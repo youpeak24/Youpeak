@@ -151,6 +151,20 @@ exports.videosOrShorts = async (req, res) => {
     const search = req.query.search?.trim().toLowerCase();
 
     let videos = await db.find("videos");
+    let users = await db.find("users");
+    const userMap = new Map((users || []).map((u) => [String(u._id || u.id), u]));
+
+    videos = videos.map((v) => {
+      const u = userMap.get(String(v.userId)) || {};
+      return {
+        ...v,
+        uniqueVideoId: v.uniqueVideoId || v._id || "-",
+        fullName: v.fullName || u.fullName || u.name || v.channelName || "Unknown User",
+        nickName: v.nickName || u.name || v.channelName || "User",
+        uniqueId: v.uniqueId || u.referralCode || u._id || v.userId || "-",
+        image: v.image || u.image || v.channelImage || "",
+      };
+    });
 
     if (videoType) {
       videos = videos.filter((v) => Number(v.videoType) === videoType);
@@ -161,7 +175,8 @@ exports.videosOrShorts = async (req, res) => {
         (v) =>
           (v.title && v.title.toLowerCase().includes(search)) ||
           (v.uniqueVideoId && v.uniqueVideoId.toLowerCase().includes(search)) ||
-          (v.channelId && v.channelId.toLowerCase().includes(search))
+          (v.channelId && v.channelId.toLowerCase().includes(search)) ||
+          (v.fullName && v.fullName.toLowerCase().includes(search))
       );
     }
 
