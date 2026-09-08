@@ -23,7 +23,7 @@ const settingSchema = new mongoose.Schema(
     adminCommissionOfPaidVideo: { type: Number, default: 0 }, //that value always in percentage
     durationOfShorts: { type: Number, default: 0 }, //that value always save in seconds
 
-    minCoinForCashOut: { type: Number, default: 0 }, //min coin requried for convert coin to default currency i.e., 1000 coin = 1 $
+    minCoinForCashOut: { type: Number, default: 100 }, //min coin requried for convert coin to default currency i.e., 1000 coin = 1 $
     maxAdPerDay: { type: Number, default: 20 },
 
     //Referral Setting
@@ -69,7 +69,7 @@ const settingSchema = new mongoose.Schema(
     }, //default currency
 
     //withdrawal setting
-    minWithdrawalRequestedAmount: { type: Number, min: 0, default: 0 },
+    minWithdrawalRequestedAmount: { type: Number, min: 0, default: 500 }, // Per YP-TC-2026-FINAL: Min payout ₹500 (50,000 coins),
     minConvertCoin: { type: Number, min: 0, default: 0 },
 
     //monetization setting

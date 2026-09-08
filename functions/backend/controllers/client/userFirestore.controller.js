@@ -52,6 +52,10 @@ function buildUserData(existing, body) {
     channelType: body.channelType || existing.channelType || "0",
     isActive: existing.isActive !== undefined ? existing.isActive : true,
     isBlock: existing.isBlock || false,
+    paymentStatus: existing.paymentStatus !== undefined ? existing.paymentStatus : (body.paymentStatus !== undefined ? body.paymentStatus : false),
+    payment_status: existing.paymentStatus !== undefined ? existing.paymentStatus : (body.paymentStatus !== undefined ? body.paymentStatus : false),
+    paymentVerifiedAt: existing.paymentVerifiedAt || null,
+    paymentGatewayRef: existing.paymentGatewayRef || null,
     coin: existing.coin || 0,
     loginRewardCoin: existing.loginRewardCoin || 0,
     totalRewardCoin: existing.totalRewardCoin || 0,
@@ -304,7 +308,13 @@ exports.getProfile = async (req, res) => {
       return res.status(200).json({ status: false, message: "you are blocked by the admin." });
     }
 
-    return res.status(200).json({ status: true, message: "Retrieve profile of the user.", user });
+    const userObj = {
+      ...user,
+      paymentStatus: user.paymentStatus || false,
+      payment_status: user.paymentStatus || false,
+    };
+
+    return res.status(200).json({ status: true, message: "Retrieve profile of the user.", user: userObj });
   } catch (error) {
     console.error("getProfile error:", error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });

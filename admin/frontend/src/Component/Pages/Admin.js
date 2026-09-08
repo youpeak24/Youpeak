@@ -31,6 +31,7 @@ import ManageReward from "./RewardSetting/ManageReward";
 import CoinPlan from "./Coin/CoinPlan";
 import CoinPlanHistory from "./Earnings/CoinPlanHistory";
 import AppLanguage from "./Language/AppLanguage";
+import GrievanceOfficer from "./GrievanceOfficer";
 import AgencyList from "./Agency/AgencyList";
 import AgencyDashboard from "./Agency/AgencyDashboard";
 import AgencyReports from "./Reports/AgencyReports";
@@ -94,6 +95,7 @@ const Admin = (props) => {
               />
               <Route path="/adminEarnings" element={<MainEarnings />} />
               <Route path="/appLanguage" element={<AppLanguage />} />
+              <Route path="/grievance" element={<GrievanceOfficer />} />
             </Routes>
           </div>
         </div>

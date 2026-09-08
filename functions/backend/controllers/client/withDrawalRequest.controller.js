@@ -223,8 +223,9 @@ exports.createWithdrawRequest = async (req, res) => {
       return res.status(200).json({ status: false, message: "Insufficient funds." });
     }
 
-    if (amount < settingJSON.minWithdrawalRequestedAmount) {
-      return res.status(400).json({ status: false, message: `Minimum withdrawal amount is ${settingJSON.minWithdrawalRequestedAmount}.` });
+    const minThreshold = Math.max(500, Number(settingJSON?.minWithdrawalRequestedAmount || 500));
+    if (amount < minThreshold) {
+      return res.status(200).json({ status: false, message: `Minimum withdrawal payout threshold is ₹${minThreshold} (50,000 Coins).` });
     }
 
     if (existingRequest?.status === 1) {

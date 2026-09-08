@@ -59,6 +59,27 @@ export const isActiveUser = (id, type, data) => (dispatch) => {
     });
 };
 
+export const togglePaymentStatus = (id) => (dispatch) => {
+  return axios
+    .patch(`admin/user/togglePaymentStatus?userId=${id}`)
+    .then((res) => {
+      if (res.data.status) {
+        setToast("success", res.data.message);
+        dispatch({
+          type: ActionType.ACTIVE_SWITCH_USER,
+          payload: { data: res.data.user, id: id },
+        });
+      } else {
+        setToast("error", res.data.message);
+      }
+      return res;
+    })
+    .catch((error) => {
+      console.log("error", error.message);
+      throw error;
+    });
+};
+
 export const deleteUser = (id, type) => (dispatch) => {
   return axios
     .delete(`admin/user/deleteUsers?userId=${id}`)

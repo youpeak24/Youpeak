@@ -14,6 +14,7 @@ import {
   getUser,
   isActiveUser,
   deleteUser,
+  togglePaymentStatus,
 } from "../../store/user/user.action";
 import $, { get } from "jquery";
 import ToggleSwitch from "../../extra/ToggleSwitch";
@@ -311,6 +312,30 @@ function ManageUser(props) {
     },
 
     {
+      Header: "PAYMENT STATUS",
+      body: "paymentStatus",
+      Cell: ({ row }) => (
+        <span
+          className={`badge ${
+            row?.paymentStatus ? "bg-success" : "bg-danger"
+          } text-white px-2 py-1`}
+          style={{ borderRadius: "6px", fontSize: "12px" }}
+        >
+          {row?.paymentStatus ? "Verified 🟢" : "Pending 🔴"}
+        </span>
+      ),
+    },
+    {
+      Header: "VERIFY PAYMENT",
+      body: "togglePaymentStatus",
+      Cell: ({ row }) => (
+        <ToggleSwitch
+          value={row?.paymentStatus || false}
+          onChange={() => handleTogglePaymentStatus(row)}
+        />
+      ),
+    },
+    {
       Header: "STATUS",
       body: "status",
       Cell: ({ row }) => <span>{row?.isBlock ? "Block" : "Unblock"}</span>,
@@ -344,6 +369,11 @@ function ManageUser(props) {
 
   const handleServerSearch = (value) => {
     handleFilterChange({ search: value || "" });
+  };
+
+  const handleTogglePaymentStatus = (row) => {
+    const id = row?._id;
+    props.togglePaymentStatus(id);
   };
 
   const handleIsActive = (row) => {
@@ -462,4 +492,5 @@ export default connect(null, {
   getUser,
   isActiveUser,
   deleteUser,
+  togglePaymentStatus,
 })(ManageUser);

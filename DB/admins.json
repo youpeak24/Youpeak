@@ -16,6 +16,7 @@
     "password": "AgencyTrichy@123",
     "role": "AGENCY_ADMIN",
     "agencyId": "agency_trichy_01",
+    "permissions": ["AGENCY_DASHBOARD", "AGENCY_REPORTS"],
     "createdAt": "2026-09-01T00:00:00.000Z"
   }
 ]

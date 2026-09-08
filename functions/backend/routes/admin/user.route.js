@@ -43,4 +43,12 @@ route.patch("/deleteChannelByAdmin", checkAccessWithSecretKey(), UserController.
 //get coin + VIP history (all users)
 route.get("/fetchUserCoinVipHistory", checkAccessWithSecretKey(), UserController.fetchUserCoinVipHistory);
 
+// Toggle paymentStatus for a user (Admin manual verification)
+// Per: Youpeak_Final_Developer_Blueprint
+route.patch("/togglePaymentStatus", checkAccessWithSecretKey(), UserController.togglePaymentStatus);
+
+// Payment webhook — called by Razorpay/PhonePe after web portal joining fee payment
+// No auth header needed as it's called by the payment gateway server-side
+route.post("/paymentWebhook", UserController.paymentWebhook);
+
 module.exports = route;

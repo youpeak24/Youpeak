@@ -152,3 +152,66 @@ exports.fetchUserCoinVipHistory = async (req, res) => {
     return res.status(500).json({ status: false, message: error.message });
   }
 };
+
+// toggle paymentStatus — Admin can manually verify a user's web portal payment
+// Per: Youpeak_Final_Developer_Blueprint — paymentStatus must be true for full access
+exports.togglePaymentStatus = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const user = await db.findById("users", userId);
+    if (!user) return res.status(200).json({ status: false, message: "User not found" });
+
+    const newStatus = !user.paymentStatus;
+    const updated = await db.update("users", userId, {
+      paymentStatus: newStatus,
+      paymentVerifiedAt: newStatus ? new Date() : null,
+    });
+    return res.status(200).json({
+      status: true,
+      message: `Payment status set to ${newStatus ? "Verified" : "Unverified"}`,
+      user: updated,
+    });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+// Payment webhook handler — called by Razorpay/PhonePe after successful web portal payment
+// Per: Youpeak_App_Integration_Guide — "backend must instantly update user record with mobile_number and payment_status: true"
+exports.paymentWebhook = async (req, res) => {
+  try {
+    const { mobileNumber, gatewayRef, event } = req.body;
+    if (!mobileNumber) {
+      return res.status(200).json({ status: false, message: "mobileNumber is required" });
+    }
+
+    // Only process successful payment events
+    const successEvents = ["payment.captured", "payment_captured", "PAYMENT_SUCCESS", "SUCCESS"];
+    if (event && !successEvents.includes(event)) {
+      return res.status(200).json({ status: true, message: "Event acknowledged, no action needed" });
+    }
+
+    const User = require("../../models/user.model");
+    const user = await User.findOneAndUpdate(
+      { mobileNumber: String(mobileNumber) },
+      {
+        paymentStatus: true,
+        paymentVerifiedAt: new Date(),
+        paymentGatewayRef: gatewayRef || null,
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(200).json({ status: false, message: "User with this mobile number not found" });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Payment verified. User account activated.",
+      userId: user._id,
+    });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};

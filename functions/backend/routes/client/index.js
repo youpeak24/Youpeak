@@ -23,6 +23,31 @@ const withdraw = require("./withdraw.route");
 const otp = require("./otp.route");
 const withdrawalRequest = require("./withdrawalRequest.route");
 const monetizationRequest = require("./monetizationRequest.route");
+//express
+const express = require("express");
+const route = express.Router();
+
+//require client's route.js
+const user = require("./user.route");
+const FAQ = require("./FAQ.route");
+const premiumPlan = require("./premiumPlan.route");
+const contact = require("./contact.route");
+const video = require("./video.route");
+const watchHistory = require("./watchHistory.route");
+const userWiseSubscription = require("./userWiseSubscription.route");
+const playlist = require("./playList.route");
+const userWiseDownload = require("./userWiseDownload.route");
+const saveToWatchLater = require("./saveToWatchLater.route");
+const notification = require("./notification.route");
+const report = require("./report.route");
+const videoComment = require("./videoComment.route");
+const file = require("./file.route");
+const soundList = require("./soundList.route");
+const liveUser = require("./liveUser.route");
+const withdraw = require("./withdraw.route");
+const otp = require("./otp.route");
+const withdrawalRequest = require("./withdrawalRequest.route");
+const monetizationRequest = require("./monetizationRequest.route");
 const setting = require("./setting.route");
 const adRewardCoin = require("./adRewardCoin.route");
 const dailyCoinReward = require("./dailyRewardCoin.route");
@@ -31,6 +56,8 @@ const playbackSession = require("./playbackSession.route");
 const translation = require("./translation.route");
 const creatorTier = require("./creatorTier.route");
 const userTaskReward = require("./userTaskReward.route");
+const videoPromotion = require("./videoPromotion.route");
+const grievance = require("./grievance.route");
 
 //exports client's route.js
 route.use("/user", user);
@@ -61,5 +88,7 @@ route.use("/playbackSession", playbackSession);
 route.use("/translation", translation);
 route.use("/creatorTier", creatorTier);
 route.use("/userTaskReward", userTaskReward);
+route.use("/videoPromotion", videoPromotion);
+route.use("/grievance", grievance);
 
 module.exports = route;

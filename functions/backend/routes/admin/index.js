@@ -37,6 +37,9 @@ const agencyReport = require("./agencyReport.route");
 const membershipTier = require("./membershipTier.route");
 const fraud = require("./fraud.route");
 const referral = require("./referral.route");
+const videoPromotion = require("./videoPromotion.route");
+const contentModeration = require("./contentModeration.route");
+const copyrightModeration = require("./copyrightModeration.route");
 
 //exports admin's route.js
 route.use("/admin", admin);
@@ -69,6 +72,9 @@ route.use("/agencyReport", AdminMiddleware, CheckScope, agencyReport);
 route.use("/membershipTier", AdminMiddleware, CheckScope, membershipTier);
 route.use("/fraud", AdminMiddleware, CheckScope, fraud);
 route.use("/referral", AdminMiddleware, CheckScope, referral);
+route.use("/videoPromotion", AdminMiddleware, CheckScope, videoPromotion);
+route.use("/contentModeration", AdminMiddleware, CheckScope, contentModeration);
+route.use("/copyrightModeration", AdminMiddleware, CheckScope, copyrightModeration);
 route.use("/", admin);
 
 module.exports = route;

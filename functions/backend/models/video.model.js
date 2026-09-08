@@ -40,9 +40,19 @@ const videoSchema = new mongoose.Schema(
     shareCount: { type: Number, default: 0 }, //when user share the video then shareCount increased
     like: { type: Number, default: 0 },
     dislike: { type: Number, default: 0 },
+    totalViews: { type: Number, default: 0 },
 
     creatorEarnedAmountInINR: { type: Number, default: 0 }, // total accumulated creator earnings for this video
     isEarningCapped: { type: Boolean, default: false }, // true when video creator earnings hit max cap
+    isPromoted: { type: Boolean, default: false }, // true if video is currently part of an active VideoPromotion campaign
+
+    // --- Content Moderation Engine (India IT Rules 2021) ---
+    moderationStatus: { type: String, enum: ["approved", "pending_review", "rejected"], default: "approved" },
+    isFlaggedAntiNational: { type: Boolean, default: false },
+    flaggedKeywords: [{ type: String }],
+
+    // --- Copyright & Duplicate Video Detection Engine ---
+    isCopyrightFlagged: { type: Boolean, default: false }, // true if duplicate audio/video hash found (>85% match)
   },
   {
     timestamps: true,

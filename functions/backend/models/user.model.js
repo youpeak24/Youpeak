@@ -33,7 +33,15 @@ const userSchema = new mongoose.Schema(
     fcmToken: { type: String, trim: true, default: null },
     date: { type: String, default: null },
 
+
     isPremiumPlan: { type: Boolean, default: false },
+
+    // Web-Portal Payment Sync (Per Final Developer Blueprint)
+    // True = user has completed joining fee payment on youpeak.in web portal
+    // False = user must be directed to web portal to complete registration
+    paymentStatus: { type: Boolean, default: false },
+    paymentVerifiedAt: { type: Date, default: null },
+    paymentGatewayRef: { type: String, default: null }, // Razorpay/PhonePe transaction ID
     plan: {
       planStartDate: { type: String, default: null }, //premium plan start date
       planEndDate: { type: String, default: null }, //Premium plan end date

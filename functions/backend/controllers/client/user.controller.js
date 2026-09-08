@@ -19,6 +19,9 @@ exports.updateProfile  = firestoreCtrl.updateProfile;
 exports.getProfile     = firestoreCtrl.getProfile;
 
 // ─── Referral Code Validation ─────────────────────────────────────────────────
+// Per Youpeak Peak Partner Terms & Payout Guidelines:
+//   Stage 1: ₹100 (10,000 coins) when referred user completes OTP verification
+//   Stage 2: ₹100 (10,000 coins) when referred user watches 100 min within 7 days
 exports.validateAndApplyReferralCode = async (req, res) => {
   try {
     const userId = req.query.userId;
@@ -41,11 +44,53 @@ exports.validateAndApplyReferralCode = async (req, res) => {
       return res.status(200).json({ status: false, message: "You cannot use your own referral code." });
     }
 
-    const referralBonus = global.settingJSON?.referralBonus || 100;
-    await db.update("users", userId, { referralApplied: true, coin: (user.coin || 0) + referralBonus });
-    await db.update("users", referrer._id || referrer.id, { coin: ((referrer.coin) || 0) + referralBonus });
+    // Stage 1: Credit 10,000 coins = ₹100 to referrer immediately on OTP verification
+    const STAGE1_COINS = 10000; // ₹100 at 100 coins = ₹1
 
-    return res.status(200).json({ status: true, message: "Referral code applied successfully." });
+    // Update referred user: mark referral as applied
+    await db.update("users", userId, {
+      referralApplied: true,
+      isReferral: true,
+    });
+
+    // Update referrer: credit Stage 1 coins + increment referral count
+    const referrerId = referrer._id || referrer.id;
+    await db.update("users", referrerId, {
+      coin: ((referrer.coin) || 0) + STAGE1_COINS,
+      referralRewardCoin: ((referrer.referralRewardCoin) || 0) + STAGE1_COINS,
+      totalRewardCoin: ((referrer.totalRewardCoin) || 0) + STAGE1_COINS,
+      referralCount: ((referrer.referralCount) || 0) + 1,
+    });
+
+    // Create ReferralHistory record for Stage 2 tracking (7-day deadline)
+    const stage2Deadline = new Date();
+    stage2Deadline.setDate(stage2Deadline.getDate() + 7);
+
+    try {
+      const ReferralHistory = require("../../models/referralHistory.model");
+      await ReferralHistory.create({
+        referrerId: referrerId,
+        referredUserId: userId,
+        referralCode: referralCode.trim(),
+        ipAddress: req.ip || "",
+        stage1Completed: true,
+        stage1CompletedAt: new Date(),
+        stage1RewardCoins: STAGE1_COINS,
+        stage2Completed: false,
+        stage2RewardCoins: 0,
+        stage2DeadlineAt: stage2Deadline,
+        totalRewardCoinsGiven: STAGE1_COINS,
+        status: "STAGE1_DONE",
+      });
+    } catch (histErr) {
+      console.error("ReferralHistory create error:", histErr.message);
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Referral code applied! Stage 1 bonus (₹100 = 10,000 coins) credited to referrer.",
+      stage1CoinsAwarded: STAGE1_COINS,
+    });
   } catch (error) {
     console.error("validateAndApplyReferralCode error:", error);
     return res.status(500).json({ status: false, message: error.message });

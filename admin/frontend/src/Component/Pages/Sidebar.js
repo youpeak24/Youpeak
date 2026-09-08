@@ -220,6 +220,12 @@ const Sidebar = () => {
           navIcon: <IconAddressBook />,
           onClick: handleCloseFunction,
         },
+        {
+          name: "Grievance Officer",
+          path: "/admin/grievance",
+          navIcon: <IconHelpOctagon />,
+          onClick: handleCloseFunction,
+        },
       ],
     },
     {

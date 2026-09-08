@@ -27,7 +27,7 @@ module.exports = {
   durationOfShorts: 60000,
   createdAt: "2023-08-08T12:48:46.902Z",
   updatedAt: new Date().toISOString(),
-  minWithdrawalRequestedAmount: 10,
+  minWithdrawalRequestedAmount: 500,
   zegoAppId: "",
   zegoAppSignIn: "",
   earningPerHour: 2,
