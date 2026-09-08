@@ -10,7 +10,7 @@ export const baseURL =
   process.env.REACT_APP_BASE_URL ||
   (isLocalhost
     ? "http://localhost:5000/"
-    : "/api/");
+    : "/");
 
 export const secretKey = "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ";
 export const projectName = "YouPeak";
