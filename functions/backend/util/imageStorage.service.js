@@ -19,7 +19,7 @@ function bucketName() {
   return (
     process.env.FIREBASE_STORAGE_BUCKET ||
     s.firebaseStorageBucket ||
-    `${process.env.FIREBASE_PROJECT_ID || "youpeak-9ff65"}.appspot.com`
+    `${process.env.FIREBASE_PROJECT_ID || "youpeak-9ff65"}.firebasestorage.app`
   );
 }
 

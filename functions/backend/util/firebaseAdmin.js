@@ -30,7 +30,9 @@ if (admin.apps.length === 0) {
     process.env.GCP_PROJECT ||
     process.env.GCLOUD_PROJECT ||
     "youpeak-9ff65";
-  const storageBucket = process.env.FIREBASE_STORAGE_BUCKET || `${projectId}.appspot.com`;
+  // youpeak-9ff65's real bucket is <project>.firebasestorage.app (newer default),
+  // not the legacy <project>.appspot.com.
+  const storageBucket = process.env.FIREBASE_STORAGE_BUCKET || `${projectId}.firebasestorage.app`;
 
   if (serviceAccount && serviceAccount.private_key) {
     admin.initializeApp({
