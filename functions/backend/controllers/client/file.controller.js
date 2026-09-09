@@ -55,7 +55,13 @@ exports.uploadContent = async (req, res) => {
     }
 
     const fileName = req.generatedFileName || req.file.filename || req.file.key;
-    const folder = req.body.folderStructure;
+    // Normalise to a safe lowercase slug so different clients can't create
+    // parallel folders (Videos/ vs videos/) or escape the prefix.
+    const folder =
+      String(req.body.folderStructure || "misc")
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, "")
+        .slice(0, 40) || "misc";
     const filePath = req.file.path;
     const isVideo = isVideoFile(req.file, fileName);
 
