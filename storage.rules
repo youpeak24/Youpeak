@@ -1,8 +1,16 @@
 rules_version = '2';
+
+// YouPeak media architecture:
+//   • Videos & Shorts  -> Cloudflare Stream / R2  (never Firebase Storage)
+//   • All other files  -> uploaded via the backend API (Firebase Admin SDK,
+//                         which bypasses these rules)
+// No client (app or web) talks to Firebase Storage directly, so all direct
+// client access is denied. If a future feature needs client-side Storage,
+// add a scoped match block here — never re-open the bucket with `if true`.
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
-      allow read, write: if true;
+      allow read, write: if false;
     }
   }
 }

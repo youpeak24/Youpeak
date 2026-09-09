@@ -3,30 +3,30 @@ import 'dart:io' show Platform;
 import 'package:youpeak/pages/admin_settings/admin_settings_api.dart';
 
 class Constant {
-  // ✅ LOCAL DEVELOPMENT: Smart URL for Web, Emulator, and Physical Mobile Devices
+  // Build-time config. Override per build with --dart-define, e.g.
+  //   flutter build apk --dart-define=API_BASE_URL=https://api.youpeak.in/ \
+  //                      --dart-define=API_SECRET_KEY=xxxxxxxx
+  static const String _defaultBaseUrl =
+      String.fromEnvironment("API_BASE_URL", defaultValue: "https://youpeak.vercel.app/");
+
+  static const bool _useLocalDev =
+      bool.fromEnvironment("USE_LOCAL_DEV", defaultValue: false);
+
   static String get baseURL {
-    if (kIsWeb) {
-      return "http://localhost:5001/";
-    } else {
-      // Physical mobile device connects via PC Local IP (10.140.10.65) or fallback
-      return "http://10.140.10.65:5001/";
+    if (_useLocalDev) {
+      return kIsWeb ? "http://localhost:5001/" : "http://10.0.2.2:5001/";
     }
+    return _defaultBaseUrl;
   }
 
   static String get domain {
-    if (kIsWeb) {
-      return "http://localhost:5001";
-    } else {
-      return "http://10.140.10.65:5001";
-    }
+    final b = baseURL;
+    return b.endsWith("/") ? b.substring(0, b.length - 1) : b;
   }
 
-  static const secretKey = "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ";
+  static const secretKey =
+      String.fromEnvironment("API_SECRET_KEY", defaultValue: "");
   static const folderStructurePath = "YouPeak";
-
-  // Production URLs (Uncomment for production build):
-  // static const baseURL = "https://youpeak-9ff65.web.app/api/";
-  // static const domain = "https://youpeak-9ff65.web.app";
 
   // >>>>> >>>>> >>>>> Admin Setting Api <<<<< <<<<< <<<<<<
   static const adminSetting = "client/setting";

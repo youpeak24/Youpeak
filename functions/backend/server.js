@@ -14,10 +14,7 @@ const fs = require("fs");
 
 //dotenv — load from functions/backend/.env
 require("dotenv").config({ path: path.join(__dirname, ".env") });
-
-// Set env fallbacks
-process.env.secretKey = process.env.secretKey || "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ";
-process.env.JWT_SECRET = process.env.JWT_SECRET || "5BF2AE1515EA6";
+require("./util/validateEnv")();
 
 const express = require("express");
 const cors = require("cors");
@@ -46,36 +43,8 @@ try {
   app.use(logger("dev"));
 } catch (e) {}
 
-// Firebase Admin (Firestore)
-const admin = require("firebase-admin");
-if (admin.apps.length === 0) {
-  try {
-    // Check for serviceAccountKey.json in the source root (2 levels up from functions/backend/)
-    const serviceAccountPaths = [
-      path.join(__dirname, "..", "..", "serviceAccountKey.json"),  // source/
-      path.join(__dirname, "..", "serviceAccountKey.json"),        // functions/
-      path.join(__dirname, "serviceAccountKey.json"),              // functions/backend/
-    ];
-
-    let initialized = false;
-    for (const keyPath of serviceAccountPaths) {
-      if (fs.existsSync(keyPath)) {
-        const serviceAccount = require(keyPath);
-        admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-        console.log("🔑 Firebase initialized with serviceAccountKey.json:", keyPath);
-        initialized = true;
-        break;
-      }
-    }
-
-    if (!initialized) {
-      admin.initializeApp();
-      console.log("🔥 Firebase initialized with Application Default Credentials");
-    }
-  } catch (e) {
-    console.log("⚠️  Firebase init note:", e.message);
-  }
-}
+// Firebase Admin (Firestore) — single canonical init
+require("./util/firebaseAdmin");
 
 // Global settings initialization
 try {

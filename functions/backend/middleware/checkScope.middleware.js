@@ -1,22 +1,21 @@
-const db = require("../util/connection");
-
+// Derives the caller's role/agency scope from req.admin (set by admin.middleware).
+// Never defaults to SUPER_ADMIN — an unknown role gets the narrowest scope.
 const checkScope = async (req, res, next) => {
   try {
     if (!req.admin) {
       return res.status(401).json({ status: false, message: "Unauthorized request" });
     }
 
-    let admin = await db.findById("admins", req.admin._id || req.admin.id);
-    if (!admin) {
-      admin = req.admin;
-    }
+    const role = req.admin.role || "AGENCY_ADMIN";
+    const agencyId = req.admin.agencyId || null;
 
-    req.adminRole = admin?.role || "SUPER_ADMIN";
-    req.agencyId = admin?.agencyId || null;
+    req.adminRole = role;
+    req.agencyId = agencyId;
 
+    // Agency admins are always constrained to their own agency's data.
     req.getScopeFilter = (baseFilter = {}) => {
-      if (req.adminRole === "AGENCY_ADMIN" && req.agencyId) {
-        return { ...baseFilter, agencyId: req.agencyId };
+      if (role !== "SUPER_ADMIN" && agencyId) {
+        return { ...baseFilter, agencyId };
       }
       return baseFilter;
     };
@@ -24,9 +23,7 @@ const checkScope = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Error in checkScope middleware:", error);
-    req.adminRole = "SUPER_ADMIN";
-    req.getScopeFilter = (baseFilter = {}) => baseFilter;
-    next();
+    return res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 };
 

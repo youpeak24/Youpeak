@@ -1,4 +1,5 @@
 const db = require("../../util/connection");
+const crypto = require("crypto");
 
 // create user by admin
 exports.fakeUser = async (req, res) => {
@@ -12,7 +13,7 @@ exports.fakeUser = async (req, res) => {
       fullName,
       nickName,
       email,
-      password: password || "12345678",
+      password: password || crypto.randomBytes(12).toString("hex"),
       channelName: channelName || fullName,
       isChannel: !!channelName,
       isFake: true,

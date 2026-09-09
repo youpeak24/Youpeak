@@ -1,7 +1,7 @@
 const express = require("express");
 const route = express.Router();
 const contentModerationController = require("../../controllers/admin/contentModeration.controller");
-const checkAccess = require("../../middleware/checkAccess");
+const checkAccess = require("../../checkAccess");
 
 // Moderation Queue
 route.get("/queue", checkAccess(), contentModerationController.getModerationQueue);

@@ -47,7 +47,8 @@ app.use(logger("dev"));
 const path = require("path");
 
 //dotenv
-require("dotenv").config({ path: ".env" });
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+require("./util/validateEnv")();
 
 //connection.js (100% Firebase Firestore)
 const db = require("./util/connection");
@@ -87,28 +88,23 @@ app.get("/.well-known/apple-app-site-association", (req, res) => {
   return res.status(200).json(global?.settingJSON?.appleAppSiteAssociation || {});
 });
 
-// Cloudflare R2 Video Stream Proxy Route (with Range support for video players)
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-const r2StreamClient = new S3Client({
-  region: "auto",
-  endpoint: "https://da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  credentials: {
-    accessKeyId: "cdb9bca482d4459a3d9a99533d71939b",
-    secretAccessKey: "9d2946e08c57db8ed33ef5d29044d066c73274b103d26d3ae43e7ba2a12582df",
-  },
-});
+// Cloudflare R2 Video Stream Proxy Route (with Range support for video players).
+// Legacy path for raw MP4 objects still in R2 — new uploads use Cloudflare Stream.
+const { GetObjectCommand } = require("@aws-sdk/client-s3");
+const cloudflareStorage = require("./util/cloudflareStorage.service");
 
 app.get(["/uploads/videos/:filename", "/uploads/Videos/:filename", "/videos/:filename", "/video/stream/:filename"], async (req, res, next) => {
   try {
+    if (!cloudflareStorage.isConfigured()) return next();
     const filename = req.params.filename;
     const r2Key = filename.includes("/") ? filename : `videos/${filename}`;
     const range = req.headers.range;
 
-    const cmdInput = { Bucket: "youpeak-videos", Key: r2Key };
+    const cmdInput = { Bucket: cloudflareStorage.r2BucketName, Key: r2Key };
     if (range) cmdInput.Range = range;
 
     const cmd = new GetObjectCommand(cmdInput);
-    const r2Res = await r2StreamClient.send(cmd);
+    const r2Res = await cloudflareStorage.getS3Client().send(cmd);
 
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");

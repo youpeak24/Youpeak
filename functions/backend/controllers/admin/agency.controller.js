@@ -1,6 +1,5 @@
 const db = require("../../util/connection");
-const Cryptr = require("cryptr");
-const cryptr = new Cryptr(process.env.secretKey || "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ");
+const bcrypt = require("bcryptjs");
 
 // Create agency
 exports.store = async (req, res) => {
@@ -34,7 +33,7 @@ exports.store = async (req, res) => {
       return res.status(200).json({ status: false, message: "Agency code or email already exists!" });
     }
 
-    const encryptedPassword = cryptr.encrypt(password.trim());
+    const encryptedPassword = bcrypt.hashSync(password.trim(), 10);
     const agencyId = "agency_" + Date.now();
 
     const agencyData = {

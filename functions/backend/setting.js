@@ -1,18 +1,17 @@
+// Default settings. Real values are loaded from the Firestore `settings`
+// collection at runtime and managed from the admin panel.
+// Secrets (R2 keys, Firebase SA, payment keys) are NEVER stored here — they
+// come from environment variables. See .env.example.
 module.exports = {
   _id: "6a5a008c9fb97d1dc7aa9e61",
   storage: {
     local: false,
     awsS3: false,
     digitalOcean: false,
-    cloudflareR2: true
+    cloudflareR2: true,
   },
-  r2AccountId: "da97865a5caa8f2b10c795c92912615e",
-  r2AccessKeyId: "cdb9bca482d4459a3d9a99533d71939b",
-  r2SecretAccessKey: "9d2946e08c57db8ed33ef5d29044d066c73274b103d26d3ae43e7ba2a12582df",
-  r2BucketName: "youpeak-videos",
-  r2Endpoint: "https://da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  r2PublicDomain: "https://youpeak-videos.da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  r2CdnUrl: "https://youpeak-videos.da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
+  r2BucketName: process.env.CLOUDFLARE_R2_BUCKET || "youpeak-videos",
+  r2PublicDomain: process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN || "",
   currency: {
     name: "USD",
     symbol: "$",
@@ -36,15 +35,26 @@ module.exports = {
   isMonetization: true,
   adDisplayIndex: 2,
   privateKey: {},
-  maxAdPerDay: 5,
+  // ── Engagement / earning limits (YP-TC-2026-FINAL + strategy call) ──
+  coinToInrRate: 100,          // 100 coins = ₹1
+  maxAdPerDay: 20,             // hard cap, all tiers
+  dailyMaxLikes: 5,            // free tier
+  dailyMaxComments: 2,         // free tier
+  dailyMaxDislikes: 5,         // free tier
+  dailyMaxCheckIns: 1,
+  dailyMaxVideoWatches: 50,
+  dailyMaxEarningCapInCoins: 500,   // free tier: ₹5/day
+  minWatchMinutesForEngagementReward: 120, // 2 hours -> 500 coins
+  engagementWatchRewardCoins: 500,
   minCoinForCashOut: 100,
-  commentingRewardCoins: 100,
-  likeVideoRewardCoins: 100,
+  commentingRewardCoins: 5,
+  likeVideoRewardCoins: 2,
+  dislikeVideoRewardCoins: 2,
   loginRewardCoins: 100,
-  referralRewardCoins: 100,
+  referralRewardCoins: 250,    // free tasker referral = 250 coins (₹2.50)
   requiredMembers: 5,
-  watchingVideoRewardCoins: 100,
-  minWithdrawalRequestedCoin: 0,
+  watchingVideoRewardCoins: 2,
+  minWithdrawalRequestedCoin: 50000,  // ₹500
   minConvertCoin: 1000,
   isWatermarkOn: false,
   watermarkIcon: "",
