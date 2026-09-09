@@ -86,7 +86,9 @@ exports.applyEconomyDefaults = async (req, res) => {
       "loginRewardCoins", "referralRewardCoins", "watchingVideoRewardCoins",
       "minWithdrawalRequestedAmount", "minWithdrawalRequestedCoin", "minConvertCoin",
       "revenueSplits", "districtPartnerRates", "districtPartnerUnlockCapINR",
-      "referralStage2WatchMinutes", "referralStage2Coins",
+      "referralStage1Coins", "referralStage2Coins", "referralStage1HoldHours",
+      "referralStage2HoldHours", "referralStage2WatchMinutes", "referralStage2WindowDays",
+      "maxReferralsPerDayPerUser", "referralDeviceDedup", "paidTierReferralPercentage",
     ];
     const patch = {};
     for (const k of KEYS) if (defaults[k] !== undefined) patch[k] = defaults[k];

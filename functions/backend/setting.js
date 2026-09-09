@@ -55,6 +55,17 @@ module.exports = {
   loginRewardCoins: 100,
   referralRewardCoins: 250,      // free tasker referral = 250 coins (₹2.50)
   requiredMembers: 5,
+
+  // ── Peak Partner referral (₹100 + ₹100, with holding periods) ──
+  referralStage1Coins: 10000,           // ₹100 on code apply
+  referralStage2Coins: 10000,           // ₹100 on watch-time task
+  referralStage1HoldHours: 24,
+  referralStage2HoldHours: 48,
+  referralStage2WatchMinutes: 100,
+  referralStage2WindowDays: 7,
+  maxReferralsPerDayPerUser: 20,
+  referralDeviceDedup: true,
+  paidTierReferralPercentage: 10,       // YP-TC §1.5: 10% of a referred member's paid pass
   watchingVideoRewardCoins: 2,   // per video watch (non-milestone)
   minWithdrawalRequestedCoin: 50000,  // ₹500
   minConvertCoin: 1000,

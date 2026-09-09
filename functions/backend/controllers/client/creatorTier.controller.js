@@ -1,6 +1,7 @@
 const MembershipTier = require("../../models/membershipTier.model");
 const User = require("../../models/user.model");
 const db = require("../../util/connection");
+const referralService = require("../../util/referral.service");
 
 // Get available CREATOR tiers with subscriber-qualification flags
 exports.getAvailableCreatorTiers = async (req, res) => {
@@ -73,11 +74,27 @@ exports.upgradeCreatorTier = async (req, res) => {
       isMonetization: true,
     });
 
+    // YP-TC §1.5: referrer of a paying member gets a % of the pass price.
+    let referralBonus = null;
+    if ((tier.membershipPrice || 0) > 0) {
+      try {
+        const r = await referralService.handlePaidTierReferral({
+          buyerId: String(user._id || user.id),
+          tierPriceInr: tier.membershipPrice,
+          tierName: tier.tierName,
+        });
+        if (r.ok) referralBonus = { coins: r.bonusCoins, percentage: r.percentage };
+      } catch (e) {
+        console.error("paid-tier referral bonus error:", e.message);
+      }
+    }
+
     return res.status(200).json({
       status: true,
       message: `Upgraded to ${tier.tierName}! Ad revenue share is now ${tier.creatorRevenueSharePercentage}%.`,
       user: updated,
       tier,
+      referralBonus,
     });
   } catch (error) {
     console.error("Error upgrading creator tier:", error);

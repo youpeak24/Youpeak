@@ -16,6 +16,7 @@
 
 const db = require("../util/connection");
 const { todayStr } = require("../util/rewardEngine");
+const referralService = require("../util/referral.service");
 
 function authorised(req) {
   const secret = process.env.CRON_SECRET;
@@ -72,6 +73,11 @@ exports.daily = async (req, res) => {
     result.tasks.expireReferrals = await expireReferrals();
   } catch (e) {
     result.tasks.expireReferrals = { error: e.message };
+  }
+  try {
+    result.tasks.releaseHeldReferrals = await referralService.releaseHeldReferrals();
+  } catch (e) {
+    result.tasks.releaseHeldReferrals = { error: e.message };
   }
 
   if (req.query.full === "1" || String(process.env.CRON_BULK_RESET || "").toLowerCase() === "true") {

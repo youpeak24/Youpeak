@@ -14,6 +14,7 @@ const { generateUniqueId } = require("../../util/generateUniqueId");
 const { generateReferralCode } = require("../../util/generateReferralCode");
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 const rewardEngine = require("../../util/rewardEngine");
+const referralService = require("../../util/referral.service");
 
 // ─── Re-export everything from the Firestore controller ──────────────────────
 const firestoreCtrl = require("./userFirestore.controller");
@@ -28,72 +29,21 @@ exports.getProfile     = firestoreCtrl.getProfile;
 //   Stage 2: ₹100 (10,000 coins) when referred user watches 100 min within 7 days
 exports.validateAndApplyReferralCode = async (req, res) => {
   try {
-    const userId = req.query.userId;
-    const { referralCode } = req.body;
-    if (!userId || !referralCode) {
-      return res.status(200).json({ status: false, message: "userId and referralCode are required." });
-    }
-    const user = await db.findById("users", userId);
-    if (!user) return res.status(200).json({ status: false, message: "User not found." });
+    const userId = req.query.userId || req.body.userId;
+    const referralCode = req.body.referralCode || req.query.referralCode;
 
-    if (user.referralApplied) {
-      return res.status(200).json({ status: false, message: "Referral code already applied." });
-    }
-
-    const referrer = await db.findOne("users", { referralCode: referralCode.trim() });
-    if (!referrer) {
-      return res.status(200).json({ status: false, message: "Invalid referral code." });
-    }
-    if ((referrer._id || referrer.id) === userId) {
-      return res.status(200).json({ status: false, message: "You cannot use your own referral code." });
-    }
-
-    // Stage 1: Credit 10,000 coins = ₹100 to referrer immediately on OTP verification
-    const STAGE1_COINS = 10000; // ₹100 at 100 coins = ₹1
-
-    // Update referred user: mark referral as applied
-    await db.update("users", userId, {
-      referralApplied: true,
-      isReferral: true,
+    const result = await referralService.applyReferralCode({
+      referredUserId: userId,
+      referralCode,
+      ipAddress: (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.ip || "",
     });
-
-    // Update referrer: credit Stage 1 coins + increment referral count
-    const referrerId = referrer._id || referrer.id;
-    await db.update("users", referrerId, {
-      coin: ((referrer.coin) || 0) + STAGE1_COINS,
-      referralRewardCoin: ((referrer.referralRewardCoin) || 0) + STAGE1_COINS,
-      totalRewardCoin: ((referrer.totalRewardCoin) || 0) + STAGE1_COINS,
-      referralCount: ((referrer.referralCount) || 0) + 1,
-    });
-
-    // Create ReferralHistory record for Stage 2 tracking (7-day deadline)
-    const stage2Deadline = new Date();
-    stage2Deadline.setDate(stage2Deadline.getDate() + 7);
-
-    try {
-      const ReferralHistory = require("../../models/referralHistory.model");
-      await ReferralHistory.create({
-        referrerId: referrerId,
-        referredUserId: userId,
-        referralCode: referralCode.trim(),
-        ipAddress: req.ip || "",
-        stage1Completed: true,
-        stage1CompletedAt: new Date(),
-        stage1RewardCoins: STAGE1_COINS,
-        stage2Completed: false,
-        stage2RewardCoins: 0,
-        stage2DeadlineAt: stage2Deadline,
-        totalRewardCoinsGiven: STAGE1_COINS,
-        status: "STAGE1_DONE",
-      });
-    } catch (histErr) {
-      console.error("ReferralHistory create error:", histErr.message);
-    }
 
     return res.status(200).json({
-      status: true,
-      message: "Referral code applied! Stage 1 bonus (₹100 = 10,000 coins) credited to referrer.",
-      stage1CoinsAwarded: STAGE1_COINS,
+      status: !!result.ok,
+      message: result.message,
+      flagged: result.flagged || false,
+      stage1CoinsPending: result.stage1CoinsPending || 0,
+      holdHours: result.holdHours || 0,
     });
   } catch (error) {
     console.error("validateAndApplyReferralCode error:", error);
@@ -195,6 +145,18 @@ exports.handleEngagementVideoWatchReward = async (req, res) => {
         type: rewardEngine.HISTORY_TYPE.ENGAGEMENT_WATCH,
         date: new Date().toISOString(),
       });
+    }
+
+    // Stage-2 referral: referred user reached the watch-minute threshold in-window
+    if (user.isReferral) {
+      try {
+        await referralService.completeStage2({
+          referredUserId: String(id),
+          totalWatchMinutes: baseUpdates.totalWatchTime,
+        });
+      } catch (e) {
+        console.error("stage2 referral check error:", e.message);
+      }
     }
 
     return res.status(200).json({

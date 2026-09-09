@@ -18,6 +18,7 @@ const {
   creditReward,
   snapshotCounts,
 } = require("../../util/rewardEngine");
+const referralService = require("../../util/referral.service");
 
 // 1. Reward Video Like
 exports.rewardVideoLike = async (req, res) => {
@@ -166,9 +167,14 @@ exports.checkWatchTimeMilestone = async (req, res) => {
       });
     }
 
-    // Stage-2 referral: referred user hits 100 watch minutes within the window
+    // Stage-2 referral: referred user hits the watch-minute threshold in-window
     try {
-      await maybeCompleteStage2Referral(user, newTotalWatchTime);
+      if (user.isReferral) {
+        await referralService.completeStage2({
+          referredUserId: userIdStr,
+          totalWatchMinutes: newTotalWatchTime,
+        });
+      }
     } catch (stage2Err) {
       console.error("Stage 2 referral check error:", stage2Err.message);
     }
@@ -191,53 +197,6 @@ exports.checkWatchTimeMilestone = async (req, res) => {
     return res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 };
-
-async function maybeCompleteStage2Referral(user, newTotalWatchTime) {
-  if (!user.isReferral) return;
-  const userIdStr = user._id || user.id;
-
-  const referralRecord = await db.findOne("referralHistories", {
-    referredUserId: userIdStr,
-    stage1Completed: true,
-    stage2Completed: false,
-  });
-  if (!referralRecord) return;
-
-  const s = global.settingJSON || {};
-  const stage2Minutes = Number(s.referralStage2WatchMinutes) || 100;
-  const stage2Coins = Number(s.referralStage2Coins) || 10000; // ₹100
-
-  const deadline = referralRecord.stage2DeadlineAt ? new Date(referralRecord.stage2DeadlineAt) : null;
-  if (deadline && new Date() > deadline) {
-    await db.update("referralHistories", referralRecord._id || referralRecord.id, { status: "EXPIRED" });
-    return;
-  }
-  if (newTotalWatchTime < stage2Minutes) return;
-
-  const referrer = await db.findById("users", referralRecord.referrerId);
-  if (!referrer || referrer.isBlock) return;
-  const referrerIdStr = referrer._id || referrer.id;
-
-  await db.update("users", referrerIdStr, {
-    coin: (referrer.coin || 0) + stage2Coins,
-    referralRewardCoin: (referrer.referralRewardCoin || 0) + stage2Coins,
-    totalRewardCoin: (referrer.totalRewardCoin || 0) + stage2Coins,
-  });
-  await db.create("histories", {
-    userId: referrerIdStr,
-    uniqueId: await generateHistoryUniqueId(),
-    coin: stage2Coins,
-    type: HISTORY_TYPE.STAGE2_REFERRAL,
-    date: new Date().toISOString(),
-  });
-  await db.update("referralHistories", referralRecord._id || referralRecord.id, {
-    stage2Completed: true,
-    stage2CompletedAt: new Date().toISOString(),
-    stage2RewardCoins: stage2Coins,
-    totalRewardCoinsGiven: (referralRecord.totalRewardCoinsGiven || 0) + stage2Coins,
-    status: "STAGE2_DONE",
-  });
-}
 
 // Shape a creditReward() result into the response the app expects
 function shapeRewardResponse(result, which) {
