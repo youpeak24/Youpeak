@@ -15,8 +15,14 @@ const cors = require("cors");
 app.use(cors({ origin: true, credentials: true }));
 app.options("*", cors());
 
+// Payment webhooks need the raw body for signature verification — handle them
+// before the JSON parser consumes the stream.
+app.use("/payment/webhook", express.raw({ type: "*/*", limit: "5mb" }));
+app.use("/api/payment/webhook", express.raw({ type: "*/*", limit: "5mb" }));
+
 // Safe Body Parser for Vercel Serverless Function Bridge
 app.use((req, res, next) => {
+  if (Buffer.isBuffer(req.body)) return next(); // raw webhook body, leave it
   if (req.body !== undefined && req.body !== null) {
     if (typeof req.body === "string") {
       try {
@@ -25,7 +31,7 @@ app.use((req, res, next) => {
     }
     return next();
   }
-  express.json({ limit: "50mb" })(req, res, (err) => {
+  express.json({ limit: "50mb", verify: (r, _res, buf) => { r.rawBody = buf; } })(req, res, (err) => {
     next();
   });
 });

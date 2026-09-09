@@ -33,6 +33,7 @@ const creatorTier = require("./creatorTier.route");
 const userTaskReward = require("./userTaskReward.route");
 const videoPromotion = require("./videoPromotion.route");
 const grievance = require("./grievance.route");
+const payment = require("./payment.route");
 
 //exports client's route.js
 route.use("/user", user);
@@ -65,5 +66,6 @@ route.use("/creatorTier", creatorTier);
 route.use("/userTaskReward", userTaskReward);
 route.use("/videoPromotion", videoPromotion);
 route.use("/grievance", grievance);
+route.use("/payment", payment);
 
 module.exports = route;

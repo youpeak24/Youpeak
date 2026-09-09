@@ -89,6 +89,7 @@ exports.applyEconomyDefaults = async (req, res) => {
       "referralStage1Coins", "referralStage2Coins", "referralStage1HoldHours",
       "referralStage2HoldHours", "referralStage2WatchMinutes", "referralStage2WindowDays",
       "maxReferralsPerDayPerUser", "referralDeviceDedup", "paidTierReferralPercentage",
+      "joiningFeeINR", "paymentGateway",
     ];
     const patch = {};
     for (const k of KEYS) if (defaults[k] !== undefined) patch[k] = defaults[k];

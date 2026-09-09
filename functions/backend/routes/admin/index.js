@@ -40,6 +40,7 @@ const referral = require("./referral.route");
 const videoPromotion = require("./videoPromotion.route");
 const contentModeration = require("./contentModeration.route");
 const copyrightModeration = require("./copyrightModeration.route");
+const payment = require("./payment.route");
 
 //exports admin's route.js
 route.use("/admin", admin);
@@ -75,6 +76,7 @@ route.use("/referral", AdminMiddleware, CheckScope, referral);
 route.use("/videoPromotion", AdminMiddleware, CheckScope, videoPromotion);
 route.use("/contentModeration", AdminMiddleware, CheckScope, contentModeration);
 route.use("/copyrightModeration", AdminMiddleware, CheckScope, copyrightModeration);
+route.use("/payment", AdminMiddleware, CheckScope, payment);
 route.use("/", admin);
 
 module.exports = route;

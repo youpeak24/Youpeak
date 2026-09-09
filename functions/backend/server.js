@@ -34,7 +34,9 @@ app.use((req, res, next) => {
 });
 app.use(cors({ origin: true, credentials: true }));
 
-app.use(express.json({ limit: "50mb" }));
+// Payment webhooks need the raw body for signature verification.
+app.use(["/payment/webhook", "/api/payment/webhook"], express.raw({ type: "*/*", limit: "5mb" }));
+app.use(express.json({ limit: "50mb", verify: (r, _res, buf) => { r.rawBody = buf; } }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Morgan logging

@@ -18,11 +18,15 @@ exports.get = async (req, res) => {
     const merged = { ...settingObj, ...advertise };
 
     // ── Strip every server-only secret before sending settings to the client ──
-    // NOTE: payment secrets (stripeSecretKey, razorSecretKey, paypalSecretKey,
-    // cashfreeClientSecret, paystackSecretKey) are still returned because the
-    // Flutter app currently calls the gateways directly. Move payments
-    // server-side (Step 4) and add them to this list.
+    // Payments are now server-side (util/payment.service): the client only needs
+    // the public key ids (razorPayId, stripePublishableKey), never the secrets.
     const SENSITIVE_SETTING_KEYS = [
+      // payment gateway secrets
+      "razorSecretKey", "razorpayKeySecret", "razorpayWebhookSecret",
+      "stripeSecretKey", "stripeTestSecretKey",
+      "paypalSecretKey", "paystackSecretKey",
+      "cashfreeClientSecret", "cashfreeSecretKey", "cashfreeWebhookSecret",
+      "flutterWaveSecretKey", "flutterwaveSecretKey",
       // storage engine selectors / creds
       "storage",
       "doEndpoint", "doAccessKey", "doSecretKey", "doHostname", "doBucketName", "doRegion", "digitalOcean",

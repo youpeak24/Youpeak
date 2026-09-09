@@ -131,6 +131,7 @@ class FirestoreDbService {
       videounlock: "videoUnlocks", videounlocks: "videoUnlocks",
       agencycommission: "agencyCommissions", agencycommissions: "agencyCommissions",
       revenueledger: "revenueLedger",
+      paymenttransaction: "paymentTransactions", paymenttransactions: "paymentTransactions",
     };
     return MAP[key] || name;
   }

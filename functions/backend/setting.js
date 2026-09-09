@@ -70,6 +70,12 @@ module.exports = {
   minWithdrawalRequestedCoin: 50000,  // ₹500
   minConvertCoin: 1000,
 
+  // ── Payments ──
+  // joiningFeeINR: 0 = no joining fee (launch on the tier model). Set > 0 only
+  // after legal sign-off to gate earning/withdrawal behind a one-time fee.
+  joiningFeeINR: 0,
+  paymentGateway: "razorpay",         // razorpay | cashfree | phonepe
+
   // ── Revenue split (% of gross; creator+referrer+platform must sum to 100) ──
   // District-partner cut is taken from the platform share, capped separately.
   revenueSplits: {
