@@ -30,6 +30,7 @@ const HISTORY_TYPE = {
   WATCH_TIME_MILESTONE: 9,
   STAGE2_REFERRAL: 10,
   ENGAGEMENT_WATCH: 11,
+  VIDEO_DISLIKE: 12,
 };
 
 const num = (v, d) => {
@@ -121,10 +122,12 @@ async function getLimits(user) {
  * Credit a reward for one engagement action, enforcing the count cap and the
  * daily coin cap. Loads + resets the user itself.
  *
+ * @param {string} [dedupeVideoId]  if set, only reward once per (user, video, historyType)
  * @returns {Promise<{ok, credited, reason, message, limits, user, counts}>}
- *   reason: "OK" | "PARTIAL_CAP" | "COUNT_LIMIT" | "EARNING_CAP" | "USER_BLOCKED" | "USER_NOT_FOUND"
+ *   reason: "OK" | "PARTIAL_CAP" | "COUNT_LIMIT" | "EARNING_CAP" | "ALREADY_REWARDED"
+ *         | "USER_BLOCKED" | "USER_NOT_FOUND"
  */
-async function creditReward({ userId, kind, historyType, countField, capField, fixedCoins, meta }) {
+async function creditReward({ userId, kind, historyType, countField, capField, fixedCoins, meta, dedupeVideoId }) {
   if (!userId) return { ok: false, reason: "USER_NOT_FOUND", credited: 0, message: "userId is required." };
 
   const user = await db.findById("users", userId);
@@ -134,6 +137,17 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
   await ensureDailyReset(user);
   const limits = await getLimits(user);
   const id = user._id || user.id;
+
+  if (dedupeVideoId) {
+    const already = await db.findOne("histories", { userId: id, videoId: dedupeVideoId, type: historyType });
+    if (already) {
+      return {
+        ok: false, reason: "ALREADY_REWARDED", credited: 0, limits,
+        message: "Already rewarded for this video.",
+        counts: snapshotCounts(user),
+      };
+    }
+  }
 
   const maxCount = capField ? limits[capField] : null;
   const currentCount = countField ? (user[countField] || 0) : 0;
@@ -203,6 +217,34 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
   };
 }
 
+/**
+ * Undo a previously-credited engagement reward (e.g. user un-likes a video).
+ * Subtracts exactly what was credited, deletes the history row, and decrements
+ * the daily count. Never drives a balance negative.
+ */
+async function reverseReward({ userId, videoId, historyType, countField }) {
+  if (!userId) return { ok: false, reversed: 0 };
+  const user = await db.findById("users", userId);
+  if (!user) return { ok: false, reversed: 0 };
+  const id = user._id || user.id;
+
+  const hist = await db.findOne("histories", { userId: id, videoId, type: historyType });
+  if (!hist) return { ok: false, reversed: 0 };
+
+  const amt = Math.max(0, Number(hist.coin) || 0);
+  const updates = {
+    coin: Math.max(0, (user.coin || 0) - amt),
+    engagementRewardCoin: Math.max(0, (user.engagementRewardCoin || 0) - amt),
+    totalRewardCoin: Math.max(0, (user.totalRewardCoin || 0) - amt),
+    dailyEarningCoinsToday: Math.max(0, (user.dailyEarningCoinsToday || 0) - amt),
+  };
+  if (countField) updates[countField] = Math.max(0, (user[countField] || 0) - 1);
+
+  await db.update("users", id, updates);
+  await db.delete("histories", hist._id || hist.id);
+  return { ok: true, reversed: amt };
+}
+
 function snapshotCounts(user) {
   return {
     dailyEarningCoinsToday: user.dailyEarningCoinsToday || 0,
@@ -221,5 +263,6 @@ module.exports = {
   ensureDailyReset,
   getLimits,
   creditReward,
+  reverseReward,
   snapshotCounts,
 };

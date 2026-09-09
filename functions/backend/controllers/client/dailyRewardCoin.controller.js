@@ -9,6 +9,9 @@ const Notification = require("../../models/notification.model");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
+//reward engine (daily caps + coin crediting)
+const rewardEngine = require("../../util/rewardEngine");
+
 //mongoose
 const mongoose = require("../../util/mongooseShim");
 
@@ -88,137 +91,103 @@ exports.getDailyRewardCoinByUser = async (req, res) => {
 //earn coin from daily check In
 exports.handleDailyCheckInReward = async (req, res) => {
   try {
-    const { userId, dailyRewardCoin } = req.query || {};
-
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId) || !dailyRewardCoin || isNaN(dailyRewardCoin)) {
+    const userId = req.query.userId || (req.body && req.body.userId);
+    if (!userId) {
       return res.status(200).json({ status: false, message: "Invalid details!" });
     }
 
-    const objectUserId = new mongoose.Types.ObjectId(userId);
-    const rewardCoin = Number(dailyRewardCoin);
-
     const istNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
-    const todayStr = istNow.toISOString().slice(0, 10);
+    const startOfDay = new Date(istNow); startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(istNow); endOfDay.setHours(23, 59, 59, 999);
+    const dayOfWeek = ((istNow.getDay() + 6) % 7) + 1; // Mon=1 … Sun=7
 
-    const startOfDay = new Date(istNow);
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(istNow);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    // Monday = 1, Sunday = 7
-    const dayOfWeek = ((istNow.getDay() + 6) % 7) + 1;
-
-    console.log("IST Today:", todayStr);
-    console.log("DayOfWeek:", dayOfWeek);
-
-    const [uniqueId, user, userCheckIn, rewardForToday] = await Promise.all([
-      generateHistoryUniqueId(),
-      User.findOne({ _id: objectUserId, isActive: true }).select("_id isBlock coin fcmToken").lean(),
-      CheckIn.findOne({ userId: objectUserId }),
-      DailyRewardCoin.findOne({
-        day: dayOfWeek,
-        dailyRewardCoin: rewardCoin,
-      })
-        .select("_id dailyRewardCoin")
-        .lean(),
+    const [user, userCheckIn, rewardForToday] = await Promise.all([
+      User.findOne({ _id: userId, isActive: true }),
+      CheckIn.findOne({ userId }),
+      // Server decides the amount — the client no longer picks it.
+      DailyRewardCoin.findOne({ day: dayOfWeek }),
     ]);
 
-    if (!user) {
-      return res.status(200).json({ status: false, message: "User not found!" });
-    }
+    if (!user) return res.status(200).json({ status: false, message: "User not found!" });
+    if (user.isBlock) return res.status(200).json({ status: false, message: "You are blocked by the admin." });
+    if (!rewardForToday) return res.status(200).json({ status: false, message: "No reward configured for today." });
 
-    if (user.isBlock) {
-      return res.status(200).json({ status: false, message: "You are blocked by the admin." });
-    }
-
-    if (!rewardForToday) {
-      return res.status(200).json({ status: false, message: "No reward configured for today." });
-    }
-
+    // Already checked in today?
     if (userCheckIn?.lastCheckInDate) {
-      const lastCheckIn = new Date(userCheckIn.lastCheckInDate);
-      if (lastCheckIn >= startOfDay && lastCheckIn <= endOfDay) {
-        return res.status(200).json({ status: false, message: "You have already checked in today." });
+      const last = new Date(userCheckIn.lastCheckInDate);
+      if (last >= startOfDay && last <= endOfDay) {
+        return res.status(200).json({ status: false, message: "You have already checked in today.", isCheckIn: true });
       }
     }
 
-    // Send response early
-    res.status(200).json({
+    const rewardCoin = Math.max(0, Number(rewardForToday.dailyRewardCoin) || 0);
+
+    // Credit via the engine — enforces 1 check-in / day + the daily earning cap.
+    const r = await rewardEngine.creditReward({
+      userId,
+      kind: "checkin",
+      historyType: rewardEngine.HISTORY_TYPE.DAILY_CHECKIN,
+      countField: "dailyCheckInsToday",
+      capField: "maxCheckInsPerDay",
+      fixedCoins: rewardCoin,
+      meta: { day: dayOfWeek },
+    });
+
+    if (!r.ok && r.reason === "COUNT_LIMIT") {
+      return res.status(200).json({ status: false, message: "You have already checked in today.", isCheckIn: true });
+    }
+
+    // Streak accounting
+    let consecutiveDays = 1;
+    if (userCheckIn?.lastCheckInDate) {
+      const lastDate = new Date(userCheckIn.lastCheckInDate);
+      lastDate.setHours(0, 0, 0, 0);
+      const diffDays = Math.floor((startOfDay - lastDate) / 86400000);
+      if (diffDays === 1) consecutiveDays = (userCheckIn.consecutiveDays || 0) + 1;
+    }
+
+    const rewardsCollected = Array.isArray(userCheckIn?.rewardsCollected) ? userCheckIn.rewardsCollected.slice() : [];
+    rewardsCollected.push({
+      day: dayOfWeek,
+      isCheckIn: true,
+      reward: rewardCoin,
+      checkInDate: istNow.toISOString(),
+    });
+
+    const checkInDoc = {
+      userId,
+      lastCheckInDate: istNow.toISOString(),
+      consecutiveDays,
+      rewardsCollected,
+    };
+    if (userCheckIn && (userCheckIn._id || userCheckIn.id)) {
+      await CheckIn.findByIdAndUpdate(userCheckIn._id || userCheckIn.id, { $set: checkInDoc });
+    } else {
+      await CheckIn.create(checkInDoc);
+    }
+
+    if (user.fcmToken && r.ok && r.credited > 0) {
+      try {
+        admin.messaging().send({
+          token: user.fcmToken,
+          notification: {
+            title: "🌟 Daily Check-in Reward Unlocked! 💰",
+            body: `You earned ${r.credited} coins today! Come back tomorrow 🎉`,
+          },
+          data: { type: "DAILY_CHECKIN_REWARD" },
+        }).catch(() => {});
+      } catch (e) {}
+    }
+
+    return res.status(200).json({
       status: true,
       message: "Check-in successful",
       isCheckIn: true,
+      coinsEarned: r.ok ? r.credited : 0,
+      rewardStatus: r.reason,
+      streak: consecutiveDays,
+      totalCoins: r.ok ? r.user.coin : (user.coin || 0),
     });
-
-    let updatedUserCheckIn = userCheckIn;
-    if (!updatedUserCheckIn) {
-      updatedUserCheckIn = new CheckIn({
-        userId: objectUserId,
-        rewardsCollected: [],
-        consecutiveDays: 0,
-      });
-    }
-
-    updatedUserCheckIn.rewardsCollected.push({
-      day: dayOfWeek,
-      isCheckIn: true,
-      reward: rewardForToday.dailyRewardCoin,
-      checkInDate: istNow,
-    });
-
-    let consecutiveDays = 1;
-
-    if (userCheckIn?.lastCheckInDate) {
-      const lastDate = new Date(userCheckIn.lastCheckInDate);
-      const diffDays = Math.floor((startOfDay - new Date(lastDate.setHours(0, 0, 0, 0))) / (1000 * 60 * 60 * 24));
-      if (diffDays === 1) {
-        consecutiveDays = userCheckIn.consecutiveDays + 1;
-      }
-    }
-
-    updatedUserCheckIn.consecutiveDays = consecutiveDays;
-    updatedUserCheckIn.lastCheckInDate = istNow;
-
-    await Promise.all([
-      updatedUserCheckIn.save(),
-      User.updateOne(
-        { _id: objectUserId },
-        {
-          $inc: {
-            coin: rewardCoin,
-            dailyCheckInRewardCoins: rewardCoin,
-            totalRewardCoins: rewardCoin,
-          },
-        },
-      ),
-      History({
-        userId: objectUserId,
-        uniqueId,
-        coin: rewardCoin,
-        type: 1,
-        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }).save(),
-    ]);
-
-    if (user.fcmToken) {
-      const payload = {
-        token: user.fcmToken,
-        notification: {
-          title: "🌟 Daily Check-in Reward Unlocked! 💰",
-          body: `You've earned ${rewardCoin} coins today! Come back tomorrow 🎉`,
-        },
-        data: {
-          type: "DAILY_CHECKIN_REWARD",
-        },
-      };
-
-      try {
-        const adminInstance = await admin;
-        await adminInstance.messaging().send(payload);
-      } catch (err) {
-        console.log("FCM Error:", err);
-      }
-    }
   } catch (error) {
     console.log("ERROR:", error);
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });

@@ -41,6 +41,12 @@ const { generateUniqueVideoId } = require("../../util/generateUniqueVideoId");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
+//reward engine (daily caps + coin crediting)
+const rewardEngine = require("../../util/rewardEngine");
+
+//firestore connection (direct doc updates)
+const db = require("../../util/connection");
+
 //video Unlocked
 exports.unlockPrivateVideo = async (req, res) => {
   try {
@@ -2806,11 +2812,8 @@ exports.likeOrDislikeOfVideo = async (req, res) => {
     const [user, video, existingHistory] = await Promise.all([
       User.findOne({ _id: userId, isActive: true }),
       Video.findById(videoId),
-      LikeHistoryOfVideo.findOne({
-        userId,
-        videoId,
-        $or: [{ likeOrDislike: "like" }, { likeOrDislike: "dislike" }],
-      }),
+      // one like/dislike record per (user, video)
+      LikeHistoryOfVideo.findOne({ userId, videoId }),
     ]);
 
     console.log("👤 User:", user?._id);
@@ -2821,256 +2824,149 @@ exports.likeOrDislikeOfVideo = async (req, res) => {
     if (user.isBlock) return res.status(200).json({ status: false, message: "you are blocked by admin!" });
     if (!video) return res.status(200).json({ status: false, message: "video does not found!" });
 
-    const rewardCoins = settingJSON.likeVideoRewardCoins;
+    let like = Number(video.like) || 0;
+    let dislike = Number(video.dislike) || 0;
+    const setCounts = () => db.update("videos", videoId, { like, dislike });
+    const current = existingHistory?.likeOrDislike || null;
 
     /* ===================== LIKE REMOVE ===================== */
     if (likeOrDislike === "likeremove") {
-      console.log("🗑️ Like remove request");
-
-      if (existingHistory?.likeOrDislike === "like") {
-        console.log("⬇️ Decreasing like count");
-
-        video.like = Math.max(0, video.like - 1);
-
-        const promises = [
-          video.save(),
-          LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" }),
-          LikeHistoryOfVideo.create({
-            userId,
-            videoId,
-            channelId: video.channelId,
-            likeOrDislike: "dislike",
-          }),
-        ];
-
-        const rewardHistory = await History.findOne({
-          userId: user._id,
-          videoId,
-          type: 7,
+      if (current === "like") {
+        like = Math.max(0, like - 1);
+        await setCounts();
+        await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" });
+        const rev = await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
+          countField: "dailyLikesToday",
         });
-
-        if (rewardHistory) {
-          console.log("Check if reward history exists (type: 7)");
-
-          promises.push(
-            User.updateOne(
-              {
-                _id: user._id,
-                coin: { $gte: rewardCoins },
-                engagementRewardCoin: { $gte: rewardCoins },
-                totalRewardCoin: { $gte: rewardCoins },
-              },
-              {
-                $inc: {
-                  coin: -rewardCoins,
-                  engagementRewardCoin: -rewardCoins,
-                  totalRewardCoin: -rewardCoins,
-                },
-              },
-            ),
-            History.deleteOne({
-              userId: user._id,
-              videoId,
-              type: 7,
-            }),
-          );
-
-          console.log("💰 Coins deducted:", rewardCoins);
-        } else {
-          console.log("ℹ️ No reward history found — no coin deduction");
-        }
-
-        await Promise.all(promises);
-
-        console.log("✅ Like removed successfully");
+        if (rev.reversed) console.log("💰 Like coins reversed:", rev.reversed);
       }
-
-      return res.status(200).json({ status: true, message: "Like removed successfully", isLike: false });
+      return res.status(200).json({ status: true, message: "Like removed successfully", isLike: false, like, dislike });
     }
 
     /* ===================== DISLIKE REMOVE ===================== */
     if (likeOrDislike === "dislikeremove") {
-      console.log("🗑️ Dislike remove request");
-
-      if (existingHistory?.likeOrDislike === "dislike") {
-        console.log("⬇️ Decreasing dislike count");
-
-        video.dislike = Math.max(0, video.dislike - 1);
-
-        await Promise.all([video.save(), LikeHistoryOfVideo.deleteOne({ _id: existingHistory._id })]);
-
-        console.log("✅ Dislike removed successfully");
+      if (current === "dislike") {
+        dislike = Math.max(0, dislike - 1);
+        await setCounts();
+        await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" });
+        const rev = await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
+          countField: "dailyDislikesToday",
+        });
+        if (rev.reversed) console.log("💰 Dislike coins reversed:", rev.reversed);
       }
-
-      return res.status(200).json({ status: true, message: "Dislike removed successfully", isLike: false });
+      return res.status(200).json({ status: true, message: "Dislike removed successfully", isLike: false, like, dislike });
     }
 
     /* ===================== LIKE ===================== */
     if (likeOrDislike === "like") {
-      console.log("👍 Like request");
+      if (current === "like") {
+        return res.status(200).json({ status: true, message: "Already liked", isLike: true, like, dislike });
+      }
 
-      if (existingHistory?.likeOrDislike === "like") {
-        console.log("⚠️ Already liked");
-        return res.status(200).json({
-          status: true,
-          message: "Already liked",
-          isLike: true,
+      like += 1;
+      if (current === "dislike") {
+        dislike = Math.max(0, dislike - 1);
+        await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
+          countField: "dailyDislikesToday",
         });
       }
 
-      video.like += 1;
+      await setCounts();
+      await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" });
+      await LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "like" });
 
-      if (existingHistory?.likeOrDislike === "dislike") {
-        video.dislike = Math.max(0, video.dislike - 1);
-        console.log("↔️ Switching dislike → like");
-      }
+      // Coins: server-decided, once per video, capped by maxLikesPerDay + daily earning cap.
+      const likeReward = await rewardEngine.creditReward({
+        userId,
+        kind: "like",
+        historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
+        countField: "dailyLikesToday",
+        capField: "maxLikesPerDay",
+        dedupeVideoId: videoId,
+        meta: { videoId },
+      });
+      const coinsEarned = likeReward.ok ? likeReward.credited : 0;
+      console.log("💰 Like reward:", coinsEarned, likeReward.reason, "→", user?.fullName);
 
-      const uniqueId = await generateHistoryUniqueId();
-
-      await Promise.all([
-        video.save(),
-        LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" }),
-        LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "like" }),
-        User.updateOne(
-          { _id: user._id },
-          {
-            $inc: {
-              coin: rewardCoins,
-              engagementRewardCoin: rewardCoins,
-              totalRewardCoin: rewardCoins,
-            },
-          },
-        ),
-        History.create({
-          userId: user._id,
-          videoId,
-          uniqueId,
-          coin: rewardCoins,
-          type: 7,
-          date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-        }),
-      ]);
-
-      console.log("💰 Coins added:", rewardCoins, "To: ", user?.fullName);
-
-      if (user.fcmToken) {
-        console.log("📲 Sending reward notification to user");
-        const adminPromise = await admin;
-        adminPromise
-          .messaging()
-          .send({
+      if (user.fcmToken && coinsEarned > 0) {
+        try {
+          admin.messaging().send({
             token: user.fcmToken,
-            notification: {
-              title: "👍 You've Earned Coins!",
-              body: `You earned ${rewardCoins} coins for liking a video 🎬💰`,
-            },
+            notification: { title: "👍 You've Earned Coins!", body: `You earned ${coinsEarned} coins for liking a video 🎬💰` },
             data: { type: "ENGAGEMENT_LIKING_REWARD" },
-          })
-          .catch(console.error);
+          }).catch(() => {});
+        } catch (e) {}
       }
 
-      const videoUser = await User.findById(video.userId);
-      if (videoUser?.fcmToken) {
-        console.log("📲 Sending like notification to video owner");
-        const adminPromise = await admin;
-        adminPromise
-          .messaging()
-          .send({
+      try {
+        const videoUser = await User.findById(video.userId);
+        if (videoUser?.fcmToken) {
+          admin.messaging().send({
             token: videoUser.fcmToken,
-            notification: {
-              title: "🌟 New Like!",
-              body: "Someone liked your video 👍🎥",
-            },
+            notification: { title: "🌟 New Like!", body: "Someone liked your video 👍🎥" },
             data: { type: "VIDEO_LIKING_NOTIFICATION" },
-          })
-          .catch(console.error);
-      }
-
-      console.log("✅ Like completed");
+          }).catch(() => {});
+        }
+      } catch (e) {}
 
       return res.status(200).json({
         status: true,
         message: "Video liked successfully",
         isLike: true,
+        like,
+        dislike,
+        coinsEarned,
+        rewardStatus: likeReward.reason,
       });
     }
 
     /* ===================== DISLIKE ===================== */
     if (likeOrDislike === "dislike") {
-      console.log("👎 Dislike request");
+      if (current === "dislike") {
+        return res.status(200).json({ status: true, message: "Already disliked", isLike: false, like, dislike });
+      }
 
-      if (existingHistory?.likeOrDislike === "dislike") {
-        console.log("⚠️ Already disliked");
-        return res.status(200).json({
-          status: true,
-          message: "Already disliked",
-          isLike: false,
+      dislike += 1;
+      if (current === "like") {
+        like = Math.max(0, like - 1);
+        await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
+          countField: "dailyLikesToday",
         });
       }
 
-      video.dislike += 1;
+      await setCounts();
+      await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" });
+      await LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "dislike" });
 
-      if (existingHistory?.likeOrDislike === "like") {
-        video.like = Math.max(0, video.like - 1);
-        console.log("↔️ Switching like → dislike");
-      }
-
-      const promises = [
-        video.save(),
-        LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" }),
-        LikeHistoryOfVideo.create({
-          userId,
-          videoId,
-          channelId: video.channelId,
-          likeOrDislike: "dislike",
-        }),
-      ];
-
-      const rewardHistory = await History.findOne({
-        userId: user._id,
-        videoId,
-        type: 7,
+      // Dislike reward (YP-TC-2026-FINAL: 2 coins; set dislikeVideoRewardCoins=0 in settings to disable)
+      const dislikeReward = await rewardEngine.creditReward({
+        userId,
+        kind: "dislike",
+        historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
+        countField: "dailyDislikesToday",
+        capField: "maxDislikesPerDay",
+        dedupeVideoId: videoId,
+        meta: { videoId },
       });
-
-      if (rewardHistory) {
-        console.log("Check if reward history exists (type: 7)");
-
-        promises.push(
-          User.updateOne(
-            {
-              _id: user._id,
-              coin: { $gte: rewardCoins },
-              engagementRewardCoin: { $gte: rewardCoins },
-              totalRewardCoin: { $gte: rewardCoins },
-            },
-            {
-              $inc: {
-                coin: -rewardCoins,
-                engagementRewardCoin: -rewardCoins,
-                totalRewardCoin: -rewardCoins,
-              },
-            },
-          ),
-          History.deleteOne({
-            userId: user._id,
-            videoId,
-            type: 7,
-          }),
-        );
-
-        console.log("💰 Coins deducted:", rewardCoins);
-      } else {
-        console.log("ℹ️ No reward history found — no coin deduction");
-      }
-
-      await Promise.all(promises);
-
-      console.log("✅ Dislike completed");
+      const coinsEarned = dislikeReward.ok ? dislikeReward.credited : 0;
+      console.log("✅ Dislike completed. Reward:", coinsEarned, dislikeReward.reason);
 
       return res.status(200).json({
         status: true,
         message: "Video disliked successfully",
         isLike: false,
+        like,
+        dislike,
+        coinsEarned,
+        rewardStatus: dislikeReward.reason,
       });
     }
   } catch (error) {

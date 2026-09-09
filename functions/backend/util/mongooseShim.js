@@ -64,11 +64,23 @@ class FirestoreQuery {
   }
 }
 
+// Firestore uses string document ids. This coerces anything Mongoose code
+// throws at `new mongoose.Types.ObjectId(x)` / `mongoose.Types.ObjectId(x)`
+// into that string. When called with `new`, JS ignores a primitive return, so
+// the instance carries toString/valueOf/toJSON that all yield the id string.
 function ObjectId(val) {
-  if (val && typeof val === "object" && val._id) return String(val._id);
-  if (val && typeof val === "object" && val.id) return String(val.id);
-  return val ? String(val) : "custom_id";
+  let s;
+  if (val && typeof val === "object") s = String(val._id || val.id || val.toString?.() || "");
+  else s = val != null && val !== "" ? String(val) : "";
+  if (this instanceof ObjectId) {
+    this._id = s;
+    return this;
+  }
+  return s;
 }
+ObjectId.prototype.toString = function () { return this._id; };
+ObjectId.prototype.valueOf = function () { return this._id; };
+ObjectId.prototype.toJSON = function () { return this._id; };
 ObjectId.isValid = (id) => Boolean(id);
 
 function createFirestoreModel(modelName) {

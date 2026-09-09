@@ -128,6 +128,26 @@ class FirestoreDbService {
     }
   }
 
+  // Normalise a Mongo-style query into flat { field: scalar } equality pairs.
+  // Unwraps ObjectId-like wrappers; drops operator objects ($gt/$in/…) and
+  // $or/$and (not supported by this shim — do those in the controller).
+  _flattenQuery(query) {
+    const out = {};
+    if (!query || typeof query !== "object" || Array.isArray(query)) return out;
+    for (const key of Object.keys(query)) {
+      if (key.startsWith("$")) continue;
+      let v = query[key];
+      if (v === undefined || v === null) continue;
+      if (typeof v === "object") {
+        if (typeof v.toJSON === "function") v = v.toJSON();
+        else if (v._id != null) v = String(v._id);
+        else continue; // operator / nested object — unsupported here
+      }
+      if (typeof v !== "object") out[key] = v;
+    }
+    return out;
+  }
+
   // In-memory sort so we never need Firestore composite indexes.
   // options.sort is a Mongo-style map, e.g. { createdAt: -1, name: 1 }.
   _applySort(rows, sort) {
@@ -152,6 +172,7 @@ class FirestoreDbService {
     const normalizedName = this.normalizeCollectionName(collectionName);
     const hasSort = options.sort && typeof options.sort === "object" &&
       !Array.isArray(options.sort) && Object.keys(options.sort).length > 0;
+    const flatQuery = this._flattenQuery(query);
 
     try {
       const db = this.getDb();
@@ -161,13 +182,8 @@ class FirestoreDbService {
         // Equality filters only. Firestore serves multi-equality queries with
         // no composite index; anything fancier ($gt/$in/$regex/…) is not
         // supported by this shim and must be done in the controller.
-        if (query && typeof query === "object" && !Array.isArray(query)) {
-          Object.keys(query).forEach((key) => {
-            const v = query[key];
-            if (v !== undefined && v !== null && typeof v !== "object") {
-              ref = ref.where(key, "==", v);
-            }
-          });
+        for (const [key, v] of Object.entries(flatQuery)) {
+          ref = ref.where(key, "==", v);
         }
 
         // Only push a DB-side limit when we are NOT sorting in memory
@@ -201,13 +217,8 @@ class FirestoreDbService {
     const collection = localData[normalizedName] || {};
     let results = Object.values(collection);
 
-    if (query && typeof query === "object" && !Array.isArray(query)) {
-      Object.keys(query).forEach((key) => {
-        const v = query[key];
-        if (v !== undefined && v !== null && typeof v !== "object") {
-          results = results.filter((item) => item[key] === v);
-        }
-      });
+    for (const [key, v] of Object.entries(flatQuery)) {
+      results = results.filter((item) => item[key] === v);
     }
 
     if (hasSort) results = this._applySort(results, options.sort);
