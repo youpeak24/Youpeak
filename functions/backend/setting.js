@@ -81,6 +81,23 @@ module.exports = {
   joiningFeeINR: 0,
   paymentGateway: "razorpay",         // razorpay | cashfree | phonepe
 
+  // ── Content moderation (IT Rules 2021) ──
+  moderationEnabled: true,
+  reportAutoHoldThreshold: 5,          // reports within the window -> pending_review
+  reportAutoHoldWindowHours: 24,
+  grievanceSlaHours: 36,
+  grievanceOfficerName: "Grievance Officer",
+  grievanceEmail: "grievance@youpeak.in",
+  grievancePhone: "",
+  grievanceAddress: "Trichy, Tamil Nadu, India",
+  companyLegalName: "Youpeak Digital Solutions Pvt Ltd",
+
+  // ── Copyright / duplicate detection (needs the fingerprint worker) ──
+  copyrightEngineEnabled: false,       // turn on once a worker is deployed
+  copyrightAudioMatchThreshold: 0.85,
+  copyrightFrameHammingThreshold: 10,
+  copyrightMinFrameMatches: 3,
+
   // ── Revenue split (% of gross; creator+referrer+platform must sum to 100) ──
   // District-partner cut is taken from the platform share, capped separately.
   revenueSplits: {

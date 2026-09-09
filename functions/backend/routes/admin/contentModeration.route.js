@@ -11,5 +11,6 @@ route.post("/moderate", checkAccess(), contentModerationController.moderateVideo
 route.get("/keywords", checkAccess(), contentModerationController.getKeywords);
 route.post("/keywords/add", checkAccess(), contentModerationController.addKeyword);
 route.delete("/keywords/delete", checkAccess(), contentModerationController.deleteKeyword);
+route.post("/rescreen", checkAccess(), contentModerationController.rescreenVideo);
 
 module.exports = route;

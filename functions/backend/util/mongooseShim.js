@@ -52,6 +52,136 @@ function buildUpdatePayload(existing, updateData) {
   return out;
 }
 
+// Best-effort in-memory aggregation pipeline. Supports the stages the YouPeak
+// feed/report controllers actually use: $match (equality + $ne/$gte/$lte/$in),
+// $sort, $skip, $limit, $count, $facet, $group (basic), $project (basic),
+// $addFields; $lookup / $unwind are skipped (populate is done in the controller).
+function matchStage(rows, cond) {
+  return rows.filter((item) => {
+    for (const [k, v] of Object.entries(cond || {})) {
+      if (k === "$or") { if (!v.some((c) => matchStage([item], c).length)) return false; continue; }
+      if (k === "$and") { if (!v.every((c) => matchStage([item], c).length)) return false; continue; }
+      const val = item[k];
+      if (v && typeof v === "object" && !Array.isArray(v)) {
+        for (const [op, t] of Object.entries(v)) {
+          if (op === "$ne" && !(val !== t)) return false;
+          if (op === "$eq" && !(val === t)) return false;
+          if (op === "$gte" && !(val >= t)) return false;
+          if (op === "$gt" && !(val > t)) return false;
+          if (op === "$lte" && !(val <= t)) return false;
+          if (op === "$lt" && !(val < t)) return false;
+          if (op === "$in" && !(Array.isArray(t) && t.includes(val))) return false;
+          if (op === "$nin" && Array.isArray(t) && t.includes(val)) return false;
+          if (op === "$exists" && (t ? val === undefined : val !== undefined)) return false;
+        }
+      } else if (val !== v) {
+        return false;
+      }
+    }
+    return true;
+  });
+}
+
+function runPipeline(rows, pipeline) {
+  let results = Array.isArray(rows) ? rows.slice() : [];
+  for (const stage of pipeline || []) {
+    if (stage.$match) results = matchStage(results, stage.$match);
+    else if (stage.$sort) {
+      const keys = Object.keys(stage.$sort);
+      results.sort((a, b) => {
+        for (const k of keys) {
+          const dir = stage.$sort[k] === -1 ? -1 : 1;
+          if (a[k] === b[k]) continue;
+          return (a[k] > b[k] ? 1 : -1) * dir;
+        }
+        return 0;
+      });
+    } else if (stage.$skip) results = results.slice(stage.$skip);
+    else if (stage.$limit) results = results.slice(0, stage.$limit);
+    else if (stage.$count) results = [{ [stage.$count]: results.length }];
+    else if (stage.$facet) {
+      const out = {};
+      for (const [name, sub] of Object.entries(stage.$facet)) out[name] = runPipeline(results, sub);
+      results = [out];
+    } else if (stage.$addFields || stage.$set) {
+      const add = stage.$addFields || stage.$set;
+      results = results.map((r) => ({ ...r, ...resolveComputed(add, r) }));
+    } else if (stage.$project) {
+      const p = stage.$project;
+      const incl = Object.entries(p).filter(([, v]) => v === 1 || v === true).map(([k]) => k);
+      const excl = Object.entries(p).filter(([, v]) => v === 0 || v === false).map(([k]) => k);
+      results = results.map((r) => {
+        if (incl.length) {
+          const o = {};
+          for (const k of incl) if (r[k] !== undefined) o[k] = r[k];
+          if (p._id !== 0) o._id = r._id;
+          return { ...o, ...resolveComputed(p, r) };
+        }
+        const o = { ...r };
+        for (const k of excl) delete o[k];
+        return o;
+      });
+    } else if (stage.$group) {
+      results = groupStage(results, stage.$group);
+    }
+    // $lookup / $unwind: skipped — controllers populate manually
+  }
+  return results;
+}
+
+function resolveComputed(spec, doc) {
+  const out = {};
+  for (const [k, v] of Object.entries(spec)) {
+    if (v && typeof v === "object" && v.$ifNull) {
+      const [expr, fallback] = v.$ifNull;
+      const val = typeof expr === "string" && expr.startsWith("$") ? doc[expr.slice(1)] : expr;
+      out[k] = val === undefined || val === null ? fallback : val;
+    } else if (typeof v === "string" && v.startsWith("$")) {
+      out[k] = doc[v.slice(1)];
+    } else if (v === 1 || v === 0 || v === true || v === false) {
+      /* projection flag, not a computed field */
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+function groupStage(rows, spec) {
+  const idExpr = spec._id;
+  const keyOf = (r) => {
+    if (idExpr === null) return "__all__";
+    if (typeof idExpr === "string" && idExpr.startsWith("$")) return r[idExpr.slice(1)];
+    return JSON.stringify(idExpr);
+  };
+  const groups = new Map();
+  for (const r of rows) {
+    const k = keyOf(r);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(r);
+  }
+  const out = [];
+  for (const [k, items] of groups) {
+    const doc = { _id: k === "__all__" ? null : k };
+    for (const [field, acc] of Object.entries(spec)) {
+      if (field === "_id") continue;
+      const [op, arg] = Object.entries(acc)[0];
+      const pick = (r) => (typeof arg === "string" && arg.startsWith("$") ? r[arg.slice(1)] : arg);
+      if (op === "$sum") doc[field] = items.reduce((s, r) => s + (Number(pick(r)) || (arg === 1 ? 1 : 0)), 0);
+      else if (op === "$count") doc[field] = items.length;
+      else if (op === "$avg") doc[field] = items.reduce((s, r) => s + (Number(pick(r)) || 0), 0) / (items.length || 1);
+      else if (op === "$max") doc[field] = Math.max(...items.map((r) => Number(pick(r)) || 0));
+      else if (op === "$min") doc[field] = Math.min(...items.map((r) => Number(pick(r)) || 0));
+      else if (op === "$first") doc[field] = pick(items[0]);
+      else if (op === "$last") doc[field] = pick(items[items.length - 1]);
+      else if (op === "$push") doc[field] = items.map(pick);
+      else if (op === "$addToSet") doc[field] = Array.from(new Set(items.map(pick)));
+    }
+    out.push(doc);
+  }
+  return out;
+}
+
 // Evaluate operator conditions in a query against a doc (e.g. { coin: { $gte: 100 } }).
 // Returns false if any guard fails — used so updateOne won't run when the doc
 // no longer satisfies a precondition (e.g. insufficient balance).
@@ -304,23 +434,8 @@ function createFirestoreModel(modelName) {
   };
 
   ModelConstructor.aggregate = async function (pipeline = []) {
-    let results = await firestoreDb.find(collectionName, {});
-    for (const stage of pipeline) {
-      if (stage.$match) {
-        results = results.filter(item => {
-          return Object.keys(stage.$match).every(k => item[k] === stage.$match[k]);
-        });
-      }
-      if (stage.$sort) {
-        const key = Object.keys(stage.$sort)[0];
-        const dir = stage.$sort[key] === -1 ? -1 : 1;
-        results.sort((a, b) => (a[key] > b[key] ? dir : -dir));
-      }
-      if (stage.$limit) {
-        results = results.slice(0, stage.$limit);
-      }
-    }
-    return results;
+    const seed = await firestoreDb.find(collectionName, {});
+    return runPipeline(seed, pipeline);
   };
 
   ModelConstructor.distinct = async function (field, query = {}) {

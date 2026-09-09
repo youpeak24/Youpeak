@@ -132,6 +132,12 @@ class FirestoreDbService {
       agencycommission: "agencyCommissions", agencycommissions: "agencyCommissions",
       revenueledger: "revenueLedger",
       paymenttransaction: "paymentTransactions", paymenttransactions: "paymentTransactions",
+      report: "reports", reports: "reports",
+      keywordblacklist: "KeywordBlacklist",
+      contentfingerprint: "contentFingerprints", contentfingerprints: "contentFingerprints",
+      fingerprintqueue: "fingerprintQueue",
+      grievance: "grievances", grievances: "grievances",
+      fraudalert: "fraudAlerts", fraudalerts: "fraudAlerts",
     };
     return MAP[key] || name;
   }

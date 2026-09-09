@@ -90,6 +90,9 @@ exports.applyEconomyDefaults = async (req, res) => {
       "referralStage2HoldHours", "referralStage2WatchMinutes", "referralStage2WindowDays",
       "maxReferralsPerDayPerUser", "referralDeviceDedup", "paidTierReferralPercentage",
       "joiningFeeINR", "paymentGateway",
+      "moderationEnabled", "reportAutoHoldThreshold", "reportAutoHoldWindowHours",
+      "grievanceSlaHours", "copyrightEngineEnabled", "copyrightAudioMatchThreshold",
+      "copyrightFrameHammingThreshold", "copyrightMinFrameMatches",
     ];
     const patch = {};
     for (const k of KEYS) if (defaults[k] !== undefined) patch[k] = defaults[k];

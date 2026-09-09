@@ -53,6 +53,10 @@ const revenueSplit = require("../../util/revenueSplit.service");
 //cloudflare stream pipeline
 const videoPipeline = require("../../util/videoPipeline.service");
 
+//content moderation + copyright
+const moderation = require("../../util/moderation.service");
+const copyright = require("../../util/copyright.service");
+
 //video Unlocked
 exports.unlockPrivateVideo = async (req, res) => {
   try {
@@ -146,20 +150,26 @@ exports.unlockPrivateVideo = async (req, res) => {
       date: new Date().toISOString(),
     });
 
-    // 2. split the unlock revenue: creator / referrer / platform / district partner
-    const settlement = await revenueSplit.settleRevenue({
-      sourceType: "videoUnlock",
-      grossCoins: unlockCost,
-      creatorId: String(video.userId),
-      buyerId: String(userId),
-      referrerOf: "creator",
-      videoId: String(videoId),
-      agencyContext: {
-        state: freshBuyer.state || "",
-        district: freshBuyer.district || "",
-        userId: String(userId),
-      },
-    });
+    // 2. split the unlock revenue — but a copyright-flagged / under-review video
+    // earns nothing for the creator; the platform holds the full amount.
+    let settlement;
+    if (moderation.isMonetizable(video)) {
+      settlement = await revenueSplit.settleRevenue({
+        sourceType: "videoUnlock",
+        grossCoins: unlockCost,
+        creatorId: String(video.userId),
+        buyerId: String(userId),
+        referrerOf: "creator",
+        videoId: String(videoId),
+        agencyContext: {
+          state: freshBuyer.state || "",
+          district: freshBuyer.district || "",
+          userId: String(userId),
+        },
+      });
+    } else {
+      settlement = { creatorCoins: 0, referrerCoins: 0, platformCoins: unlockCost, demonetised: true };
+    }
 
     res.status(200).json({
       status: true,
@@ -477,8 +487,27 @@ exports.createVideo = async (req, res) => {
     }
     await db.update("users", user._id || user.id, userChanges);
     const savedVideo = await video.save();
+    const newVideoId = savedVideo._id || savedVideo.id || video._id;
 
-    const data = await Video.findById(savedVideo._id || savedVideo.id || video._id);
+    // Content moderation — keyword-screen the metadata (transcript is added later
+    // by the worker); may push the video to pending_review.
+    let moderationResult = { flagged: false };
+    try {
+      moderationResult = await moderation.screenVideo({
+        videoId: newVideoId,
+        title: video.title, description: video.description,
+        hashTags: video.hashTag || [],
+      });
+    } catch (e) { console.error("moderation.screenVideo:", e.message); }
+
+    // Copyright — enqueue for fingerprinting (a worker processes the queue).
+    try {
+      await copyright.queueForFingerprint({
+        videoId: newVideoId, streamUid: video.streamUid || null, videoUrl: video.rawVideoUrl || video.videoUrl,
+      });
+    } catch (e) { /* engine disabled or no worker */ }
+
+    const data = await Video.findById(newVideoId);
     if (data && data.soundListId) {
       try {
         const sl = await SoundList.findById(data.soundListId);
@@ -491,8 +520,11 @@ exports.createVideo = async (req, res) => {
 
     res.status(200).json({
       status: true,
-      message: "Normal video or shorts has been uploaded by the user!",
+      message: moderationResult.flagged
+        ? "Video uploaded — it is under review and will go live once approved."
+        : "Normal video or shorts has been uploaded by the user!",
       video: data,
+      underReview: !!moderationResult.flagged,
     });
 
     //if user don't have channel then send notification to that user
@@ -636,6 +668,8 @@ exports.shortsOfUser = async (req, res) => {
           isActive: true,
           scheduleType: 2,
           visibilityType: 1,
+          moderationStatus: { $nin: ["pending_review", "rejected"] },
+          isCopyrightFlagged: { $ne: true },
           videoType: 2,
         },
       },
@@ -820,6 +854,8 @@ exports.getShorts = async (req, res) => {
           isActive: true,
           scheduleType: 2,
           visibilityType: 1,
+          moderationStatus: { $nin: ["pending_review", "rejected"] },
+          isCopyrightFlagged: { $ne: true },
           videoType: 2,
         },
       },
@@ -1351,6 +1387,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
             },
           },
@@ -1555,6 +1593,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
             },
           },
@@ -1769,6 +1809,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
             },
           },
@@ -1957,6 +1999,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
             },
           },
@@ -2152,6 +2196,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
             },
           },
@@ -2341,6 +2387,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
             },
           },
@@ -3245,6 +3293,8 @@ exports.search = async (req, res) => {
             isActive: true,
             scheduleType: 2,
             visibilityType: 1,
+            moderationStatus: { $nin: ["pending_review", "rejected"] },
+            isCopyrightFlagged: { $ne: true },
             $or: [{ title: { $regex: req.body.searchString?.trim(), $options: "i" } }, { description: { $regex: req.body.searchString?.trim(), $options: "i" } }],
           },
         },
@@ -3727,6 +3777,8 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
               $or: [{ title: { $regex: searchString, $options: "i" } }, { description: { $regex: searchString, $options: "i" } }],
             },
@@ -3898,6 +3950,8 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
               $or: [{ title: { $regex: searchString, $options: "i" } }, { description: { $regex: searchString, $options: "i" } }],
             },
