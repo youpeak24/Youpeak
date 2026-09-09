@@ -1,5 +1,9 @@
 "use strict";
 
+const cloudflareStorageService = require("../../util/cloudflareStorage.service");
+const firebaseSyncService = require("../../util/firebaseSync.service");
+
+// uploadContent - Strict Routing (Videos/Shorts → Cloudflare R2, Others → Firebase)
 exports.uploadContent = async (req, res) => {
   try {
     if (!req.body?.folderStructure) {
@@ -10,34 +14,65 @@ exports.uploadContent = async (req, res) => {
       return res.status(200).json({ status: false, message: "Please upload valid files." });
     }
 
-    const settings = global.settingJSON || {};
-    const storage = settings.storage || {};
+    let url = "";
     const fileName = req.generatedFileName || req.file.filename || req.file.key;
     const folder = req.body.folderStructure;
+    const isVideo = req.file.storageProvider === "cloudflareR2" ||
+      (req.file.mimetype && req.file.mimetype.startsWith("video/")) ||
+      /\.(mp4|mov|m3u8|webm|avi|mkv|flv|wmv|3gp)$/i.test(req.file.originalname || fileName);
 
-    let url = "";
+    if (isVideo) {
+      // 📹 VIDEOS & SHORTS ONLY → Cloudflare R2 Storage
+      console.log(`🎬 Video file detected (${req.file.originalname}). Uploading exclusively to Cloudflare R2...`);
 
-    if (storage.cloudflareR2 || settings.r2AccountId || settings.r2AccessKeyId) {
-      // Cloudflare R2 CDN Public URL
-      const r2Domain = settings.r2PublicDomain || settings.r2CdnUrl || "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev";
-      const cleanDomain = r2Domain.replace(/\/$/, "");
-      url = `${cleanDomain}/${folder}/${fileName}`;
-    } else if (storage.digitalOcean) {
-      url = `${settings.doEndpoint}/${folder}/${fileName}`;
-    } else if (storage.awsS3) {
-      url = `${settings.awsEndpoint}/${folder}/${fileName}`;
+      const r2Url = await cloudflareStorageService.uploadToCloudflareR2(
+        req.file.path,
+        `${folder}/${fileName}`,
+        req.file.mimetype
+      );
+      url = r2Url || `${process.env.baseURL || ""}/uploads/${fileName}`;
+
+      // Save video metadata in Firebase Firestore
+      await firebaseSyncService.syncMetadata("videos_metadata", fileName, {
+        fileName,
+        url,
+        storageProvider: "Cloudflare",
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        folderStructure: folder,
+      });
+
+      return res.status(200).json({
+        status: true,
+        message: "Video uploaded exclusively to Cloudflare R2!",
+        storageProvider: "Cloudflare",
+        url,
+      });
     } else {
-      // Firebase / Local fallback
-      url = req.file.location || `https://youpeak-9ff65.web.app/uploads/${fileName}`;
-    }
+      // 📄 ALL OTHER DATA (images, thumbnails, etc.) → Firebase / Local
+      console.log(`📄 Non-video data detected (${req.file.originalname}). Keeping on Firebase/Local...`);
+      url = `${process.env.baseURL || ""}/uploads/${fileName}`;
 
-    return res.status(200).json({
-      status: true,
-      message: "File uploaded successfully",
-      url,
-    });
+      // Sync metadata to Firebase Firestore
+      await firebaseSyncService.syncMetadata("app_assets", fileName, {
+        fileName,
+        url,
+        storageProvider: "Firebase",
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        folderStructure: folder,
+      });
+
+      return res.status(200).json({
+        status: true,
+        message: "Asset uploaded to Firebase/Local storage!",
+        storageProvider: "Firebase",
+        url,
+      });
+    }
   } catch (error) {
     console.error("Upload Error:", error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
   }
 };
+

@@ -33,11 +33,29 @@ try {
   }
 } catch (e) {}
 
+/**
+ * Check if a file is a video based on MIME type or extension.
+ * Videos & Shorts → Cloudflare R2
+ * Everything else → Local/Firebase
+ */
+const isVideoFile = (file) => {
+  if (!file) return false;
+  if (file.mimetype && file.mimetype.startsWith("video/")) return true;
+  const videoExts = /\.(mp4|mov|m3u8|webm|avi|mkv|flv|wmv|3gp)$/i;
+  if (videoExts.test(file.originalname || "")) return true;
+  return false;
+};
 
-const getActiveStorage = () => {
+const getActiveStorage = (file) => {
   const settings = global.settingJSON || {};
   const storage = settings.storage || {};
-  if (storage.cloudflareR2 || settings.r2AccountId || settings.r2AccessKeyId) return "cloudflareR2";
+
+  // Only route VIDEO files to Cloudflare R2. All other files go to local/Firebase.
+  if (isVideoFile(file)) {
+    if (storage.cloudflareR2 || settings.r2AccountId || settings.r2AccessKeyId) return "cloudflareR2";
+  }
+
+  // Non-video files always go to local storage (for Firebase sync)
   if (storage.awsS3) return "aws";
   if (storage.digitalOcean) return "digitalocean";
   return "local";
@@ -46,79 +64,8 @@ const getActiveStorage = () => {
 const uploadMiddleware = (req, res, next) => {
   try {
     const settings = global.settingJSON || {};
-    const activeStorage = getActiveStorage();
 
-    if (activeStorage === "cloudflareR2") {
-      const r2Client = createS3Instance(
-        settings.r2Endpoint || `https://${settings.r2AccountId}.r2.cloudflarestorage.com`,
-        "auto",
-        settings.r2AccessKeyId,
-        settings.r2SecretAccessKey
-      );
-
-      const r2Storage = multerS3({
-        s3: r2Client,
-        bucket: settings.r2BucketName || "youpeak-videos",
-        key: (req, file, cb) => {
-          const folder = req.body.folderStructure || "Videos";
-          if (!req.generatedFileName) {
-            req.generatedFileName = generateFileName(file);
-          }
-          cb(null, `${folder}/${req.generatedFileName}`);
-        },
-      });
-
-      return multer({ storage: r2Storage }).single("content")(req, res, next);
-    }
-
-    if (activeStorage === "digitalocean") {
-      const doClient = createS3Instance(
-        settings.doHostname,
-        settings.doRegion,
-        settings.doAccessKey,
-        settings.doSecretKey
-      );
-
-      const doStorage = multerS3({
-        s3: doClient,
-        bucket: settings.doBucketName,
-        acl: "public-read",
-        key: (req, file, cb) => {
-          const folder = req.body.folderStructure || "Videos";
-          if (!req.generatedFileName) {
-            req.generatedFileName = generateFileName(file);
-          }
-          cb(null, `${folder}/${req.generatedFileName}`);
-        },
-      });
-
-      return multer({ storage: doStorage }).single("content")(req, res, next);
-    }
-
-    if (activeStorage === "aws") {
-      const awsClient = createS3Instance(
-        settings.awsHostname,
-        settings.awsRegion,
-        settings.awsAccessKey,
-        settings.awsSecretKey
-      );
-
-      const awsStorage = multerS3({
-        s3: awsClient,
-        bucket: settings.awsBucketName,
-        key: (req, file, cb) => {
-          const folder = req.body.folderStructure || "Videos";
-          if (!req.generatedFileName) {
-            req.generatedFileName = generateFileName(file);
-          }
-          cb(null, `${folder}/${req.generatedFileName}`);
-        },
-      });
-
-      return multer({ storage: awsStorage }).single("content")(req, res, next);
-    }
-
-    // Default Local storage
+    // Step 1: Always receive the file to local disk first
     const localStorage = multer.diskStorage({
       destination: (req, file, cb) => cb(null, localStoragePath),
       filename: (req, file, cb) => {
@@ -129,7 +76,34 @@ const uploadMiddleware = (req, res, next) => {
       },
     });
 
-    return multer({ storage: localStorage }).single("content")(req, res, next);
+    const localUpload = multer({ storage: localStorage }).single("content");
+
+    localUpload(req, res, async (err) => {
+      if (err) {
+        console.error("Multer local upload error:", err);
+        return next(err);
+      }
+
+      if (!req.file) {
+        // No file uploaded, let the controller handle the error
+        return next();
+      }
+
+      // Step 2: Determine storage based on file type
+      const activeStorage = getActiveStorage(req.file);
+
+      if (activeStorage === "cloudflareR2") {
+        // 📹 VIDEO files ONLY → Upload to Cloudflare R2 from local disk
+        console.log(`🎬 Video detected: ${req.file.originalname} → Routing to Cloudflare R2`);
+        req.file.storageProvider = "cloudflareR2";
+      } else {
+        // 📄 NON-VIDEO files → Stay on local disk (Firebase sync in controller)
+        console.log(`📄 Non-video detected: ${req.file.originalname} → Routing to Local/Firebase`);
+        req.file.storageProvider = "local";
+      }
+
+      next();
+    });
   } catch (error) {
     console.error("Upload Middleware Error:", error);
     next(error);

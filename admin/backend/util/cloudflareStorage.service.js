@@ -7,12 +7,12 @@ const fs = require("fs");
  */
 class CloudflareStorageService {
   constructor() {
-    this.accountId = process.env.CLOUDFLARE_ACCOUNT_ID || global.settingJSON?.cloudflareAccountId || "";
+    this.accountId = process.env.CLOUDFLARE_ACCOUNT_ID || global.settingJSON?.r2AccountId || global.settingJSON?.cloudflareAccountId || "";
     this.apiToken = process.env.CLOUDFLARE_API_TOKEN || global.settingJSON?.cloudflareApiToken || "";
-    this.r2AccessKey = process.env.CLOUDFLARE_R2_ACCESS_KEY || global.settingJSON?.cloudflareR2AccessKey || "";
-    this.r2SecretKey = process.env.CLOUDFLARE_R2_SECRET_KEY || global.settingJSON?.cloudflareR2SecretKey || "";
-    this.r2BucketName = process.env.CLOUDFLARE_R2_BUCKET || global.settingJSON?.cloudflareR2Bucket || "youpeak-videos";
-    this.r2PublicDomain = process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN || global.settingJSON?.cloudflareR2PublicDomain || "";
+    this.r2AccessKey = process.env.CLOUDFLARE_R2_ACCESS_KEY || global.settingJSON?.r2AccessKeyId || global.settingJSON?.cloudflareR2AccessKey || "";
+    this.r2SecretKey = process.env.CLOUDFLARE_R2_SECRET_KEY || global.settingJSON?.r2SecretAccessKey || global.settingJSON?.cloudflareR2SecretKey || "";
+    this.r2BucketName = process.env.CLOUDFLARE_R2_BUCKET || global.settingJSON?.r2BucketName || global.settingJSON?.cloudflareR2Bucket || "youpeak-videos";
+    this.r2PublicDomain = process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN || global.settingJSON?.r2PublicDomain || global.settingJSON?.r2CdnUrl || global.settingJSON?.cloudflareR2PublicDomain || "";
   }
 
   /**

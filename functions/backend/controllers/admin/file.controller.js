@@ -1,18 +1,7 @@
 const cloudflareStorageService = require("../../util/cloudflareStorage.service");
 const firebaseSyncService = require("../../util/firebaseSync.service");
 
-const getActiveStorage = async () => {
-  const settings = settingJSON;
-
-  if (settings?.storage?.cloudflare) return "cloudflare";
-  if (settings?.storage?.local) return "local";
-  if (settings?.storage?.awsS3) return "aws";
-  if (settings?.storage?.digitalOcean) return "digitalocean";
-
-  return "local";
-};
-
-// uploadContent - Strict Routing Router (Videos -> Cloudflare, Others -> Firebase)
+// uploadContent - Strict Routing Router (Videos/Shorts -> Cloudflare R2, Others -> Firebase)
 exports.uploadContent = async (req, res) => {
   try {
     if (!req.body?.folderStructure) {
@@ -24,18 +13,21 @@ exports.uploadContent = async (req, res) => {
     }
 
     let url = "";
-    const fileName = req.generatedFileName;
-    const isVideo = req.file.mimetype.startsWith("video/") || /\.(mp4|mov|m3u8|webm|avi|mkv)$/i.test(req.file.originalname || fileName);
+    const fileName = req.generatedFileName || req.file.filename || req.file.key;
+    const folder = req.body.folderStructure;
+    const isVideo = req.file.storageProvider === "cloudflareR2" ||
+      (req.file.mimetype && req.file.mimetype.startsWith("video/")) ||
+      /\.(mp4|mov|m3u8|webm|avi|mkv|flv|wmv|3gp)$/i.test(req.file.originalname || fileName);
 
     if (isVideo) {
-      // 📹 VIDEOS ONLY -> Cloudflare Stream / R2 Storage
-      console.log(`🎬 Video file detected (${req.file.originalname}). Uploading exclusively to Cloudflare...`);
+      // 📹 VIDEOS & SHORTS ONLY -> Cloudflare R2 Storage
+      console.log(`🎬 Video file detected (${req.file.originalname}). Uploading exclusively to Cloudflare R2...`);
       const r2Url = await cloudflareStorageService.uploadToCloudflareR2(
         req.file.path,
-        `${req.body.folderStructure}/${fileName}`,
+        `${folder}/${fileName}`,
         req.file.mimetype
       );
-      url = r2Url || `${process.env.baseURL}/uploads/${fileName}`;
+      url = r2Url || `${process.env.baseURL || ""}/uploads/${fileName}`;
 
       // Save video metadata record in Firebase Firestore
       await firebaseSyncService.syncMetadata("videos_metadata", fileName, {
@@ -44,19 +36,19 @@ exports.uploadContent = async (req, res) => {
         storageProvider: "Cloudflare",
         mimeType: req.file.mimetype,
         size: req.file.size,
-        folderStructure: req.body.folderStructure,
+        folderStructure: folder,
       });
 
       return res.status(200).json({
         status: true,
-        message: "Video uploaded exclusively to Cloudflare!",
+        message: "Video uploaded exclusively to Cloudflare R2!",
         storageProvider: "Cloudflare",
         url,
       });
     } else {
-      // 📄 ALL OTHER DATA -> Firebase Storage & Firestore Sync
-      console.log(`📄 Non-video data detected (${req.file.originalname}). Uploading exclusively to Firebase...`);
-      url = `${process.env.baseURL}/uploads/${fileName}`;
+      // 📄 ALL OTHER DATA -> Firebase / Local Storage
+      console.log(`📄 Non-video data detected (${req.file.originalname}). Keeping on Firebase/Local...`);
+      url = `${process.env.baseURL || ""}/uploads/${fileName}`;
 
       await firebaseSyncService.syncMetadata("app_assets", fileName, {
         fileName,
@@ -64,12 +56,12 @@ exports.uploadContent = async (req, res) => {
         storageProvider: "Firebase",
         mimeType: req.file.mimetype,
         size: req.file.size,
-        folderStructure: req.body.folderStructure,
+        folderStructure: folder,
       });
 
       return res.status(200).json({
         status: true,
-        message: "Text/Asset metadata synced exclusively to Firebase!",
+        message: "Asset uploaded to Firebase/Local storage!",
         storageProvider: "Firebase",
         url,
       });
@@ -96,4 +88,5 @@ exports.getCloudflareStreamUploadUrl = async (req, res) => {
     return res.status(500).json({ status: false, message: error.message || "Server Error" });
   }
 };
+
 
