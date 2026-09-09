@@ -36,7 +36,8 @@ module.exports = {
   adDisplayIndex: 2,
   privateKey: {},
   // ── Engagement / earning limits (YP-TC-2026-FINAL + strategy call) ──
-  coinToInrRate: 100,          // 100 coins = ₹1
+  coinToInrRate: 0.01,        // INR per coin (100 coins = ₹1)
+  coinsPerInr: 100,           // coins per ₹1 (used for coin->INR conversion)
   maxAdPerDay: 20,             // hard cap, all tiers
   dailyMaxLikes: 5,            // free tier
   dailyMaxComments: 2,         // free tier
@@ -57,6 +58,26 @@ module.exports = {
   watchingVideoRewardCoins: 2,   // per video watch (non-milestone)
   minWithdrawalRequestedCoin: 50000,  // ₹500
   minConvertCoin: 1000,
+
+  // ── Revenue split (% of gross; creator+referrer+platform must sum to 100) ──
+  // District-partner cut is taken from the platform share, capped separately.
+  revenueSplits: {
+    videoUnlock:     { creator: 80, referrer: 10, platform: 10 },
+    peakBoost:       { creator: 80, referrer: 0,  platform: 20 },
+    coinPurchase:    { creator: 0,  referrer: 10, platform: 90 },
+    premiumPurchase: { creator: 0,  referrer: 10, platform: 90 },
+    tierUpgrade:     { creator: 0,  referrer: 10, platform: 90 },
+    adRevenue:       { creator: 55, referrer: 0,  platform: 45 }, // creator% overridden by VIP tier
+  },
+  districtPartnerRates: {
+    videoUnlock: 10,        // capped by districtPartnerUnlockCapINR
+    tierUpgrade: 20,        // VIP creator pass sale
+    localBusinessAds: 30,
+    adRevenue: 10,
+    coinPurchase: 0,
+    premiumPurchase: 0,
+  },
+  districtPartnerUnlockCapINR: 1000,
   isWatermarkOn: false,
   watermarkIcon: "",
   watermarkType: 2,

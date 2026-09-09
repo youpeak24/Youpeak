@@ -56,23 +56,15 @@ const db = require("./util/connection");
 //fs
 const fs = require("fs");
 
-//settingJson
+//settings: static defaults + the admin-managed Firestore settings doc
 const settingJson = require("./setting");
+const { loadSettings, settingsMiddleware } = require("./util/loadSettings");
+global.settingJSON = { ...settingJson };
+loadSettings(true).catch(() => {}); // warm it on boot
+global.updateSettingFile = (settingData) => { global.settingJSON = settingData; };
 
-const os = require("os");
-
-//Declare global variable
-global.settingJSON = settingJson;
-
-//Declare the function as a global variable to update the setting.js file
-global.updateSettingFile = (settingData) => {
-  try {
-    const settingJSON = JSON.stringify(settingData, null, 2);
-    const tmpFile = path.join(os.tmpdir(), "setting.js");
-    fs.writeFileSync(tmpFile, `module.exports = ${settingJSON};`, "utf8");
-  } catch (e) {}
-  global.settingJSON = settingData;
-};
+// keep global.settingJSON fresh (respects SETTINGS_TTL_MS) before each request
+app.use(settingsMiddleware);
 
 const routes = require("./routes/index");
 app.use("/", routes);

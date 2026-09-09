@@ -46,21 +46,13 @@ try {
 // Firebase Admin (Firestore) — single canonical init
 require("./util/firebaseAdmin");
 
-// Global settings initialization
-try {
-  const settingJson = require("./setting");
-  global.settingJSON = settingJson;
-  global.updateSettingFile = (settingData) => {
-    try {
-      const settingJSON = JSON.stringify(settingData, null, 2);
-      fs.writeFileSync(path.join(__dirname, "setting.js"), `module.exports = ${settingJSON};`, "utf8");
-    } catch (e) {}
-    global.settingJSON = settingData;
-  };
-} catch (e) {
-  global.settingJSON = {};
-  global.updateSettingFile = () => {};
-}
+// Global settings: static defaults + admin-managed Firestore settings doc
+const settingJson = require("./setting");
+const { loadSettings, settingsMiddleware } = require("./util/loadSettings");
+global.settingJSON = { ...settingJson };
+global.updateSettingFile = (settingData) => { global.settingJSON = settingData; };
+loadSettings(true).catch(() => {});
+app.use(settingsMiddleware);
 
 // Initialize Firestore seed data
 try {

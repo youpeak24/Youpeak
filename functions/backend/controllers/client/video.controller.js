@@ -47,6 +47,9 @@ const rewardEngine = require("../../util/rewardEngine");
 //firestore connection (direct doc updates)
 const db = require("../../util/connection");
 
+//revenue split engine (creator / referrer / platform / district partner)
+const revenueSplit = require("../../util/revenueSplit.service");
+
 //video Unlocked
 exports.unlockPrivateVideo = async (req, res) => {
   try {
@@ -116,53 +119,54 @@ exports.unlockPrivateVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "Invalid unlock cost." });
     }
 
-    if (user.coin < unlockCost) {
+    // Re-read the buyer's live balance and guard against a race / stale read.
+    const freshBuyer = await User.findById(userId);
+    if (!freshBuyer || (freshBuyer.coin || 0) < unlockCost) {
       return res.status(200).json({ status: false, message: "Insufficient coin balance." });
     }
 
-    const [uniqueIdUser, uniqueIdOwner] = await Promise.all([generateHistoryUniqueId(), generateHistoryUniqueId()]);
+    // 1. record the unlock + debit the buyer
+    await VideoUnlock.create({
+      userId: String(userId),
+      videoId: String(videoId),
+      videoOwnerId: String(video.userId),
+      unlockCost,
+      unlockedAt: new Date().toISOString(),
+    });
+    await User.updateOne({ _id: userId, coin: { $gte: unlockCost } }, { $inc: { coin: -unlockCost } });
+    await History.create({
+      otherUserId: String(userId),
+      videoId: String(videoId),
+      uniqueId: await generateHistoryUniqueId(),
+      coin: -unlockCost,
+      type: 9,
+      date: new Date().toISOString(),
+    });
 
-    await Promise.all([
-      /* store unlock */
-      VideoUnlock.create({
-        userId: userObjectId,
-        videoId: videoObjectId,
-        videoOwnerId: video.userId,
-        unlockCost: unlockCost,
-        unlockedAt: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }),
-
-      /* deduct coins from user */
-      User.updateOne({ _id: userObjectId }, { $inc: { coin: -unlockCost } }),
-
-      /* add coins to video owner */
-      User.updateOne({ _id: video.userId }, { $inc: { coin: unlockCost } }),
-
-      /* history for owner */
-      History.create({
-        userId: video.userId,
-        videoId: videoObjectId,
-        uniqueId: uniqueIdOwner,
-        coin: unlockCost,
-        type: 9,
-        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }),
-
-      /* history for user */
-      History.create({
-        otherUserId: userObjectId,
-        videoId: videoObjectId,
-        uniqueId: uniqueIdUser,
-        coin: unlockCost,
-        type: 9,
-        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }),
-    ]);
+    // 2. split the unlock revenue: creator / referrer / platform / district partner
+    const settlement = await revenueSplit.settleRevenue({
+      sourceType: "videoUnlock",
+      grossCoins: unlockCost,
+      creatorId: String(video.userId),
+      buyerId: String(userId),
+      referrerOf: "creator",
+      videoId: String(videoId),
+      agencyContext: {
+        state: freshBuyer.state || "",
+        district: freshBuyer.district || "",
+        userId: String(userId),
+      },
+    });
 
     res.status(200).json({
       status: true,
       message: "Video unlocked successfully.",
       isUnlocked: true,
+      revenueSplit: {
+        creatorCoins: settlement.creatorCoins,
+        referrerCoins: settlement.referrerCoins,
+        platformCoins: settlement.platformCoins,
+      },
     });
 
     if (user.fcmToken) {

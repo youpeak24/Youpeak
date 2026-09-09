@@ -128,6 +128,9 @@ class FirestoreDbService {
       checkin: "checkIns", checkins: "checkIns",
       wallethistory: "walletHistories", wallethistories: "walletHistories",
       withdrawrequest: "withDrawRequests", withdrawrequests: "withDrawRequests",
+      videounlock: "videoUnlocks", videounlocks: "videoUnlocks",
+      agencycommission: "agencyCommissions", agencycommissions: "agencyCommissions",
+      revenueledger: "revenueLedger",
     };
     return MAP[key] || name;
   }
