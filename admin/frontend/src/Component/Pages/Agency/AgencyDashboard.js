@@ -78,30 +78,30 @@ export default function AgencyDashboard() {
         <h5 className="mb-3">District Partner Commission Rates & Breakdown</h5>
         <div className="row g-3">
           <div className="col-md-4">
-            <div className="p-3 border rounded bg-dark text-white">
+            <div className="p-3 border rounded bg-light">
               <div className="d-flex justify-content-between align-items-center mb-1">
-                <span className="fw-semibold">Video Unlock Revenue</span>
+                <span className="fw-bold text-dark">Video Unlock Revenue</span>
                 <span className="badge bg-primary fs-6">10%</span>
               </div>
-              <small className="text-muted">10% commission per video unlock (Max ₹1,000 cap per unlock transaction).</small>
+              <small className="text-secondary d-block mt-2">10% commission per video unlock (Max ₹1,000 cap per unlock transaction).</small>
             </div>
           </div>
           <div className="col-md-4">
-            <div className="p-3 border rounded bg-dark text-white">
+            <div className="p-3 border rounded bg-light">
               <div className="d-flex justify-content-between align-items-center mb-1">
-                <span className="fw-semibold">VIP Creator Onboarding</span>
+                <span className="fw-bold text-dark">VIP Creator Onboarding</span>
                 <span className="badge bg-success fs-6">20%</span>
               </div>
-              <small className="text-muted">20% commission on all VIP Creator subscription & onboarding fees in your region.</small>
+              <small className="text-secondary d-block mt-2">20% commission on all VIP Creator subscription & onboarding fees in your region.</small>
             </div>
           </div>
           <div className="col-md-4">
-            <div className="p-3 border rounded bg-dark text-white">
+            <div className="p-3 border rounded bg-light">
               <div className="d-flex justify-content-between align-items-center mb-1">
-                <span className="fw-semibold">Local Business Ads</span>
+                <span className="fw-bold text-dark">Local Business Ads</span>
                 <span className="badge bg-warning text-dark fs-6">30%</span>
               </div>
-              <small className="text-muted">30% commission on local advertiser & business ad placements within your district.</small>
+              <small className="text-secondary d-block mt-2">30% commission on local advertiser & business ad placements within your district.</small>
             </div>
           </div>
         </div>

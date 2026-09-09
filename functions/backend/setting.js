@@ -11,8 +11,8 @@ module.exports = {
   r2SecretAccessKey: "9d2946e08c57db8ed33ef5d29044d066c73274b103d26d3ae43e7ba2a12582df",
   r2BucketName: "youpeak-videos",
   r2Endpoint: "https://da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  r2PublicDomain: "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev",
-  r2CdnUrl: "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev",
+  r2PublicDomain: "https://youpeak-videos.da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
+  r2CdnUrl: "https://youpeak-videos.da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
   currency: {
     name: "USD",
     symbol: "$",

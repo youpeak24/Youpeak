@@ -18,23 +18,23 @@ export default function GrievanceOfficer() {
 
         <div className="row g-4 mt-2">
           <div className="col-md-6">
-            <div className="p-3 border rounded bg-dark text-white">
+            <div className="p-3 border rounded bg-light">
               <h6 className="fw-bold text-primary mb-2">Designated Grievance Officer</h6>
-              <p className="mb-1"><strong>Name:</strong> YouPeak Compliance & Legal Officer</p>
-              <p className="mb-1"><strong>Designation:</strong> Grievance Redressal Officer</p>
-              <p className="mb-1"><strong>Email:</strong> grievance@youpeak.in</p>
-              <p className="mb-1"><strong>Alternate Email:</strong> legal@youpeak.in</p>
-              <p className="mb-0"><strong>Response Timeframe:</strong> Acknowledged within 24 hours, resolved within 15 days.</p>
+              <p className="mb-1 text-dark"><strong>Name:</strong> YouPeak Compliance & Legal Officer</p>
+              <p className="mb-1 text-dark"><strong>Designation:</strong> Grievance Redressal Officer</p>
+              <p className="mb-1 text-dark"><strong>Email:</strong> grievance@youpeak.in</p>
+              <p className="mb-1 text-dark"><strong>Alternate Email:</strong> legal@youpeak.in</p>
+              <p className="mb-0 text-dark"><strong>Response Timeframe:</strong> Acknowledged within 24 hours, resolved within 15 days.</p>
             </div>
           </div>
 
           <div className="col-md-6">
-            <div className="p-3 border rounded bg-dark text-white">
+            <div className="p-3 border rounded bg-light">
               <h6 className="fw-bold text-success mb-2">Nodal Contact for Law Enforcement</h6>
-              <p className="mb-1"><strong>Entity:</strong> YouPeak Digital Technologies Private Limited</p>
-              <p className="mb-1"><strong>Jurisdiction:</strong> India (IT Act 2000 & Amendments)</p>
-              <p className="mb-1"><strong>Nodal Email:</strong> nodal@youpeak.in</p>
-              <p className="mb-0"><strong>Emergency Takedown Window:</strong> 24 hours for emergency content blocks.</p>
+              <p className="mb-1 text-dark"><strong>Entity:</strong> YouPeak Digital Technologies Private Limited</p>
+              <p className="mb-1 text-dark"><strong>Jurisdiction:</strong> India (IT Act 2000 & Amendments)</p>
+              <p className="mb-1 text-dark"><strong>Nodal Email:</strong> nodal@youpeak.in</p>
+              <p className="mb-0 text-dark"><strong>Emergency Takedown Window:</strong> 24 hours for emergency content blocks.</p>
             </div>
           </div>
         </div>
