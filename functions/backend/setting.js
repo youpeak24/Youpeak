@@ -47,13 +47,14 @@ module.exports = {
   minWatchMinutesForEngagementReward: 120, // 2 hours -> 500 coins
   engagementWatchRewardCoins: 500,
   minCoinForCashOut: 100,
-  commentingRewardCoins: 5,
-  likeVideoRewardCoins: 2,
-  dislikeVideoRewardCoins: 2,
+  commentingRewardCoins: 5,      // per comment
+  likeVideoRewardCoins: 2,       // per like
+  dislikeVideoRewardCoins: 2,    // per unlike/dislike
+  adRewardCoins: 25,             // per ad view (20 ads x 25 = 500 = free-tier daily cap)
   loginRewardCoins: 100,
-  referralRewardCoins: 250,    // free tasker referral = 250 coins (₹2.50)
+  referralRewardCoins: 250,      // free tasker referral = 250 coins (₹2.50)
   requiredMembers: 5,
-  watchingVideoRewardCoins: 2,
+  watchingVideoRewardCoins: 2,   // per video watch (non-milestone)
   minWithdrawalRequestedCoin: 50000,  // ₹500
   minConvertCoin: 1000,
   isWatermarkOn: false,
