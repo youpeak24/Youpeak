@@ -1,71 +1,65 @@
 const MembershipTier = require("../../models/membershipTier.model");
+const db = require("../../util/connection");
+const { ALL_TIERS } = require("../../types/tiers");
 
-// Create or update tier
+const TIER_FIELDS = [
+  "tierName", "level", "tierType",
+  "dailyEarningCapInCoins", "dailyEarningCapInINR", "dailyAdLimit",
+  "dailyLikeLimit", "dailyCommentLimit", "coinMultiplier", "adCreditsGranted",
+  "membershipPrice", "creatorRevenueSharePercentage", "companyRevenueSharePercentage",
+  "minSubscribersRequired", "maxSubscribers", "maxEarningPerVideoInINR",
+  "upgradeFeeInINR", "description", "isDefault", "isActive",
+];
+
+// Create or update a tier (keyed by tierType + level)
 exports.store = async (req, res) => {
   try {
-    const {
-      tierName,
-      level,
-      dailyEarningCapInCoins,
-      dailyEarningCapInINR,
-      dailyAdLimit,
-      coinMultiplier,
-      adCreditsGranted,
-      membershipPrice,
-      creatorRevenueSharePercentage,
-      companyRevenueSharePercentage,
-      minSubscribersRequired,
-      maxEarningPerVideoInINR,
-      upgradeFeeInINR,
-      description,
-      isDefault,
-    } = req.body;
+    const body = req.body || {};
+    const tierName = body.tierName;
+    const level = body.level;
+    const tierType = body.tierType === "CREATOR" ? "CREATOR" : "TASKER";
 
-    if (!tierName || level === undefined) {
+    if (!tierName || level === undefined || level === null) {
       return res.status(200).json({ status: false, message: "Tier name and level are required!" });
     }
 
-    let tier = await MembershipTier.findOne({ level });
-    if (tier) {
-      tier.tierName = tierName;
-      tier.dailyEarningCapInCoins = dailyEarningCapInCoins || tier.dailyEarningCapInCoins;
-      tier.dailyEarningCapInINR = dailyEarningCapInINR || tier.dailyEarningCapInINR;
-      tier.dailyAdLimit = dailyAdLimit || tier.dailyAdLimit;
-      tier.coinMultiplier = coinMultiplier || tier.coinMultiplier;
-      tier.adCreditsGranted = adCreditsGranted || tier.adCreditsGranted;
-      tier.membershipPrice = membershipPrice || tier.membershipPrice;
-      tier.creatorRevenueSharePercentage = creatorRevenueSharePercentage !== undefined ? creatorRevenueSharePercentage : tier.creatorRevenueSharePercentage;
-      tier.companyRevenueSharePercentage = companyRevenueSharePercentage !== undefined ? companyRevenueSharePercentage : tier.companyRevenueSharePercentage;
-      tier.minSubscribersRequired = minSubscribersRequired !== undefined ? minSubscribersRequired : tier.minSubscribersRequired;
-      tier.maxEarningPerVideoInINR = maxEarningPerVideoInINR !== undefined ? maxEarningPerVideoInINR : tier.maxEarningPerVideoInINR;
-      tier.upgradeFeeInINR = upgradeFeeInINR !== undefined ? upgradeFeeInINR : tier.upgradeFeeInINR;
-      tier.description = description || tier.description;
-      tier.isDefault = isDefault !== undefined ? isDefault : tier.isDefault;
+    const patch = {};
+    for (const f of TIER_FIELDS) {
+      if (body[f] !== undefined) patch[f] = body[f];
+    }
+    patch.tierType = tierType;
+
+    const existing = await MembershipTier.findOne({ tierType, level: Number(level) });
+
+    let tier;
+    if (existing) {
+      tier = await db.update("membershipTiers", existing._id || existing.id, patch);
     } else {
-      tier = new MembershipTier({
-        tierName,
-        level,
-        dailyEarningCapInCoins: dailyEarningCapInCoins || 1000,
-        dailyEarningCapInINR: dailyEarningCapInINR || 100,
-        dailyAdLimit: dailyAdLimit || 10,
-        coinMultiplier: coinMultiplier || 1.0,
-        adCreditsGranted: adCreditsGranted || 0,
-        membershipPrice: membershipPrice || 0,
-        creatorRevenueSharePercentage: creatorRevenueSharePercentage || 70,
-        companyRevenueSharePercentage: companyRevenueSharePercentage || 30,
-        minSubscribersRequired: minSubscribersRequired || 0,
-        maxEarningPerVideoInINR: maxEarningPerVideoInINR || 1000,
-        upgradeFeeInINR: upgradeFeeInINR || 0,
-        description: description || "",
-        isDefault: isDefault || false,
+      tier = await MembershipTier.create({
+        dailyEarningCapInCoins: 500,
+        dailyEarningCapInINR: 5,
+        dailyAdLimit: 20,
+        dailyLikeLimit: 5,
+        dailyCommentLimit: 2,
+        coinMultiplier: 1.0,
+        creatorRevenueSharePercentage: 50,
+        companyRevenueSharePercentage: 50,
+        isActive: true,
+        ...patch,
+        level: Number(level),
       });
     }
 
-    if (isDefault) {
-      await MembershipTier.updateMany({ level: { $ne: level } }, { isDefault: false });
+    // Only one default per tierType
+    if (patch.isDefault) {
+      const others = await MembershipTier.find({ tierType });
+      for (const o of others) {
+        if ((o._id || o.id) !== (tier._id || tier.id) && o.isDefault) {
+          await db.update("membershipTiers", o._id || o.id, { isDefault: false });
+        }
+      }
     }
 
-    await tier.save();
     return res.status(200).json({ status: true, message: "Membership tier saved!", tier });
   } catch (error) {
     console.error("Error saving membership tier:", error);
@@ -73,10 +67,12 @@ exports.store = async (req, res) => {
   }
 };
 
-// Get all tiers
+// List tiers (optionally filter by ?tierType=TASKER|CREATOR)
 exports.getTiers = async (req, res) => {
   try {
-    const tiers = await MembershipTier.find().sort({ level: 1 });
+    const filter = {};
+    if (req.query.tierType) filter.tierType = req.query.tierType;
+    const tiers = await MembershipTier.find(filter).sort({ tierType: 1, level: 1 });
     return res.status(200).json({ status: true, message: "Tiers fetched successfully!", tiers });
   } catch (error) {
     console.error("Error fetching tiers:", error);
@@ -84,14 +80,34 @@ exports.getTiers = async (req, res) => {
   }
 };
 
-// Delete tier
+// Delete a tier
 exports.destroy = async (req, res) => {
   try {
-    const { tierId } = req.query;
+    const tierId = req.query.tierId || (req.body && req.body.tierId);
+    if (!tierId) return res.status(200).json({ status: false, message: "tierId is required" });
     await MembershipTier.findByIdAndDelete(tierId);
     return res.status(200).json({ status: true, message: "Tier deleted successfully!" });
   } catch (error) {
     console.error("Error deleting tier:", error);
+    return res.status(500).json({ status: false, message: "Server error" });
+  }
+};
+
+// Seed / re-seed the default tier ladders
+exports.seedDefaults = async (req, res) => {
+  try {
+    let created = 0;
+    for (const t of ALL_TIERS) {
+      const exists = await MembershipTier.findById(t._id);
+      if (!exists) {
+        await MembershipTier.create({ ...t });
+        created++;
+      }
+    }
+    const tiers = await MembershipTier.find({}).sort({ tierType: 1, level: 1 });
+    return res.status(200).json({ status: true, message: `Seeded ${created} tier(s).`, tiers });
+  } catch (error) {
+    console.error("Error seeding tiers:", error);
     return res.status(500).json({ status: false, message: "Server error" });
   }
 };

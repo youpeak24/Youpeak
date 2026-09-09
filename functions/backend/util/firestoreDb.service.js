@@ -105,12 +105,31 @@ class FirestoreDbService {
 
   normalizeCollectionName(name) {
     if (!name) return name;
-    const lower = name.toString().toLowerCase().trim();
-    if (lower === "user") return "users";
-    if (lower === "video") return "videos";
-    if (lower === "short") return "shorts";
-    if (lower === "channel") return "channels";
-    return name;
+    const key = name.toString().toLowerCase().trim();
+    // Mongoose model names -> actual Firestore collection ids (see listCollections()).
+    // Anything not listed keeps its given name.
+    const MAP = {
+      user: "users", users: "users",
+      video: "videos", videos: "videos",
+      short: "shorts", shorts: "shorts",
+      channel: "channels", channels: "channels",
+      admin: "admins", admins: "admins",
+      membershiptier: "membershipTiers", membershiptiers: "membershipTiers",
+      history: "histories", histories: "histories",
+      dailyreward: "dailyrewards", dailyrewards: "dailyrewards", dailyrewardcoin: "dailyrewards",
+      adrewardcoin: "adrewards", adrewards: "adrewards",
+      advertise: "advertises", advertises: "advertises",
+      agency: "agencies", agencies: "agencies",
+      currency: "currencies", currencies: "currencies",
+      language: "languages", languages: "languages",
+      login: "logins", logins: "logins",
+      setting: "settings", settings: "settings",
+      referralhistory: "referralHistories", referralhistories: "referralHistories",
+      checkin: "checkIns", checkins: "checkIns",
+      wallethistory: "walletHistories", wallethistories: "walletHistories",
+      withdrawrequest: "withDrawRequests", withdrawrequests: "withDrawRequests",
+    };
+    return MAP[key] || name;
   }
 
   async withTimeout(promiseMs, ms = this.opTimeoutMs) {
@@ -173,6 +192,18 @@ class FirestoreDbService {
     const hasSort = options.sort && typeof options.sort === "object" &&
       !Array.isArray(options.sort) && Object.keys(options.sort).length > 0;
     const flatQuery = this._flattenQuery(query);
+
+    // Lookup by document id → doc path (a where("_id","==") clause misses docs
+    // that don't store an _id field).
+    const idVal = flatQuery._id != null ? flatQuery._id : flatQuery.id;
+    if (idVal != null) {
+      const doc = await this.findById(collectionName, idVal);
+      if (!doc) return [];
+      for (const [k, v] of Object.entries(flatQuery)) {
+        if (k !== "_id" && k !== "id" && doc[k] !== v) return [];
+      }
+      return [doc];
+    }
 
     try {
       const db = this.getDb();
@@ -241,6 +272,20 @@ class FirestoreDbService {
   }
 
   async findOne(collectionName, query = {}) {
+    const flat = this._flattenQuery(query);
+    // A lookup by document id must go through the doc path — many docs don't
+    // store an `_id`/`id` field, so a where("_id","==",…) clause would miss.
+    const idKey = flat._id != null ? "_id" : (flat.id != null ? "id" : null);
+    if (idKey) {
+      const doc = await this.findById(collectionName, flat[idKey]);
+      if (!doc) return null;
+      // still honour any other equality fields in the query
+      const others = Object.entries(flat).filter(([k]) => k !== "_id" && k !== "id");
+      for (const [k, v] of others) {
+        if (doc[k] !== v) return null;
+      }
+      return doc;
+    }
     const results = await this.find(collectionName, query, { limit: 1 });
     return results.length > 0 ? results[0] : null;
   }
@@ -375,7 +420,29 @@ class FirestoreDbService {
           "currency_default"
         );
       }
-    } catch (err) {}
+
+      // Membership tiers (tasker + creator) — seed once if the collection is empty.
+      const existingTiers = await this.find("membershipTiers", {}, { limit: 1 });
+      if (!existingTiers || existingTiers.length === 0) {
+        const { ALL_TIERS } = require("../types/tiers");
+        for (const tier of ALL_TIERS) {
+          await this.create("membershipTiers", tier, tier._id);
+        }
+        console.log(`🌱 Seeded ${ALL_TIERS.length} membership tiers`);
+      }
+
+      // Daily check-in reward ladder (Mon..Sun) — seed once if empty.
+      const existingDaily = await this.find("dailyrewards", {}, { limit: 1 });
+      if (!existingDaily || existingDaily.length === 0) {
+        const ladder = [300, 330, 350, 400, 450, 550, 600];
+        for (let i = 0; i < 7; i++) {
+          await this.create("dailyrewards", { _id: `dailyreward_day_${i + 1}`, day: i + 1, dailyRewardCoin: ladder[i] }, `dailyreward_day_${i + 1}`);
+        }
+        console.log("🌱 Seeded 7-day check-in reward ladder");
+      }
+    } catch (err) {
+      console.warn("seedDefaultData note:", err.message);
+    }
   }
 }
 

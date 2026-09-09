@@ -95,6 +95,9 @@ async function getLimits(user) {
     },
   };
 
+  limits.tierName = "Free";
+  limits.tierLevel = 1;
+
   if (user && user.membershipTierId) {
     try {
       const tier = await db.findById("membershipTiers", user.membershipTierId);
@@ -102,12 +105,13 @@ async function getLimits(user) {
         limits.maxAdsPerDay = num(tier.dailyAdLimit, limits.maxAdsPerDay);
         limits.dailyEarningCapInCoins = num(tier.dailyEarningCapInCoins, limits.dailyEarningCapInCoins);
         limits.coinMultiplier = num(tier.coinMultiplier, 1) || 1;
+
+        // prefer explicit per-tier limits, else the T&C tier table by level
         const caps = TIER_ENGAGEMENT_CAPS[tier.level];
-        if (caps) {
-          limits.maxLikesPerDay = caps.likes;
-          limits.maxCommentsPerDay = caps.comments;
-          limits.maxDislikesPerDay = caps.likes;
-        }
+        limits.maxLikesPerDay = num(tier.dailyLikeLimit, caps ? caps.likes : limits.maxLikesPerDay);
+        limits.maxCommentsPerDay = num(tier.dailyCommentLimit, caps ? caps.comments : limits.maxCommentsPerDay);
+        limits.maxDislikesPerDay = num(tier.dailyLikeLimit, caps ? caps.likes : limits.maxDislikesPerDay);
+
         limits.tierName = tier.tierName || `Tier ${tier.level}`;
         limits.tierLevel = tier.level;
       }
@@ -116,6 +120,40 @@ async function getLimits(user) {
     }
   }
   return limits;
+}
+
+/**
+ * Resolve a creator's ad-revenue split. Returns the fraction (0–1) that goes to
+ * the creator and to the platform, from their active creator tier (VIP pass) or
+ * the Classic default (50/50).
+ */
+async function getCreatorRevenueShare(user) {
+  const s = global.settingJSON || {};
+  let creatorPct = num(s.defaultCreatorRevenueSharePercentage, 50);
+  let tierName = "Classic Pass";
+  let maxPerVideoINR = num(s.defaultMaxEarningPerVideoInINR, 1000);
+
+  const tierId = user && (user.activeCreatorTierId || user.creatorTierId);
+  if (tierId) {
+    try {
+      const tier = await db.findById("membershipTiers", tierId);
+      if (tier && tier.tierType === "CREATOR") {
+        creatorPct = num(tier.creatorRevenueSharePercentage, creatorPct);
+        maxPerVideoINR = num(tier.maxEarningPerVideoInINR, maxPerVideoINR);
+        tierName = tier.tierName || tierName;
+      }
+    } catch (e) {
+      /* fall back to Classic */
+    }
+  }
+  creatorPct = Math.min(100, Math.max(0, creatorPct));
+  return {
+    tierName,
+    creatorShare: creatorPct / 100,
+    platformShare: (100 - creatorPct) / 100,
+    creatorSharePercentage: creatorPct,
+    maxEarningPerVideoInINR: maxPerVideoINR,
+  };
 }
 
 /**
@@ -262,6 +300,7 @@ module.exports = {
   todayStr,
   ensureDailyReset,
   getLimits,
+  getCreatorRevenueShare,
   creditReward,
   reverseReward,
   snapshotCounts,

@@ -1,5 +1,80 @@
 const firestoreDb = require("./firestoreDb.service");
 
+// ── Mongo-style update operators, applied in JS (Firestore shim has no atomic ops) ──
+// Supports $set, $inc, $mul, $push, $addToSet, $pull, $unset, and bare fields.
+function buildUpdatePayload(existing, updateData) {
+  existing = existing || {};
+  const out = {};
+
+  // bare top-level fields (no leading $)
+  for (const k of Object.keys(updateData || {})) {
+    if (!k.startsWith("$")) out[k] = updateData[k];
+  }
+  if (updateData && updateData.$set) Object.assign(out, updateData.$set);
+
+  if (updateData && updateData.$inc) {
+    for (const [k, v] of Object.entries(updateData.$inc)) {
+      out[k] = (Number(existing[k]) || 0) + Number(v || 0);
+    }
+  }
+  if (updateData && updateData.$mul) {
+    for (const [k, v] of Object.entries(updateData.$mul)) {
+      out[k] = (Number(existing[k]) || 0) * Number(v || 0);
+    }
+  }
+  if (updateData && updateData.$push) {
+    for (const [k, v] of Object.entries(updateData.$push)) {
+      const arr = Array.isArray(existing[k]) ? existing[k].slice() : [];
+      if (v && typeof v === "object" && Array.isArray(v.$each)) arr.push(...v.$each);
+      else arr.push(v);
+      out[k] = arr;
+    }
+  }
+  if (updateData && updateData.$addToSet) {
+    for (const [k, v] of Object.entries(updateData.$addToSet)) {
+      const arr = Array.isArray(existing[k]) ? existing[k].slice() : [];
+      const items = v && typeof v === "object" && Array.isArray(v.$each) ? v.$each : [v];
+      for (const it of items) {
+        if (!arr.some((x) => JSON.stringify(x) === JSON.stringify(it))) arr.push(it);
+      }
+      out[k] = arr;
+    }
+  }
+  if (updateData && updateData.$pull) {
+    for (const [k, v] of Object.entries(updateData.$pull)) {
+      const arr = Array.isArray(existing[k]) ? existing[k] : [];
+      out[k] = arr.filter((x) => JSON.stringify(x) !== JSON.stringify(v));
+    }
+  }
+  if (updateData && updateData.$unset) {
+    for (const k of Object.keys(updateData.$unset)) out[k] = null;
+  }
+  return out;
+}
+
+// Evaluate operator conditions in a query against a doc (e.g. { coin: { $gte: 100 } }).
+// Returns false if any guard fails — used so updateOne won't run when the doc
+// no longer satisfies a precondition (e.g. insufficient balance).
+function matchesQueryGuards(doc, query) {
+  if (!doc || !query || typeof query !== "object") return true;
+  for (const [key, cond] of Object.entries(query)) {
+    if (key.startsWith("$")) continue;
+    if (cond && typeof cond === "object" && !Array.isArray(cond)) {
+      const v = doc[key];
+      for (const [op, target] of Object.entries(cond)) {
+        if (op === "$gte" && !(Number(v) >= Number(target))) return false;
+        if (op === "$gt" && !(Number(v) > Number(target))) return false;
+        if (op === "$lte" && !(Number(v) <= Number(target))) return false;
+        if (op === "$lt" && !(Number(v) < Number(target))) return false;
+        if (op === "$ne" && !(v !== target)) return false;
+        if (op === "$in" && !(Array.isArray(target) && target.includes(v))) return false;
+        if (op === "$nin" && Array.isArray(target) && target.includes(v)) return false;
+      }
+    }
+  }
+  return true;
+}
+
 class FirestoreQuery {
   constructor(collectionName, opType, query = {}, extraData = null) {
     this.collectionName = collectionName;
@@ -132,52 +207,50 @@ function createFirestoreModel(modelName) {
     return results;
   };
 
-  ModelConstructor.updateOne = async function (query, updateData) {
-    const id = query._id || query.id;
-    if (id) {
-      return await firestoreDb.update(collectionName, id, updateData.$set || updateData);
+  ModelConstructor.updateOne = async function (query = {}, updateData = {}) {
+    const directId = query._id || query.id;
+    const existing = directId
+      ? await firestoreDb.findById(collectionName, directId)
+      : await firestoreDb.findOne(collectionName, query);
+
+    if (!existing) return { matchedCount: 0, modifiedCount: 0, acknowledged: true };
+    if (!matchesQueryGuards(existing, query)) {
+      return { matchedCount: 1, modifiedCount: 0, acknowledged: true };
     }
-    const existing = await firestoreDb.findOne(collectionName, query);
-    if (existing) {
-      return await firestoreDb.update(collectionName, existing._id || existing.id, updateData.$set || updateData);
-    }
-    return null;
+
+    await firestoreDb.update(collectionName, existing._id || existing.id, buildUpdatePayload(existing, updateData));
+    return { matchedCount: 1, modifiedCount: 1, acknowledged: true };
   };
 
-  ModelConstructor.updateMany = async function (query, updateData) {
+  ModelConstructor.updateMany = async function (query = {}, updateData = {}) {
     const items = await firestoreDb.find(collectionName, query);
-    const updated = [];
+    let modified = 0;
     for (const item of items) {
-      const res = await firestoreDb.update(collectionName, item._id || item.id, updateData.$set || updateData);
-      updated.push(res);
+      if (!matchesQueryGuards(item, query)) continue;
+      await firestoreDb.update(collectionName, item._id || item.id, buildUpdatePayload(item, updateData));
+      modified++;
     }
-    return updated;
+    return { matchedCount: items.length, modifiedCount: modified, acknowledged: true };
   };
 
-  ModelConstructor.findByIdAndUpdate = async function (id, updateData, options = {}) {
-    const payload = updateData.$set ? { ...updateData.$set } : { ...updateData };
-    if (updateData.$inc) {
-      const existing = await firestoreDb.findById(collectionName, id);
-      if (existing) {
-        Object.keys(updateData.$inc).forEach(key => {
-          payload[key] = (Number(existing[key]) || 0) + Number(updateData.$inc[key]);
-        });
-      }
-    }
-    return await firestoreDb.update(collectionName, id, payload);
-  };
-
-  ModelConstructor.findOneAndUpdate = async function (query, updateData, options = {}) {
-    const existing = await firestoreDb.findOne(collectionName, query);
+  ModelConstructor.findByIdAndUpdate = async function (id, updateData = {}, options = {}) {
+    const existing = await firestoreDb.findById(collectionName, id);
     if (!existing) return null;
-    const id = existing._id || existing.id;
-    const payload = updateData.$set ? { ...updateData.$set } : { ...updateData };
-    if (updateData.$inc) {
-      Object.keys(updateData.$inc).forEach(key => {
-        payload[key] = (Number(existing[key]) || 0) + Number(updateData.$inc[key]);
-      });
+    const updated = await firestoreDb.update(collectionName, existing._id || existing.id, buildUpdatePayload(existing, updateData));
+    return options && options.new === false ? existing : updated;
+  };
+
+  ModelConstructor.findOneAndUpdate = async function (query = {}, updateData = {}, options = {}) {
+    const existing = await firestoreDb.findOne(collectionName, query);
+    if (!existing) {
+      if (options && options.upsert) {
+        return await firestoreDb.create(collectionName, buildUpdatePayload({}, updateData));
+      }
+      return null;
     }
-    return await firestoreDb.update(collectionName, id, payload);
+    if (!matchesQueryGuards(existing, query)) return existing;
+    const updated = await firestoreDb.update(collectionName, existing._id || existing.id, buildUpdatePayload(existing, updateData));
+    return options && options.new === false ? existing : updated;
   };
 
   ModelConstructor.findByIdAndDelete = async function (id) {
