@@ -115,8 +115,28 @@ class FirestoreQuery {
   lean() { return this; }
   exec() { return this.execute(); }
 
+  // Query.distinct(field) → resolves to a de-duplicated array of that field.
+  async distinct(field) {
+    const rows = await firestoreDb.find(this.collectionName, this.query, this.options);
+    const set = new Set();
+    for (const r of rows) {
+      const v = r && r[field];
+      if (v !== undefined && v !== null) set.add(typeof v === "object" ? JSON.stringify(v) : v);
+    }
+    return Array.from(set);
+  }
+
+  // Query.countDocuments() chained after a find()
+  async countDocuments() {
+    const rows = await firestoreDb.find(this.collectionName, this.query, this.options);
+    return rows.length;
+  }
+
   then(resolve, reject) {
     return this.execute().then(resolve, reject);
+  }
+  catch(reject) {
+    return this.execute().catch(reject);
   }
 
   async execute() {

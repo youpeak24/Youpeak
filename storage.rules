@@ -1,14 +1,18 @@
 rules_version = '2';
 
-// YouPeak media architecture:
+// YouPeak media split:
 //   • Videos & Shorts  -> Cloudflare Stream / R2  (never Firebase Storage)
-//   • All other files  -> uploaded via the backend API (Firebase Admin SDK,
-//                         which bypasses these rules)
-// No client (app or web) talks to Firebase Storage directly, so all direct
-// client access is denied. If a future feature needs client-side Storage,
-// add a scoped match block here — never re-open the bucket with `if true`.
+//   • All other assets -> Firebase Storage under public/, uploaded by the
+//     backend (Admin SDK, which bypasses these rules)
 service firebase.storage {
   match /b/{bucket}/o {
+    // Public assets (images, thumbnails, channel art, sounds) — world-readable,
+    // no client writes.
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+    // Everything else is closed.
     match /{allPaths=**} {
       allow read, write: if false;
     }

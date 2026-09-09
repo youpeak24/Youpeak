@@ -15,10 +15,13 @@ const cors = require("cors");
 app.use(cors({ origin: true, credentials: true }));
 app.options("*", cors());
 
-// Payment webhooks need the raw body for signature verification — handle them
-// before the JSON parser consumes the stream.
-app.use("/payment/webhook", express.raw({ type: "*/*", limit: "5mb" }));
-app.use("/api/payment/webhook", express.raw({ type: "*/*", limit: "5mb" }));
+// Webhooks need the raw body for signature verification — handle them before
+// the JSON parser consumes the stream.
+const RAW_WEBHOOK_PATHS = [
+  "/payment/webhook", "/api/payment/webhook",
+  "/stream/webhook", "/api/stream/webhook",
+];
+app.use(RAW_WEBHOOK_PATHS, express.raw({ type: "*/*", limit: "5mb" }));
 
 // Safe Body Parser for Vercel Serverless Function Bridge
 app.use((req, res, next) => {

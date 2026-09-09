@@ -16,8 +16,19 @@ const videoSchema = new mongoose.Schema(
     videoType: { type: Number, enum: VIDEO_TYPE },
     videoPrivacyType: { type: Number, default: 1, enum: VIDEO_PRIVACY_TYPE }, //1.free 2.paid
     videoTime: { type: Number, min: 0 }, //Seconds
-    videoUrl: { type: String },
+    videoUrl: { type: String }, // playable URL — the HLS .m3u8 once Stream is ready, else the raw R2 URL
     videoImage: { type: String },
+
+    // ── Cloudflare Stream / HLS ──
+    streamUid: { type: String, default: null },        // Cloudflare Stream video id
+    hlsUrl: { type: String, default: null },           // …/manifest/video.m3u8
+    dashUrl: { type: String, default: null },          // …/manifest/video.mpd
+    videoDuration: { type: Number, default: 0 },       // seconds, from Stream
+    availableResolutions: { type: String, default: "" },
+    // pendingupload | queued | inprogress | ready | error | r2 (raw, not transcoded)
+    streamStatus: { type: String, default: null },
+    storageProvider: { type: String, default: "stream" }, // stream | r2 | local
+    rawVideoUrl: { type: String, default: null },       // original R2 object, if any
     visibilityType: { type: Number, default: 1, enum: VISIBILITY_TYPE },
     audienceType: { type: Number, default: 2, enum: AUDIENCE_TYPE },
     commentType: { type: Number, default: 1, enum: COMMENT_TYPE },

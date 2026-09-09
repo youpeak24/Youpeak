@@ -24,19 +24,26 @@ function loadServiceAccount() {
 
 if (admin.apps.length === 0) {
   const serviceAccount = loadServiceAccount();
+  const projectId =
+    (serviceAccount && serviceAccount.project_id) ||
+    process.env.FIREBASE_PROJECT_ID ||
+    process.env.GCP_PROJECT ||
+    process.env.GCLOUD_PROJECT ||
+    "youpeak-9ff65";
+  const storageBucket = process.env.FIREBASE_STORAGE_BUCKET || `${projectId}.appspot.com`;
+
   if (serviceAccount && serviceAccount.private_key) {
     admin.initializeApp({
       credential: admin.credential.cert({
         ...serviceAccount,
         private_key: serviceAccount.private_key.replace(/\\n/g, "\n"),
       }),
-      projectId: serviceAccount.project_id || process.env.FIREBASE_PROJECT_ID,
+      projectId,
+      storageBucket,
     });
     console.log("🔥 Firebase Admin initialised (service account:", serviceAccount.client_email + ")");
   } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS || process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT || process.env.K_SERVICE) {
-    admin.initializeApp({
-      projectId: process.env.FIREBASE_PROJECT_ID || process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT,
-    });
+    admin.initializeApp({ projectId, storageBucket });
     console.log("🔥 Firebase Admin initialised (application default credentials)");
   } else {
     throw new Error(

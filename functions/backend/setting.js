@@ -12,6 +12,11 @@ module.exports = {
   },
   r2BucketName: process.env.CLOUDFLARE_R2_BUCKET || "youpeak-videos",
   r2PublicDomain: process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN || "",
+  // Cloudflare Stream (adaptive HLS). customerCode = the "customer-xxxxx" part
+  // of your playback URLs (Stream dashboard).
+  cloudflareStreamCustomerCode: process.env.CLOUDFLARE_STREAM_CUSTOMER_CODE || "",
+  // non-video assets go to Firebase Storage:
+  firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
   currency: {
     name: "USD",
     symbol: "$",

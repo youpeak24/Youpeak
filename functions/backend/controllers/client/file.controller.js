@@ -1,78 +1,150 @@
 "use strict";
 
+const fs = require("fs");
 const cloudflareStorageService = require("../../util/cloudflareStorage.service");
+const videoPipeline = require("../../util/videoPipeline.service");
+const imageStorage = require("../../util/imageStorage.service");
 const firebaseSyncService = require("../../util/firebaseSync.service");
 
-// uploadContent - Strict Routing (Videos/Shorts → Cloudflare R2, Others → Firebase)
+const VIDEO_EXT = /\.(mp4|mov|m3u8|webm|avi|mkv|flv|wmv|3gp|m4v)$/i;
+// Server-side push to Stream only for small files; large videos must use the
+// direct-upload URL (getStreamUploadUrl) so they never touch our function.
+const MAX_SERVER_SIDE_VIDEO_BYTES = 40 * 1024 * 1024; // 40 MB
+
+function isVideoFile(file, name) {
+  return (
+    file.storageProvider === "cloudflareR2" ||
+    (file.mimetype && file.mimetype.startsWith("video/")) ||
+    VIDEO_EXT.test(file.originalname || name || "")
+  );
+}
+
+// ── One-time Cloudflare Stream direct-upload URL (preferred path for the app) ──
+exports.getStreamUploadUrl = async (req, res) => {
+  try {
+    if (!videoPipeline.isConfigured()) {
+      return res.status(200).json({ status: false, message: "Video streaming is not configured." });
+    }
+    const b = { ...req.query, ...req.body };
+    const maxDurationSeconds = Number(b.maxDurationSeconds) || 3600;
+    const meta = { userId: String(b.userId || ""), kind: b.kind || "video" };
+
+    const up = await videoPipeline.createDirectUpload({ maxDurationSeconds, meta });
+    return res.status(200).json({
+      status: true,
+      message: "Upload URL created.",
+      uploadURL: up.uploadURL,
+      streamUid: up.uid,
+      hlsUrl: up.hlsUrl,
+      thumbnailUrl: up.thumbnailUrl,
+    });
+  } catch (error) {
+    console.error("getStreamUploadUrl error:", error.response?.data || error.message);
+    return res.status(200).json({ status: false, message: "Could not create upload URL." });
+  }
+};
+
+// ── Legacy multipart upload (images + fallback for small videos) ──
 exports.uploadContent = async (req, res) => {
   try {
     if (!req.body?.folderStructure) {
       return res.status(200).json({ status: false, message: "Oops ! Invalid details." });
     }
-
     if (!req?.file) {
       return res.status(200).json({ status: false, message: "Please upload valid files." });
     }
 
-    let url = "";
     const fileName = req.generatedFileName || req.file.filename || req.file.key;
     const folder = req.body.folderStructure;
-    const isVideo = req.file.storageProvider === "cloudflareR2" ||
-      (req.file.mimetype && req.file.mimetype.startsWith("video/")) ||
-      /\.(mp4|mov|m3u8|webm|avi|mkv|flv|wmv|3gp)$/i.test(req.file.originalname || fileName);
+    const filePath = req.file.path;
+    const isVideo = isVideoFile(req.file, fileName);
 
+    // ── VIDEO / SHORTS ──
     if (isVideo) {
-      // 📹 VIDEOS & SHORTS ONLY → Cloudflare R2 Storage
-      console.log(`🎬 Video file detected (${req.file.originalname}). Uploading exclusively to Cloudflare R2...`);
+      const size = req.file.size || (filePath && fs.existsSync(filePath) ? fs.statSync(filePath).size : 0);
 
+      // 1. small enough + Stream configured -> push straight to Cloudflare Stream
+      if (videoPipeline.isConfigured() && size > 0 && size <= MAX_SERVER_SIDE_VIDEO_BYTES) {
+        try {
+          const r = await videoPipeline.uploadFromPath(filePath, { meta: { folder, fileName } });
+          cleanupTmp(filePath);
+          return res.status(200).json({
+            status: true,
+            message: "Video sent to Cloudflare Stream for transcoding.",
+            storageProvider: "stream",
+            streamUid: r.uid,
+            streamStatus: r.status || "queued",
+            url: r.hlsUrl,
+            hlsUrl: r.hlsUrl,
+            thumbnailUrl: r.thumbnailUrl,
+          });
+        } catch (streamErr) {
+          console.error("Stream upload failed, falling back to R2:", streamErr.response?.data || streamErr.message);
+        }
+      }
+
+      // 2. fallback -> raw object in R2 (played directly, no adaptive quality)
       const r2Url = await cloudflareStorageService.uploadToCloudflareR2(
-        req.file.path,
-        `${folder}/${fileName}`,
-        req.file.mimetype
+        filePath, `${folder}/${fileName}`, req.file.mimetype
       );
-      url = r2Url || `${process.env.baseURL || ""}/uploads/${fileName}`;
+      cleanupTmp(filePath);
+      const url = r2Url || `${process.env.baseURL || ""}/uploads/${fileName}`;
 
-      // Save video metadata in Firebase Firestore
+      // Optionally hand it to Stream to transcode from the R2 URL.
+      let streamUid = null;
+      if (videoPipeline.isConfigured() && r2Url) {
+        try {
+          const copy = await videoPipeline.copyFromUrl(r2Url, { meta: { folder, fileName } });
+          streamUid = copy.uid;
+        } catch (e) { /* leave as raw R2 */ }
+      }
+
       await firebaseSyncService.syncMetadata("videos_metadata", fileName, {
-        fileName,
-        url,
-        storageProvider: "Cloudflare",
-        mimeType: req.file.mimetype,
-        size: req.file.size,
-        folderStructure: folder,
+        fileName, url, storageProvider: streamUid ? "stream" : "r2", streamUid,
+        mimeType: req.file.mimetype, size, folderStructure: folder,
       });
 
       return res.status(200).json({
         status: true,
-        message: "Video uploaded exclusively to Cloudflare R2!",
-        storageProvider: "Cloudflare",
-        url,
-      });
-    } else {
-      // 📄 ALL OTHER DATA (images, thumbnails, etc.) → Firebase / Local
-      console.log(`📄 Non-video data detected (${req.file.originalname}). Keeping on Firebase/Local...`);
-      url = `${process.env.baseURL || ""}/uploads/${fileName}`;
-
-      // Sync metadata to Firebase Firestore
-      await firebaseSyncService.syncMetadata("app_assets", fileName, {
-        fileName,
-        url,
-        storageProvider: "Firebase",
-        mimeType: req.file.mimetype,
-        size: req.file.size,
-        folderStructure: folder,
-      });
-
-      return res.status(200).json({
-        status: true,
-        message: "Asset uploaded to Firebase/Local storage!",
-        storageProvider: "Firebase",
-        url,
+        message: streamUid ? "Video stored in R2 and queued for Stream transcoding." : "Video uploaded to Cloudflare R2.",
+        storageProvider: streamUid ? "stream" : "r2",
+        streamUid,
+        url: streamUid ? videoPipeline.playbackUrls(streamUid).hlsUrl : url,
+        rawVideoUrl: url,
       });
     }
+
+    // ── IMAGES / OTHER → Firebase Storage ──
+    let url = null;
+    let provider = "local";
+    if (imageStorage.isConfigured()) {
+      try {
+        url = await imageStorage.uploadImage(filePath, folder, fileName, req.file.mimetype);
+        provider = "firebase";
+      } catch (e) {
+        console.error("Firebase Storage upload failed:", e.message);
+      }
+    }
+    // last-resort fallback so the request never fails outright
+    if (!url && cloudflareStorageService.isConfigured()) {
+      url = await cloudflareStorageService.uploadToCloudflareR2(filePath, `${folder}/${fileName}`, req.file.mimetype);
+      provider = "r2";
+    }
+    cleanupTmp(filePath);
+    url = url || `${process.env.baseURL || ""}/uploads/${fileName}`;
+
+    await firebaseSyncService.syncMetadata("app_assets", fileName, {
+      fileName, url, storageProvider: provider,
+      mimeType: req.file.mimetype, size: req.file.size, folderStructure: folder,
+    });
+
+    return res.status(200).json({ status: true, message: "Asset uploaded.", storageProvider: provider, url });
   } catch (error) {
     console.error("Upload Error:", error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
   }
 };
 
+function cleanupTmp(p) {
+  try { if (p && fs.existsSync(p)) fs.unlinkSync(p); } catch (e) { /* ignore */ }
+}

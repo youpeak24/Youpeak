@@ -50,6 +50,9 @@ const db = require("../../util/connection");
 //revenue split engine (creator / referrer / platform / district partner)
 const revenueSplit = require("../../util/revenueSplit.service");
 
+//cloudflare stream pipeline
+const videoPipeline = require("../../util/videoPipeline.service");
+
 //video Unlocked
 exports.unlockPrivateVideo = async (req, res) => {
   try {
@@ -422,21 +425,43 @@ exports.createVideo = async (req, res) => {
     }
 
     video.title = req?.body?.title.trim();
-    video.description = req?.body?.description.trim();
+    video.description = (req?.body?.description || "").trim();
     video.videoType = req?.body?.videoType;
     video.videoTime = req?.body?.videoTime;
     video.videoUrl = req?.body?.videoUrl;
     video.videoImage = req?.body?.videoImage;
+
+    // ── Cloudflare Stream metadata (set when the app used direct upload) ──
+    if (req.body.streamUid) {
+      video.streamUid = req.body.streamUid;
+      video.storageProvider = "stream";
+      video.rawVideoUrl = req.body.rawVideoUrl || null;
+      const pb = videoPipeline.playbackUrls(req.body.streamUid);
+      video.hlsUrl = req.body.hlsUrl || pb.hlsUrl;
+      video.dashUrl = pb.dashUrl;
+      video.videoUrl = video.hlsUrl; // the app plays videoUrl
+      video.streamStatus = req.body.streamStatus || "inprogress";
+    } else if (/\.m3u8($|\?)/i.test(String(req.body.videoUrl || ""))) {
+      video.storageProvider = "stream";
+      video.hlsUrl = req.body.videoUrl;
+      video.streamStatus = "ready";
+    } else {
+      video.storageProvider = req.body.storageProvider || "r2";
+      video.rawVideoUrl = req.body.videoUrl;
+      video.streamStatus = "r2";
+    }
     video.visibilityType = req?.body?.visibilityType;
     video.audienceType = req?.body?.audienceType;
     video.commentType = req?.body?.commentType;
     video.scheduleType = req?.body?.scheduleType;
     video.videoPrivacyType = parseInt(req?.body?.videoPrivacyType);
 
-    video.location = req?.body?.location?.toLowerCase();
-    video.locationCoordinates.latitude = req?.body?.latitude;
-    video.locationCoordinates.longitude = req?.body?.longitude;
-    video.soundListId = soundList?._id;
+    video.location = req?.body?.location ? String(req.body.location).toLowerCase() : "";
+    video.locationCoordinates = {
+      latitude: req?.body?.latitude || "",
+      longitude: req?.body?.longitude || "",
+    };
+    video.soundListId = soundList?._id || null;
     video.userId = user._id;
     video.isAddByAdmin = false;
 
@@ -445,12 +470,24 @@ exports.createVideo = async (req, res) => {
 
     video.uniqueVideoId = uniqueVideoId;
 
-    await Promise.all([user.save(), video.save()]);
+    // user is a plain object from findOne() — no .save(); persist explicitly.
+    const userChanges = {};
+    for (const k of ["fullName", "channelId", "isChannel", "channelType", "subscriptionCost", "videoUnlockCost", "descriptionOfChannel", "socialMediaLinks"]) {
+      if (user[k] !== undefined) userChanges[k] = user[k];
+    }
+    await db.update("users", user._id || user.id, userChanges);
+    const savedVideo = await video.save();
 
-    const data = await Video.findById(video._id).populate([
-      { path: "soundListId", select: "soundTitle soundLink" },
-      { path: "userId", select: "fullName nickName" },
-    ]);
+    const data = await Video.findById(savedVideo._id || savedVideo.id || video._id);
+    if (data && data.soundListId) {
+      try {
+        const sl = await SoundList.findById(data.soundListId);
+        if (sl) data.soundListId = { _id: sl._id, soundTitle: sl.soundTitle, soundLink: sl.soundLink };
+      } catch (e) { /* leave as id */ }
+    }
+    if (data) {
+      data.userId = { _id: user._id || user.id, fullName: user.fullName, nickName: user.nickName };
+    }
 
     res.status(200).json({
       status: true,
@@ -564,10 +601,9 @@ exports.shareCount = async (req, res) => {
       return res.status(200).json({ status: false, message: "video does not found!!" });
     }
 
-    video.shareCount += 1;
-    await video.save();
+    const updated = await Video.findByIdAndUpdate(video._id || video.id, { $inc: { shareCount: 1 } });
 
-    return res.status(200).json({ status: true, message: "When user share video then shareCount increased!", video });
+    return res.status(200).json({ status: true, message: "When user share video then shareCount increased!", video: updated });
   } catch (error) {
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });
   }
@@ -4578,78 +4614,64 @@ exports.modifyVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "video does not found!" });
     }
 
-    res.status(200).json({
-      status: true,
-      message: "Video has been updated!",
-    });
+    const b = req.body || {};
+    const changes = {};
+    if (b.title) changes.title = String(b.title).trim();
+    if (b.description) changes.description = String(b.description).trim();
 
-    video.title = req?.body?.title ? req?.body?.title?.trim() : video.title;
-    video.description = req?.body?.description ? req?.body?.description?.trim() : video.description;
-
-    if (Number(req.query.videoType) === 2) {
-      if (req?.body?.videoTime) {
-        if (global.settingJSON.durationOfShorts < Number(req?.body?.videoTime)) {
-          if (req.body.videoImage) {
-            await deleteFromStorage(req.body.videoImage);
-          }
-
-          if (req.body.videoUrl) {
-            await deleteFromStorage(req.body.videoUrl);
-          }
-
-          return res.status(200).json({ status: false, message: "your duration of Shorts greater than decided by the admin." });
-        }
-
-        video.videoTime = req?.body?.videoTime ? req?.body?.videoTime : video.videoTime;
+    if (Number(req.query.videoType) === 2 && b.videoTime) {
+      if (global.settingJSON.durationOfShorts < Number(b.videoTime)) {
+        if (b.videoImage) await deleteFromStorage(b.videoImage);
+        if (b.videoUrl) await deleteFromStorage(b.videoUrl);
+        return res.status(200).json({ status: false, message: "your duration of Shorts greater than decided by the admin." });
       }
+      changes.videoTime = b.videoTime;
     }
 
-    video.visibilityType = req?.body?.visibilityType ? req?.body?.visibilityType : video.visibilityType;
-    video.audienceType = req?.body?.audienceType ? req?.body?.audienceType : video.audienceType;
-    video.commentType = req?.body?.commentType ? req?.body?.commentType : video.commentType;
+    if (b.visibilityType) changes.visibilityType = b.visibilityType;
+    if (b.audienceType) changes.audienceType = b.audienceType;
+    if (b.commentType) changes.commentType = b.commentType;
 
-    if (req?.body?.scheduleType) {
-      video.scheduleType = req?.body?.scheduleType ? req?.body?.scheduleType : video.scheduleType;
-
-      if (req?.body?.scheduleType == 1) {
-        video.scheduleTime = req?.body?.scheduleTime ? moment(req?.body?.scheduleTime).toDate() : video.scheduleTime; //e.g."2023-07-11T18:00:00.000Z"
-      } else if (req?.body?.scheduleType == 2) {
-        video.scheduleTime = "";
-      } else {
-        if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
-        }
-
-        if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
-        }
-
+    if (b.scheduleType) {
+      changes.scheduleType = b.scheduleType;
+      if (b.scheduleType == 1) changes.scheduleTime = b.scheduleTime ? moment(b.scheduleTime).toISOString() : (video.scheduleTime || "");
+      else if (b.scheduleType == 2) changes.scheduleTime = "";
+      else {
+        if (b.videoImage) await deleteFromStorage(b.videoImage);
+        if (b.videoUrl) await deleteFromStorage(b.videoUrl);
         return res.status(200).json({ status: false, message: "scheduleType must be passed valid!" });
       }
     }
 
-    video.location = req?.body?.location ? req?.body?.location : video.location;
-    video.locationCoordinates.latitude = req?.body?.latitude ? req?.body?.latitude : video.latitude;
-    video.locationCoordinates.longitude = req?.body?.longitude ? req?.body?.longitude : video.longitude;
-
-    const multiplehashTag = req?.body?.hashTag ? req?.body?.hashTag.toString().split(",") : video.hashTag;
-    video.hashTag = multiplehashTag;
-
-    if (req?.body?.videoImage) {
-      if (video.videoImage) {
-        await deleteFromStorage(video.videoImage);
-      }
-      video.videoImage = req?.body?.videoImage ? req?.body?.videoImage : video.videoImage;
+    if (b.location) changes.location = b.location;
+    if (b.latitude || b.longitude) {
+      changes.locationCoordinates = {
+        latitude: b.latitude || video.locationCoordinates?.latitude || "",
+        longitude: b.longitude || video.locationCoordinates?.longitude || "",
+      };
     }
+    if (b.hashTag) changes.hashTag = String(b.hashTag).split(",");
 
-    if (req?.body?.videoUrl) {
-      if (video.videoUrl) {
+    if (b.videoImage) {
+      if (video.videoImage) await deleteFromStorage(video.videoImage);
+      changes.videoImage = b.videoImage;
+    }
+    if (b.videoUrl && b.videoUrl !== video.videoUrl) {
+      if (video.streamUid && video.streamUid !== b.streamUid) {
+        try { await videoPipeline.deleteVideo(video.streamUid); } catch (e) { /* ignore */ }
+      } else if (video.videoUrl) {
         await deleteFromStorage(video.videoUrl);
       }
-      video.videoUrl = req?.body?.videoUrl ? req?.body?.videoUrl : video.videoUrl;
+      changes.videoUrl = b.videoUrl;
+      if (b.streamUid) {
+        const pb = videoPipeline.playbackUrls(b.streamUid);
+        Object.assign(changes, { streamUid: b.streamUid, hlsUrl: pb.hlsUrl, dashUrl: pb.dashUrl, videoUrl: pb.hlsUrl, streamStatus: "inprogress", storageProvider: "stream" });
+      }
     }
 
-    await video.save();
+    await db.update("videos", video._id || video.id, changes);
+
+    return res.status(200).json({ status: true, message: "Video has been updated!" });
   } catch (error) {
     if (req.body.videoImage) {
       await deleteFromStorage(req.body.videoImage);
@@ -5120,5 +5142,78 @@ exports.getUserVideos = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
+  }
+};
+
+// ── Cloudflare Stream webhook: a video finished transcoding ─────────────────
+exports.streamWebhook = async (req, res) => {
+  try {
+    const parsed = videoPipeline.verifyWebhook({
+      rawBody: Buffer.isBuffer(req.body) ? req.body : (req.rawBody || JSON.stringify(req.body || {})),
+      headers: req.headers,
+    });
+    if (!parsed.valid) {
+      console.warn("stream webhook rejected:", parsed.reason);
+      return res.status(400).json({ status: false, message: parsed.reason });
+    }
+    res.status(200).json({ status: true });
+
+    if (!parsed.uid) return;
+    const video = await Video.findOne({ streamUid: parsed.uid });
+    if (!video) return;
+
+    const updates = {
+      streamStatus: parsed.state || (parsed.ready ? "ready" : "inprogress"),
+    };
+    if (parsed.ready) {
+      updates.hlsUrl = parsed.hlsUrl;
+      updates.dashUrl = parsed.dashUrl;
+      updates.videoUrl = parsed.hlsUrl;            // the app plays videoUrl
+      updates.videoDuration = Math.round(parsed.duration || 0);
+      if (parsed.duration) updates.videoTime = Math.round(parsed.duration);
+      if (parsed.thumbnail) updates.videoImage = parsed.thumbnail;
+    }
+    await db.update("videos", video._id || video.id, updates);
+    console.log(`🎬 Stream ${parsed.uid} → ${updates.streamStatus}`);
+  } catch (error) {
+    console.error("streamWebhook error:", error.message);
+    if (!res.headersSent) res.status(500).json({ status: false });
+  }
+};
+
+// ── Poll a video's Stream transcode status (client fallback for the webhook) ──
+exports.getStreamStatus = async (req, res) => {
+  try {
+    const videoId = req.query.videoId || (req.body && req.body.videoId);
+    if (!videoId) return res.status(200).json({ status: false, message: "videoId is required." });
+    const video = await Video.findById(videoId);
+    if (!video || !video.streamUid) {
+      return res.status(200).json({ status: false, message: "Video is not on Cloudflare Stream." });
+    }
+    if (video.streamStatus === "ready") {
+      return res.status(200).json({ status: true, ready: true, streamStatus: "ready", hlsUrl: video.hlsUrl, videoDuration: video.videoDuration });
+    }
+    const s = await videoPipeline.getStatus(video.streamUid);
+    if (s.ready) {
+      await db.update("videos", video._id || video.id, {
+        streamStatus: "ready",
+        hlsUrl: s.hlsUrl, dashUrl: s.dashUrl, videoUrl: s.hlsUrl,
+        videoDuration: Math.round(s.duration || 0),
+        videoTime: Math.round(s.duration || video.videoTime || 0),
+        videoImage: s.thumbnail || video.videoImage,
+      });
+    } else {
+      await db.update("videos", video._id || video.id, { streamStatus: s.state || "inprogress" });
+    }
+    return res.status(200).json({
+      status: true,
+      ready: s.ready,
+      streamStatus: s.state,
+      hlsUrl: s.ready ? s.hlsUrl : null,
+      videoDuration: Math.round(s.duration || 0),
+    });
+  } catch (error) {
+    console.error("getStreamStatus error:", error.message);
+    return res.status(200).json({ status: false, message: error.message });
   }
 };
