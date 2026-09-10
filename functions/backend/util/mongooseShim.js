@@ -56,25 +56,39 @@ function buildUpdatePayload(existing, updateData) {
 // feed/report controllers actually use: $match (equality + $ne/$gte/$lte/$in),
 // $sort, $skip, $limit, $count, $facet, $group (basic), $project (basic),
 // $addFields; $lookup / $unwind are skipped (populate is done in the controller).
+// Loose equality: strict first, then compare stringified forms so an ObjectId
+// instance / string / number match the way Mongo would.
+function looseEq(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  return String(a) === String(b);
+}
+
 function matchStage(rows, cond) {
   return rows.filter((item) => {
     for (const [k, v] of Object.entries(cond || {})) {
       if (k === "$or") { if (!v.some((c) => matchStage([item], c).length)) return false; continue; }
       if (k === "$and") { if (!v.every((c) => matchStage([item], c).length)) return false; continue; }
       const val = item[k];
-      if (v && typeof v === "object" && !Array.isArray(v)) {
+      if (v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).some((kk) => kk.startsWith("$"))) {
         for (const [op, t] of Object.entries(v)) {
-          if (op === "$ne" && !(val !== t)) return false;
-          if (op === "$eq" && !(val === t)) return false;
+          if (op === "$ne" && looseEq(val, t)) return false;
+          if (op === "$eq" && !looseEq(val, t)) return false;
           if (op === "$gte" && !(val >= t)) return false;
           if (op === "$gt" && !(val > t)) return false;
           if (op === "$lte" && !(val <= t)) return false;
           if (op === "$lt" && !(val < t)) return false;
-          if (op === "$in" && !(Array.isArray(t) && t.includes(val))) return false;
-          if (op === "$nin" && Array.isArray(t) && t.includes(val)) return false;
+          if (op === "$in" && !(Array.isArray(t) && t.some((x) => looseEq(x, val)))) return false;
+          if (op === "$nin" && Array.isArray(t) && t.some((x) => looseEq(x, val))) return false;
           if (op === "$exists" && (t ? val === undefined : val !== undefined)) return false;
+          if (op === "$regex") {
+            try {
+              const re = t instanceof RegExp ? t : new RegExp(t, v.$options || "");
+              if (!re.test(val == null ? "" : String(val))) return false;
+            } catch (e) { /* bad regex -> no match */ return false; }
+          }
         }
-      } else if (val !== v) {
+      } else if (!looseEq(val, v)) {
         return false;
       }
     }
@@ -82,7 +96,142 @@ function matchStage(rows, cond) {
   });
 }
 
-function runPipeline(rows, pipeline) {
+function getPath(doc, path) {
+  if (doc == null) return undefined;
+  if (path.indexOf(".") === -1) return doc[path];
+  return path.split(".").reduce((o, seg) => {
+    if (o == null) return undefined;
+    // Mongo: "arr.field" over an array of objects -> array of field values.
+    if (Array.isArray(o)) return o.map((el) => (el == null ? undefined : el[seg]));
+    return o[seg];
+  }, doc);
+}
+
+// Evaluate a Mongo aggregation expression against a document (+ $$ vars scope).
+// Unknown operators return null rather than leaking the literal {$op:...} object.
+function evalExpr(expr, doc, vars) {
+  if (expr == null) return expr;
+  if (typeof expr === "string") {
+    if (expr.startsWith("$$")) {
+      const name = expr.slice(2);
+      if (name === "ROOT") return doc;
+      if (name === "NOW") return new Date();
+      return vars ? getPath(vars, name) : undefined;
+    }
+    if (expr.startsWith("$")) return getPath(doc, expr.slice(1));
+    return expr;
+  }
+  if (Array.isArray(expr)) return expr.map((e) => evalExpr(e, doc, vars));
+  if (typeof expr !== "object") return expr;
+
+  const keys = Object.keys(expr);
+  const opKey = keys.find((k) => k.startsWith("$"));
+  if (!opKey) {
+    // plain object literal — evaluate each value
+    const o = {};
+    for (const [k, v] of Object.entries(expr)) o[k] = evalExpr(v, doc, vars);
+    return o;
+  }
+  const a = expr[opKey];
+  const E = (x) => evalExpr(x, doc, vars);
+  const num = (x) => { const n = Number(E(x)); return Number.isFinite(n) ? n : 0; };
+  const arr = (x) => { const v = E(x); return Array.isArray(v) ? v : []; };
+  switch (opKey) {
+    case "$literal": return a;
+    case "$ifNull": { for (let i = 0; i < a.length - 1; i++) { const v = E(a[i]); if (v !== undefined && v !== null) return v; } return E(a[a.length - 1]); }
+    case "$arrayElemAt": { const l = arr(a[0]); const i = num(a[1]); return i < 0 ? l[l.length + i] : l[i]; }
+    case "$first": return arr(a)[0];
+    case "$last": { const l = arr(a); return l[l.length - 1]; }
+    case "$size": return arr(a).length;
+    case "$isArray": return Array.isArray(E(a));
+    case "$concat": return a.map((x) => { const v = E(x); return v == null ? "" : String(v); }).join("");
+    case "$toString": { const v = E(a); return v == null ? "" : String(v); }
+    case "$toInt": case "$toLong": return Math.trunc(num(a));
+    case "$toDouble": case "$toDecimal": return num(a);
+    case "$toBool": return Boolean(E(a));
+    case "$toDate": { const v = E(a); const d = v instanceof Date ? v : new Date(v); return isNaN(d) ? null : d; }
+    case "$year": { const d = new Date(E(a)); return isNaN(d) ? null : d.getFullYear(); }
+    case "$floor": return Math.floor(num(a));
+    case "$ceil": return Math.ceil(num(a));
+    case "$round": case "$trunc": return Math.trunc(num(a));
+    case "$abs": return Math.abs(num(a));
+    case "$add": return (Array.isArray(a) ? a : [a]).reduce((s, x) => s + num(x), 0);
+    case "$multiply": return (Array.isArray(a) ? a : [a]).reduce((s, x) => s * num(x), 1);
+    case "$subtract": return num(a[0]) - num(a[1]);
+    case "$divide": { const d = num(a[1]); return d === 0 ? null : num(a[0]) / d; }
+    case "$mod": { const d = num(a[1]); return d === 0 ? null : num(a[0]) % d; }
+    case "$eq": return looseEq(E(a[0]), E(a[1]));
+    case "$ne": return !looseEq(E(a[0]), E(a[1]));
+    case "$gt": return num(a[0]) > num(a[1]);
+    case "$gte": return num(a[0]) >= num(a[1]);
+    case "$lt": return num(a[0]) < num(a[1]);
+    case "$lte": return num(a[0]) <= num(a[1]);
+    case "$and": return a.every((x) => Boolean(E(x)));
+    case "$or": return a.some((x) => Boolean(E(x)));
+    case "$not": return !E(Array.isArray(a) ? a[0] : a);
+    case "$in": { const l = E(a[1]); return Array.isArray(l) && l.some((x) => looseEq(x, E(a[0]))); }
+    case "$cond": {
+      const c = Array.isArray(a) ? { if: a[0], then: a[1], else: a[2] } : a;
+      return E(c.if) ? E(c.then) : E(c.else);
+    }
+    case "$switch": {
+      for (const b of a.branches || []) if (E(b.case)) return E(b.then);
+      return a.default !== undefined ? E(a.default) : null;
+    }
+    case "$let": {
+      const scope = { ...(vars || {}) };
+      for (const [k, v] of Object.entries(a.vars || {})) scope[k] = evalExpr(v, doc, vars);
+      return evalExpr(a.in, doc, scope);
+    }
+    case "$map": {
+      const input = arr(a.input); const as = a.as || "this";
+      return input.map((el) => evalExpr(a.in, doc, { ...(vars || {}), [as]: el }));
+    }
+    case "$filter": {
+      const input = arr(a.input); const as = a.as || "this";
+      return input.filter((el) => Boolean(evalExpr(a.cond, doc, { ...(vars || {}), [as]: el })));
+    }
+    case "$mergeObjects": return Object.assign({}, ...(Array.isArray(a) ? a : [a]).map((x) => E(x) || {}));
+    case "$dateDiff": case "$timeDiff": case "$dateToString": return null;
+    default: return null;
+  }
+}
+
+function applyLookup(results, stage, foreign) {
+  const { from, localField, foreignField, as, pipeline: sub } = stage.$lookup;
+  const key = firestoreDb.normalizeCollectionName(from);
+  const frows = foreign[key] || foreign[from] || [];
+  return results.map((r) => {
+    const lv = getPath(r, localField);
+    let matches = frows.filter((fr) => {
+      const fv = getPath(fr, foreignField);
+      return Array.isArray(lv) ? lv.some((x) => looseEq(x, fv)) : looseEq(lv, fv);
+    });
+    if (Array.isArray(sub) && sub.length) matches = runPipeline(matches, sub, foreign);
+    return { ...r, [as]: matches };
+  });
+}
+
+function applyUnwind(results, stage) {
+  const spec = stage.$unwind;
+  const path = (typeof spec === "string" ? spec : spec.path).replace(/^\$/, "");
+  const keepEmpty = typeof spec === "object" && spec.preserveNullAndEmptyArrays;
+  const out = [];
+  for (const r of results) {
+    const v = getPath(r, path);
+    if (Array.isArray(v)) {
+      if (v.length) { for (const el of v) out.push({ ...r, [path]: el }); }
+      else if (keepEmpty) out.push({ ...r, [path]: null });
+    } else if (v !== undefined && v !== null) {
+      out.push(r);
+    } else if (keepEmpty) {
+      out.push({ ...r, [path]: null });
+    }
+  }
+  return out;
+}
+
+function runPipeline(rows, pipeline, foreign = {}) {
   let results = Array.isArray(rows) ? rows.slice() : [];
   for (const stage of pipeline || []) {
     if (stage.$match) results = matchStage(results, stage.$match);
@@ -91,8 +240,11 @@ function runPipeline(rows, pipeline) {
       results.sort((a, b) => {
         for (const k of keys) {
           const dir = stage.$sort[k] === -1 ? -1 : 1;
-          if (a[k] === b[k]) continue;
-          return (a[k] > b[k] ? 1 : -1) * dir;
+          const av = a[k], bv = b[k];
+          if (av === bv) continue;
+          if (av === undefined) return 1;
+          if (bv === undefined) return -1;
+          return (av > bv ? 1 : -1) * dir;
         }
         return 0;
       });
@@ -101,20 +253,29 @@ function runPipeline(rows, pipeline) {
     else if (stage.$count) results = [{ [stage.$count]: results.length }];
     else if (stage.$facet) {
       const out = {};
-      for (const [name, sub] of Object.entries(stage.$facet)) out[name] = runPipeline(results, sub);
+      for (const [name, sub] of Object.entries(stage.$facet)) out[name] = runPipeline(results, sub, foreign);
       results = [out];
+    } else if (stage.$lookup) {
+      results = applyLookup(results, stage, foreign);
+    } else if (stage.$unwind) {
+      results = applyUnwind(results, stage);
     } else if (stage.$addFields || stage.$set) {
       const add = stage.$addFields || stage.$set;
       results = results.map((r) => ({ ...r, ...resolveComputed(add, r) }));
     } else if (stage.$project) {
       const p = stage.$project;
-      const incl = Object.entries(p).filter(([, v]) => v === 1 || v === true).map(([k]) => k);
+      const plainIncl = Object.entries(p).filter(([, v]) => v === 1 || v === true).map(([k]) => k);
+      // A field set to an expression / "$ref" is also an inclusion in Mongo.
+      const computedKeys = Object.entries(p)
+        .filter(([, v]) => v !== 0 && v !== false && v !== 1 && v !== true)
+        .map(([k]) => k);
       const excl = Object.entries(p).filter(([, v]) => v === 0 || v === false).map(([k]) => k);
+      const isInclusion = plainIncl.length > 0 || computedKeys.length > 0;
       results = results.map((r) => {
-        if (incl.length) {
+        if (isInclusion) {
           const o = {};
-          for (const k of incl) if (r[k] !== undefined) o[k] = r[k];
-          if (p._id !== 0) o._id = r._id;
+          for (const k of plainIncl) if (getPath(r, k) !== undefined) o[k] = getPath(r, k);
+          if (p._id !== 0 && p._id !== false) o._id = r._id;
           return { ...o, ...resolveComputed(p, r) };
         }
         const o = { ...r };
@@ -124,27 +285,30 @@ function runPipeline(rows, pipeline) {
     } else if (stage.$group) {
       results = groupStage(results, stage.$group);
     }
-    // $lookup / $unwind: skipped — controllers populate manually
   }
   return results;
 }
 
+// Turn a $project / $addFields spec into concrete fields for one doc.
 function resolveComputed(spec, doc) {
   const out = {};
   for (const [k, v] of Object.entries(spec)) {
-    if (v && typeof v === "object" && v.$ifNull) {
-      const [expr, fallback] = v.$ifNull;
-      const val = typeof expr === "string" && expr.startsWith("$") ? doc[expr.slice(1)] : expr;
-      out[k] = val === undefined || val === null ? fallback : val;
-    } else if (typeof v === "string" && v.startsWith("$")) {
-      out[k] = doc[v.slice(1)];
-    } else if (v === 1 || v === 0 || v === true || v === false) {
-      /* projection flag, not a computed field */
-    } else {
-      out[k] = v;
-    }
+    if (v === 1 || v === 0 || v === true || v === false) continue; // projection flag
+    if (typeof v === "string") { out[k] = v.startsWith("$") ? evalExpr(v, doc) : v; continue; }
+    if (v && typeof v === "object") { out[k] = evalExpr(v, doc); continue; }
+    out[k] = v;
   }
   return out;
+}
+
+// Collect the collections referenced by every $lookup (including inside $facet).
+function collectLookupNames(pipeline, set) {
+  for (const stage of pipeline || []) {
+    if (stage && stage.$lookup && stage.$lookup.from) set.add(stage.$lookup.from);
+    if (stage && stage.$facet) for (const sub of Object.values(stage.$facet)) collectLookupNames(sub, set);
+    if (stage && stage.$lookup && Array.isArray(stage.$lookup.pipeline)) collectLookupNames(stage.$lookup.pipeline, set);
+  }
+  return set;
 }
 
 function groupStage(rows, spec) {
@@ -435,7 +599,18 @@ function createFirestoreModel(modelName) {
 
   ModelConstructor.aggregate = async function (pipeline = []) {
     const seed = await firestoreDb.find(collectionName, {});
-    return runPipeline(seed, pipeline);
+    // Pre-load every collection referenced by a $lookup so runPipeline (sync)
+    // can resolve joins in memory.
+    const names = collectLookupNames(pipeline, new Set());
+    const foreign = {};
+    await Promise.all(
+      [...names].map(async (name) => {
+        const key = firestoreDb.normalizeCollectionName(name);
+        try { foreign[key] = await firestoreDb.find(key, {}); }
+        catch (e) { foreign[key] = []; }
+      })
+    );
+    return runPipeline(seed, pipeline, foreign);
   };
 
   ModelConstructor.distinct = async function (field, query = {}) {

@@ -3,8 +3,8 @@
     "_id": "video_101",
     "title": "Welcome to YouPeak — Next Gen Creator Platform",
     "description": "Discover incredible videos, shorts, live streams, and earn rewards on YouPeak!",
-    "videoUrl": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/videos/video_101.mp4",
-    "videoImage": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/thumbnails/video_101.jpg",
+    "videoUrl": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8",
+    "videoImage": "https://picsum.photos/seed/yp_video_101/640/360",
     "videoType": 1,
     "videoTime": 596,
     "hashTag": [
@@ -32,14 +32,18 @@
     "fullName": "Super Admin (Master)",
     "nickName": "YouPeak Admin",
     "uniqueId": "user_101",
-    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80"
+    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+    "hlsUrl": "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8",
+    "storageProvider": "stream",
+    "streamStatus": "ready",
+    "moderationStatus": "approved"
   },
   {
     "_id": "video_102",
     "title": "Top 10 High Energy Tech Trends in 2026",
     "description": "Exploring AI, autonomous systems, mobile frameworks, and cloud architectures for developers.",
-    "videoUrl": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/videos/video_102.mp4",
-    "videoImage": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/thumbnails/video_102.jpg",
+    "videoUrl": "https://media.w3.org/2010/05/sintel/trailer.mp4",
+    "videoImage": "https://picsum.photos/seed/yp_video_102/640/360",
     "videoType": 1,
     "videoTime": 653,
     "hashTag": [
@@ -66,14 +70,17 @@
     "fullName": "Tech Pulse Labs (Channel Creator)",
     "nickName": "Alex Tech",
     "uniqueId": "user_102",
-    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80"
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+    "storageProvider": "r2",
+    "streamStatus": "ready",
+    "moderationStatus": "approved"
   },
   {
     "_id": "short_101",
     "title": "Fast Mobile Dev Hacks You Need to Know! 🚀",
     "description": "Build high performance cross-platform applications in minutes! #Shorts",
-    "videoUrl": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/videos/short_101.mp4",
-    "videoImage": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/thumbnails/short_101.jpg",
+    "videoUrl": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    "videoImage": "https://picsum.photos/seed/yp_short_101/640/360",
     "videoType": 2,
     "videoTime": 45,
     "hashTag": [
@@ -100,14 +107,17 @@
     "fullName": "Super Admin (Master)",
     "nickName": "YouPeak Admin",
     "uniqueId": "user_101",
-    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80"
+    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+    "storageProvider": "r2",
+    "streamStatus": "ready",
+    "moderationStatus": "approved"
   },
   {
     "_id": "short_102",
     "title": "Epic Sunset Live Stream Recap 🌅✨",
     "description": "Beautiful 4K cinematic landscape compilation #Shorts #Relax",
-    "videoUrl": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/videos/short_102.mp4",
-    "videoImage": "https://pub-da97865a5caa8f2b10c795c92912615e.r2.dev/thumbnails/short_102.jpg",
+    "videoUrl": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4",
+    "videoImage": "https://picsum.photos/seed/yp_short_102/640/360",
     "videoType": 2,
     "videoTime": 30,
     "hashTag": [
@@ -134,6 +144,9 @@
     "fullName": "Trichy Digital Partner",
     "nickName": "Trichy Partner",
     "uniqueId": "TRICHY_PARTNER_2026",
-    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80"
+    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+    "storageProvider": "r2",
+    "streamStatus": "ready",
+    "moderationStatus": "approved"
   }
 ]
