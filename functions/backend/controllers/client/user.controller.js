@@ -7,9 +7,14 @@
 
 const db = require("../../util/connection");
 const Cryptr = require("cryptr");
-const cryptr = new Cryptr("myTotallySecretKey");
+// TODO(step-4): migrate user passwords to bcrypt (verify-and-rehash on login).
+// Key is overridable so it can be rotated once that migration exists.
+const cryptr = new Cryptr(process.env.USER_PW_SECRET || "myTotallySecretKey");
 const { generateUniqueId } = require("../../util/generateUniqueId");
 const { generateReferralCode } = require("../../util/generateReferralCode");
+const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
+const rewardEngine = require("../../util/rewardEngine");
+const referralService = require("../../util/referral.service");
 
 // ─── Re-export everything from the Firestore controller ──────────────────────
 const firestoreCtrl = require("./userFirestore.controller");
@@ -24,72 +29,21 @@ exports.getProfile     = firestoreCtrl.getProfile;
 //   Stage 2: ₹100 (10,000 coins) when referred user watches 100 min within 7 days
 exports.validateAndApplyReferralCode = async (req, res) => {
   try {
-    const userId = req.query.userId;
-    const { referralCode } = req.body;
-    if (!userId || !referralCode) {
-      return res.status(200).json({ status: false, message: "userId and referralCode are required." });
-    }
-    const user = await db.findById("users", userId);
-    if (!user) return res.status(200).json({ status: false, message: "User not found." });
+    const userId = req.query.userId || req.body.userId;
+    const referralCode = req.body.referralCode || req.query.referralCode;
 
-    if (user.referralApplied) {
-      return res.status(200).json({ status: false, message: "Referral code already applied." });
-    }
-
-    const referrer = await db.findOne("users", { referralCode: referralCode.trim() });
-    if (!referrer) {
-      return res.status(200).json({ status: false, message: "Invalid referral code." });
-    }
-    if ((referrer._id || referrer.id) === userId) {
-      return res.status(200).json({ status: false, message: "You cannot use your own referral code." });
-    }
-
-    // Stage 1: Credit 10,000 coins = ₹100 to referrer immediately on OTP verification
-    const STAGE1_COINS = 10000; // ₹100 at 100 coins = ₹1
-
-    // Update referred user: mark referral as applied
-    await db.update("users", userId, {
-      referralApplied: true,
-      isReferral: true,
+    const result = await referralService.applyReferralCode({
+      referredUserId: userId,
+      referralCode,
+      ipAddress: (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.ip || "",
     });
-
-    // Update referrer: credit Stage 1 coins + increment referral count
-    const referrerId = referrer._id || referrer.id;
-    await db.update("users", referrerId, {
-      coin: ((referrer.coin) || 0) + STAGE1_COINS,
-      referralRewardCoin: ((referrer.referralRewardCoin) || 0) + STAGE1_COINS,
-      totalRewardCoin: ((referrer.totalRewardCoin) || 0) + STAGE1_COINS,
-      referralCount: ((referrer.referralCount) || 0) + 1,
-    });
-
-    // Create ReferralHistory record for Stage 2 tracking (7-day deadline)
-    const stage2Deadline = new Date();
-    stage2Deadline.setDate(stage2Deadline.getDate() + 7);
-
-    try {
-      const ReferralHistory = require("../../models/referralHistory.model");
-      await ReferralHistory.create({
-        referrerId: referrerId,
-        referredUserId: userId,
-        referralCode: referralCode.trim(),
-        ipAddress: req.ip || "",
-        stage1Completed: true,
-        stage1CompletedAt: new Date(),
-        stage1RewardCoins: STAGE1_COINS,
-        stage2Completed: false,
-        stage2RewardCoins: 0,
-        stage2DeadlineAt: stage2Deadline,
-        totalRewardCoinsGiven: STAGE1_COINS,
-        status: "STAGE1_DONE",
-      });
-    } catch (histErr) {
-      console.error("ReferralHistory create error:", histErr.message);
-    }
 
     return res.status(200).json({
-      status: true,
-      message: "Referral code applied! Stage 1 bonus (₹100 = 10,000 coins) credited to referrer.",
-      stage1CoinsAwarded: STAGE1_COINS,
+      status: !!result.ok,
+      message: result.message,
+      flagged: result.flagged || false,
+      stage1CoinsPending: result.stage1CoinsPending || 0,
+      holdHours: result.holdHours || 0,
     });
   } catch (error) {
     console.error("validateAndApplyReferralCode error:", error);
@@ -98,41 +52,128 @@ exports.validateAndApplyReferralCode = async (req, res) => {
 };
 
 // ─── Ad Watch Reward ──────────────────────────────────────────────────────────
+// Server decides the coin amount and enforces the 20-ads/day + daily-earning caps.
+// `coinEarnedFromAd` from the client is IGNORED for crediting (kept only as a
+// fraud-analysis breadcrumb in the history record).
 exports.handleAdWatchReward = async (req, res) => {
   try {
-    const userId = req.query.userId;
+    const userId = req.query.userId || req.body.userId;
     const { coinEarnedFromAd, adId } = req.body;
-    if (!userId) return res.status(200).json({ status: false, message: "userId is required." });
 
-    const user = await db.findById("users", userId);
-    if (!user) return res.status(200).json({ status: false, message: "User not found." });
-
-    const coins = Number(coinEarnedFromAd) || 0;
-    await db.update("users", userId, { coin: (user.coin || 0) + coins, totalRewardCoin: (user.totalRewardCoin || 0) + coins });
-    await db.create("histories", {
-      userId, coin: coins, type: 1, date: new Date().toISOString(), adId: adId || ""
+    const result = await rewardEngine.creditReward({
+      userId,
+      kind: "ad",
+      historyType: rewardEngine.HISTORY_TYPE.AD_WATCH,
+      countField: "dailyAdCountToday",
+      capField: "maxAdsPerDay",
+      meta: { adId: adId || "", claimedByClient: Number(coinEarnedFromAd) || 0 },
     });
-    return res.status(200).json({ status: true, message: "Ad reward applied." });
+
+    if (!result.ok) {
+      return res.status(200).json({ status: false, message: result.message, ...(result.counts || {}) });
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: result.message,
+      coinsEarned: result.credited,
+      data: {
+        coin: result.user.coin,
+        watchAds: { count: result.counts.dailyAdCountToday, date: rewardEngine.todayStr() },
+      },
+      dailyAdCountToday: result.counts.dailyAdCountToday,
+      maxAdsPerDay: result.limits.maxAdsPerDay,
+      dailyEarningCoinsToday: result.counts.dailyEarningCoinsToday,
+      dailyMaxCapInCoins: result.limits.dailyEarningCapInCoins,
+    });
   } catch (error) {
     console.error("handleAdWatchReward error:", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };
 
-// ─── Engagement Video Reward ──────────────────────────────────────────────────
+// ─── Engagement Video Watch Reward (2h/day milestone -> 500 coins) ─────────────
 exports.handleEngagementVideoWatchReward = async (req, res) => {
   try {
-    const userId = req.query.userId;
-    const { videoId, totalWatchTime } = req.body;
+    const userId = req.query.userId || req.body.userId;
+    let sessionMinutes = Number(req.body.totalWatchTime ?? req.query.totalWatchTime ?? 0);
     if (!userId) return res.status(200).json({ status: false, message: "userId is required." });
+    if (!Number.isFinite(sessionMinutes) || sessionMinutes <= 0) {
+      return res.status(200).json({ status: false, message: "Invalid watch time." });
+    }
+    // A single client report can't represent more than one long sitting.
+    sessionMinutes = Math.min(sessionMinutes, 180);
 
-    const setting = global.settingJSON || {};
-    const rewardCoins = setting.videoWatchRewardCoin || 10;
     const user = await db.findById("users", userId);
     if (!user) return res.status(200).json({ status: false, message: "User not found." });
+    if (user.isBlock) return res.status(200).json({ status: false, message: "You are blocked by the admin." });
 
-    await db.update("users", userId, { coin: (user.coin || 0) + rewardCoins, totalRewardCoin: (user.totalRewardCoin || 0) + rewardCoins });
-    return res.status(200).json({ status: true, message: "Engagement reward applied.", coin: rewardCoins });
+    await rewardEngine.ensureDailyReset(user);
+    const limits = await rewardEngine.getLimits(user);
+    const id = user._id || user.id;
+
+    const milestoneMin = limits.minWatchMinutesForEngagementReward; // 120
+    const prevMinutes = user.totalCurrentWatchTime || 0;
+    const newMinutes = prevMinutes + sessionMinutes;
+    const crossed = prevMinutes < milestoneMin && newMinutes >= milestoneMin;
+
+    const baseUpdates = {
+      totalCurrentWatchTime: newMinutes,
+      totalWatchTime: (user.totalWatchTime || 0) + sessionMinutes,
+      dailyVideoWatchesToday: (user.dailyVideoWatchesToday || 0) + 1,
+    };
+
+    let credited = 0;
+    if (crossed) {
+      const room = limits.dailyEarningCapInCoins - (user.dailyEarningCoinsToday || 0);
+      credited = Math.max(0, Math.min(limits.reward.engagementWatch, room));
+      if (credited > 0) {
+        baseUpdates.coin = (user.coin || 0) + credited;
+        baseUpdates.engagementRewardCoin = (user.engagementRewardCoin || 0) + credited;
+        baseUpdates.totalRewardCoin = (user.totalRewardCoin || 0) + credited;
+        baseUpdates.dailyEarningCoinsToday = (user.dailyEarningCoinsToday || 0) + credited;
+      }
+    }
+
+    await db.update("users", id, baseUpdates);
+
+    if (credited > 0) {
+      await db.create("histories", {
+        userId: id,
+        uniqueId: await generateHistoryUniqueId(),
+        coin: credited,
+        type: rewardEngine.HISTORY_TYPE.ENGAGEMENT_WATCH,
+        date: new Date().toISOString(),
+      });
+    }
+
+    // Stage-2 referral: referred user reached the watch-minute threshold in-window
+    if (user.isReferral) {
+      try {
+        await referralService.completeStage2({
+          referredUserId: String(id),
+          totalWatchMinutes: baseUpdates.totalWatchTime,
+        });
+      } catch (e) {
+        console.error("stage2 referral check error:", e.message);
+      }
+    }
+
+    return res.status(200).json({
+      status: true,
+      milestoneReached: crossed,
+      message: crossed
+        ? (credited > 0
+            ? `2-hour watch milestone reached! Earned ${credited} coins.`
+            : "2-hour milestone reached — today's earning cap is already met.")
+        : "Watch time updated.",
+      coinsEarned: credited,
+      data: { coin: (user.coin || 0) + credited },
+      totalWatchMinutesToday: newMinutes,
+      minutesUntilMilestone: Math.max(0, milestoneMin - newMinutes),
+      dailyEarningCoinsToday: (user.dailyEarningCoinsToday || 0) + credited,
+      dailyMaxCapInCoins: limits.dailyEarningCapInCoins,
+    });
   } catch (error) {
     console.error("handleEngagementVideoWatchReward error:", error);
     return res.status(500).json({ status: false, message: error.message });

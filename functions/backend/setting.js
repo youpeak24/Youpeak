@@ -1,18 +1,22 @@
+// Default settings. Real values are loaded from the Firestore `settings`
+// collection at runtime and managed from the admin panel.
+// Secrets (R2 keys, Firebase SA, payment keys) are NEVER stored here — they
+// come from environment variables. See .env.example.
 module.exports = {
   _id: "6a5a008c9fb97d1dc7aa9e61",
   storage: {
     local: false,
     awsS3: false,
     digitalOcean: false,
-    cloudflareR2: true
+    cloudflareR2: true,
   },
-  r2AccountId: "da97865a5caa8f2b10c795c92912615e",
-  r2AccessKeyId: "cdb9bca482d4459a3d9a99533d71939b",
-  r2SecretAccessKey: "9d2946e08c57db8ed33ef5d29044d066c73274b103d26d3ae43e7ba2a12582df",
-  r2BucketName: "youpeak-videos",
-  r2Endpoint: "https://da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  r2PublicDomain: "https://youpeak-videos.da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  r2CdnUrl: "https://youpeak-videos.da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
+  r2BucketName: process.env.CLOUDFLARE_R2_BUCKET || "youpeak-videos",
+  r2PublicDomain: process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN || "",
+  // Cloudflare Stream (adaptive HLS). customerCode = the "customer-xxxxx" part
+  // of your playback URLs (Stream dashboard).
+  cloudflareStreamCustomerCode: process.env.CLOUDFLARE_STREAM_CUSTOMER_CODE || "",
+  // non-video assets go to Firebase Storage:
+  firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET || "",
   currency: {
     name: "USD",
     symbol: "$",
@@ -36,16 +40,83 @@ module.exports = {
   isMonetization: true,
   adDisplayIndex: 2,
   privateKey: {},
-  maxAdPerDay: 5,
+  // ── Engagement / earning limits (YP-TC-2026-FINAL + strategy call) ──
+  coinToInrRate: 0.01,        // INR per coin (100 coins = ₹1)
+  coinsPerInr: 100,           // coins per ₹1 (used for coin->INR conversion)
+  maxAdPerDay: 20,             // hard cap, all tiers
+  dailyMaxLikes: 5,            // free tier
+  dailyMaxComments: 2,         // free tier
+  dailyMaxDislikes: 5,         // free tier
+  dailyMaxCheckIns: 1,
+  dailyMaxVideoWatches: 50,
+  dailyMaxEarningCapInCoins: 500,   // free tier: ₹5/day
+  minWatchMinutesForEngagementReward: 120, // 2 hours -> 500 coins
+  engagementWatchRewardCoins: 500,
   minCoinForCashOut: 100,
-  commentingRewardCoins: 100,
-  likeVideoRewardCoins: 100,
+  commentingRewardCoins: 5,      // per comment
+  likeVideoRewardCoins: 2,       // per like
+  dislikeVideoRewardCoins: 2,    // per unlike/dislike
+  adRewardCoins: 25,             // per ad view (20 ads x 25 = 500 = free-tier daily cap)
   loginRewardCoins: 100,
-  referralRewardCoins: 100,
+  referralRewardCoins: 250,      // free tasker referral = 250 coins (₹2.50)
   requiredMembers: 5,
-  watchingVideoRewardCoins: 100,
-  minWithdrawalRequestedCoin: 0,
+
+  // ── Peak Partner referral (₹100 + ₹100, with holding periods) ──
+  referralStage1Coins: 10000,           // ₹100 on code apply
+  referralStage2Coins: 10000,           // ₹100 on watch-time task
+  referralStage1HoldHours: 24,
+  referralStage2HoldHours: 48,
+  referralStage2WatchMinutes: 100,
+  referralStage2WindowDays: 7,
+  maxReferralsPerDayPerUser: 20,
+  referralDeviceDedup: true,
+  paidTierReferralPercentage: 10,       // YP-TC §1.5: 10% of a referred member's paid pass
+  watchingVideoRewardCoins: 2,   // per video watch (non-milestone)
+  minWithdrawalRequestedCoin: 50000,  // ₹500
   minConvertCoin: 1000,
+
+  // ── Payments ──
+  // joiningFeeINR: 0 = no joining fee (launch on the tier model). Set > 0 only
+  // after legal sign-off to gate earning/withdrawal behind a one-time fee.
+  joiningFeeINR: 0,
+  paymentGateway: "razorpay",         // razorpay | cashfree | phonepe
+
+  // ── Content moderation (IT Rules 2021) ──
+  moderationEnabled: true,
+  reportAutoHoldThreshold: 5,          // reports within the window -> pending_review
+  reportAutoHoldWindowHours: 24,
+  grievanceSlaHours: 36,
+  grievanceOfficerName: "Grievance Officer",
+  grievanceEmail: "grievance@youpeak.in",
+  grievancePhone: "",
+  grievanceAddress: "Trichy, Tamil Nadu, India",
+  companyLegalName: "Youpeak Digital Solutions Pvt Ltd",
+
+  // ── Copyright / duplicate detection (needs the fingerprint worker) ──
+  copyrightEngineEnabled: false,       // turn on once a worker is deployed
+  copyrightAudioMatchThreshold: 0.85,
+  copyrightFrameHammingThreshold: 10,
+  copyrightMinFrameMatches: 3,
+
+  // ── Revenue split (% of gross; creator+referrer+platform must sum to 100) ──
+  // District-partner cut is taken from the platform share, capped separately.
+  revenueSplits: {
+    videoUnlock:     { creator: 80, referrer: 10, platform: 10 },
+    peakBoost:       { creator: 80, referrer: 0,  platform: 20 },
+    coinPurchase:    { creator: 0,  referrer: 10, platform: 90 },
+    premiumPurchase: { creator: 0,  referrer: 10, platform: 90 },
+    tierUpgrade:     { creator: 0,  referrer: 10, platform: 90 },
+    adRevenue:       { creator: 55, referrer: 0,  platform: 45 }, // creator% overridden by VIP tier
+  },
+  districtPartnerRates: {
+    videoUnlock: 10,        // capped by districtPartnerUnlockCapINR
+    tierUpgrade: 20,        // VIP creator pass sale
+    localBusinessAds: 30,
+    adRevenue: 10,
+    coinPurchase: 0,
+    premiumPurchase: 0,
+  },
+  districtPartnerUnlockCapINR: 1000,
   isWatermarkOn: false,
   watermarkIcon: "",
   watermarkType: 2,

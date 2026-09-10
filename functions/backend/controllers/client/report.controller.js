@@ -6,10 +6,13 @@
 "use strict";
 
 const db = require("../../util/connection");
+const moderation = require("../../util/moderation.service");
 
 exports.reportToVideo = async (req, res) => {
   try {
-    const { userId, videoId, reportType } = req.query;
+    const userId = req.query.userId || req.body.userId;
+    const videoId = req.query.videoId || req.body.videoId;
+    const reportType = req.query.reportType || req.body.reportType;
 
     if (!userId || !videoId || !reportType) {
       return res.status(200).json({
@@ -46,22 +49,14 @@ exports.reportToVideo = async (req, res) => {
 
     const reportToVideo = await db.create("reports", reportData);
 
-    // IT Rules 2021 Auto-hold logic: If >= 5 reports in 24 hours, set moderationStatus = "pending_review"
-    const allReportsForVideo = await db.find("reports", { videoId });
-    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const recentReports = allReportsForVideo.filter((r) => {
-      const created = r.createdAt ? new Date(r.createdAt) : new Date();
-      return created >= twentyFourHoursAgo;
-    });
-
-    if (recentReports.length >= 5) {
-      await db.update("videos", videoId, { moderationStatus: "pending_review" });
-    }
+    // IT Rules 2021 rolling-window auto-hold (config: reportAutoHoldThreshold / WindowHours)
+    const hold = await moderation.applyReportAutoHold(videoId);
 
     return res.status(200).json({
       status: true,
       message: "Video reported successfully.",
       reportToVideo,
+      underReview: hold.held || false,
     });
   } catch (error) {
     console.error("Report To Video Error:", error);

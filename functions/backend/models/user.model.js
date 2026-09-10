@@ -76,7 +76,11 @@ const userSchema = new mongoose.Schema(
 
     referralCode: { type: String, trim: true, unique: true },
     isReferral: { type: Boolean, default: false }, //True if the user was used referral code
+    referralApplied: { type: Boolean, default: false }, //True once this user has applied someone's code
+    referrerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null }, //who referred this user
     referralCount: { type: Number, default: 0 }, //how many users have signed up using a specific user's referral code
+    pendingReferralCoin: { type: Number, default: 0 }, //referral coins in the holding period (not yet spendable)
+    isNewUser: { type: Boolean, default: true },
 
     loginRewardCoin: { type: Number, default: 0 },
     dailyCheckInRewardCoin: { type: Number, default: 0 },

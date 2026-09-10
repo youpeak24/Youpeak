@@ -28,4 +28,8 @@ route.put(
   FileController.uploadContent
 );
 
+// One-time Cloudflare Stream direct-upload URL (large videos upload straight to CF)
+route.post("/stream-upload-url", checkAccessWithSecretKey(), FileController.getStreamUploadUrl);
+route.get("/stream-upload-url", checkAccessWithSecretKey(), FileController.getStreamUploadUrl);
+
 module.exports = route;

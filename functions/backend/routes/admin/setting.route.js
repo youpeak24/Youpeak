@@ -27,4 +27,7 @@ route.patch("/switchStorageOption", AdminMiddleware, checkAccessWithSecretKey(),
 // Get selected fields of setting
 route.get("/retrieveLinks", settingController.retrieveLinks);
 
+// One-time: write the YP-TC-2026-FINAL economy values into the settings doc
+route.post("/applyEconomyDefaults", AdminMiddleware, checkAccessWithSecretKey(), settingController.applyEconomyDefaults);
+
 module.exports = route;

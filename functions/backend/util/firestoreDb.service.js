@@ -1,27 +1,20 @@
-const admin = require("firebase-admin");
+const firebaseAdmin = require("./firebaseAdmin"); // initialises firebase-admin once
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-
-const EMBEDDED_SERVICE_ACCOUNT = {
-  type: "service_account",
-  project_id: "youpeak-9ff65",
-  private_key_id: "f656fa51065de18a4c2554d8196824f5da750dea",
-  private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDSTh0vTk2GlNZl\n9laM1tprz8qbEj0/wa+aINqgkgI6U8Iyv2Nf7qWhkQmW+1xupYi+wNqYT3f5EKat\nJu39mWFPXGHxudaR1QhIO1qfMp2v3eGIs76iC92vVEYyk1lcAg6dT+UYVF8YUWgm\nuMRZ853h0h9SAalLUmTIcGixINjnzs3188GbRIda1ep1i2DfNqgGY2Up8BFzOPnR\njMjTrbyFBhQD7yfOqv8wI/NKd/hqLtZQPuQS9xReORv9e7QnfPT60Ws0BiK/Q4us\nsfgVSkwYRaeCPCVFmMnStvUVETF8UhBxaUBSOIfzF8dSdXI8GDWV1qCu2KQFwmiW\nDmfJTeijAgMBAAECggEAXhII5fctoGyFNpipAFi+3QjWhOT0tscpiFT31mlZS8PZ\nkx+fEPNL7WhWFM4c+3VaJJFZdlXdwXAcTkminRR1va0CNsE85ICZMs4x7BIVDOzA\nDIjyVcPfBqU4vTjB+PEGnoF1ZZuf6d3IK8HsOpxJXBDEZ8dMdd/GKw51Ff4uaAl+\nVQQWgGdbasU4qNlXchtJwbSNnjD/cqTN2ZqftN+FeDP8W8HcO7v+sr24+4Y5QbSe\nRWYANBBF4CLMl/Mx701bvi1PIxiNORgP+wDTH1jf3CxM90EGao3Eunom+YboYw/e\nzawVlA6RhHolXOVJvmuqA62C88xcGGq59tuO+XOg+QKBgQD6QbnjXhgHhIylS0Cx\nr+4dwqU3Rd8tV2ajcvXBzvXYjZ49ShUkRCkWT5CxtwQFxMwDJ9nxOTT9MSYSyH85\nkD1rlndT/CLjIij5Qx+s402gkuAjGiIBGycTziqQszT1OG/chEXNLZNLik2ksST4\nnI4RPxALgUDof6YM8PbJTGCHrwKBgQDXIatxBexOfvrCWSkI1vi5YLTm+7wrU8Uh\nEfBKac5xs3hAW/2FbS5TLt6EagXmXlH2TpAOjxtLwJTt0IkV6CVJI//+DAsaFWCQ\naXojTXpHoIBlNV+u0ayjEwc/u9oj6ygk+tmPcUAJPDHJE1uurVVx4fQQ5pWKoZpb\n9oDA/+m3TQKBgQDOBM3DH/MoPTaL3SelH/AnD9ZzalIQQaN9a2Zl5rr9S5i5XAOL\nl5E7jMTRiJkHJrvM3UHOFApLZeqyC9ywxs3JhFU4Dpmp4rVYfqnU6ks9paxfOWRF\nBNVmuJLSDLXMKmnsX/gWnWxlA7Znnm2RPVC3YfMThZSp0mwguz5u+TF+gQKBgQCv\nlgmJ3B29C6K7UW5OirbDBw1foYM5kcvJbAzFj4ox/xtc3DgV2MEAn7Z6ONbL6ZvX\n/tNRLrhGoc5sM9JPkQQtqDZeMZI2HdCMzaokei4dnABvmpqX4waWqwc1m6s1uc8w\nL5W2n+Z2Iy03QpeIAG1G3/cGfEz9s1x7RrxbygQF2QKBgQDDdHLyqIQ4RYno3yAX\nAgl07FViSV9W7sUWZuvKGUOoHHio46j+hCrBGdUuxg6s7BUwtP3Oq4bx8rYffg0j\n7DFdilYAB7Pr4JmHsYhWis5EiORhkhEePjexaVaRuu7sf9JCS2M6m8yakyhamXTm\n1hST/mkvPUwe9iVNA171oLf6Xg==\n-----END PRIVATE KEY-----\n",
-  client_email: "firebase-adminsdk-fbsvc@youpeak-9ff65.iam.gserviceaccount.com",
-  client_id: "111199914500346184474",
-  auth_uri: "https://accounts.google.com/o/oauth2/auth",
-  token_uri: "https://oauth2.googleapis.com/token",
-  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40youpeak-9ff65.iam.gserviceaccount.com",
-  universe_domain: "googleapis.com",
-};
 
 class FirestoreDbService {
   constructor() {
     this.db = null;
     this.localDbFile = path.join(os.tmpdir(), "youpeak_local_db.json");
-    this.ensureLocalDbFile();
+    // Firestore op timeout. Cold connections can take >1.4s; serverless cold
+    // starts more. Keep it well under the platform function limit.
+    this.opTimeoutMs = Number(process.env.FIRESTORE_TIMEOUT_MS) || 8000;
+    // Local JSON mirror is a DEV-ONLY convenience. In production it hides real
+    // Firestore failures and (on serverless) writes to an ephemeral tmp dir,
+    // so it is OFF unless explicitly enabled.
+    this.allowLocalFallback = String(process.env.ALLOW_LOCAL_DB_FALLBACK || "").toLowerCase() === "true";
+    if (this.allowLocalFallback) this.ensureLocalDbFile();
   }
 
   ensureLocalDbFile() {
@@ -105,56 +98,51 @@ class FirestoreDbService {
 
   getDb() {
     if (!this.db) {
-      try {
-        if (admin.apps.length === 0) {
-          let serviceAccount;
-          if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-            try { serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT); } catch(e) {}
-          }
-          if (!serviceAccount) {
-            try { serviceAccount = require("../serviceAccountKey.json"); } catch (e) {
-              try { serviceAccount = require("../../serviceAccountKey.json"); } catch (e2) {}
-            }
-          }
-          if (!serviceAccount) {
-            serviceAccount = EMBEDDED_SERVICE_ACCOUNT;
-          }
-
-          if (serviceAccount && serviceAccount.private_key) {
-            const formattedPrivateKey = serviceAccount.private_key.replace(/\\n/g, "\n");
-            admin.initializeApp({
-              credential: admin.credential.cert({
-                ...serviceAccount,
-                private_key: formattedPrivateKey,
-              }),
-              projectId: serviceAccount.project_id || "youpeak-9ff65",
-            });
-          } else {
-            admin.initializeApp({
-              projectId: process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT || "youpeak-9ff65"
-            });
-          }
-        }
-        this.db = admin.firestore();
-        this.db.settings({ ignoreUndefinedProperties: true });
-      } catch (err) {
-        console.error("Firebase Admin init error:", err);
-      }
+      this.db = firebaseAdmin.getFirestore();
     }
     return this.db;
   }
 
   normalizeCollectionName(name) {
     if (!name) return name;
-    const lower = name.toString().toLowerCase().trim();
-    if (lower === "user") return "users";
-    if (lower === "video") return "videos";
-    if (lower === "short") return "shorts";
-    if (lower === "channel") return "channels";
-    return name;
+    const key = name.toString().toLowerCase().trim();
+    // Mongoose model names -> actual Firestore collection ids (see listCollections()).
+    // Anything not listed keeps its given name.
+    const MAP = {
+      user: "users", users: "users",
+      video: "videos", videos: "videos",
+      short: "shorts", shorts: "shorts",
+      channel: "channels", channels: "channels",
+      admin: "admins", admins: "admins",
+      membershiptier: "membershipTiers", membershiptiers: "membershipTiers",
+      history: "histories", histories: "histories",
+      dailyreward: "dailyrewards", dailyrewards: "dailyrewards", dailyrewardcoin: "dailyrewards",
+      adrewardcoin: "adrewards", adrewards: "adrewards",
+      advertise: "advertises", advertises: "advertises",
+      agency: "agencies", agencies: "agencies",
+      currency: "currencies", currencies: "currencies",
+      language: "languages", languages: "languages",
+      login: "logins", logins: "logins",
+      setting: "settings", settings: "settings",
+      referralhistory: "referralHistories", referralhistories: "referralHistories",
+      checkin: "checkIns", checkins: "checkIns",
+      wallethistory: "walletHistories", wallethistories: "walletHistories",
+      withdrawrequest: "withDrawRequests", withdrawrequests: "withDrawRequests",
+      videounlock: "videoUnlocks", videounlocks: "videoUnlocks",
+      agencycommission: "agencyCommissions", agencycommissions: "agencyCommissions",
+      revenueledger: "revenueLedger",
+      paymenttransaction: "paymentTransactions", paymenttransactions: "paymentTransactions",
+      report: "reports", reports: "reports",
+      keywordblacklist: "KeywordBlacklist",
+      contentfingerprint: "contentFingerprints", contentfingerprints: "contentFingerprints",
+      fingerprintqueue: "fingerprintQueue",
+      grievance: "grievances", grievances: "grievances",
+      fraudalert: "fraudAlerts", fraudalerts: "fraudAlerts",
+    };
+    return MAP[key] || name;
   }
 
-  async withTimeout(promiseMs, ms = 1500) {
+  async withTimeout(promiseMs, ms = this.opTimeoutMs) {
     let timer;
     const timeoutPromise = new Promise((_, reject) => {
       timer = setTimeout(() => reject(new Error("GCP_TIMEOUT")), ms);
@@ -169,61 +157,116 @@ class FirestoreDbService {
     }
   }
 
+  // Normalise a Mongo-style query into flat { field: scalar } equality pairs.
+  // Unwraps ObjectId-like wrappers; drops operator objects ($gt/$in/…) and
+  // $or/$and (not supported by this shim — do those in the controller).
+  _flattenQuery(query) {
+    const out = {};
+    if (!query || typeof query !== "object" || Array.isArray(query)) return out;
+    for (const key of Object.keys(query)) {
+      if (key.startsWith("$")) continue;
+      let v = query[key];
+      if (v === undefined || v === null) continue;
+      if (typeof v === "object") {
+        if (typeof v.toJSON === "function") v = v.toJSON();
+        else if (v._id != null) v = String(v._id);
+        else continue; // operator / nested object — unsupported here
+      }
+      if (typeof v !== "object") out[key] = v;
+    }
+    return out;
+  }
+
+  // In-memory sort so we never need Firestore composite indexes.
+  // options.sort is a Mongo-style map, e.g. { createdAt: -1, name: 1 }.
+  _applySort(rows, sort) {
+    if (!sort || typeof sort !== "object" || Array.isArray(sort)) return rows;
+    const keys = Object.keys(sort);
+    if (!keys.length) return rows;
+    return rows.slice().sort((a, b) => {
+      for (const k of keys) {
+        const dir = sort[k] === -1 || sort[k] === "desc" ? -1 : 1;
+        let av = a[k], bv = b[k];
+        if (av === bv) continue;
+        if (av === undefined || av === null) return 1;
+        if (bv === undefined || bv === null) return -1;
+        if (av < bv) return -1 * dir;
+        if (av > bv) return 1 * dir;
+      }
+      return 0;
+    });
+  }
+
   async find(collectionName, query = {}, options = {}) {
     const normalizedName = this.normalizeCollectionName(collectionName);
+    const hasSort = options.sort && typeof options.sort === "object" &&
+      !Array.isArray(options.sort) && Object.keys(options.sort).length > 0;
+    const flatQuery = this._flattenQuery(query);
+
+    // Lookup by document id → doc path (a where("_id","==") clause misses docs
+    // that don't store an _id field).
+    const idVal = flatQuery._id != null ? flatQuery._id : flatQuery.id;
+    if (idVal != null) {
+      const doc = await this.findById(collectionName, idVal);
+      if (!doc) return [];
+      for (const [k, v] of Object.entries(flatQuery)) {
+        if (k !== "_id" && k !== "id" && doc[k] !== v) return [];
+      }
+      return [doc];
+    }
+
     try {
       const db = this.getDb();
       if (db) {
         let ref = db.collection(normalizedName);
 
-        if (query && typeof query === "object" && !Array.isArray(query)) {
-          Object.keys(query).forEach((key) => {
-            if (query[key] !== undefined && query[key] !== null) {
-              ref = ref.where(key, "==", query[key]);
-            }
-          });
+        // Equality filters only. Firestore serves multi-equality queries with
+        // no composite index; anything fancier ($gt/$in/$regex/…) is not
+        // supported by this shim and must be done in the controller.
+        for (const [key, v] of Object.entries(flatQuery)) {
+          ref = ref.where(key, "==", v);
         }
 
-        if (options.sort && typeof options.sort === "object" && !Array.isArray(options.sort)) {
-          Object.keys(options.sort).forEach((key) => {
-            const dir = options.sort[key] === -1 ? "desc" : "asc";
-            try {
-              ref = ref.orderBy(key, dir);
-            } catch (e) {}
-          });
-        }
-
-        if (options.limit && typeof options.limit === "number") {
+        // Only push a DB-side limit when we are NOT sorting in memory
+        // (sorting after a truncated fetch would drop rows).
+        if (!hasSort && options.limit && typeof options.limit === "number") {
           ref = ref.limit(options.limit);
         }
 
-        const snapshot = await this.withTimeout(ref.get(), 1500);
-        const results = [];
+        const snapshot = await this.withTimeout(ref.get());
+        let results = [];
         snapshot.forEach((doc) => {
           results.push({ _id: doc.id, id: doc.id, ...doc.data() });
         });
 
+        if (hasSort) {
+          results = this._applySort(results, options.sort);
+          if (options.limit && typeof options.limit === "number") {
+            results = results.slice(options.skip || 0, (options.skip || 0) + options.limit);
+          }
+        }
+
         return results;
       }
     } catch (err) {
-      console.warn(`Firestore query warning for ${normalizedName}:`, err.message);
+      console.error(`Firestore find() failed for "${normalizedName}":`, err.message);
+      if (!this.allowLocalFallback) throw err;
     }
 
-    // Instant local JSON fallback
+    // Local JSON fallback (dev only — see constructor)
     const localData = this.readLocalDb();
     const collection = localData[normalizedName] || {};
     let results = Object.values(collection);
 
-    if (query && typeof query === "object" && !Array.isArray(query)) {
-      Object.keys(query).forEach((key) => {
-        if (query[key] !== undefined && query[key] !== null) {
-          results = results.filter((item) => item[key] === query[key]);
-        }
-      });
+    for (const [key, v] of Object.entries(flatQuery)) {
+      results = results.filter((item) => item[key] === v);
     }
 
+    if (hasSort) results = this._applySort(results, options.sort);
+
     if (options.limit && typeof options.limit === "number") {
-      results = results.slice(0, options.limit);
+      const skip = options.skip || 0;
+      results = results.slice(skip, skip + options.limit);
     }
 
     return results;
@@ -239,6 +282,20 @@ class FirestoreDbService {
   }
 
   async findOne(collectionName, query = {}) {
+    const flat = this._flattenQuery(query);
+    // A lookup by document id must go through the doc path — many docs don't
+    // store an `_id`/`id` field, so a where("_id","==",…) clause would miss.
+    const idKey = flat._id != null ? "_id" : (flat.id != null ? "id" : null);
+    if (idKey) {
+      const doc = await this.findById(collectionName, flat[idKey]);
+      if (!doc) return null;
+      // still honour any other equality fields in the query
+      const others = Object.entries(flat).filter(([k]) => k !== "_id" && k !== "id");
+      for (const [k, v] of others) {
+        if (doc[k] !== v) return null;
+      }
+      return doc;
+    }
     const results = await this.find(collectionName, query, { limit: 1 });
     return results.length > 0 ? results[0] : null;
   }
@@ -249,12 +306,13 @@ class FirestoreDbService {
     try {
       const db = this.getDb();
       if (db) {
-        const doc = await this.withTimeout(db.collection(normalizedName).doc(String(id)).get(), 1500);
-        if (doc.exists) {
-          return { _id: doc.id, id: doc.id, ...doc.data() };
-        }
+        const doc = await this.withTimeout(db.collection(normalizedName).doc(String(id)).get());
+        return doc.exists ? { _id: doc.id, id: doc.id, ...doc.data() } : null;
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error(`Firestore findById() failed for "${normalizedName}/${id}":`, err.message);
+      if (!this.allowLocalFallback) throw err;
+    }
 
     const localData = this.readLocalDb();
     const collection = localData[normalizedName] || {};
@@ -270,18 +328,21 @@ class FirestoreDbService {
     cleanData._id = docId;
     cleanData.id = docId;
 
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
     try {
-      const db = this.getDb();
-      if (db) {
-        const docRef = db.collection(normalizedName).doc(docId);
-        await this.withTimeout(docRef.set(cleanData, { merge: true }), 1500);
-      }
-    } catch (err) {}
+      await this.withTimeout(db.collection(normalizedName).doc(docId).set(cleanData, { merge: true }));
+    } catch (err) {
+      console.error(`Firestore create() failed for "${normalizedName}/${docId}":`, err.message);
+      throw err;
+    }
 
-    const localData = this.readLocalDb();
-    if (!localData[normalizedName]) localData[normalizedName] = {};
-    localData[normalizedName][docId] = cleanData;
-    this.writeLocalDb(localData);
+    if (this.allowLocalFallback) {
+      const localData = this.readLocalDb();
+      if (!localData[normalizedName]) localData[normalizedName] = {};
+      localData[normalizedName][docId] = cleanData;
+      this.writeLocalDb(localData);
+    }
 
     return cleanData;
   }
@@ -292,20 +353,27 @@ class FirestoreDbService {
     const cleanData = JSON.parse(JSON.stringify(updateData));
     cleanData.updatedAt = new Date().toISOString();
 
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
+    const docRef = db.collection(normalizedName).doc(String(id));
+    let merged;
     try {
-      const db = this.getDb();
-      if (db) {
-        const docRef = db.collection(normalizedName).doc(String(id));
-        await this.withTimeout(docRef.set(cleanData, { merge: true }), 1500);
-      }
-    } catch (err) {}
+      await this.withTimeout(docRef.set(cleanData, { merge: true }));
+      const fresh = await this.withTimeout(docRef.get());
+      merged = fresh.exists
+        ? { _id: fresh.id, id: fresh.id, ...fresh.data() }
+        : { ...cleanData, _id: String(id), id: String(id) };
+    } catch (err) {
+      console.error(`Firestore update() failed for "${normalizedName}/${id}":`, err.message);
+      throw err;
+    }
 
-    const localData = this.readLocalDb();
-    if (!localData[normalizedName]) localData[normalizedName] = {};
-    const existing = localData[normalizedName][String(id)] || {};
-    const merged = { ...existing, ...cleanData, _id: String(id), id: String(id) };
-    localData[normalizedName][String(id)] = merged;
-    this.writeLocalDb(localData);
+    if (this.allowLocalFallback) {
+      const localData = this.readLocalDb();
+      if (!localData[normalizedName]) localData[normalizedName] = {};
+      localData[normalizedName][String(id)] = merged;
+      this.writeLocalDb(localData);
+    }
 
     return merged;
   }
@@ -313,17 +381,21 @@ class FirestoreDbService {
   async delete(collectionName, id) {
     if (!id) return false;
     const normalizedName = this.normalizeCollectionName(collectionName);
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
     try {
-      const db = this.getDb();
-      if (db) {
-        await this.withTimeout(db.collection(normalizedName).doc(String(id)).delete(), 1500);
-      }
-    } catch (err) {}
+      await this.withTimeout(db.collection(normalizedName).doc(String(id)).delete());
+    } catch (err) {
+      console.error(`Firestore delete() failed for "${normalizedName}/${id}":`, err.message);
+      throw err;
+    }
 
-    const localData = this.readLocalDb();
-    if (localData[normalizedName] && localData[normalizedName][String(id)]) {
-      delete localData[normalizedName][String(id)];
-      this.writeLocalDb(localData);
+    if (this.allowLocalFallback) {
+      const localData = this.readLocalDb();
+      if (localData[normalizedName] && localData[normalizedName][String(id)]) {
+        delete localData[normalizedName][String(id)];
+        this.writeLocalDb(localData);
+      }
     }
     return true;
   }
@@ -358,7 +430,29 @@ class FirestoreDbService {
           "currency_default"
         );
       }
-    } catch (err) {}
+
+      // Membership tiers (tasker + creator) — seed once if the collection is empty.
+      const existingTiers = await this.find("membershipTiers", {}, { limit: 1 });
+      if (!existingTiers || existingTiers.length === 0) {
+        const { ALL_TIERS } = require("../types/tiers");
+        for (const tier of ALL_TIERS) {
+          await this.create("membershipTiers", tier, tier._id);
+        }
+        console.log(`🌱 Seeded ${ALL_TIERS.length} membership tiers`);
+      }
+
+      // Daily check-in reward ladder (Mon..Sun) — seed once if empty.
+      const existingDaily = await this.find("dailyrewards", {}, { limit: 1 });
+      if (!existingDaily || existingDaily.length === 0) {
+        const ladder = [300, 330, 350, 400, 450, 550, 600];
+        for (let i = 0; i < 7; i++) {
+          await this.create("dailyrewards", { _id: `dailyreward_day_${i + 1}`, day: i + 1, dailyRewardCoin: ladder[i] }, `dailyreward_day_${i + 1}`);
+        }
+        console.log("🌱 Seeded 7-day check-in reward ladder");
+      }
+    } catch (err) {
+      console.warn("seedDefaultData note:", err.message);
+    }
   }
 }
 

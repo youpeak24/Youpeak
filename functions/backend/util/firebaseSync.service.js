@@ -1,4 +1,4 @@
-const admin = require("firebase-admin");
+const firebaseAdmin = require("./firebaseAdmin");
 
 /**
  * Firebase Firestore Text & Metadata Service
@@ -9,9 +9,9 @@ class FirebaseSyncService {
   }
 
   getFirestore() {
-    if (!this.db && admin.apps.length > 0) {
+    if (!this.db) {
       try {
-        this.db = admin.firestore();
+        this.db = firebaseAdmin.getFirestore();
       } catch (err) {
         console.error("Error connecting to Firestore instance:", err.message);
       }

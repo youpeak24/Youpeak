@@ -9,9 +9,11 @@ const isLocalhost = Boolean(
 export const baseURL =
   process.env.REACT_APP_BASE_URL ||
   (isLocalhost
-    ? "http://localhost:5000/"
+    ? "http://localhost:5001/"
     : "/");
 
-export const secretKey = "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ";
+// Shared API key — must equal the backend `secretKey` env var.
+// Set REACT_APP_SECRET_KEY in the Vercel project env.
+export const secretKey = process.env.REACT_APP_SECRET_KEY || "";
 export const projectName = "YouPeak";
 export const folderStructurePath = projectName;

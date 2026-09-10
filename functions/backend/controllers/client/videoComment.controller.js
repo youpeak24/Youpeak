@@ -15,6 +15,9 @@ const admin = require("../../util/privateKey");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
+//reward engine (daily caps + coin crediting)
+const rewardEngine = require("../../util/rewardEngine");
+
 //day.js
 const dayjs = require("dayjs");
 
@@ -27,18 +30,10 @@ exports.createComment = async (req, res) => {
       return res.status(200).json({ status: false, message: "Oops! Invalid details!" });
     }
 
-    const commentingRewardCoins = Number(settingJSON?.commentingRewardCoins || 0);
-
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    const videoObjectId = new mongoose.Types.ObjectId(videoId);
-
     const [user, video, alreadyCommented] = await Promise.all([
-      User.findOne({ _id: userObjectId, isActive: true }).select("_id isBlock fcmToken").lean(),
-      Video.findOne({ _id: videoObjectId, isActive: true }).select("_id channelId videoType commentType").lean(),
-      VideoComment.exists({
-        userId: userObjectId,
-        videoId: videoObjectId,
-      }),
+      User.findOne({ _id: userId, isActive: true }).lean(),
+      Video.findById(videoId).lean(),
+      VideoComment.exists({ userId, videoId }),
     ]);
 
     if (!user) {
@@ -70,69 +65,51 @@ exports.createComment = async (req, res) => {
     }
 
     const videoComment = await VideoComment.create({
-      userId: userObjectId,
-      videoId: videoObjectId,
+      userId,
+      videoId,
       channelId: video.channelId,
       videoType: video.videoType,
       commentText,
     });
 
-    res.status(200).json({
+    // Reward only on the user's FIRST comment for this video, and only within
+    // the daily comment cap + daily earning cap. Server decides the amount.
+    let coinsEarned = 0;
+    let rewardStatus = "SKIPPED";
+    if (!alreadyCommented) {
+      const r = await rewardEngine.creditReward({
+        userId,
+        kind: "comment",
+        historyType: rewardEngine.HISTORY_TYPE.VIDEO_COMMENT,
+        countField: "dailyCommentsToday",
+        capField: "maxCommentsPerDay",
+        dedupeVideoId: videoId,
+        meta: { videoId },
+      });
+      coinsEarned = r.ok ? r.credited : 0;
+      rewardStatus = r.reason;
+
+      if (coinsEarned > 0 && user.fcmToken) {
+        try {
+          admin.messaging().send({
+            token: user.fcmToken,
+            notification: {
+              title: "🚀 You've Earned Coins for Your Comment! 🌟",
+              body: `You earned ${coinsEarned} coins for commenting on a video! 🎬💬`,
+            },
+            data: { type: "ENGAGEMENT_COMMENTING_REWARD" },
+          }).catch(() => {});
+        } catch (e) {}
+      }
+    }
+
+    return res.status(200).json({
       status: true,
       message: "Comment added successfully.",
       data: videoComment,
+      coinsEarned,
+      rewardStatus,
     });
-
-    if (!alreadyCommented && commentingRewardCoins > 0) {
-      console.log("Reward only on FIRST comment");
-
-      const uniqueId = await generateHistoryUniqueId();
-
-      await Promise.all([
-        User.updateOne(
-          { _id: userObjectId },
-          {
-            $inc: {
-              coin: commentingRewardCoins,
-              engagementRewardCoin: commentingRewardCoins,
-              totalRewardCoin: commentingRewardCoins,
-            },
-          },
-        ),
-        History.create({
-          userId: userObjectId,
-          videoId: videoObjectId,
-          uniqueId,
-          coin: commentingRewardCoins,
-          type: 6,
-          date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-        }),
-      ]);
-
-      if (user.fcmToken && user.fcmToken !== null) {
-        const payload = {
-          token: user.fcmToken,
-          notification: {
-            title: "🚀 You've Earned Coins for Your Comment! Keep Engaging! 🌟",
-            body: `You've earned ${commentingRewardCoins} coins for commenting on a video! Keep engaging for more rewards! 🎬💬`,
-          },
-          data: {
-            type: "ENGAGEMENT_COMMENTING_REWARD",
-          },
-        };
-
-        const adminPromise = await admin;
-        adminPromise
-          .messaging()
-          .send(payload)
-          .then((response) => {
-            console.log("Successfully sent with response: ", response);
-          })
-          .catch((error) => {
-            console.log("Error sending message: ", error);
-          });
-      }
-    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({

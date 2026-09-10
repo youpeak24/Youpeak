@@ -8,7 +8,9 @@
 
 const db = require("../../util/connection");
 const Cryptr = require("cryptr");
-const cryptr = new Cryptr("myTotallySecretKey");
+// TODO(step-4): migrate user passwords to bcrypt (verify-and-rehash on login).
+// Key is overridable so it can be rotated once that migration exists.
+const cryptr = new Cryptr(process.env.USER_PW_SECRET || "myTotallySecretKey");
 const { generateUniqueId } = require("../../util/generateUniqueId");
 const { generateReferralCode } = require("../../util/generateReferralCode");
 const admin = require("../../util/privateKey");

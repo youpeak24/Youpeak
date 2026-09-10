@@ -1,37 +1,32 @@
 const MembershipTier = require("../../models/membershipTier.model");
 const User = require("../../models/user.model");
+const db = require("../../util/connection");
+const referralService = require("../../util/referral.service");
 
-// Get available creator tiers with subscriber qualification check
+// Get available CREATOR tiers with subscriber-qualification flags
 exports.getAvailableCreatorTiers = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.query.userId || (req.body && req.body.userId);
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(200).json({ status: false, message: "User not found!" });
-    }
+    if (!user) return res.status(200).json({ status: false, message: "User not found!" });
 
-    const tiers = await MembershipTier.find({ isActive: true }).sort({ level: 1 });
-
+    const all = await MembershipTier.find({ tierType: "CREATOR", isActive: true }).sort({ level: 1 });
     const userSubscribers = user.totalSubscribers || 0;
+    const currentTierId = user.activeCreatorTierId ? String(user.activeCreatorTierId) : null;
 
-    const formattedTiers = tiers.map((tier) => {
-      const isEligible = userSubscribers >= (tier.minSubscribersRequired || 0);
-      const isCurrentTier =
-        user.activeCreatorTierId && user.activeCreatorTierId.toString() === tier._id.toString();
-
-      return {
-        ...tier.toObject(),
-        isEligible,
-        isCurrentTier,
-        userSubscribers,
-      };
-    });
+    const tiers = all.map((tier) => ({
+      ...tier,
+      isEligible: userSubscribers >= (tier.minSubscribersRequired || 0) &&
+        (tier.maxSubscribers == null || userSubscribers <= tier.maxSubscribers),
+      isCurrentTier: currentTierId === String(tier._id || tier.id),
+      userSubscribers,
+    }));
 
     return res.status(200).json({
       status: true,
       message: "Creator tiers fetched successfully!",
       userSubscribers,
-      tiers: formattedTiers,
+      tiers,
     });
   } catch (error) {
     console.error("Error fetching creator tiers:", error);
@@ -39,45 +34,67 @@ exports.getAvailableCreatorTiers = async (req, res) => {
   }
 };
 
-// Upgrade creator tier after dual-condition check (subscribers + payment)
+// Assign a CREATOR tier once the subscriber (and, later, payment) conditions pass.
 exports.upgradeCreatorTier = async (req, res) => {
   try {
-    const { userId, tierId } = req.body;
-
+    const { userId, tierId } = req.body || {};
     if (!userId || !tierId) {
       return res.status(200).json({ status: false, message: "User ID and Tier ID are required!" });
     }
 
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(200).json({ status: false, message: "User not found!" });
-    }
+    if (!user) return res.status(200).json({ status: false, message: "User not found!" });
 
     const tier = await MembershipTier.findById(tierId);
-    if (!tier || !tier.isActive) {
-      return res.status(200).json({ status: false, message: "Invalid or inactive tier!" });
+    if (!tier || tier.tierType !== "CREATOR" || !tier.isActive) {
+      return res.status(200).json({ status: false, message: "Invalid or inactive creator tier!" });
     }
 
-    // Condition 1: Subscriber Count Check
     const userSubscribers = user.totalSubscribers || 0;
     const minRequired = tier.minSubscribersRequired || 0;
-
     if (userSubscribers < minRequired) {
       return res.status(200).json({
         status: false,
-        message: `Qualification failed! You need at least ${minRequired} subscribers to upgrade to ${tier.tierName}. Your current subscribers: ${userSubscribers}.`,
+        message: `Qualification failed! You need at least ${minRequired} subscribers for ${tier.tierName}. You have ${userSubscribers}.`,
       });
     }
 
-    // Assign active creator tier
-    user.activeCreatorTierId = tier._id;
-    await user.save();
+    // Paid VIP passes require a completed payment (wired in the payment step).
+    if ((tier.membershipPrice || 0) > 0 && !user.paymentStatus) {
+      return res.status(200).json({
+        status: false,
+        message: `${tier.tierName} is a paid pass. Please complete the payment on the web portal first.`,
+        requiresPayment: true,
+        priceInINR: tier.membershipPrice,
+      });
+    }
+
+    const updated = await db.update("users", user._id || user.id, {
+      activeCreatorTierId: tier._id || tier.id,
+      isMonetization: true,
+    });
+
+    // YP-TC §1.5: referrer of a paying member gets a % of the pass price.
+    let referralBonus = null;
+    if ((tier.membershipPrice || 0) > 0) {
+      try {
+        const r = await referralService.handlePaidTierReferral({
+          buyerId: String(user._id || user.id),
+          tierPriceInr: tier.membershipPrice,
+          tierName: tier.tierName,
+        });
+        if (r.ok) referralBonus = { coins: r.bonusCoins, percentage: r.percentage };
+      } catch (e) {
+        console.error("paid-tier referral bonus error:", e.message);
+      }
+    }
 
     return res.status(200).json({
       status: true,
-      message: `Successfully upgraded to ${tier.tierName} creator tier! Revenue share set to ${tier.creatorRevenueSharePercentage}%.`,
-      user,
+      message: `Upgraded to ${tier.tierName}! Ad revenue share is now ${tier.creatorRevenueSharePercentage}%.`,
+      user: updated,
       tier,
+      referralBonus,
     });
   } catch (error) {
     console.error("Error upgrading creator tier:", error);

@@ -13,6 +13,9 @@ const moment = require("moment");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
+//revenue split (referral bonus on purchases)
+const revenueSplit = require("../../util/revenueSplit.service");
+
 //razorpay
 const Razorpay = require("razorpay");
 
@@ -109,6 +112,23 @@ exports.createCoinPlanHistory = async (req, res) => {
         date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
       }),
     ]);
+
+    // Referral bonus: buyer's referrer gets a config % of the purchase (as coins).
+    try {
+      const buyerFresh = await User.findById(String(user._id));
+      await revenueSplit.settleRevenue({
+        sourceType: "coinPurchase",
+        grossInr: Number(coinPlan.amount) || 0,
+        buyerId: String(user._id),
+        referrerOf: "buyer",
+        agencyContext: buyerFresh
+          ? { state: buyerFresh.state || "", district: buyerFresh.district || "", userId: String(user._id) }
+          : null,
+        meta: { coinPlanId: String(coinPlan._id), gateway: paymentGateWay },
+      });
+    } catch (splitErr) {
+      console.error("coinPlan revenue split error:", splitErr.message);
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });

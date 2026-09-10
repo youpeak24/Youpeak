@@ -41,6 +41,22 @@ const { generateUniqueVideoId } = require("../../util/generateUniqueVideoId");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
+//reward engine (daily caps + coin crediting)
+const rewardEngine = require("../../util/rewardEngine");
+
+//firestore connection (direct doc updates)
+const db = require("../../util/connection");
+
+//revenue split engine (creator / referrer / platform / district partner)
+const revenueSplit = require("../../util/revenueSplit.service");
+
+//cloudflare stream pipeline
+const videoPipeline = require("../../util/videoPipeline.service");
+
+//content moderation + copyright
+const moderation = require("../../util/moderation.service");
+const copyright = require("../../util/copyright.service");
+
 //video Unlocked
 exports.unlockPrivateVideo = async (req, res) => {
   try {
@@ -110,53 +126,60 @@ exports.unlockPrivateVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "Invalid unlock cost." });
     }
 
-    if (user.coin < unlockCost) {
+    // Re-read the buyer's live balance and guard against a race / stale read.
+    const freshBuyer = await User.findById(userId);
+    if (!freshBuyer || (freshBuyer.coin || 0) < unlockCost) {
       return res.status(200).json({ status: false, message: "Insufficient coin balance." });
     }
 
-    const [uniqueIdUser, uniqueIdOwner] = await Promise.all([generateHistoryUniqueId(), generateHistoryUniqueId()]);
+    // 1. record the unlock + debit the buyer
+    await VideoUnlock.create({
+      userId: String(userId),
+      videoId: String(videoId),
+      videoOwnerId: String(video.userId),
+      unlockCost,
+      unlockedAt: new Date().toISOString(),
+    });
+    await User.updateOne({ _id: userId, coin: { $gte: unlockCost } }, { $inc: { coin: -unlockCost } });
+    await History.create({
+      otherUserId: String(userId),
+      videoId: String(videoId),
+      uniqueId: await generateHistoryUniqueId(),
+      coin: -unlockCost,
+      type: 9,
+      date: new Date().toISOString(),
+    });
 
-    await Promise.all([
-      /* store unlock */
-      VideoUnlock.create({
-        userId: userObjectId,
-        videoId: videoObjectId,
-        videoOwnerId: video.userId,
-        unlockCost: unlockCost,
-        unlockedAt: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }),
-
-      /* deduct coins from user */
-      User.updateOne({ _id: userObjectId }, { $inc: { coin: -unlockCost } }),
-
-      /* add coins to video owner */
-      User.updateOne({ _id: video.userId }, { $inc: { coin: unlockCost } }),
-
-      /* history for owner */
-      History.create({
-        userId: video.userId,
-        videoId: videoObjectId,
-        uniqueId: uniqueIdOwner,
-        coin: unlockCost,
-        type: 9,
-        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }),
-
-      /* history for user */
-      History.create({
-        otherUserId: userObjectId,
-        videoId: videoObjectId,
-        uniqueId: uniqueIdUser,
-        coin: unlockCost,
-        type: 9,
-        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      }),
-    ]);
+    // 2. split the unlock revenue — but a copyright-flagged / under-review video
+    // earns nothing for the creator; the platform holds the full amount.
+    let settlement;
+    if (moderation.isMonetizable(video)) {
+      settlement = await revenueSplit.settleRevenue({
+        sourceType: "videoUnlock",
+        grossCoins: unlockCost,
+        creatorId: String(video.userId),
+        buyerId: String(userId),
+        referrerOf: "creator",
+        videoId: String(videoId),
+        agencyContext: {
+          state: freshBuyer.state || "",
+          district: freshBuyer.district || "",
+          userId: String(userId),
+        },
+      });
+    } else {
+      settlement = { creatorCoins: 0, referrerCoins: 0, platformCoins: unlockCost, demonetised: true };
+    }
 
     res.status(200).json({
       status: true,
       message: "Video unlocked successfully.",
       isUnlocked: true,
+      revenueSplit: {
+        creatorCoins: settlement.creatorCoins,
+        referrerCoins: settlement.referrerCoins,
+        platformCoins: settlement.platformCoins,
+      },
     });
 
     if (user.fcmToken) {
@@ -412,21 +435,43 @@ exports.createVideo = async (req, res) => {
     }
 
     video.title = req?.body?.title.trim();
-    video.description = req?.body?.description.trim();
+    video.description = (req?.body?.description || "").trim();
     video.videoType = req?.body?.videoType;
     video.videoTime = req?.body?.videoTime;
     video.videoUrl = req?.body?.videoUrl;
     video.videoImage = req?.body?.videoImage;
+
+    // ── Cloudflare Stream metadata (set when the app used direct upload) ──
+    if (req.body.streamUid) {
+      video.streamUid = req.body.streamUid;
+      video.storageProvider = "stream";
+      video.rawVideoUrl = req.body.rawVideoUrl || null;
+      const pb = videoPipeline.playbackUrls(req.body.streamUid);
+      video.hlsUrl = req.body.hlsUrl || pb.hlsUrl;
+      video.dashUrl = pb.dashUrl;
+      video.videoUrl = video.hlsUrl; // the app plays videoUrl
+      video.streamStatus = req.body.streamStatus || "inprogress";
+    } else if (/\.m3u8($|\?)/i.test(String(req.body.videoUrl || ""))) {
+      video.storageProvider = "stream";
+      video.hlsUrl = req.body.videoUrl;
+      video.streamStatus = "ready";
+    } else {
+      video.storageProvider = req.body.storageProvider || "r2";
+      video.rawVideoUrl = req.body.videoUrl;
+      video.streamStatus = "r2";
+    }
     video.visibilityType = req?.body?.visibilityType;
     video.audienceType = req?.body?.audienceType;
     video.commentType = req?.body?.commentType;
     video.scheduleType = req?.body?.scheduleType;
     video.videoPrivacyType = parseInt(req?.body?.videoPrivacyType);
 
-    video.location = req?.body?.location?.toLowerCase();
-    video.locationCoordinates.latitude = req?.body?.latitude;
-    video.locationCoordinates.longitude = req?.body?.longitude;
-    video.soundListId = soundList?._id;
+    video.location = req?.body?.location ? String(req.body.location).toLowerCase() : "";
+    video.locationCoordinates = {
+      latitude: req?.body?.latitude || "",
+      longitude: req?.body?.longitude || "",
+    };
+    video.soundListId = soundList?._id || null;
     video.userId = user._id;
     video.isAddByAdmin = false;
 
@@ -435,17 +480,51 @@ exports.createVideo = async (req, res) => {
 
     video.uniqueVideoId = uniqueVideoId;
 
-    await Promise.all([user.save(), video.save()]);
+    // user is a plain object from findOne() — no .save(); persist explicitly.
+    const userChanges = {};
+    for (const k of ["fullName", "channelId", "isChannel", "channelType", "subscriptionCost", "videoUnlockCost", "descriptionOfChannel", "socialMediaLinks"]) {
+      if (user[k] !== undefined) userChanges[k] = user[k];
+    }
+    await db.update("users", user._id || user.id, userChanges);
+    const savedVideo = await video.save();
+    const newVideoId = savedVideo._id || savedVideo.id || video._id;
 
-    const data = await Video.findById(video._id).populate([
-      { path: "soundListId", select: "soundTitle soundLink" },
-      { path: "userId", select: "fullName nickName" },
-    ]);
+    // Content moderation — keyword-screen the metadata (transcript is added later
+    // by the worker); may push the video to pending_review.
+    let moderationResult = { flagged: false };
+    try {
+      moderationResult = await moderation.screenVideo({
+        videoId: newVideoId,
+        title: video.title, description: video.description,
+        hashTags: video.hashTag || [],
+      });
+    } catch (e) { console.error("moderation.screenVideo:", e.message); }
+
+    // Copyright — enqueue for fingerprinting (a worker processes the queue).
+    try {
+      await copyright.queueForFingerprint({
+        videoId: newVideoId, streamUid: video.streamUid || null, videoUrl: video.rawVideoUrl || video.videoUrl,
+      });
+    } catch (e) { /* engine disabled or no worker */ }
+
+    const data = await Video.findById(newVideoId);
+    if (data && data.soundListId) {
+      try {
+        const sl = await SoundList.findById(data.soundListId);
+        if (sl) data.soundListId = { _id: sl._id, soundTitle: sl.soundTitle, soundLink: sl.soundLink };
+      } catch (e) { /* leave as id */ }
+    }
+    if (data) {
+      data.userId = { _id: user._id || user.id, fullName: user.fullName, nickName: user.nickName };
+    }
 
     res.status(200).json({
       status: true,
-      message: "Normal video or shorts has been uploaded by the user!",
+      message: moderationResult.flagged
+        ? "Video uploaded — it is under review and will go live once approved."
+        : "Normal video or shorts has been uploaded by the user!",
       video: data,
+      underReview: !!moderationResult.flagged,
     });
 
     //if user don't have channel then send notification to that user
@@ -554,10 +633,9 @@ exports.shareCount = async (req, res) => {
       return res.status(200).json({ status: false, message: "video does not found!!" });
     }
 
-    video.shareCount += 1;
-    await video.save();
+    const updated = await Video.findByIdAndUpdate(video._id || video.id, { $inc: { shareCount: 1 } });
 
-    return res.status(200).json({ status: true, message: "When user share video then shareCount increased!", video });
+    return res.status(200).json({ status: true, message: "When user share video then shareCount increased!", video: updated });
   } catch (error) {
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });
   }
@@ -590,6 +668,8 @@ exports.shortsOfUser = async (req, res) => {
           isActive: true,
           scheduleType: 2,
           visibilityType: 1,
+          moderationStatus: { $nin: ["pending_review", "rejected"] },
+          isCopyrightFlagged: { $ne: true },
           videoType: 2,
         },
       },
@@ -774,6 +854,8 @@ exports.getShorts = async (req, res) => {
           isActive: true,
           scheduleType: 2,
           visibilityType: 1,
+          moderationStatus: { $nin: ["pending_review", "rejected"] },
+          isCopyrightFlagged: { $ne: true },
           videoType: 2,
         },
       },
@@ -1305,6 +1387,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
             },
           },
@@ -1509,6 +1593,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
             },
           },
@@ -1723,6 +1809,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
             },
           },
@@ -1911,6 +1999,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
             },
           },
@@ -2106,6 +2196,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
             },
           },
@@ -2295,6 +2387,8 @@ exports.videosOfHome = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
             },
           },
@@ -2806,11 +2900,8 @@ exports.likeOrDislikeOfVideo = async (req, res) => {
     const [user, video, existingHistory] = await Promise.all([
       User.findOne({ _id: userId, isActive: true }),
       Video.findById(videoId),
-      LikeHistoryOfVideo.findOne({
-        userId,
-        videoId,
-        $or: [{ likeOrDislike: "like" }, { likeOrDislike: "dislike" }],
-      }),
+      // one like/dislike record per (user, video)
+      LikeHistoryOfVideo.findOne({ userId, videoId }),
     ]);
 
     console.log("👤 User:", user?._id);
@@ -2821,256 +2912,149 @@ exports.likeOrDislikeOfVideo = async (req, res) => {
     if (user.isBlock) return res.status(200).json({ status: false, message: "you are blocked by admin!" });
     if (!video) return res.status(200).json({ status: false, message: "video does not found!" });
 
-    const rewardCoins = settingJSON.likeVideoRewardCoins;
+    let like = Number(video.like) || 0;
+    let dislike = Number(video.dislike) || 0;
+    const setCounts = () => db.update("videos", videoId, { like, dislike });
+    const current = existingHistory?.likeOrDislike || null;
 
     /* ===================== LIKE REMOVE ===================== */
     if (likeOrDislike === "likeremove") {
-      console.log("🗑️ Like remove request");
-
-      if (existingHistory?.likeOrDislike === "like") {
-        console.log("⬇️ Decreasing like count");
-
-        video.like = Math.max(0, video.like - 1);
-
-        const promises = [
-          video.save(),
-          LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" }),
-          LikeHistoryOfVideo.create({
-            userId,
-            videoId,
-            channelId: video.channelId,
-            likeOrDislike: "dislike",
-          }),
-        ];
-
-        const rewardHistory = await History.findOne({
-          userId: user._id,
-          videoId,
-          type: 7,
+      if (current === "like") {
+        like = Math.max(0, like - 1);
+        await setCounts();
+        await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" });
+        const rev = await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
+          countField: "dailyLikesToday",
         });
-
-        if (rewardHistory) {
-          console.log("Check if reward history exists (type: 7)");
-
-          promises.push(
-            User.updateOne(
-              {
-                _id: user._id,
-                coin: { $gte: rewardCoins },
-                engagementRewardCoin: { $gte: rewardCoins },
-                totalRewardCoin: { $gte: rewardCoins },
-              },
-              {
-                $inc: {
-                  coin: -rewardCoins,
-                  engagementRewardCoin: -rewardCoins,
-                  totalRewardCoin: -rewardCoins,
-                },
-              },
-            ),
-            History.deleteOne({
-              userId: user._id,
-              videoId,
-              type: 7,
-            }),
-          );
-
-          console.log("💰 Coins deducted:", rewardCoins);
-        } else {
-          console.log("ℹ️ No reward history found — no coin deduction");
-        }
-
-        await Promise.all(promises);
-
-        console.log("✅ Like removed successfully");
+        if (rev.reversed) console.log("💰 Like coins reversed:", rev.reversed);
       }
-
-      return res.status(200).json({ status: true, message: "Like removed successfully", isLike: false });
+      return res.status(200).json({ status: true, message: "Like removed successfully", isLike: false, like, dislike });
     }
 
     /* ===================== DISLIKE REMOVE ===================== */
     if (likeOrDislike === "dislikeremove") {
-      console.log("🗑️ Dislike remove request");
-
-      if (existingHistory?.likeOrDislike === "dislike") {
-        console.log("⬇️ Decreasing dislike count");
-
-        video.dislike = Math.max(0, video.dislike - 1);
-
-        await Promise.all([video.save(), LikeHistoryOfVideo.deleteOne({ _id: existingHistory._id })]);
-
-        console.log("✅ Dislike removed successfully");
+      if (current === "dislike") {
+        dislike = Math.max(0, dislike - 1);
+        await setCounts();
+        await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" });
+        const rev = await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
+          countField: "dailyDislikesToday",
+        });
+        if (rev.reversed) console.log("💰 Dislike coins reversed:", rev.reversed);
       }
-
-      return res.status(200).json({ status: true, message: "Dislike removed successfully", isLike: false });
+      return res.status(200).json({ status: true, message: "Dislike removed successfully", isLike: false, like, dislike });
     }
 
     /* ===================== LIKE ===================== */
     if (likeOrDislike === "like") {
-      console.log("👍 Like request");
+      if (current === "like") {
+        return res.status(200).json({ status: true, message: "Already liked", isLike: true, like, dislike });
+      }
 
-      if (existingHistory?.likeOrDislike === "like") {
-        console.log("⚠️ Already liked");
-        return res.status(200).json({
-          status: true,
-          message: "Already liked",
-          isLike: true,
+      like += 1;
+      if (current === "dislike") {
+        dislike = Math.max(0, dislike - 1);
+        await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
+          countField: "dailyDislikesToday",
         });
       }
 
-      video.like += 1;
+      await setCounts();
+      await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" });
+      await LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "like" });
 
-      if (existingHistory?.likeOrDislike === "dislike") {
-        video.dislike = Math.max(0, video.dislike - 1);
-        console.log("↔️ Switching dislike → like");
-      }
+      // Coins: server-decided, once per video, capped by maxLikesPerDay + daily earning cap.
+      const likeReward = await rewardEngine.creditReward({
+        userId,
+        kind: "like",
+        historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
+        countField: "dailyLikesToday",
+        capField: "maxLikesPerDay",
+        dedupeVideoId: videoId,
+        meta: { videoId },
+      });
+      const coinsEarned = likeReward.ok ? likeReward.credited : 0;
+      console.log("💰 Like reward:", coinsEarned, likeReward.reason, "→", user?.fullName);
 
-      const uniqueId = await generateHistoryUniqueId();
-
-      await Promise.all([
-        video.save(),
-        LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" }),
-        LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "like" }),
-        User.updateOne(
-          { _id: user._id },
-          {
-            $inc: {
-              coin: rewardCoins,
-              engagementRewardCoin: rewardCoins,
-              totalRewardCoin: rewardCoins,
-            },
-          },
-        ),
-        History.create({
-          userId: user._id,
-          videoId,
-          uniqueId,
-          coin: rewardCoins,
-          type: 7,
-          date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-        }),
-      ]);
-
-      console.log("💰 Coins added:", rewardCoins, "To: ", user?.fullName);
-
-      if (user.fcmToken) {
-        console.log("📲 Sending reward notification to user");
-        const adminPromise = await admin;
-        adminPromise
-          .messaging()
-          .send({
+      if (user.fcmToken && coinsEarned > 0) {
+        try {
+          admin.messaging().send({
             token: user.fcmToken,
-            notification: {
-              title: "👍 You've Earned Coins!",
-              body: `You earned ${rewardCoins} coins for liking a video 🎬💰`,
-            },
+            notification: { title: "👍 You've Earned Coins!", body: `You earned ${coinsEarned} coins for liking a video 🎬💰` },
             data: { type: "ENGAGEMENT_LIKING_REWARD" },
-          })
-          .catch(console.error);
+          }).catch(() => {});
+        } catch (e) {}
       }
 
-      const videoUser = await User.findById(video.userId);
-      if (videoUser?.fcmToken) {
-        console.log("📲 Sending like notification to video owner");
-        const adminPromise = await admin;
-        adminPromise
-          .messaging()
-          .send({
+      try {
+        const videoUser = await User.findById(video.userId);
+        if (videoUser?.fcmToken) {
+          admin.messaging().send({
             token: videoUser.fcmToken,
-            notification: {
-              title: "🌟 New Like!",
-              body: "Someone liked your video 👍🎥",
-            },
+            notification: { title: "🌟 New Like!", body: "Someone liked your video 👍🎥" },
             data: { type: "VIDEO_LIKING_NOTIFICATION" },
-          })
-          .catch(console.error);
-      }
-
-      console.log("✅ Like completed");
+          }).catch(() => {});
+        }
+      } catch (e) {}
 
       return res.status(200).json({
         status: true,
         message: "Video liked successfully",
         isLike: true,
+        like,
+        dislike,
+        coinsEarned,
+        rewardStatus: likeReward.reason,
       });
     }
 
     /* ===================== DISLIKE ===================== */
     if (likeOrDislike === "dislike") {
-      console.log("👎 Dislike request");
+      if (current === "dislike") {
+        return res.status(200).json({ status: true, message: "Already disliked", isLike: false, like, dislike });
+      }
 
-      if (existingHistory?.likeOrDislike === "dislike") {
-        console.log("⚠️ Already disliked");
-        return res.status(200).json({
-          status: true,
-          message: "Already disliked",
-          isLike: false,
+      dislike += 1;
+      if (current === "like") {
+        like = Math.max(0, like - 1);
+        await rewardEngine.reverseReward({
+          userId, videoId,
+          historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
+          countField: "dailyLikesToday",
         });
       }
 
-      video.dislike += 1;
+      await setCounts();
+      await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" });
+      await LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "dislike" });
 
-      if (existingHistory?.likeOrDislike === "like") {
-        video.like = Math.max(0, video.like - 1);
-        console.log("↔️ Switching like → dislike");
-      }
-
-      const promises = [
-        video.save(),
-        LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" }),
-        LikeHistoryOfVideo.create({
-          userId,
-          videoId,
-          channelId: video.channelId,
-          likeOrDislike: "dislike",
-        }),
-      ];
-
-      const rewardHistory = await History.findOne({
-        userId: user._id,
-        videoId,
-        type: 7,
+      // Dislike reward (YP-TC-2026-FINAL: 2 coins; set dislikeVideoRewardCoins=0 in settings to disable)
+      const dislikeReward = await rewardEngine.creditReward({
+        userId,
+        kind: "dislike",
+        historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
+        countField: "dailyDislikesToday",
+        capField: "maxDislikesPerDay",
+        dedupeVideoId: videoId,
+        meta: { videoId },
       });
-
-      if (rewardHistory) {
-        console.log("Check if reward history exists (type: 7)");
-
-        promises.push(
-          User.updateOne(
-            {
-              _id: user._id,
-              coin: { $gte: rewardCoins },
-              engagementRewardCoin: { $gte: rewardCoins },
-              totalRewardCoin: { $gte: rewardCoins },
-            },
-            {
-              $inc: {
-                coin: -rewardCoins,
-                engagementRewardCoin: -rewardCoins,
-                totalRewardCoin: -rewardCoins,
-              },
-            },
-          ),
-          History.deleteOne({
-            userId: user._id,
-            videoId,
-            type: 7,
-          }),
-        );
-
-        console.log("💰 Coins deducted:", rewardCoins);
-      } else {
-        console.log("ℹ️ No reward history found — no coin deduction");
-      }
-
-      await Promise.all(promises);
-
-      console.log("✅ Dislike completed");
+      const coinsEarned = dislikeReward.ok ? dislikeReward.credited : 0;
+      console.log("✅ Dislike completed. Reward:", coinsEarned, dislikeReward.reason);
 
       return res.status(200).json({
         status: true,
         message: "Video disliked successfully",
         isLike: false,
+        like,
+        dislike,
+        coinsEarned,
+        rewardStatus: dislikeReward.reason,
       });
     }
   } catch (error) {
@@ -3309,6 +3293,8 @@ exports.search = async (req, res) => {
             isActive: true,
             scheduleType: 2,
             visibilityType: 1,
+            moderationStatus: { $nin: ["pending_review", "rejected"] },
+            isCopyrightFlagged: { $ne: true },
             $or: [{ title: { $regex: req.body.searchString?.trim(), $options: "i" } }, { description: { $regex: req.body.searchString?.trim(), $options: "i" } }],
           },
         },
@@ -3791,6 +3777,8 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 1,
               $or: [{ title: { $regex: searchString, $options: "i" } }, { description: { $regex: searchString, $options: "i" } }],
             },
@@ -3962,6 +3950,8 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
               isActive: true,
               scheduleType: 2,
               visibilityType: 1,
+              moderationStatus: { $nin: ["pending_review", "rejected"] },
+              isCopyrightFlagged: { $ne: true },
               videoType: 2,
               $or: [{ title: { $regex: searchString, $options: "i" } }, { description: { $regex: searchString, $options: "i" } }],
             },
@@ -4678,78 +4668,64 @@ exports.modifyVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "video does not found!" });
     }
 
-    res.status(200).json({
-      status: true,
-      message: "Video has been updated!",
-    });
+    const b = req.body || {};
+    const changes = {};
+    if (b.title) changes.title = String(b.title).trim();
+    if (b.description) changes.description = String(b.description).trim();
 
-    video.title = req?.body?.title ? req?.body?.title?.trim() : video.title;
-    video.description = req?.body?.description ? req?.body?.description?.trim() : video.description;
-
-    if (Number(req.query.videoType) === 2) {
-      if (req?.body?.videoTime) {
-        if (global.settingJSON.durationOfShorts < Number(req?.body?.videoTime)) {
-          if (req.body.videoImage) {
-            await deleteFromStorage(req.body.videoImage);
-          }
-
-          if (req.body.videoUrl) {
-            await deleteFromStorage(req.body.videoUrl);
-          }
-
-          return res.status(200).json({ status: false, message: "your duration of Shorts greater than decided by the admin." });
-        }
-
-        video.videoTime = req?.body?.videoTime ? req?.body?.videoTime : video.videoTime;
+    if (Number(req.query.videoType) === 2 && b.videoTime) {
+      if (global.settingJSON.durationOfShorts < Number(b.videoTime)) {
+        if (b.videoImage) await deleteFromStorage(b.videoImage);
+        if (b.videoUrl) await deleteFromStorage(b.videoUrl);
+        return res.status(200).json({ status: false, message: "your duration of Shorts greater than decided by the admin." });
       }
+      changes.videoTime = b.videoTime;
     }
 
-    video.visibilityType = req?.body?.visibilityType ? req?.body?.visibilityType : video.visibilityType;
-    video.audienceType = req?.body?.audienceType ? req?.body?.audienceType : video.audienceType;
-    video.commentType = req?.body?.commentType ? req?.body?.commentType : video.commentType;
+    if (b.visibilityType) changes.visibilityType = b.visibilityType;
+    if (b.audienceType) changes.audienceType = b.audienceType;
+    if (b.commentType) changes.commentType = b.commentType;
 
-    if (req?.body?.scheduleType) {
-      video.scheduleType = req?.body?.scheduleType ? req?.body?.scheduleType : video.scheduleType;
-
-      if (req?.body?.scheduleType == 1) {
-        video.scheduleTime = req?.body?.scheduleTime ? moment(req?.body?.scheduleTime).toDate() : video.scheduleTime; //e.g."2023-07-11T18:00:00.000Z"
-      } else if (req?.body?.scheduleType == 2) {
-        video.scheduleTime = "";
-      } else {
-        if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
-        }
-
-        if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
-        }
-
+    if (b.scheduleType) {
+      changes.scheduleType = b.scheduleType;
+      if (b.scheduleType == 1) changes.scheduleTime = b.scheduleTime ? moment(b.scheduleTime).toISOString() : (video.scheduleTime || "");
+      else if (b.scheduleType == 2) changes.scheduleTime = "";
+      else {
+        if (b.videoImage) await deleteFromStorage(b.videoImage);
+        if (b.videoUrl) await deleteFromStorage(b.videoUrl);
         return res.status(200).json({ status: false, message: "scheduleType must be passed valid!" });
       }
     }
 
-    video.location = req?.body?.location ? req?.body?.location : video.location;
-    video.locationCoordinates.latitude = req?.body?.latitude ? req?.body?.latitude : video.latitude;
-    video.locationCoordinates.longitude = req?.body?.longitude ? req?.body?.longitude : video.longitude;
-
-    const multiplehashTag = req?.body?.hashTag ? req?.body?.hashTag.toString().split(",") : video.hashTag;
-    video.hashTag = multiplehashTag;
-
-    if (req?.body?.videoImage) {
-      if (video.videoImage) {
-        await deleteFromStorage(video.videoImage);
-      }
-      video.videoImage = req?.body?.videoImage ? req?.body?.videoImage : video.videoImage;
+    if (b.location) changes.location = b.location;
+    if (b.latitude || b.longitude) {
+      changes.locationCoordinates = {
+        latitude: b.latitude || video.locationCoordinates?.latitude || "",
+        longitude: b.longitude || video.locationCoordinates?.longitude || "",
+      };
     }
+    if (b.hashTag) changes.hashTag = String(b.hashTag).split(",");
 
-    if (req?.body?.videoUrl) {
-      if (video.videoUrl) {
+    if (b.videoImage) {
+      if (video.videoImage) await deleteFromStorage(video.videoImage);
+      changes.videoImage = b.videoImage;
+    }
+    if (b.videoUrl && b.videoUrl !== video.videoUrl) {
+      if (video.streamUid && video.streamUid !== b.streamUid) {
+        try { await videoPipeline.deleteVideo(video.streamUid); } catch (e) { /* ignore */ }
+      } else if (video.videoUrl) {
         await deleteFromStorage(video.videoUrl);
       }
-      video.videoUrl = req?.body?.videoUrl ? req?.body?.videoUrl : video.videoUrl;
+      changes.videoUrl = b.videoUrl;
+      if (b.streamUid) {
+        const pb = videoPipeline.playbackUrls(b.streamUid);
+        Object.assign(changes, { streamUid: b.streamUid, hlsUrl: pb.hlsUrl, dashUrl: pb.dashUrl, videoUrl: pb.hlsUrl, streamStatus: "inprogress", storageProvider: "stream" });
+      }
     }
 
-    await video.save();
+    await db.update("videos", video._id || video.id, changes);
+
+    return res.status(200).json({ status: true, message: "Video has been updated!" });
   } catch (error) {
     if (req.body.videoImage) {
       await deleteFromStorage(req.body.videoImage);
@@ -5220,5 +5196,78 @@ exports.getUserVideos = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
+  }
+};
+
+// ── Cloudflare Stream webhook: a video finished transcoding ─────────────────
+exports.streamWebhook = async (req, res) => {
+  try {
+    const parsed = videoPipeline.verifyWebhook({
+      rawBody: Buffer.isBuffer(req.body) ? req.body : (req.rawBody || JSON.stringify(req.body || {})),
+      headers: req.headers,
+    });
+    if (!parsed.valid) {
+      console.warn("stream webhook rejected:", parsed.reason);
+      return res.status(400).json({ status: false, message: parsed.reason });
+    }
+    res.status(200).json({ status: true });
+
+    if (!parsed.uid) return;
+    const video = await Video.findOne({ streamUid: parsed.uid });
+    if (!video) return;
+
+    const updates = {
+      streamStatus: parsed.state || (parsed.ready ? "ready" : "inprogress"),
+    };
+    if (parsed.ready) {
+      updates.hlsUrl = parsed.hlsUrl;
+      updates.dashUrl = parsed.dashUrl;
+      updates.videoUrl = parsed.hlsUrl;            // the app plays videoUrl
+      updates.videoDuration = Math.round(parsed.duration || 0);
+      if (parsed.duration) updates.videoTime = Math.round(parsed.duration);
+      if (parsed.thumbnail) updates.videoImage = parsed.thumbnail;
+    }
+    await db.update("videos", video._id || video.id, updates);
+    console.log(`🎬 Stream ${parsed.uid} → ${updates.streamStatus}`);
+  } catch (error) {
+    console.error("streamWebhook error:", error.message);
+    if (!res.headersSent) res.status(500).json({ status: false });
+  }
+};
+
+// ── Poll a video's Stream transcode status (client fallback for the webhook) ──
+exports.getStreamStatus = async (req, res) => {
+  try {
+    const videoId = req.query.videoId || (req.body && req.body.videoId);
+    if (!videoId) return res.status(200).json({ status: false, message: "videoId is required." });
+    const video = await Video.findById(videoId);
+    if (!video || !video.streamUid) {
+      return res.status(200).json({ status: false, message: "Video is not on Cloudflare Stream." });
+    }
+    if (video.streamStatus === "ready") {
+      return res.status(200).json({ status: true, ready: true, streamStatus: "ready", hlsUrl: video.hlsUrl, videoDuration: video.videoDuration });
+    }
+    const s = await videoPipeline.getStatus(video.streamUid);
+    if (s.ready) {
+      await db.update("videos", video._id || video.id, {
+        streamStatus: "ready",
+        hlsUrl: s.hlsUrl, dashUrl: s.dashUrl, videoUrl: s.hlsUrl,
+        videoDuration: Math.round(s.duration || 0),
+        videoTime: Math.round(s.duration || video.videoTime || 0),
+        videoImage: s.thumbnail || video.videoImage,
+      });
+    } else {
+      await db.update("videos", video._id || video.id, { streamStatus: s.state || "inprogress" });
+    }
+    return res.status(200).json({
+      status: true,
+      ready: s.ready,
+      streamStatus: s.state,
+      hlsUrl: s.ready ? s.hlsUrl : null,
+      videoDuration: Math.round(s.duration || 0),
+    });
+  } catch (error) {
+    console.error("getStreamStatus error:", error.message);
+    return res.status(200).json({ status: false, message: error.message });
   }
 };

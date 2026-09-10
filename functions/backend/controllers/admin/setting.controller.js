@@ -36,8 +36,8 @@ exports.update = async (req, res) => {
     } else {
       updated = await db.create("settings", req.body, "default_settings");
     }
-    global.settingJSON = updated;
-    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: updated });
+    try { await require("../../util/loadSettings").loadSettings(true); } catch (e) { global.settingJSON = updated; }
+    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: global.settingJSON });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -56,8 +56,8 @@ exports.handleSwitch = async (req, res) => {
       updateData[type] = !setting[type];
     }
     const updated = await db.update("settings", setting._id || setting.id, updateData);
-    global.settingJSON = updated;
-    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: updated });
+    try { await require("../../util/loadSettings").loadSettings(true); } catch (e) { global.settingJSON = updated; }
+    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: global.settingJSON });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -71,6 +71,41 @@ exports.updateWatermarkSetting = async (req, res) => {
 // Switch Storage Option
 exports.switchStorageOption = async (req, res) => {
   return exports.update(req, res);
+};
+
+// Write the YP-TC-2026-FINAL economy values into the settings doc.
+// Use this once to overwrite any stale template values (e.g. likeVideoRewardCoins: 100).
+exports.applyEconomyDefaults = async (req, res) => {
+  try {
+    const defaults = require("../../setting");
+    const KEYS = [
+      "coinToInrRate", "coinsPerInr", "maxAdPerDay", "dailyMaxLikes", "dailyMaxComments",
+      "dailyMaxDislikes", "dailyMaxCheckIns", "dailyMaxVideoWatches", "dailyMaxEarningCapInCoins",
+      "minWatchMinutesForEngagementReward", "engagementWatchRewardCoins", "minCoinForCashOut",
+      "commentingRewardCoins", "likeVideoRewardCoins", "dislikeVideoRewardCoins", "adRewardCoins",
+      "loginRewardCoins", "referralRewardCoins", "watchingVideoRewardCoins",
+      "minWithdrawalRequestedAmount", "minWithdrawalRequestedCoin", "minConvertCoin",
+      "revenueSplits", "districtPartnerRates", "districtPartnerUnlockCapINR",
+      "referralStage1Coins", "referralStage2Coins", "referralStage1HoldHours",
+      "referralStage2HoldHours", "referralStage2WatchMinutes", "referralStage2WindowDays",
+      "maxReferralsPerDayPerUser", "referralDeviceDedup", "paidTierReferralPercentage",
+      "joiningFeeINR", "paymentGateway",
+      "moderationEnabled", "reportAutoHoldThreshold", "reportAutoHoldWindowHours",
+      "grievanceSlaHours", "copyrightEngineEnabled", "copyrightAudioMatchThreshold",
+      "copyrightFrameHammingThreshold", "copyrightMinFrameMatches",
+    ];
+    const patch = {};
+    for (const k of KEYS) if (defaults[k] !== undefined) patch[k] = defaults[k];
+
+    let setting = await db.findOne("settings", {});
+    if (setting) await db.update("settings", setting._id || setting.id, patch);
+    else await db.create("settings", patch, "default_settings");
+
+    await require("../../util/loadSettings").loadSettings(true);
+    return res.status(200).json({ status: true, message: "Economy defaults applied.", applied: patch, setting: global.settingJSON });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: error.message });
+  }
 };
 
 // Retrieve Links

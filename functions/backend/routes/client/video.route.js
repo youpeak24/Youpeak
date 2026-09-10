@@ -16,6 +16,9 @@ route.get("/verifyChannelname", checkAccessWithSecretKey(), videoController.veri
 //upload (normal videos or shorts) by the user
 route.post("/createVideo", checkAccessWithSecretKey(), videoController.createVideo);
 
+//poll cloudflare stream transcode status
+route.get("/streamStatus", checkAccessWithSecretKey(), videoController.getStreamStatus);
+
 //when user share (normal videos or shorts) then shareCount increased
 route.post("/shareCount", checkAccessWithSecretKey(), videoController.shareCount);
 

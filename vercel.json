@@ -1,20 +1,22 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build --prefix admin/frontend",
   "outputDirectory": "admin/frontend/build",
   "functions": {
     "api/index.js": {
-      "includeFiles": "{functions/backend/**,DB/**,admin/frontend/DB/**}"
+      "runtime": "nodejs20.x",
+      "maxDuration": 30,
+      "includeFiles": "functions/backend/**"
     }
   },
+  "crons": [
+    { "path": "/api/cron/daily", "schedule": "30 18 * * *" }
+  ],
   "rewrites": [
-    {
-      "source": "/admin/(.*)",
-      "destination": "/api"
-    },
-    {
-      "source": "/client/(.*)",
-      "destination": "/api"
-    },
+    { "source": "/admin/(.*)", "destination": "/api" },
+    { "source": "/client/(.*)", "destination": "/api" },
+    { "source": "/cron/(.*)", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api" },
     {
       "source": "/((?!admin/|client/|api/|static/|manifest\\.json|favicon\\.ico|logo192\\.png|logo512\\.png|robots\\.txt|asset-manifest\\.json|.*\\.[a-zA-Z0-9]+$).*)",
       "destination": "/index.html"

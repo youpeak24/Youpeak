@@ -15,8 +15,17 @@ const cors = require("cors");
 app.use(cors({ origin: true, credentials: true }));
 app.options("*", cors());
 
+// Webhooks need the raw body for signature verification — handle them before
+// the JSON parser consumes the stream.
+const RAW_WEBHOOK_PATHS = [
+  "/payment/webhook", "/api/payment/webhook",
+  "/stream/webhook", "/api/stream/webhook",
+];
+app.use(RAW_WEBHOOK_PATHS, express.raw({ type: "*/*", limit: "5mb" }));
+
 // Safe Body Parser for Vercel Serverless Function Bridge
 app.use((req, res, next) => {
+  if (Buffer.isBuffer(req.body)) return next(); // raw webhook body, leave it
   if (req.body !== undefined && req.body !== null) {
     if (typeof req.body === "string") {
       try {
@@ -25,7 +34,7 @@ app.use((req, res, next) => {
     }
     return next();
   }
-  express.json({ limit: "50mb" })(req, res, (err) => {
+  express.json({ limit: "50mb", verify: (r, _res, buf) => { r.rawBody = buf; } })(req, res, (err) => {
     next();
   });
 });
@@ -47,7 +56,8 @@ app.use(logger("dev"));
 const path = require("path");
 
 //dotenv
-require("dotenv").config({ path: ".env" });
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+require("./util/validateEnv")();
 
 //connection.js (100% Firebase Firestore)
 const db = require("./util/connection");
@@ -55,23 +65,15 @@ const db = require("./util/connection");
 //fs
 const fs = require("fs");
 
-//settingJson
+//settings: static defaults + the admin-managed Firestore settings doc
 const settingJson = require("./setting");
+const { loadSettings, settingsMiddleware } = require("./util/loadSettings");
+global.settingJSON = { ...settingJson };
+loadSettings(true).catch(() => {}); // warm it on boot
+global.updateSettingFile = (settingData) => { global.settingJSON = settingData; };
 
-const os = require("os");
-
-//Declare global variable
-global.settingJSON = settingJson;
-
-//Declare the function as a global variable to update the setting.js file
-global.updateSettingFile = (settingData) => {
-  try {
-    const settingJSON = JSON.stringify(settingData, null, 2);
-    const tmpFile = path.join(os.tmpdir(), "setting.js");
-    fs.writeFileSync(tmpFile, `module.exports = ${settingJSON};`, "utf8");
-  } catch (e) {}
-  global.settingJSON = settingData;
-};
+// keep global.settingJSON fresh (respects SETTINGS_TTL_MS) before each request
+app.use(settingsMiddleware);
 
 const routes = require("./routes/index");
 app.use("/", routes);
@@ -87,28 +89,23 @@ app.get("/.well-known/apple-app-site-association", (req, res) => {
   return res.status(200).json(global?.settingJSON?.appleAppSiteAssociation || {});
 });
 
-// Cloudflare R2 Video Stream Proxy Route (with Range support for video players)
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-const r2StreamClient = new S3Client({
-  region: "auto",
-  endpoint: "https://da97865a5caa8f2b10c795c92912615e.r2.cloudflarestorage.com",
-  credentials: {
-    accessKeyId: "cdb9bca482d4459a3d9a99533d71939b",
-    secretAccessKey: "9d2946e08c57db8ed33ef5d29044d066c73274b103d26d3ae43e7ba2a12582df",
-  },
-});
+// Cloudflare R2 Video Stream Proxy Route (with Range support for video players).
+// Legacy path for raw MP4 objects still in R2 — new uploads use Cloudflare Stream.
+const { GetObjectCommand } = require("@aws-sdk/client-s3");
+const cloudflareStorage = require("./util/cloudflareStorage.service");
 
 app.get(["/uploads/videos/:filename", "/uploads/Videos/:filename", "/videos/:filename", "/video/stream/:filename"], async (req, res, next) => {
   try {
+    if (!cloudflareStorage.isConfigured()) return next();
     const filename = req.params.filename;
     const r2Key = filename.includes("/") ? filename : `videos/${filename}`;
     const range = req.headers.range;
 
-    const cmdInput = { Bucket: "youpeak-videos", Key: r2Key };
+    const cmdInput = { Bucket: cloudflareStorage.r2BucketName, Key: r2Key };
     if (range) cmdInput.Range = range;
 
     const cmd = new GetObjectCommand(cmdInput);
-    const r2Res = await r2StreamClient.send(cmd);
+    const r2Res = await cloudflareStorage.getS3Client().send(cmd);
 
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");

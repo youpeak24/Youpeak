@@ -3,10 +3,15 @@ const mongoose = require("../util/mongooseShim");
 const membershipTierSchema = new mongoose.Schema(
   {
     tierName: { type: String, required: true, trim: true }, // e.g., Free, Silver, Gold, Platinum
-    level: { type: Number, required: true, unique: true }, // 1, 2, 3, 4
+    level: { type: Number, required: true }, // 1..5 (unique per tierType)
+    // "TASKER"  -> viewer/earner ladder, controls the daily earning caps
+    // "CREATOR" -> creator ladder, controls the ad revenue split
+    tierType: { type: String, enum: ["TASKER", "CREATOR"], default: "TASKER" },
     dailyEarningCapInCoins: { type: Number, default: 1000 },
     dailyEarningCapInINR: { type: Number, default: 100 },
-    dailyAdLimit: { type: Number, default: 10 },
+    dailyAdLimit: { type: Number, default: 20 },
+    dailyLikeLimit: { type: Number, default: 5 },
+    dailyCommentLimit: { type: Number, default: 2 },
     coinMultiplier: { type: Number, default: 1.0 },
     adCreditsGranted: { type: Number, default: 0 },
     membershipPrice: { type: Number, default: 0 },

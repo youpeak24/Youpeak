@@ -1,16 +1,9 @@
 const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-if (admin.apps.length === 0) {
-  admin.initializeApp({
-    projectId: process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT || "youpeak-9ff65",
-  });
-}
 
 const express = require("express");
 require("dotenv").config();
-process.env.secretKey = process.env.secretKey || "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ";
-process.env.JWT_SECRET = process.env.JWT_SECRET || "5BF2AE1515EA6";
+require("./backend/util/validateEnv")();
+require("./backend/util/firebaseAdmin"); // single canonical Firebase Admin init
 const cors = require("cors");
 
 const app = express();

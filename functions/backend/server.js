@@ -14,10 +14,7 @@ const fs = require("fs");
 
 //dotenv — load from functions/backend/.env
 require("dotenv").config({ path: path.join(__dirname, ".env") });
-
-// Set env fallbacks
-process.env.secretKey = process.env.secretKey || "0LF8bPi5BnOgl3JjLGcfhfU3N7TAk8rJ";
-process.env.JWT_SECRET = process.env.JWT_SECRET || "5BF2AE1515EA6";
+require("./util/validateEnv")();
 
 const express = require("express");
 const cors = require("cors");
@@ -37,7 +34,12 @@ app.use((req, res, next) => {
 });
 app.use(cors({ origin: true, credentials: true }));
 
-app.use(express.json({ limit: "50mb" }));
+// Webhooks need the raw body for signature verification.
+app.use(
+  ["/payment/webhook", "/api/payment/webhook", "/stream/webhook", "/api/stream/webhook"],
+  express.raw({ type: "*/*", limit: "5mb" })
+);
+app.use(express.json({ limit: "50mb", verify: (r, _res, buf) => { r.rawBody = buf; } }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Morgan logging
@@ -46,52 +48,16 @@ try {
   app.use(logger("dev"));
 } catch (e) {}
 
-// Firebase Admin (Firestore)
-const admin = require("firebase-admin");
-if (admin.apps.length === 0) {
-  try {
-    // Check for serviceAccountKey.json in the source root (2 levels up from functions/backend/)
-    const serviceAccountPaths = [
-      path.join(__dirname, "..", "..", "serviceAccountKey.json"),  // source/
-      path.join(__dirname, "..", "serviceAccountKey.json"),        // functions/
-      path.join(__dirname, "serviceAccountKey.json"),              // functions/backend/
-    ];
+// Firebase Admin (Firestore) — single canonical init
+require("./util/firebaseAdmin");
 
-    let initialized = false;
-    for (const keyPath of serviceAccountPaths) {
-      if (fs.existsSync(keyPath)) {
-        const serviceAccount = require(keyPath);
-        admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-        console.log("🔑 Firebase initialized with serviceAccountKey.json:", keyPath);
-        initialized = true;
-        break;
-      }
-    }
-
-    if (!initialized) {
-      admin.initializeApp();
-      console.log("🔥 Firebase initialized with Application Default Credentials");
-    }
-  } catch (e) {
-    console.log("⚠️  Firebase init note:", e.message);
-  }
-}
-
-// Global settings initialization
-try {
-  const settingJson = require("./setting");
-  global.settingJSON = settingJson;
-  global.updateSettingFile = (settingData) => {
-    try {
-      const settingJSON = JSON.stringify(settingData, null, 2);
-      fs.writeFileSync(path.join(__dirname, "setting.js"), `module.exports = ${settingJSON};`, "utf8");
-    } catch (e) {}
-    global.settingJSON = settingData;
-  };
-} catch (e) {
-  global.settingJSON = {};
-  global.updateSettingFile = () => {};
-}
+// Global settings: static defaults + admin-managed Firestore settings doc
+const settingJson = require("./setting");
+const { loadSettings, settingsMiddleware } = require("./util/loadSettings");
+global.settingJSON = { ...settingJson };
+global.updateSettingFile = (settingData) => { global.settingJSON = settingData; };
+loadSettings(true).catch(() => {});
+app.use(settingsMiddleware);
 
 // Initialize Firestore seed data
 try {
