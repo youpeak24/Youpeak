@@ -208,7 +208,7 @@ class AllShorts {
 
   AllShorts.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
-    hashTag = json['hashTag'].cast<String>();
+    hashTag = (json['hashTag'] as List?)?.cast<String>() ?? <String>[];
     shareCount = json['shareCount'];
     like = json['like'];
     dislike = json['dislike'];
