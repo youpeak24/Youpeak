@@ -1,65 +1,15 @@
 rules_version = '2';
+
+// YouPeak Firestore is accessed ONLY through the backend API, which uses the
+// Firebase Admin SDK — that bypasses these rules entirely. The Flutter app has
+// no cloud_firestore dependency and never talks to Firestore directly (it only
+// uses firebase_auth + firebase_messaging). So every direct client request is
+// denied: a signed-in user must not be able to read other users, the `admins`
+// collection, revenueLedger, paymentTransactions, etc. with just their ID token.
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper functions
-    function isSignedIn() {
-      return request.auth != null;
-    }
-    
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-    
-    function isAdmin() {
-      return isSignedIn() && (request.auth.token.admin == true || request.auth.token.role == 'admin');
-    }
-
-    // 1. Users Collection
-    match /users/{userId} {
-      allow read: if isSignedIn();
-      allow create: if isOwner(userId) || isAdmin();
-      // Users can update their basic profile, but wallet coins & blocks are locked to Admin SDK / Cloud Functions
-      allow update: if (isOwner(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['coin', 'dailyEarningCoinsToday', 'isBlock', 'isRestricted'])) || isAdmin();
-      allow delete: if isAdmin();
-    }
-
-    // 2. Videos Collection
-    match /videos/{videoId} {
-      allow read: if true; // Public video feed
-      allow create: if isSignedIn();
-      allow update, delete: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
-    }
-
-    // 3. Membership Tiers & Config Tiers
-    match /membershipTiers/{tierId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 4. Global Settings Collection
-    match /settings/{settingId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // 5. Financial & Coin History Logs
-    match /histories/{historyId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow write: if isAdmin();
-    }
-
-    // 6. Withdrawal Requests
-    match /withDrawRequests/{requestId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      allow update, delete: if isAdmin();
-    }
-
-    // Default Fallback: Allow authenticated read, Admin write
     match /{document=**} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin();
+      allow read, write: if false;
     }
   }
 }
