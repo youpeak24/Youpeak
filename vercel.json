@@ -1,10 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci && (cd admin/frontend && npm ci)",
   "buildCommand": "npm run build --prefix admin/frontend",
   "outputDirectory": "admin/frontend/build",
   "functions": {
     "api/index.js": {
-      "runtime": "nodejs20.x",
       "maxDuration": 30,
       "includeFiles": "functions/backend/**"
     }
