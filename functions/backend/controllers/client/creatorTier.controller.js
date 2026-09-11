@@ -59,14 +59,30 @@ exports.upgradeCreatorTier = async (req, res) => {
       });
     }
 
-    // Paid VIP passes require a completed payment (wired in the payment step).
-    if ((tier.membershipPrice || 0) > 0 && !user.paymentStatus) {
-      return res.status(200).json({
-        status: false,
-        message: `${tier.tierName} is a paid pass. Please complete the payment on the web portal first.`,
-        requiresPayment: true,
-        priceInINR: tier.membershipPrice,
+    // Paid VIP passes require a completed payment for THIS exact tier.
+    // `user.paymentStatus` is an unrelated one-time joining-fee flag (and is
+    // never client-settable — see userFirestore.controller.js) so it must
+    // NOT be used as a stand-in for "paid for this tier". Verify a real,
+    // paid paymentTransactions record instead — the normal path is
+    // POST /client/payment/createOrder (purpose=tier_upgrade) -> Razorpay ->
+    // /client/payment/verify, which calls fulfilTierUpgrade() and already
+    // assigns activeCreatorTierId directly; this endpoint just re-confirms
+    // that assignment idempotently once a paid transaction exists.
+    if ((tier.membershipPrice || 0) > 0) {
+      const paidTxn = await db.findOne("paymentTransactions", {
+        userId: String(user._id || user.id),
+        tierId: String(tier._id || tier.id),
+        purpose: "tier_upgrade",
+        status: "paid",
       });
+      if (!paidTxn) {
+        return res.status(200).json({
+          status: false,
+          message: `${tier.tierName} is a paid pass. Please complete the payment first.`,
+          requiresPayment: true,
+          priceInINR: tier.membershipPrice,
+        });
+      }
     }
 
     const updated = await db.update("users", user._id || user.id, {
