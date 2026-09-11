@@ -17,6 +17,7 @@ const db = require("../../util/connection");
 const payment = require("../../util/payment.service");
 const referralService = require("../../util/referral.service");
 const revenueSplit = require("../../util/revenueSplit.service");
+const { recordAgencyCommission } = require("../../util/revenueCommission.service");
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
@@ -231,6 +232,27 @@ async function fulfilTierUpgrade(txn) {
     });
     if (r.ok) referralBonus = { coins: r.bonusCoins, percentage: r.percentage };
   } catch (e) { /* ignore */ }
+
+  // District Partner ("VIP Creator Onboarding") commission — 20% per the
+  // District Partner commission chart — on CREATOR-track VIP pass purchases.
+  // Called directly (not via revenueSplit.settleRevenue) so it doesn't also
+  // re-run the peer referral split above.
+  if (tier.tierType === "CREATOR") {
+    try {
+      const rate = num((global.settingJSON || {}).districtPartnerRates?.tierUpgrade, 20);
+      if (rate > 0 && num(txn.amountInr) > 0) {
+        const buyer = await db.findById("users", txn.userId);
+        await recordAgencyCommission({
+          sourceType: "VIP_CREATOR_ONBOARDING",
+          grossAmount: num(txn.amountInr),
+          ratePercentage: rate,
+          state: buyer?.state || "",
+          district: buyer?.district || "",
+          userId: txn.userId,
+        });
+      }
+    } catch (e) { /* ignore */ }
+  }
 
   return { tier: tier.tierName, tierType: tier.tierType, referralBonus };
 }
