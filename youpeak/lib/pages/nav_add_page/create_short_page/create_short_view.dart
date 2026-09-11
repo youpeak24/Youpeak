@@ -291,16 +291,43 @@ class CreateShortView extends StatelessWidget {
   }
 }
 
+// File-level check mirrors main_home_view.dart's isSupport() — see the
+// comment there for why this no longer gates on VideoPlayerController
+// successfully decoding the file.
+const _supportedShortsExtensions = {
+  'mp4', 'mov', 'm4v', '3gp', '3g2', 'mkv', 'webm', 'avi', 'flv', 'wmv',
+};
+
 Future<int?> isSupport(String path) async {
+  try {
+    final file = File(path);
+    if (!await file.exists() || await file.length() <= 0) {
+      AppSettings.showLog("isSupport (shorts): missing/empty file => $path");
+      return null;
+    }
+    final ext = path.split('.').last.toLowerCase();
+    if (!_supportedShortsExtensions.contains(ext)) {
+      AppSettings.showLog("isSupport (shorts): unsupported extension .$ext => $path");
+      return null;
+    }
+  } catch (e) {
+    AppSettings.showLog("isSupport (shorts) file check failed for $path => $e");
+    return null;
+  }
+
+  // Best-effort duration probe for the client-side max-duration UX check.
+  // If the native decoder can't probe it in time (large file, HEVC, etc.),
+  // don't block the upload — fall back to 0 (treated as within any admin
+  // duration limit) and let the file go through; the server can still
+  // enforce limits after transcoding if needed.
   VideoPlayerController? controller;
   try {
     controller = VideoPlayerController.file(File(path));
-    await controller.initialize();
-
-    return controller.value.isInitialized ? controller.value.duration.inMilliseconds : null;
+    await controller.initialize().timeout(const Duration(seconds: 8));
+    return controller.value.isInitialized ? controller.value.duration.inMilliseconds : 0;
   } catch (e) {
-    AppSettings.showLog("isSupport (shorts) failed for $path => $e");
-    return null;
+    AppSettings.showLog("isSupport (shorts) duration probe failed, allowing anyway for $path => $e");
+    return 0;
   } finally {
     controller?.dispose();
   }
