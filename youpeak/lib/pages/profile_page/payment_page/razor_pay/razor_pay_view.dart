@@ -1,55 +1,53 @@
-import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:youpeak/custom/custom_method/custom_toast.dart';
-import 'package:youpeak/utils/string/app_string.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+// Thin wrapper around the Razorpay SDK. The checkout map MUST come from the
+// backend's POST /client/payment/createOrder response (key/order_id/amount/
+// currency) — never build it client-side, since order_id is what lets the
+// server verify the payment signature after checkout completes.
 class RazorPayService {
-  static late Razorpay razorPay;
-  static late String razorKeys;
-  Callback onComplete = () {};
+  Razorpay? _razorpay;
 
-  void init({
-    required String razorKey,
-    required Callback callback,
+  void openCheckout({
+    required Map<String, dynamic> checkout,
+    required String appName,
+    String? email,
+    String? contact,
+    required void Function(PaymentSuccessResponse response) onSuccess,
+    required void Function(String message) onError,
   }) {
-    razorPay = Razorpay();
-    razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
-    razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-    razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
-    razorKeys = razorKey;
-    onComplete = () => callback.call();
-  }
+    // Fresh instance per checkout — reusing one across purchases stacks
+    // listeners and can fire onSuccess more than once for a single payment.
+    _razorpay?.clear();
+    final razorpay = Razorpay();
+    _razorpay = razorpay;
 
-  Future handlePaymentSuccess(PaymentSuccessResponse response) async => onComplete();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse r) => onSuccess(r));
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse r) => onError(r.message ?? "Payment failed."));
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse r) {});
 
-  void razorPayCheckout(int amount) async {
-    debugPrint("Payment Amount => $amount");
-    var options = {
-      'key': razorKeys,
-      'amount': amount,
-      'name': AppStrings.appName,
-      'theme.color': '#FF4D67',
-      'description': AppStrings.appName,
-      'image': 'https://razorpay.com/assets/razorpay-glyph.svg',
-      'currency': AppStrings.razorpayCurrencyCode,
-      'prefill': {'contact': "Your Contact", 'email': "Your Email"},
-      'external': {
-        'wallets': ['paytm']
-      }
+    final options = <String, dynamic>{
+      'key': checkout['key'],
+      'order_id': checkout['order_id'],
+      'amount': checkout['amount'],
+      'currency': checkout['currency'] ?? 'INR',
+      'name': appName,
+      'theme': {'color': '#FF4D67'},
+      if ((email ?? '').isNotEmpty || (contact ?? '').isNotEmpty)
+        'prefill': {
+          if ((email ?? '').isNotEmpty) 'email': email,
+          if ((contact ?? '').isNotEmpty) 'contact': contact,
+        },
     };
+
     try {
-      razorPay.open(options);
+      razorpay.open(options);
     } catch (e) {
-      debugPrint("Razor Payment Error => ${e.toString()}");
+      onError(e.toString());
     }
   }
 
-  void handlePaymentError(PaymentFailureResponse response) {
-    CustomToast.show(response.message ?? "");
-  }
-
-  void handleExternalWallet(ExternalWalletResponse response) {
-    CustomToast.show("External wallet: ${response.walletName!}");
+  void dispose() {
+    _razorpay?.clear();
+    _razorpay = null;
   }
 }

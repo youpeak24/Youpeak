@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,18 +7,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:youpeak/custom/custom_method/custom_filled_button.dart';
 import 'package:youpeak/custom/custom_method/custom_toast.dart';
-import 'package:youpeak/custom/dialog/extended_license_dialog.dart';
+import 'package:youpeak/custom/custom_ui/loader_ui.dart';
 import 'package:youpeak/database/database.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/pages/admin_settings/admin_settings_api.dart';
+import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_api.dart';
 import 'package:youpeak/pages/profile_page/payment_page/in_app_purchase/iap_callback.dart';
 import 'package:youpeak/pages/profile_page/payment_page/in_app_purchase/in_app_purchase_helper.dart';
 import 'package:youpeak/pages/profile_page/payment_page/razor_pay/razor_pay_view.dart';
-import 'package:youpeak/pages/profile_page/premium_plan_page/create_premium_plan_api.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
-import 'package:youpeak/utils/common_payment.dart';
 import 'package:youpeak/utils/config/size_config.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/payment/payment_api.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/style/app_style.dart';
@@ -38,6 +37,8 @@ class PaymentView extends StatefulWidget {
 class _PaymentViewState extends State<PaymentView> implements IAPCallback {
   Map<String, PurchaseDetails>? purchases;
   bool isClicked = false;
+  final RazorPayService _razorPayService = RazorPayService();
+
   @override
   void initState() {
     InAppPurchaseHelper().getAlreadyPurchaseItems(this);
@@ -45,6 +46,54 @@ class _PaymentViewState extends State<PaymentView> implements IAPCallback {
     InAppPurchaseHelper().clearTransactions();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _razorPayService.dispose();
+    super.dispose();
+  }
+
+  Future<void> onRazorpayPurchase() async {
+    if (isClicked) return;
+    setState(() => isClicked = true);
+    final order = await PaymentApi.createOrder(purpose: "premium_plan", premiumPlanId: widget.premiumPlanId);
+    if (!mounted) return;
+    setState(() => isClicked = false);
+
+    if (order["status"] != true || order["checkout"] == null) {
+      CustomToast.show(order["message"]?.toString() ?? AppStrings.someThingWentWrong.tr);
+      return;
+    }
+
+    final checkout = Map<String, dynamic>.from(order["checkout"]);
+    _razorPayService.openCheckout(
+      checkout: checkout,
+      appName: AppStrings.appName.tr,
+      email: GetProfileApi.profileModel?.user?.email,
+      contact: GetProfileApi.profileModel?.user?.mobileNumber,
+      onSuccess: (response) async {
+        if (!mounted) return;
+        Get.dialog(const LoaderUi(), barrierDismissible: false);
+        final verify = await PaymentApi.verify(
+          orderId: response.orderId ?? "",
+          paymentId: response.paymentId ?? "",
+          signature: response.signature ?? "",
+        );
+        if (Get.isDialogOpen == true) Get.back();
+        if (verify["status"] == true) {
+          await GetProfileApi.callApi(Database.loginUserId ?? "");
+          CustomToast.show("Premium Plan Purchase Success");
+          Get.back();
+        } else {
+          CustomToast.show(verify["message"]?.toString() ?? AppStrings.someThingWentWrong.tr);
+        }
+      },
+      onError: (message) {
+        if (!mounted) return;
+        CustomToast.show(message);
+      },
+    );
   }
 
   @override
@@ -73,7 +122,11 @@ class _PaymentViewState extends State<PaymentView> implements IAPCallback {
             CustomToast.show("Please select payment type");
             return;
           }
-          Get.dialog(const ExtendedLicenseDialog());
+          if (AppSettings.paymentType.value == AppStrings.razorPay.tr) {
+            await onRazorpayPurchase();
+          } else {
+            CustomToast.show(AppStrings.paymentMethodComingSoon.tr);
+          }
         },
       ).paddingAll(20),
       body: SingleChildScrollView(

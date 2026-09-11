@@ -139,6 +139,7 @@ final Map<String, String> enUS = {
   "payments": "Payments",
   "paymentNote": "Select the payment method you want to use.",
   "razorPay": "RazorPay",
+  "paymentMethodComingSoon": "This payment method isn't available yet. Please use RazorPay.",
   "stripe": "Stripe",
   "googlePay": "Google Pay",
   "uploads": "Uploads",
