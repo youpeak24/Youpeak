@@ -349,12 +349,49 @@ exports.deleteUserAccount = async (req, res) => {
 };
 
 // ─── Load Referral History ────────────────────────────────────────────────────
+// referralHistories rows key off referrerId/referredUserId (Peak Partner
+// two-stage tracking), not userId — and the app's model (unchanged) expects
+// {status, message, data:[{_id, userId:{_id,fullName,nickName}, type, coin,
+// date, createdAt}]}, the shape of a generic "history" log row. Query the
+// right field and reshape each row into that exact format instead of
+// changing the (already-shipped) app model.
 exports.loadReferralHistoryByUser = async (req, res) => {
   try {
     const userId = req.query.userId;
-    const records = await db.find("referralHistories", { userId });
-    return res.status(200).json({ status: true, message: "Success", history: records, total: records.length });
+    if (!userId) return res.status(200).json({ status: false, message: "userId is required." });
+
+    const records = await db.find("referralHistories", { referrerId: String(userId) }, { sort: { createdAt: -1 } });
+
+    const referredIds = [...new Set(records.map((r) => r.referredUserId).filter(Boolean))];
+    const referredUsers = referredIds.length
+      ? await Promise.all(referredIds.map((id) => db.findById("users", id).catch(() => null)))
+      : [];
+    const userById = {};
+    referredUsers.forEach((u, i) => { if (u) userById[referredIds[i]] = u; });
+
+    const data = records.map((r) => {
+      const u = userById[r.referredUserId];
+      return {
+        _id: r._id || r.id,
+        userId: {
+          _id: r.referredUserId || "",
+          fullName: u?.fullName || "Youpeak User",
+          nickName: u?.nickName || "",
+        },
+        type: 4, // HISTORY_TYPE.REFERRAL_REWARD, kept for display consistency
+        coin: Number(r.totalRewardCoinsGiven) || 0,
+        stage1Completed: !!r.stage1Completed,
+        stage2Completed: !!r.stage2Completed,
+        status: r.status || "",
+        date: r.createdAt,
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt || r.createdAt,
+      };
+    });
+
+    return res.status(200).json({ status: true, message: "Success", data, history: data, total: data.length });
   } catch (error) {
+    console.error("loadReferralHistoryByUser error:", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };
