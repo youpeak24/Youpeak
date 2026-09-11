@@ -292,13 +292,17 @@ class CreateShortView extends StatelessWidget {
 }
 
 Future<int?> isSupport(String path) async {
+  VideoPlayerController? controller;
   try {
-    final VideoPlayerController controller = VideoPlayerController.file(File(path));
+    controller = VideoPlayerController.file(File(path));
     await controller.initialize();
 
     return controller.value.isInitialized ? controller.value.duration.inMilliseconds : null;
   } catch (e) {
+    AppSettings.showLog("isSupport (shorts) failed for $path => $e");
     return null;
+  } finally {
+    controller?.dispose();
   }
 }
 
