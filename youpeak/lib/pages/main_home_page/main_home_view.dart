@@ -371,17 +371,40 @@ class _MainHomePageViewState extends State<MainHomePageView> {
   }
 }
 
+// Whether the picked file is a video we're willing to upload.
+//
+// Deliberately NOT gated on VideoPlayerController.initialize() succeeding:
+// on real devices that decoder probe fails for plenty of valid videos
+// (HEVC / high-res camera output, some OEM encoders, large files taking
+// long to probe) and was surfacing as a wrong "Video not support" error
+// even after storage/media permission was granted. The file itself
+// doesn't need to be locally decodable — it gets uploaded and transcoded
+// server-side (Cloudflare Stream), so a light extension + existence +
+// size check is what actually matters here.
+const _supportedVideoExtensions = {
+  'mp4', 'mov', 'm4v', '3gp', '3g2', 'mkv', 'webm', 'avi', 'flv', 'wmv',
+};
+
 Future<bool> isSupport(String path) async {
-  VideoPlayerController? controller;
   try {
-    controller = VideoPlayerController.file(File(path));
-    await controller.initialize();
-    return controller.value.isInitialized ? true : false;
+    final file = File(path);
+    if (!await file.exists()) {
+      AppSettings.showLog("isSupport (video): file does not exist => $path");
+      return false;
+    }
+    if (await file.length() <= 0) {
+      AppSettings.showLog("isSupport (video): zero-byte file => $path");
+      return false;
+    }
+    final ext = path.split('.').last.toLowerCase();
+    if (!_supportedVideoExtensions.contains(ext)) {
+      AppSettings.showLog("isSupport (video): unsupported extension .$ext => $path");
+      return false;
+    }
+    return true;
   } catch (e) {
     AppSettings.showLog("isSupport (video) failed for $path => $e");
     return false;
-  } finally {
-    controller?.dispose();
   }
 }
 

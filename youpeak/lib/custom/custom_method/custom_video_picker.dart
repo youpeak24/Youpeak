@@ -9,26 +9,35 @@ import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 
 class CustomVideoPicker {
-  // Android 13+ needs READ_MEDIA_VIDEO (older Android: READ_EXTERNAL_STORAGE /
-  // no-op on the modern Photo Picker). Without this, the gallery pick can
-  // return a path the app isn't actually allowed to read, so
-  // VideoPlayerController.initialize() fails later and the picked video gets
-  // wrongly reported as "not supported".
-  static Future<bool> _ensureMediaPermission() async {
-    if (!Platform.isAndroid) return true;
-    final status = await Permission.videos.status;
-    if (status.isGranted) return true;
-    final result = await Permission.videos.request();
-    return result.isGranted;
+  // Best-effort permission request only — never blocks the picker. On
+  // Android 11+ (and pre-11 with Play services), image_picker uses the
+  // system Photo Picker, which grants scoped per-file access regardless of
+  // these app permissions, so a "denied" result here must not stop the
+  // user from picking a video. This just makes sure the OS dialog is shown
+  // (and covers the older/legacy picker fallback some OEMs still use).
+  static Future<void> _requestMediaPermission() async {
+    if (!Platform.isAndroid) return;
+    try {
+      final videosStatus = await Permission.videos.status;
+      if (!videosStatus.isGranted && !videosStatus.isLimited) {
+        await Permission.videos.request();
+      }
+    } catch (e) {
+      AppSettings.showLog("Permission.videos request failed: $e");
+    }
+    try {
+      final storageStatus = await Permission.storage.status;
+      if (!storageStatus.isGranted && !storageStatus.isLimited) {
+        await Permission.storage.request();
+      }
+    } catch (e) {
+      AppSettings.showLog("Permission.storage request failed: $e");
+    }
   }
 
   static Future<String?> pickVideo() async {
     try {
-      final granted = await _ensureMediaPermission();
-      if (!granted) {
-        CustomToast.show(AppStrings.pleaseSelectVideo.tr);
-        return null;
-      }
+      await _requestMediaPermission();
 
       Get.dialog(barrierDismissible: false, const LoaderUi());
       final videoPath = await ImagePicker().pickVideo(source: ImageSource.gallery);
