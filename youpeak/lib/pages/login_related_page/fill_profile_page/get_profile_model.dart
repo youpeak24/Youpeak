@@ -156,17 +156,20 @@ class User {
     _nickName = json['nickName'];
     _email = json['email'];
     _gender = json['gender'];
-    _age = json['age'];
+    // age / channelType can come back as a String (older saves stored the
+    // raw form-field text) or a num — accept either instead of crashing.
+    _age = json['age'] is num ? (json['age'] as num).toInt() : int.tryParse('${json['age'] ?? ''}');
     _mobileNumber = json['mobileNumber'];
     _image = json['image'];
     _country = json['country'];
     _ipAddress = json['ipAddress'];
-    _channelType = json['channelType'];
+    _channelType = json['channelType'] is num ? (json['channelType'] as num).toInt() : int.tryParse('${json['channelType'] ?? ''}');
     _channelId = json['channelId'];
     _descriptionOfChannel = json['descriptionOfChannel'];
     _isChannel = json['isChannel'];
     _password = json['password'];
-    _uniqueId = json['uniqueId'];
+    // uniqueId is a numeric id server-side; the model stores it as a string.
+    _uniqueId = json['uniqueId']?.toString();
     _identity = json['identity'];
     _fcmToken = json['fcmToken'];
     _date = json['date'];
