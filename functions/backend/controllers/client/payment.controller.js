@@ -49,6 +49,11 @@ async function resolveAmount({ purpose, tierId, coinPlanId, premiumPlanId }) {
     if (!plan || plan.isActive === false) return { error: "Invalid premium plan." };
     return { amountInr: num(plan.amount), premiumPlan: plan };
   }
+  if (purpose === "digital_partner_license") {
+    const amt = num(s.digitalPartnerLicenseFeeINR, 25000);
+    if (amt <= 0) return { error: "Digital Partner Program is not enabled." };
+    return { amountInr: amt };
+  }
   return { error: "Unknown purpose." };
 }
 
@@ -200,6 +205,7 @@ async function markPaidAndFulfil(txn, { paymentId, verifiedVia }) {
     else if (txn.purpose === "tier_upgrade") fulfilment = await fulfilTierUpgrade(txn);
     else if (txn.purpose === "coin_plan") fulfilment = await fulfilCoinPlan(txn);
     else if (txn.purpose === "premium_plan") fulfilment = await fulfilPremiumPlan(txn);
+    else if (txn.purpose === "digital_partner_license") fulfilment = await fulfilDigitalPartnerLicense(txn);
   } catch (e) {
     console.error(`fulfilment failed for ${id} (${txn.purpose}):`, e.message);
     fulfilment = { error: e.message };
@@ -217,6 +223,38 @@ async function fulfilJoiningFee(txn) {
     paymentGatewayRef: txn.paymentId || txn.orderId,
   });
   return { paymentStatus: true };
+}
+
+// Digital Partner Program — Module A (Partner Upgrade & Payment Flow).
+// Does NOT touch the Peak Partner referral engine (referral.service.js) —
+// that stays open to every user. This only unlocks the partner dashboard /
+// ad-credits wallet.
+async function fulfilDigitalPartnerLicense(txn) {
+  const amount = num(txn.amountInr);
+
+  await db.update("users", txn.userId, {
+    isDigitalPartner: true,
+    partnerStatus: "ACTIVE",
+  });
+
+  const existing = await db.findOne("PartnerProfile", { userId: txn.userId });
+  const patch = {
+    userId: txn.userId,
+    licenseFeePaid: amount,
+    paymentTransactionId: txn._id || txn.id,
+    adCreditsBalance: (existing?.adCreditsBalance || 0) + amount,
+    adCreditsGranted: (existing?.adCreditsGranted || 0) + amount,
+    activatedAt: new Date().toISOString(),
+  };
+  if (existing) {
+    await db.update("PartnerProfile", existing._id || existing.id, patch);
+  } else {
+    patch.totalReferrals = 0;
+    patch.totalEarnings = 0;
+    await db.create("PartnerProfile", patch);
+  }
+
+  return { isDigitalPartner: true, adCreditsBalance: patch.adCreditsBalance };
 }
 
 async function fulfilTierUpgrade(txn) {

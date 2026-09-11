@@ -138,6 +138,7 @@ class FirestoreDbService {
       fingerprintqueue: "fingerprintQueue",
       grievance: "grievances", grievances: "grievances",
       fraudalert: "fraudAlerts", fraudalerts: "fraudAlerts",
+      partnerprofile: "partnerProfiles", partnerprofiles: "partnerProfiles",
     };
     return MAP[key] || name;
   }

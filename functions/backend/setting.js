@@ -81,6 +81,13 @@ module.exports = {
   joiningFeeINR: 0,
   paymentGateway: "razorpay",         // razorpay | cashfree | phonepe
 
+  // ── Digital Partner Program (TRS) ──
+  // One-time license; on payment the user gets isDigitalPartner=true,
+  // partnerStatus=ACTIVE, and a PartnerProfile with this much ad-credit
+  // balance. The Peak Partner ₹100+₹100 referral engine is unaffected by
+  // this — it stays open to every user, partner or not.
+  digitalPartnerLicenseFeeINR: 25000,
+
   // ── Content moderation (IT Rules 2021) ──
   moderationEnabled: true,
   reportAutoHoldThreshold: 5,          // reports within the window -> pending_review
