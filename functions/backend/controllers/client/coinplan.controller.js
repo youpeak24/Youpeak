@@ -36,10 +36,38 @@ exports.retriveCoinplanByUser = async (req, res) => {
 };
 
 //when user purchase the coinPlan create coinPlan history by user
+// SECURITY: this endpoint used to credit coins purely on the client's say-so
+// (userId + coinPlanId + a gateway *name* string, no proof of payment) — any
+// caller could mint themselves unlimited coins. It now requires and verifies
+// the same Razorpay order/payment/signature triple as
+// POST /client/payment/verify, and refuses to credit the same paymentId
+// twice (replay protection). Prefer /client/payment/createOrder + verify
+// for new integrations — this endpoint stays only so the already-shipped
+// app build (which calls it directly after a real gateway checkout) keeps
+// working once the app is wired to actually complete a Razorpay payment
+// before calling it.
 exports.createCoinPlanHistory = async (req, res) => {
   try {
     if (!req.body.userId || !req.body.coinPlanId || !req.body.paymentGateway) {
       return res.json({ status: false, message: "Oops ! Invalid details." });
+    }
+
+    const { orderId, paymentId, signature } = req.body;
+    if (!orderId || !paymentId || !signature) {
+      return res.status(200).json({ status: false, message: "Payment proof (orderId/paymentId/signature) is required." });
+    }
+    const paymentService = require("../../util/payment.service");
+    const verified = paymentService.verifyCallbackSignature({
+      gateway: req.body.paymentGateway,
+      orderId, paymentId, signature,
+    });
+    if (!verified) {
+      console.warn("createCoinPlanHistory: signature verification failed", { userId: req.body.userId, orderId, paymentId });
+      return res.status(200).json({ status: false, message: "Payment verification failed." });
+    }
+    const dupe = await CoinPlanHistory.findOne({ paymentId });
+    if (dupe) {
+      return res.status(200).json({ status: false, message: "This payment has already been credited." });
     }
 
     const userId = new mongoose.Types.ObjectId(req.body.userId);
@@ -69,6 +97,8 @@ exports.createCoinPlanHistory = async (req, res) => {
     history.userId = user._id;
     history.coinplanId = coinPlan._id;
     history.paymentGateway = paymentGateWay;
+    history.paymentId = paymentId;
+    history.orderId = orderId;
     history.date = moment().toISOString();
 
     const newCoinPlan = {
