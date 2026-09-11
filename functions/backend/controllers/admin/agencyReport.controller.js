@@ -20,6 +20,19 @@ exports.getAgencyReport = async (req, res) => {
     const totalGrossRevenue = commissions.reduce((acc, c) => acc + (Number(c.grossAmount) || 0), 0);
     const totalCommissionEarned = commissions.reduce((acc, c) => acc + (Number(c.commissionAmount) || 0), 0);
 
+    // Break out the District Partner's revenue streams (DOC-20260826-WA0000):
+    // Video Unlocks, VIP Creator Onboarding, Local Business Ads, + others.
+    const commissionBySource = {};
+    for (const c of commissions) {
+      const key = c.sourceType || "OTHER";
+      if (!commissionBySource[key]) {
+        commissionBySource[key] = { grossAmount: 0, commissionAmount: 0, count: 0 };
+      }
+      commissionBySource[key].grossAmount += Number(c.grossAmount) || 0;
+      commissionBySource[key].commissionAmount += Number(c.commissionAmount) || 0;
+      commissionBySource[key].count += 1;
+    }
+
     const agencyDetails = targetAgencyId ? await db.findById("agencies", targetAgencyId) : null;
 
     return res.status(200).json({
@@ -33,6 +46,7 @@ exports.getAgencyReport = async (req, res) => {
         totalAdImpressions,
         totalGrossRevenue,
         totalCommissionEarned,
+        commissionBySource,
       },
     });
   } catch (error) {
@@ -47,6 +61,7 @@ exports.getAgencyReport = async (req, res) => {
         totalAdImpressions: 0,
         totalGrossRevenue: 0,
         totalCommissionEarned: 0,
+        commissionBySource: {},
       },
     });
   }

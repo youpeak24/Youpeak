@@ -234,7 +234,9 @@ function mapDpSourceType(t) {
   switch (t) {
     case "coinPurchase": return "COIN_PURCHASE";
     case "premiumPurchase": return "PREMIUM_SUBSCRIPTION";
-    case "tierUpgrade": return "PAID_CHANNEL";
+    case "videoUnlock": return "VIDEO_UNLOCK";
+    case "tierUpgrade": return "VIP_CREATOR_ONBOARDING";
+    case "localBusinessAds": return "LOCAL_BUSINESS_ADS";
     case "adRevenue": return "AD_IMPRESSION";
     default: return "PAID_CHANNEL";
   }
