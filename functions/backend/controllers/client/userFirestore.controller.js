@@ -259,11 +259,19 @@ exports.updateProfile = async (req, res) => {
     if (req.body.fullName) updates.fullName = req.body.fullName.trim();
     if (req.body.nickName) updates.nickName = req.body.nickName;
     if (req.body.gender) updates.gender = req.body.gender;
-    if (req.body.age) updates.age = req.body.age;
+    // Schema (and every Flutter model) declares age/channelType as numbers —
+    // the app's form fields send them as strings, so coerce on the way in.
+    if (req.body.age !== undefined && req.body.age !== "") {
+      const age = Number(req.body.age);
+      if (Number.isFinite(age)) updates.age = age;
+    }
     if (req.body.mobileNumber) updates.mobileNumber = req.body.mobileNumber;
     if (req.body.country) updates.country = req.body.country;
     if (req.body.ipAddress) updates.ipAddress = req.body.ipAddress;
-    if (req.body.channelType) updates.channelType = req.body.channelType;
+    if (req.body.channelType !== undefined && req.body.channelType !== "") {
+      const channelType = Number(req.body.channelType);
+      if (Number.isFinite(channelType)) updates.channelType = channelType;
+    }
     if (req.body.descriptionOfChannel) updates.descriptionOfChannel = req.body.descriptionOfChannel;
     if (req.body.subscriptionCost !== undefined) updates.subscriptionCost = Number(req.body.subscriptionCost);
     if (req.body.videoUnlockCost !== undefined) updates.videoUnlockCost = Number(req.body.videoUnlockCost);

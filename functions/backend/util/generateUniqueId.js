@@ -14,7 +14,10 @@ const generateUniqueId = async () => {
     user = await db.findOne("users", { uniqueId: uniqueId });
   }
 
-  return uniqueId;
+  // Schema (and every client model) declares uniqueId as a String — return
+  // that, not the raw number, or every profile-parsing screen throws a
+  // type-mismatch error on it.
+  return String(uniqueId);
 };
 
 module.exports = { generateUniqueId };
