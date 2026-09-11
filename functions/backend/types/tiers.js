@@ -60,6 +60,14 @@ const TASKER_TIERS = [
   },
 ];
 
+// Updated 2026-09-11 to the founder's VIP Pass rate card (pasted twice,
+// verbatim, treated as the current source of truth — supersedes the older
+// numbers from the "VIP pricing doc"). Sub-thresholds and price now fall as
+// subscriber count rises; splits climb 60/40 -> 70/30 -> 80/20 in a clean
+// +10 step per tier. Platinum's split (90/10) continues that same arithmetic
+// step since the rate card didn't state one — confirm with the founder, but
+// it's the only value consistent with the other three.
+// maxEarningPerVideoInINR is not in the rate card; carried over unchanged.
 const CREATOR_TIERS = [
   {
     _id: "tier_creator_classic",
@@ -67,39 +75,39 @@ const CREATOR_TIERS = [
     membershipPrice: 0, minSubscribersRequired: 0, maxSubscribers: null,
     creatorRevenueSharePercentage: 50, companyRevenueSharePercentage: 50,
     maxEarningPerVideoInINR: 1000, isDefault: true, isActive: true,
-    description: "Free — 0 subscribers, 50/50 ad revenue split.",
+    description: "Free — before any VIP Pass, 50/50 ad revenue split.",
   },
   {
     _id: "tier_creator_starter_vip",
     tierType: "CREATOR", level: 2, tierName: "Starter VIP Pass",
-    membershipPrice: 4999, minSubscribersRequired: 0, maxSubscribers: 5000,
+    membershipPrice: 2999, minSubscribersRequired: 0, maxSubscribers: 1000,
     creatorRevenueSharePercentage: 60, companyRevenueSharePercentage: 40,
     maxEarningPerVideoInINR: 2000, isDefault: false, isActive: true,
-    description: "< 5,000 subscribers — 60/40 split.",
+    description: "< 1,000 subscribers — 60/40 split.",
   },
   {
     _id: "tier_creator_silver_vip",
     tierType: "CREATOR", level: 3, tierName: "Silver VIP Pass",
-    membershipPrice: 2999, minSubscribersRequired: 5000, maxSubscribers: 25000,
-    creatorRevenueSharePercentage: 65, companyRevenueSharePercentage: 35,
+    membershipPrice: 1999, minSubscribersRequired: 1000, maxSubscribers: 10000,
+    creatorRevenueSharePercentage: 70, companyRevenueSharePercentage: 30,
     maxEarningPerVideoInINR: 5000, isDefault: false, isActive: true,
-    description: "5,000–25,000 subscribers — 65/35 split.",
+    description: "1,000–10,000 subscribers — 70/30 split.",
   },
   {
     _id: "tier_creator_gold_vip",
     tierType: "CREATOR", level: 4, tierName: "Gold VIP Pass",
-    membershipPrice: 1499, minSubscribersRequired: 25000, maxSubscribers: 100000,
-    creatorRevenueSharePercentage: 75, companyRevenueSharePercentage: 25,
+    membershipPrice: 1499, minSubscribersRequired: 10000, maxSubscribers: 100000,
+    creatorRevenueSharePercentage: 80, companyRevenueSharePercentage: 20,
     maxEarningPerVideoInINR: 10000, isDefault: false, isActive: true,
-    description: "25,000–100,000 subscribers — 75/25 split.",
+    description: "10,000–100,000 subscribers — 80/20 split.",
   },
   {
     _id: "tier_creator_platinum_vip",
     tierType: "CREATOR", level: 5, tierName: "Platinum VIP Pass",
-    membershipPrice: 0, minSubscribersRequired: 100000, maxSubscribers: null,
-    creatorRevenueSharePercentage: 80, companyRevenueSharePercentage: 20,
+    membershipPrice: 999, minSubscribersRequired: 100000, maxSubscribers: null,
+    creatorRevenueSharePercentage: 90, companyRevenueSharePercentage: 10,
     maxEarningPerVideoInINR: 25000, isDefault: false, isActive: true,
-    description: "> 100,000 subscribers — 80/20 split.",
+    description: "> 100,000 subscribers — 90/10 split (inferred; confirm).",
   },
 ];
 

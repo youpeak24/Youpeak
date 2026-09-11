@@ -111,6 +111,11 @@ const userSchema = new mongoose.Schema(
     currentLng: { type: Number, default: 0 },
     agencyId: { type: mongoose.Schema.Types.ObjectId, ref: "Agency", default: null },
 
+    // Digital Partner Program (TRS) — separate from the Peak Partner referral
+    // engine, which stays open to every user regardless of this flag.
+    isDigitalPartner: { type: Boolean, default: false },
+    partnerStatus: { type: String, enum: ["NONE", "PENDING", "ACTIVE", "SUSPENDED"], default: "NONE" },
+
     // Tier Management & Limits
     membershipTierId: { type: mongoose.Schema.Types.ObjectId, ref: "MembershipTier", default: null },
     activeCreatorTierId: { type: mongoose.Schema.Types.ObjectId, ref: "MembershipTier", default: null },
