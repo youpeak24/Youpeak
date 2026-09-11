@@ -8,6 +8,7 @@ import 'package:youpeak/database/database.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/pages/nav_library_page/history_page/history_view.dart';
 import 'package:youpeak/pages/profile_page/main_page/profile_controller.dart';
+import 'package:youpeak/pages/profile_page/setting_page/grievance_page/grievance_view.dart';
 import 'package:youpeak/pages/profile_page/setting_page/language_view.dart';
 import 'package:youpeak/pages/profile_page/setting_page/privacy_policy_web_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
@@ -158,6 +159,11 @@ class SettingsView extends GetView<ProfileController> {
                 callback: () => Get.to(const PrivacyPolicyWebView()),
                 leading: AppIcons.help,
                 title: AppStrings.privacyPolicy.tr,
+              ),
+              SettingItemUi(
+                callback: () => Get.to(() => const GrievanceView()),
+                leading: AppIcons.grievance,
+                title: AppStrings.grievanceOfficer.tr,
               ),
               // SettingItemUi(
               //   callback: () {},

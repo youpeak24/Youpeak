@@ -96,6 +96,7 @@ abstract class AppIcons {
   static const String reportFlag = "assets/icons/report.png";
   static const String help = "assets/icons/infoSquare.png";
   static const String king = "assets/icons/king.png";
+  static const String grievance = "assets/icons/shieldDone.png";
 
   static const String logOut = "assets/icons/logout.png";
   static const String done = "assets/icons/done.png";

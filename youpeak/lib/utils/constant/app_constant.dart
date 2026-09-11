@@ -96,6 +96,11 @@ class Constant {
 
   static const reportVideo = "client/report/reportToVideo";
 
+  // >>>>> >>>>> >>>>> Grievance Officer Api (IT Rules 2021) <<<<< <<<<< <<<<<<
+  static const grievanceOfficer = "client/grievance";
+  static const fileGrievance = "client/grievance/file";
+  static const trackGrievance = "client/grievance/track";
+
   static const createWatchHistory = "client/watchHistory/createWatchHistory";
   static const createWatchLater = "client/saveToWatchLater/addVideoToWatchLater";
 
