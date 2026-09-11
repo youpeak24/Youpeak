@@ -140,6 +140,7 @@ abstract class AppStrings {
   static String payments = "payments";
   static String paymentNote = "paymentNote";
   static String razorPay = "razorPay";
+  static String paymentMethodComingSoon = "paymentMethodComingSoon";
   static String stripe = "stripe";
   static String googlePay = "googlePay";
   static String applePay = "applePay";

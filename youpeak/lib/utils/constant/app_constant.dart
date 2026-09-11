@@ -181,6 +181,11 @@ class Constant {
   static const purchaseCoinPlan = "client/coinplan/createCoinPlanHistory";
   static const unlockPrivateVideo = "client/video/unlockPrivateVideo";
 
+  // >>>>> >>>>> >>>>> Gateway-agnostic Payment Api (Razorpay order + verify) <<<<< <<<<< <<<<<<
+  static const paymentCreateOrder = "client/payment/createOrder";
+  static const paymentVerify = "client/payment/verify";
+  static const paymentStatus = "client/payment/status";
+
 // >>>>> >>>>> >>>>> Comment Page Api <<<<< <<<<< <<<<<<
   static const getAllComment = "client/videoComment/getComments";
   static const createComment = "client/videoComment/createComment";
