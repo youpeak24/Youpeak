@@ -372,12 +372,16 @@ class _MainHomePageViewState extends State<MainHomePageView> {
 }
 
 Future<bool> isSupport(String path) async {
+  VideoPlayerController? controller;
   try {
-    final VideoPlayerController controller = VideoPlayerController.file(File(path));
+    controller = VideoPlayerController.file(File(path));
     await controller.initialize();
     return controller.value.isInitialized ? true : false;
   } catch (e) {
+    AppSettings.showLog("isSupport (video) failed for $path => $e");
     return false;
+  } finally {
+    controller?.dispose();
   }
 }
 
