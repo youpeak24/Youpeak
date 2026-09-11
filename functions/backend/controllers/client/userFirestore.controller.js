@@ -51,7 +51,11 @@ function buildUserData(existing, body) {
       twitterLink: body.twitterLink || existing.socialMediaLinks?.twitterLink || "",
       websiteLink: body.websiteLink || existing.socialMediaLinks?.websiteLink || "",
     },
-    channelType: body.channelType || existing.channelType || "0",
+    // CHANNEL_TYPE.PUBLIC = 1 (free) is the schema default — every prior
+    // version of this fell back to the string "0", which isn't a valid
+    // CHANNEL_TYPE value and made subscribedUnSubscibed() treat every new
+    // channel as a paid channel with no price set (permanently unsubscribable).
+    channelType: Number(body.channelType) || Number(existing.channelType) || 1,
     isActive: existing.isActive !== undefined ? existing.isActive : true,
     isBlock: existing.isBlock || false,
     paymentStatus: existing.paymentStatus !== undefined ? existing.paymentStatus : (body.paymentStatus !== undefined ? body.paymentStatus : false),

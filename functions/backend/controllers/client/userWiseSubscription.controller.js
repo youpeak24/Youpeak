@@ -78,7 +78,13 @@ exports.subscribedUnSubscibed = async (req, res) => {
     }
 
     /* ================= FREE CHANNEL ================= */
-    if (channel.channelType === 1) {
+    // A channel is only "paid" when it's explicitly PRIVATE (channelType 2)
+    // AND has a positive subscriptionCost. Treat everything else (missing
+    // channelType, "0"/0/1, no cost set) as free — channelType defaults to
+    // PUBLIC (1) in the schema, but existing/legacy user docs can have it
+    // unset, which must not turn into an unpayable "paid" channel.
+    const isPaidChannel = Number(channel.channelType) === 2 && Number(channel.subscriptionCost) > 0;
+    if (!isPaidChannel) {
       await UserWiseSubscription.create({
         userId: userObjectId,
         channelId: channel.channelId,
