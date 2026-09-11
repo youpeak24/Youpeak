@@ -58,8 +58,12 @@ function buildUserData(existing, body) {
     channelType: Number(body.channelType) || Number(existing.channelType) || 1,
     isActive: existing.isActive !== undefined ? existing.isActive : true,
     isBlock: existing.isBlock || false,
-    paymentStatus: existing.paymentStatus !== undefined ? existing.paymentStatus : (body.paymentStatus !== undefined ? body.paymentStatus : false),
-    payment_status: existing.paymentStatus !== undefined ? existing.paymentStatus : (body.paymentStatus !== undefined ? body.paymentStatus : false),
+    // SECURITY: never trust `body.paymentStatus` — this flag gates paid
+    // creator-tier upgrades (see creatorTier.controller.js). It must only
+    // ever be set server-side by a verified payment (fulfilJoiningFee) or
+    // an admin toggle, never by client-supplied signup/update input.
+    paymentStatus: existing.paymentStatus || false,
+    payment_status: existing.paymentStatus || false,
     paymentVerifiedAt: existing.paymentVerifiedAt || null,
     paymentGatewayRef: existing.paymentGatewayRef || null,
     coin: existing.coin || 0,
