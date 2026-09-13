@@ -3,15 +3,17 @@ const mongoose = require("../util/mongooseShim");
 const agencyCommissionSchema = new mongoose.Schema(
   {
     agencyId: { type: mongoose.Schema.Types.ObjectId, ref: "Agency", required: true },
-    // Mirrors the District Partner commission chart (DOC-20260826-WA0000):
-    // Video Unlocks 10% (capped), VIP Creator Onboarding 20%, Local Business
-    // Ads 30% — kept as distinct values so agency reports can break out each
-    // revenue stream instead of lumping them together.
+    // Mirrors the District Partner commission chart (V4, Trichy territory):
+    // Video Unlocks 10% (capped), Tasker Onboarding 10%, VIP Creator
+    // Onboarding 15%, Digital Partner 20%, Local Business Ads 30% — kept as
+    // distinct values so agency reports can break out each revenue stream
+    // instead of lumping them together.
     sourceType: {
       type: String,
       enum: [
         "AD_IMPRESSION", "DOWNLOAD", "COIN_PURCHASE", "PREMIUM_SUBSCRIPTION",
         "VIDEO_UNLOCK", "VIP_CREATOR_ONBOARDING", "LOCAL_BUSINESS_ADS",
+        "TASKER_ONBOARDING", "DIGITAL_PARTNER_LICENSE",
         "PAID_CHANNEL", // legacy catch-all, kept for old rows
       ],
       required: true,
