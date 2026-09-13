@@ -48,6 +48,14 @@ exports.getDashboard = async (req, res) => {
     const stage1Only = activeReferrals.filter((r) => r.stage1Completed && !r.stage2Completed);
     const bothStages = activeReferrals.filter((r) => r.stage1Completed && r.stage2Completed);
 
+    const recent = activeReferrals.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 20);
+    const referredIds = [...new Set(recent.map((r) => r.referredUserId).filter(Boolean))];
+    const referredUsers = referredIds.length
+      ? await Promise.all(referredIds.map((id) => db.findById("users", id).catch(() => null)))
+      : [];
+    const nameById = {};
+    referredUsers.forEach((u, i) => { if (u) nameById[referredIds[i]] = u.fullName || u.nickName || "Youpeak User"; });
+
     return res.status(200).json({
       status: true,
       message: "Partner dashboard.",
@@ -68,16 +76,14 @@ exports.getDashboard = async (req, res) => {
         feePaidInr: num(profile.licenseFeePaid),
         activatedAt: profile.activatedAt || null,
       },
-      recentReferrals: activeReferrals
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 20)
-        .map((r) => ({
-          referredUserId: r.referredUserId,
-          stage1Completed: !!r.stage1Completed,
-          stage2Completed: !!r.stage2Completed,
-          status: r.status,
-          createdAt: r.createdAt,
-        })),
+      recentReferrals: recent.map((r) => ({
+        referredUserId: r.referredUserId,
+        referredUserName: nameById[r.referredUserId] || "Youpeak User",
+        stage1Completed: !!r.stage1Completed,
+        stage2Completed: !!r.stage2Completed,
+        status: r.status,
+        createdAt: r.createdAt,
+      })),
     });
   } catch (error) {
     console.error("partner.getDashboard error:", error);
