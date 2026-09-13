@@ -141,6 +141,16 @@ abstract class AppStrings {
   static String paymentNote = "paymentNote";
   static String razorPay = "razorPay";
   static String paymentMethodComingSoon = "paymentMethodComingSoon";
+  static String creatorVipPass = "creatorVipPass";
+  static String creatorVipPassSubtitle = "creatorVipPassSubtitle";
+  static String yourSubscribers = "yourSubscribers";
+  static String currentTier = "currentTier";
+  static String upgradeNow = "upgradeNow";
+  static String adRevenueShare = "adRevenueShare";
+  static String maxPerVideo = "maxPerVideo";
+  static String freePass = "freePass";
+  static String tierUpgradeSuccess = "tierUpgradeSuccess";
+  static String subscribersNeeded = "subscribersNeeded";
   static String stripe = "stripe";
   static String googlePay = "googlePay";
   static String applePay = "applePay";
