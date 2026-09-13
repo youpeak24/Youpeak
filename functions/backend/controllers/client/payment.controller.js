@@ -254,6 +254,24 @@ async function fulfilDigitalPartnerLicense(txn) {
     await db.create("PartnerProfile", patch);
   }
 
+  // District Partner override — 20% of the license fee, per the V4 chart's
+  // "Digital Partner" line (digital platform promotions / network expansion /
+  // user acquisition within the district).
+  try {
+    const rate = num((global.settingJSON || {}).districtPartnerRates?.digitalPartnerLicense, 20);
+    if (rate > 0 && amount > 0) {
+      const buyer = await db.findById("users", txn.userId);
+      await recordAgencyCommission({
+        sourceType: "DIGITAL_PARTNER_LICENSE",
+        grossAmount: amount,
+        ratePercentage: rate,
+        state: buyer?.state || "",
+        district: buyer?.district || "",
+        userId: txn.userId,
+      });
+    }
+  } catch (e) { /* ignore */ }
+
   return { isDigitalPartner: true, adCreditsBalance: patch.adCreditsBalance };
 }
 
@@ -271,26 +289,30 @@ async function fulfilTierUpgrade(txn) {
     if (r.ok) referralBonus = { coins: r.bonusCoins, percentage: r.percentage };
   } catch (e) { /* ignore */ }
 
-  // District Partner ("VIP Creator Onboarding") commission — 20% per the
-  // District Partner commission chart — on CREATOR-track VIP pass purchases.
-  // Called directly (not via revenueSplit.settleRevenue) so it doesn't also
-  // re-run the peer referral split above.
-  if (tier.tierType === "CREATOR") {
-    try {
-      const rate = num((global.settingJSON || {}).districtPartnerRates?.tierUpgrade, 20);
-      if (rate > 0 && num(txn.amountInr) > 0) {
-        const buyer = await db.findById("users", txn.userId);
-        await recordAgencyCommission({
-          sourceType: "VIP_CREATOR_ONBOARDING",
-          grossAmount: num(txn.amountInr),
-          ratePercentage: rate,
-          state: buyer?.state || "",
-          district: buyer?.district || "",
-          userId: txn.userId,
-        });
-      }
-    } catch (e) { /* ignore */ }
-  }
+  // District Partner commission — V4 chart. Called directly (not via
+  // revenueSplit.settleRevenue) so it doesn't also re-run the peer referral
+  // split above.
+  //   CREATOR tier (VIP Creator Onboarding): 15% (was 20%, V4 adjustment)
+  //   TASKER tier (Tasker Onboarding, paid "Starter Pass"): 10%
+  try {
+    const s = global.settingJSON || {};
+    const isCreator = tier.tierType === "CREATOR";
+    const isTasker = tier.tierType === "TASKER";
+    const rate = isCreator
+      ? num(s.districtPartnerRates?.tierUpgrade, 15)
+      : num(s.districtPartnerRates?.taskerOnboarding, 10);
+    if ((isCreator || isTasker) && rate > 0 && num(txn.amountInr) > 0) {
+      const buyer = await db.findById("users", txn.userId);
+      await recordAgencyCommission({
+        sourceType: isCreator ? "VIP_CREATOR_ONBOARDING" : "TASKER_ONBOARDING",
+        grossAmount: num(txn.amountInr),
+        ratePercentage: rate,
+        state: buyer?.state || "",
+        district: buyer?.district || "",
+        userId: txn.userId,
+      });
+    }
+  } catch (e) { /* ignore */ }
 
   return { tier: tier.tierName, tierType: tier.tierType, referralBonus };
 }

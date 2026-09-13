@@ -31,6 +31,7 @@ const HISTORY_TYPE = {
   STAGE2_REFERRAL: 10,
   ENGAGEMENT_WATCH: 11,
   VIDEO_DISLIKE: 12,
+  TASKER_REFERRAL_COMMISSION: 13,
 };
 
 const num = (v, d) => {
@@ -238,6 +239,12 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
       date: new Date().toISOString(),
       ...(meta || {}),
     });
+    // Tasker Onboarding Commission (YP-TC): whoever referred this tasker
+    // earns a % of every reward they earn, as an additional platform-funded
+    // bonus — never deducted from the tasker's own payout. Awaited (this runs
+    // on serverless functions — a detached promise can be killed before it
+    // finishes) but its own errors never fail the tasker's own reward.
+    await creditTaskerReferralCommission(id, credited).catch(() => {});
   }
 
   const merged = { ...user, ...updates };
@@ -281,6 +288,49 @@ async function reverseReward({ userId, videoId, historyType, countField }) {
   await db.update("users", id, updates);
   await db.delete("histories", hist._id || hist.id);
   return { ok: true, reversed: amt };
+}
+
+// Not reusing revenueSplit.service's resolveReferrer here: that module
+// requires this one (for getCreatorRevenueShare), so requiring it back would
+// create a circular dependency. Small enough to duplicate.
+async function resolveReferrerId(userId) {
+  try {
+    const rec = await db.findOne("referralHistories", { referredUserId: String(userId) });
+    if (rec && rec.referrerId) return String(rec.referrerId);
+  } catch (e) { /* ignore */ }
+  try {
+    const u = await db.findById("users", userId);
+    return u && u.referrerId ? String(u.referrerId) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function creditTaskerReferralCommission(taskerId, taskerCoins) {
+  const pct = num((global.settingJSON || {}).taskerEarningsReferralPercentage, 20);
+  if (pct <= 0 || taskerCoins <= 0) return;
+  const bonus = Math.round((taskerCoins * pct) / 100);
+  if (bonus <= 0) return;
+
+  const referrerId = await resolveReferrerId(taskerId);
+  if (!referrerId || referrerId === String(taskerId)) return;
+
+  const referrer = await db.findById("users", referrerId);
+  if (!referrer || referrer.isBlock) return;
+
+  await db.update("users", referrerId, {
+    coin: (referrer.coin || 0) + bonus,
+    referralRewardCoin: (referrer.referralRewardCoin || 0) + bonus,
+    totalRewardCoin: (referrer.totalRewardCoin || 0) + bonus,
+  });
+  await db.create("histories", {
+    userId: referrerId,
+    uniqueId: await generateHistoryUniqueId(),
+    coin: bonus,
+    type: HISTORY_TYPE.TASKER_REFERRAL_COMMISSION,
+    date: new Date().toISOString(),
+    otherUserId: String(taskerId), // the tasker whose earnings generated this commission
+  });
 }
 
 function snapshotCounts(user) {

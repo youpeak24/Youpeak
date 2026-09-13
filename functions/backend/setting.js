@@ -97,7 +97,8 @@ module.exports = {
   grievanceEmail: "grievance@youpeak.in",
   grievancePhone: "",
   grievanceAddress: "Trichy, Tamil Nadu, India",
-  companyLegalName: "Youpeak Digital Solutions Pvt Ltd",
+  // Per the District Partner V4 agreement letterhead ("YOUPEAK PRIVATE LIMITED").
+  companyLegalName: "Youpeak Private Limited",
 
   // ── Copyright / duplicate detection (needs the fingerprint worker) ──
   copyrightEngineEnabled: false,       // turn on once a worker is deployed
@@ -115,15 +116,33 @@ module.exports = {
     tierUpgrade:     { creator: 0,  referrer: 10, platform: 90 },
     adRevenue:       { creator: 55, referrer: 0,  platform: 45 }, // creator% overridden by VIP tier
   },
+  // District Partner commission chart V4 (Trichy territory) — video unlocks
+  // unchanged; VIP Creator Onboarding adjusted 20%->15%; Tasker Onboarding
+  // and Digital Partner are new lines added in V4.
   districtPartnerRates: {
-    videoUnlock: 10,        // capped by districtPartnerUnlockCapINR
-    tierUpgrade: 20,        // VIP creator pass sale
+    videoUnlock: 10,          // capped by districtPartnerUnlockCapINR
+    taskerOnboarding: 10,     // on paid Tasker "Starter Pass" purchases in-district
+    tierUpgrade: 15,          // VIP creator pass sale (V4 adjustment: was 20)
+    digitalPartnerLicense: 20, // on the Digital Partner license fee, in-district
     localBusinessAds: 30,
     adRevenue: 10,
     coinPurchase: 0,
     premiumPurchase: 0,
   },
   districtPartnerUnlockCapINR: 1000,
+  // Digital Partner's own direct cut — separate from the District Partner's
+  // override above. Local Business Ads: 50% direct (Digital Partner) + 30%
+  // override (District Partner) + 20% platform. No booking/ad-serving system
+  // exists yet to actually generate this revenue — rate is recorded now so
+  // it's correct the moment that feature is built.
+  digitalPartnerRates: {
+    localBusinessAds: 50,
+  },
+  // "Tasker Onboarding Commission" (YP-TC) — whoever referred a Tasker earns
+  // this % of every reward that Tasker earns, credited as an ADDITIONAL
+  // platform-funded bonus (the Tasker's own payout is never reduced) — same
+  // pattern as the paid-tier referral bonus in referral.service.js.
+  taskerEarningsReferralPercentage: 20,
   isWatermarkOn: false,
   watermarkIcon: "",
   watermarkType: 2,
