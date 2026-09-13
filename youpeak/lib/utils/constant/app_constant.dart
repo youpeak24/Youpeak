@@ -189,6 +189,9 @@ class Constant {
   // >>>>> >>>>> >>>>> Creator VIP Pass Api <<<<< <<<<< <<<<<<
   static const getCreatorTiers = "client/creatorTier/getAvailableTiers";
 
+  // >>>>> >>>>> >>>>> Tasker Starter Pass Api <<<<< <<<<< <<<<<<
+  static const getTaskerTiers = "client/taskerTier/getAvailableTiers";
+
 // >>>>> >>>>> >>>>> Comment Page Api <<<<< <<<<< <<<<<<
   static const getAllComment = "client/videoComment/getComments";
   static const createComment = "client/videoComment/createComment";

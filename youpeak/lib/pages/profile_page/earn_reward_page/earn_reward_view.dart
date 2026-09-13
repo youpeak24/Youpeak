@@ -12,6 +12,7 @@ import 'package:youpeak/pages/profile_page/content_engagement_page/content_engag
 import 'package:youpeak/pages/profile_page/convert_coin_page/convert_coin_view.dart';
 import 'package:youpeak/pages/profile_page/earn_reward_page/earn_reward_controller.dart';
 import 'package:youpeak/pages/profile_page/referral_program_page/referral_program_view.dart';
+import 'package:youpeak/pages/profile_page/tasker_tier_page/tasker_tier_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
 import 'package:youpeak/utils/string/app_string.dart';
@@ -586,6 +587,71 @@ class _EarnRewardViewState extends State<EarnRewardView> {
                                                           Obx(
                                                             () => Text(
                                                               AppStrings.engagementRewards.tr,
+                                                              style: GoogleFonts.urbanist(
+                                                                fontSize: 18,
+                                                                color: isDarkMode.value ? AppColor.primaryColor : AppColor.black,
+                                                                fontWeight: FontWeight.w700,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const Spacer(),
+                                                      Container(
+                                                        height: 32,
+                                                        width: 70,
+                                                        alignment: Alignment.center,
+                                                        decoration: BoxDecoration(
+                                                          color: AppColor.primaryColor,
+                                                          borderRadius: BorderRadius.circular(30),
+                                                        ),
+                                                        child: Text(
+                                                          AppStrings.go.tr,
+                                                          style: GoogleFonts.urbanist(
+                                                            fontSize: 15,
+                                                            color: AppColor.white,
+                                                            fontWeight: FontWeight.w700,
+                                                          ),
+                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Divider(
+                                                indent: 15,
+                                                endIndent: 15,
+                                                color: AppColor.lightPink.withOpacity(0.2),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Get.to(const TaskerTierView());
+                                                },
+                                                child: Container(
+                                                  height: 80,
+                                                  color: Colors.transparent,
+                                                  padding: const EdgeInsets.only(left: 5, right: 15),
+                                                  child: Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Container(
+                                                        alignment: Alignment.center,
+                                                        height: 55,
+                                                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                        decoration: BoxDecoration(
+                                                          color: AppColor.lightPink.withOpacity(0.2),
+                                                          shape: BoxShape.circle,
+                                                        ),
+                                                        child: Image.asset(AppIcons.king, width: 30),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Obx(
+                                                            () => Text(
+                                                              AppStrings.starterPass.tr,
                                                               style: GoogleFonts.urbanist(
                                                                 fontSize: 18,
                                                                 color: isDarkMode.value ? AppColor.primaryColor : AppColor.black,
