@@ -186,6 +186,9 @@ class Constant {
   static const paymentVerify = "client/payment/verify";
   static const paymentStatus = "client/payment/status";
 
+  // >>>>> >>>>> >>>>> Creator VIP Pass Api <<<<< <<<<< <<<<<<
+  static const getCreatorTiers = "client/creatorTier/getAvailableTiers";
+
 // >>>>> >>>>> >>>>> Comment Page Api <<<<< <<<<< <<<<<<
   static const getAllComment = "client/videoComment/getComments";
   static const createComment = "client/videoComment/createComment";

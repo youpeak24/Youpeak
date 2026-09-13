@@ -16,6 +16,7 @@ import 'package:youpeak/pages/buy_coin_page/view/buy_coin_view.dart';
 import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_api.dart';
 import 'package:youpeak/pages/profile_page/create_channel_page/create_channel_screen.dart';
 import 'package:youpeak/pages/profile_page/earn_reward_page/earn_reward_view.dart';
+import 'package:youpeak/pages/profile_page/creator_tier_page/creator_tier_view.dart';
 import 'package:youpeak/pages/profile_page/edit_profile/edit_profile.dart';
 import 'package:youpeak/pages/profile_page/help_center_page/help_center_view.dart';
 import 'package:youpeak/pages/profile_page/main_page/profile_controller.dart';
@@ -480,6 +481,11 @@ class ProfileView extends GetView<ProfileController> {
                           },
                         )
                       : const Offstage(),
+                  ProfileItemUi(
+                    leading: AppIcons.king,
+                    title: AppStrings.creatorVipPass.tr,
+                    callback: () => Get.to(() => const CreatorTierView()),
+                  ),
                   ProfileItemUi(
                     leading: AppIcons.setting,
                     title: AppStrings.settings.tr,
