@@ -151,6 +151,14 @@ abstract class AppStrings {
   static String freePass = "freePass";
   static String tierUpgradeSuccess = "tierUpgradeSuccess";
   static String subscribersNeeded = "subscribersNeeded";
+  static String starterPass = "starterPass";
+  static String starterPassSubtitle = "starterPassSubtitle";
+  static String lifetimeWatchHours = "lifetimeWatchHours";
+  static String dailyAdLimit = "dailyAdLimit";
+  static String dailyLikeLimit = "dailyLikeLimit";
+  static String dailyCommentLimit = "dailyCommentLimit";
+  static String dailyEarningCap = "dailyEarningCap";
+  static String adCreditsGranted = "adCreditsGranted";
   static String stripe = "stripe";
   static String googlePay = "googlePay";
   static String applePay = "applePay";
