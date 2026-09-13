@@ -90,8 +90,13 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
     if (sameDevice) flaggedReason = "DUPLICATE_DEVICE";
   }
   if (!flaggedReason && ipAddress) {
-    const all = await db.find("referralHistories", { referrerId });
-    const sameIpToday = all.filter((r) => r.referredIp === ipAddress).length;
+    // Named "sameIpToday" but had no date filter at all — flagged a referrer
+    // forever after their 3rd-ever referral from one IP (e.g. home/office
+    // WiFi), even if spread across months of genuine, unrelated referrals.
+    // Scope it to today, matching the daily-cap check right below.
+    const t = todayStr();
+    const all = await db.find("referralHistories", { referrerId, referredIp: ipAddress });
+    const sameIpToday = all.filter((r) => String(r.createdAt || "").slice(0, 10) === t).length;
     if (sameIpToday >= 3) flaggedReason = "MULTIPLE_SAME_IP";
   }
   if (!flaggedReason) {
