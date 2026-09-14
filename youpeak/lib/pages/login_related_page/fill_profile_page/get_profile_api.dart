@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:youpeak/database/database.dart';
-import 'package:youpeak/pages/admin_settings/admin_settings_api.dart';
 import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_model.dart';
-import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_modell.dart';
 import 'package:youpeak/utils/constant/app_constant.dart';
 import 'package:youpeak/utils/services/convert_to_network.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
