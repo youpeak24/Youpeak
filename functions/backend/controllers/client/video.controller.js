@@ -73,7 +73,7 @@ exports.unlockPrivateVideo = async (req, res) => {
     const videoObjectId = new mongoose.Types.ObjectId(videoId);
 
     const [user, video] = await Promise.all([
-      User.findOne({ _id: userObjectId, isActive: true }).select("_id coin isBlock fcmToken").lean(),
+      User.findOne({ _id: userObjectId, isActive: true }).select("_id coin isBlock fcmToken state district").lean(),
       Video.findOne({
         _id: videoObjectId,
         videoPrivacyType: 2, // private
@@ -126,13 +126,17 @@ exports.unlockPrivateVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "Invalid unlock cost." });
     }
 
-    // Re-read the buyer's live balance and guard against a race / stale read.
-    const freshBuyer = await User.findById(userId);
-    if (!freshBuyer || (freshBuyer.coin || 0) < unlockCost) {
+    // Atomic debit — see firestoreDb.service.js spendBalance() for why this
+    // can't be a plain $inc: two near-simultaneous unlock requests (a
+    // double-tap, or a script firing them in parallel) could both read the
+    // same starting balance and both pass a "balance >= cost" check before
+    // either write lands, giving the buyer two unlocks for the price of one.
+    const spend = await db.spendBalance("users", userId, "coin", unlockCost);
+    if (!spend.ok) {
       return res.status(200).json({ status: false, message: "Insufficient coin balance." });
     }
 
-    // 1. record the unlock + debit the buyer
+    // 1. record the unlock (balance is already debited above)
     await VideoUnlock.create({
       userId: String(userId),
       videoId: String(videoId),
@@ -140,7 +144,6 @@ exports.unlockPrivateVideo = async (req, res) => {
       unlockCost,
       unlockedAt: new Date().toISOString(),
     });
-    await User.updateOne({ _id: userId, coin: { $gte: unlockCost } }, { $inc: { coin: -unlockCost } });
     await History.create({
       otherUserId: String(userId),
       videoId: String(videoId),
@@ -162,8 +165,8 @@ exports.unlockPrivateVideo = async (req, res) => {
         referrerOf: "creator",
         videoId: String(videoId),
         agencyContext: {
-          state: freshBuyer.state || "",
-          district: freshBuyer.district || "",
+          state: user.state || "",
+          district: user.district || "",
           userId: String(userId),
         },
       });
