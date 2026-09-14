@@ -14,6 +14,9 @@ const mongoose = require("../../util/mongooseShim");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
+//firestore connection (atomic balance spend — see spendBalance())
+const db = require("../../util/connection");
+
 //get setting details
 exports.fetchSettingDetails = async (req, res) => {
   try {
@@ -130,33 +133,23 @@ exports.coinToAmountConverter = async (req, res) => {
 
     const uniqueId = await generateHistoryUniqueId();
 
+    // Atomic debit — a plain $inc here reads the balance in JS and writes it
+    // back, so two concurrent conversions (double-tap, or a script firing
+    // requests in parallel) could both read the same starting balance, both
+    // pass the "coin >= coinValue" guard above, and both convert — the
+    // second write overwrites the first's with the same computed value, so
+    // the user is debited once but paid out (WalletHistory + totalEarningAmount)
+    // twice. See firestoreDb.service.js spendBalance().
+    const spend = await db.spendBalance("users", userId, "coin", coinValue);
+    if (!spend.ok) {
+      return res.status(200).json({
+        status: false,
+        message: "Insufficient coin balance.",
+      });
+    }
+
     await Promise.all([
-      User.updateOne(
-        {
-          _id: userObjectId,
-          coin: { $gte: coinValue },
-        },
-        {
-          $inc: {
-            coin: -coinValue,
-            totalEarningAmount: amount,
-          },
-        },
-      ),
-      // User.updateOne(
-      //   {
-      //     _id: userObjectId,
-      //     totalRewardCoin: { $gte: coinValue },
-      //     coin: { $gte: coinValue },
-      //   },
-      //   {
-      //     $inc: {
-      //       coin: -coinValue,
-      //       totalRewardCoin: -coinValue,
-      //       totalEarningAmount: amount,
-      //     },
-      //   },
-      // ),
+      User.updateOne({ _id: userObjectId }, { $inc: { totalEarningAmount: amount } }),
       WalletHistory.create({
         userId: userObjectId,
         uniqueId,

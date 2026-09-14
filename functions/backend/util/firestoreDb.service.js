@@ -379,6 +379,71 @@ class FirestoreDbService {
     return merged;
   }
 
+  /**
+   * Atomically decrement a numeric field on one document, refusing (no write
+   * at all) if the balance is below `amount`.
+   *
+   * update()'s $inc (via mongooseShim's buildUpdatePayload) reads the field
+   * in JS, adds to it, and writes the plain result back — there is no
+   * database-level atomicity to that read-then-write. Two concurrent spends
+   * (e.g. a user double-tapping "unlock", or a script firing parallel
+   * requests) can both read the same starting balance before either write
+   * lands, both pass their own "balance >= cost" guard, and both write —
+   * the second write simply overwrites the first with the same computed
+   * value, so the user is charged once but received the goods twice. That's
+   * a real, practically exploitable double-spend on every coin-spending
+   * endpoint (video unlocks, coin-to-cash conversion, ...), not just a
+   * theoretical one.
+   *
+   * This uses a real Firestore transaction: the read and the write happen
+   * as one atomic unit, and Firestore itself detects and retries the
+   * transaction if another write touched the document in between — so two
+   * concurrent spends can never both succeed against a balance that only
+   * covers one of them.
+   *
+   * Intentionally narrow (one field, one document, no companion writes) so
+   * it's easy to reason about and test; callers do their own create/update
+   * of related records AFTER a successful spend, same as before.
+   *
+   * @returns {Promise<{ok:boolean, reason?:string, before:number, after:number}>}
+   */
+  async spendBalance(collectionName, id, field, amount) {
+    const normalizedName = this.normalizeCollectionName(collectionName);
+    const amt = Number(amount);
+    if (!id) return { ok: false, reason: "NO_ID", before: 0, after: 0 };
+    if (!(amt > 0)) return { ok: false, reason: "INVALID_AMOUNT", before: 0, after: 0 };
+
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
+    const ref = db.collection(normalizedName).doc(String(id));
+
+    try {
+      const result = await this.withTimeout(
+        db.runTransaction(async (tx) => {
+          const snap = await tx.get(ref);
+          if (!snap.exists) return { ok: false, reason: "NOT_FOUND", before: 0, after: 0 };
+          const before = Number(snap.data()[field]) || 0;
+          if (before < amt) return { ok: false, reason: "INSUFFICIENT", before, after: before };
+          const after = before - amt;
+          tx.update(ref, { [field]: after, updatedAt: new Date().toISOString() });
+          return { ok: true, before, after };
+        })
+      );
+
+      if (result.ok && this.allowLocalFallback) {
+        const localData = this.readLocalDb();
+        if (localData[normalizedName]?.[String(id)]) {
+          localData[normalizedName][String(id)][field] = result.after;
+          this.writeLocalDb(localData);
+        }
+      }
+      return result;
+    } catch (err) {
+      console.error(`Firestore spendBalance() failed for "${normalizedName}/${id}.${field}":`, err.message);
+      throw err;
+    }
+  }
+
   async delete(collectionName, id) {
     if (!id) return false;
     const normalizedName = this.normalizeCollectionName(collectionName);
