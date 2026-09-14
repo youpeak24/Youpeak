@@ -18,13 +18,19 @@ const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId"
 //reward engine (daily caps + coin crediting)
 const rewardEngine = require("../../util/rewardEngine");
 
+//content moderation (IT Rules 2021 keyword screening) — was only ever wired
+//to video title/description/transcript; comments are free-form user text
+//with zero upload friction and were never screened at all.
+const moderation = require("../../util/moderation.service");
+
 //day.js
 const dayjs = require("dayjs");
 
 //create user wise comment for video
 exports.createComment = async (req, res) => {
   try {
-    const { userId, videoId, commentText } = req.body;
+    const { userId, videoId } = req.body;
+    const commentText = req.body.commentText?.trim();
 
     if (!userId || !videoId || !commentText) {
       return res.status(200).json({ status: false, message: "Oops! Invalid details!" });
@@ -61,6 +67,15 @@ exports.createComment = async (req, res) => {
       return res.status(200).json({
         status: false,
         message: "Comments are disabled for this video.",
+      });
+    }
+
+    const screening = moderation.cfg().enabled ? await moderation.screenText(commentText) : { flagged: false };
+    if (screening.flagged) {
+      console.warn(`Comment blocked by keyword filter: user=${userId} video=${videoId} matched=${screening.matched.join(",")}`);
+      return res.status(200).json({
+        status: false,
+        message: "Your comment contains content that isn't allowed. Please revise it.",
       });
     }
 
@@ -496,11 +511,21 @@ exports.createCommentReply = async (req, res) => {
       return res.status(200).json({ status: false, message: "videoComment does not found!" });
     }
 
+    const replyText = req.body.commentText?.trim();
+    const screening = moderation.cfg().enabled ? await moderation.screenText(replyText) : { flagged: false };
+    if (screening.flagged) {
+      console.warn(`Comment reply blocked by keyword filter: user=${req.body.userId} video=${req.body.videoId} matched=${screening.matched.join(",")}`);
+      return res.status(200).json({
+        status: false,
+        message: "Your reply contains content that isn't allowed. Please revise it.",
+      });
+    }
+
     const videoComment = new VideoComment();
 
     videoComment.userId = user._id;
     videoComment.videoId = video._id;
-    videoComment.commentText = req.body.commentText?.trim();
+    videoComment.commentText = replyText;
     videoComment.recursiveCommentId = videoCommentAlreadyExist._id;
 
     videoCommentAlreadyExist.totalReplies += 1;
