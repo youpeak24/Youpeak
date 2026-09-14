@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
-import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_new_min/ffmpeg_kit.dart';
 import 'package:get/get.dart';
 import 'package:youpeak/custom/custom_method/custom_toast.dart';
 import 'package:youpeak/custom/custom_method/custom_video_size.dart';

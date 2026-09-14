@@ -24,6 +24,18 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+// Release signing — see android/key.properties (gitignored; never commit it
+// or the .jks file). Falls back to nothing if the file is missing so a
+// fresh checkout without it fails loudly at signing time rather than
+// silently signing a "release" build with the debug key.
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader('UTF-8') { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+
 android {
     namespace "com.YouPeak.Live1"
     compileSdkVersion 36
@@ -59,9 +71,25 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            // Was signingConfigs.debug — every "release" build was actually
+            // signed with Flutter's shared debug key, which Play Store
+            // rejects outright and which isn't guaranteed identical across
+            // machines (breaking in-place updates for anyone who installed
+            // an earlier debug-signed build).
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             minifyEnabled true
             shrinkResources false

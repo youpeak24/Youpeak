@@ -8,7 +8,7 @@ import Foundation
 import app_links
 import audioplayers_darwin
 import connectivity_plus
-import ffmpeg_kit_flutter_new
+import ffmpeg_kit_flutter_new_min
 import file_selector_macos
 import firebase_auth
 import firebase_core
