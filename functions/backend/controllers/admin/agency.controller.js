@@ -1,6 +1,14 @@
 const db = require("../../util/connection");
 const bcrypt = require("bcryptjs");
 
+// Every response below was returning the agency's bcrypt password hash
+// straight from the Firestore doc — never send it back, hashed or not.
+function sanitizeAgency(agency) {
+  if (!agency) return agency;
+  const { password, ...rest } = agency;
+  return rest;
+}
+
 // Create agency
 exports.store = async (req, res) => {
   try {
@@ -69,7 +77,7 @@ exports.store = async (req, res) => {
 
     await db.create("admins", adminData, adminData._id);
 
-    return res.status(200).json({ status: true, message: "Agency created successfully!", agency: agencyData });
+    return res.status(200).json({ status: true, message: "Agency created successfully!", agency: sanitizeAgency(agencyData) });
   } catch (error) {
     console.error("Error creating agency:", error);
     return res.status(200).json({ status: false, message: error.message || "Failed to create agency" });
@@ -85,7 +93,7 @@ exports.getAgencies = async (req, res) => {
     const agencies = await db.find("agencies", {}, { sort: { createdAt: -1 } });
     const count = agencies.length;
 
-    const paginatedAgencies = agencies.slice((start - 1) * limit, start * limit);
+    const paginatedAgencies = agencies.slice((start - 1) * limit, start * limit).map(sanitizeAgency);
 
     return res.status(200).json({ status: true, message: "Agencies fetched successfully!", total: count, agencies: paginatedAgencies });
   } catch (error) {
@@ -119,7 +127,7 @@ exports.update = async (req, res) => {
     };
 
     const updatedAgency = await db.update("agencies", agencyId, updatedData);
-    return res.status(200).json({ status: true, message: "Agency updated successfully!", agency: updatedAgency });
+    return res.status(200).json({ status: true, message: "Agency updated successfully!", agency: sanitizeAgency(updatedAgency) });
   } catch (error) {
     console.error("Error updating agency:", error);
     return res.status(200).json({ status: false, message: error.message || "Failed to update agency" });

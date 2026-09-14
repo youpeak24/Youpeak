@@ -1,5 +1,11 @@
 const db = require("../../util/connection");
 
+function sanitizeAgency(agency) {
+  if (!agency) return agency;
+  const { password, ...rest } = agency;
+  return rest;
+}
+
 exports.getAgencyReport = async (req, res) => {
   try {
     const { agencyId } = req.query;
@@ -38,7 +44,7 @@ exports.getAgencyReport = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "Agency report generated successfully!",
-      agency: agencyDetails,
+      agency: sanitizeAgency(agencyDetails),
       report: {
         totalUsers: users.length,
         totalDownloads: downloads.length,
