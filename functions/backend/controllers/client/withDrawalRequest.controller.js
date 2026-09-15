@@ -195,12 +195,13 @@ exports.createWithdrawRequest = async (req, res) => {
       });
     }
 
-    const [user, existingRequest, uniqueId] = await Promise.all([
+    const [user, existingRequest, priorAcceptedRequest, uniqueId] = await Promise.all([
       User.findOne({ _id: userId, isActive: true }, "totalEarningAmount isBlock channelId fullName fcmToken").lean(),
       WithDrawRequest.findOne({
         userId,
         status: { $in: [1, 3] }, // pending or declined
       }).lean(),
+      WithDrawRequest.findOne({ userId, status: 2 }).lean(), // any withdrawal ever paid out
       generateHistoryUniqueId(),
     ]);
 
@@ -216,13 +217,19 @@ exports.createWithdrawRequest = async (req, res) => {
       return res.status(200).json({ status: false, message: "Insufficient funds." });
     }
 
-    // Trust the admin-configured minimum directly — this used to hard-floor
-    // at 500 regardless of setting, which would have silently ignored any
-    // admin decision to lower it (e.g. the ₹100 minimum under discussion).
-    const minThreshold = Number(settingJSON?.minWithdrawalRequestedAmount) > 0 ? Number(settingJSON.minWithdrawalRequestedAmount) : 500;
+    // Tiered threshold: a lower "trial" minimum on the very first withdrawal
+    // (verifies the user's payout details actually work before they commit
+    // to a bigger amount), the normal minimum on every one after that.
+    // Trust the admin-configured values directly rather than hard-floor
+    // them — an earlier version of this ignored the admin setting entirely.
+    const isFirstWithdrawal = !priorAcceptedRequest;
+    const firstMinThreshold = Number(settingJSON?.firstWithdrawalMinimumInr) > 0 ? Number(settingJSON.firstWithdrawalMinimumInr) : 100;
+    const normalMinThreshold = Number(settingJSON?.minWithdrawalRequestedAmount) > 0 ? Number(settingJSON.minWithdrawalRequestedAmount) : 500;
+    const minThreshold = isFirstWithdrawal ? firstMinThreshold : normalMinThreshold;
     if (amount < minThreshold) {
       const coinsPerInr = Number(settingJSON?.coinsPerInr) || 100;
-      return res.status(200).json({ status: false, message: `Minimum withdrawal payout threshold is ₹${minThreshold} (${(minThreshold * coinsPerInr).toLocaleString("en-IN")} Coins).` });
+      const trialNote = isFirstWithdrawal ? " (your first withdrawal has a lower trial minimum)" : "";
+      return res.status(200).json({ status: false, message: `Minimum withdrawal payout threshold is ₹${minThreshold} (${(minThreshold * coinsPerInr).toLocaleString("en-IN")} Coins)${trialNote}.` });
     }
 
     if (existingRequest?.status === 1) {

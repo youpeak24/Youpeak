@@ -32,6 +32,10 @@ module.exports = {
   createdAt: "2023-08-08T12:48:46.902Z",
   updatedAt: new Date().toISOString(),
   minWithdrawalRequestedAmount: 500,
+  // Lower "trial" minimum on a user's very first-ever withdrawal (Creator,
+  // Tasker, Digital Partner) — verifies their payout details work before
+  // they commit to the normal ₹500 minimum on every withdrawal after.
+  firstWithdrawalMinimumInr: 100,
   zegoAppId: "",
   zegoAppSignIn: "",
   earningPerHour: 2,
