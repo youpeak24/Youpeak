@@ -138,7 +138,7 @@ class _MainHomePageViewState extends State<MainHomePageView> {
       ),
       const ShortcutItem(
         type: 'Shorts',
-        localizedTitle: 'Shorts',
+        localizedTitle: 'Bites',
         icon: "shorts",
       ),
     ]);
