@@ -15,6 +15,11 @@ const creatorFundingCampaignSchema = new mongoose.Schema(
     perks: { type: Array, default: [] },
     deadlineAt: { type: String, required: true },
     status: { type: String, enum: ["ACTIVE", "SUCCESSFUL", "FAILED", "CANCELLED"], default: "ACTIVE" },
+    // Atomic claim guard — see util/creatorFunding.service.js. Independent
+    // of `status`: this is what actually stops a payment landing right as
+    // the deadline cron fires from resolving (and paying out) the same
+    // campaign twice.
+    resolutionClaimed: { type: Boolean, default: false },
     platformFeePercentage: { type: Number, default: 20 },
     backerCount: { type: Number, default: 0 },
     resolvedAt: { type: String, default: null },

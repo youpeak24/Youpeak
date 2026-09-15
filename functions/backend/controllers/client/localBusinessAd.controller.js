@@ -106,7 +106,7 @@ exports.recordImpression = async (req, res) => {
     if (!adId) return res.status(200).json({ status: false, message: "adId is required." });
     const ad = await db.findById("localBusinessAds", adId);
     if (!ad || ad.status !== "ACTIVE") return res.status(200).json({ status: false });
-    await db.update("localBusinessAds", adId, { impressionCount: (ad.impressionCount || 0) + 1 });
+    await db.incrementFields("localBusinessAds", adId, { impressionCount: 1 });
     return res.status(200).json({ status: true });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -119,7 +119,7 @@ exports.recordClick = async (req, res) => {
     if (!adId) return res.status(200).json({ status: false, message: "adId is required." });
     const ad = await db.findById("localBusinessAds", adId);
     if (!ad || ad.status !== "ACTIVE") return res.status(200).json({ status: false });
-    await db.update("localBusinessAds", adId, { clickCount: (ad.clickCount || 0) + 1 });
+    await db.incrementFields("localBusinessAds", adId, { clickCount: 1 });
     return res.status(200).json({ status: true });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });

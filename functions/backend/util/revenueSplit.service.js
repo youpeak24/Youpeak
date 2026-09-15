@@ -90,12 +90,12 @@ async function creditCoins(userId, coins, bucketField, meta) {
   if (!userId || coins <= 0) return 0;
   const u = await db.findById("users", userId);
   if (!u || u.isBlock) return 0;
-  const updates = {
-    coin: (u.coin || 0) + coins,
-    totalEarningAmount: Number(((u.totalEarningAmount || 0) + coins * coinToInrRate()).toFixed(2)),
+  const deltas = {
+    coin: coins,
+    totalEarningAmount: coins * coinToInrRate(),
   };
-  if (bucketField) updates[bucketField] = (u[bucketField] || 0) + coins;
-  await db.update("users", u._id || u.id, updates);
+  if (bucketField) deltas[bucketField] = coins;
+  await db.incrementFields("users", u._id || u.id, deltas);
   try {
     await db.create("histories", {
       userId: String(userId),

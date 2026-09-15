@@ -20,6 +20,10 @@ const localBusinessAdSchema = new mongoose.Schema(
     startAt: { type: String, default: null },
     endAt: { type: String, default: null },
     status: { type: String, enum: ["PENDING_REVIEW", "REJECTED", "ACTIVE", "COMPLETED"], default: "PENDING_REVIEW" },
+    // Atomic claim guard for admin approval — see controllers/admin/localBusinessAd.controller.js
+    // approve(). Independent of `status`: this is what actually prevents a
+    // concurrent double-approve from crediting commission twice.
+    commissionCredited: { type: Boolean, default: false },
     moderationNote: { type: String, default: "" },
     reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", default: null },
     reviewedAt: { type: String, default: null },

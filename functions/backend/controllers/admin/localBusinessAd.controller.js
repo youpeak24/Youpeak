@@ -57,6 +57,16 @@ exports.approve = async (req, res) => {
     const partner = await db.findById("users", ad.submittedByUserId);
     if (!partner) return res.status(200).json({ status: false, message: "Submitting partner not found." });
 
+    // Atomic claim — the status check above is only a fast pre-check. Two
+    // concurrent approve calls for the same ad (a double-click, or a
+    // retried request) can both read status PENDING_REVIEW before either
+    // write lands; without this, both would pass and both would credit
+    // commission. Only the caller that wins this transaction may proceed.
+    const claim = await db.claimOnce("localBusinessAds", ad._id || ad.id, "commissionCredited");
+    if (!claim.claimed) {
+      return res.status(200).json({ status: false, message: "This ad is already being processed or was already approved." });
+    }
+
     const s = global.settingJSON || {};
     const gross = num(ad.adBudgetInr);
     const digitalPartnerRate = num(s.digitalPartnerRates?.localBusinessAds, 50);
@@ -69,9 +79,7 @@ exports.approve = async (req, res) => {
       const coinRate = num(s.coinToInrRate, 0.01);
       const directAmountInr = Number(((gross * digitalPartnerRate) / 100).toFixed(2));
       digitalPartnerCommissionCoins = Math.round(directAmountInr / coinRate);
-      await db.update("users", partner._id || partner.id, {
-        coin: (partner.coin || 0) + digitalPartnerCommissionCoins,
-      });
+      await db.incrementFields("users", partner._id || partner.id, { coin: digitalPartnerCommissionCoins });
     }
 
     // District Partner override — same helper every other commission type

@@ -17,6 +17,10 @@ const historySchema = new mongoose.Schema(
     amount: { type: Number, default: 0 },
     uniqueId: { type: String, unique: true, trim: true, default: "" },
     date: { type: String, default: "" },
+    // Atomic claim guard for rewardEngine.reverseReward() (e.g. un-liking a
+    // video) — prevents two concurrent reversals of the same row from
+    // subtracting the reward coins twice. See util/rewardEngine.js.
+    reversed: { type: Boolean, default: false },
   },
   {
     timestamps: true,

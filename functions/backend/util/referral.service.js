@@ -49,9 +49,7 @@ function cfg() {
 async function addPending(userId, coins) {
   const u = await db.findById("users", userId);
   if (!u) return null;
-  await db.update("users", u._id || u.id, {
-    pendingReferralCoin: (u.pendingReferralCoin || 0) + coins,
-  });
+  await db.incrementFields("users", u._id || u.id, { pendingReferralCoin: coins });
   return u;
 }
 
@@ -106,6 +104,15 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
     if (todaysReferrals >= c.maxReferralsPerDay) flaggedReason = "DAILY_CAP_EXCEEDED";
   }
 
+  // Atomic claim — a double-tap on "apply code" (or a retried request) must
+  // not create two referralHistories records / credit two referrers for
+  // the same new user. The referralApplied check above is only a fast
+  // pre-check; this is the real, race-free gate.
+  const claim = await db.claimOnce("users", referredUserId, "referralApplied");
+  if (!claim.claimed) {
+    return { ok: false, message: "Referral code already applied." };
+  }
+
   const now = Date.now();
   const record = {
     _id: `ref_${now}_${Math.floor(Math.random() * 1e6)}`,
@@ -131,9 +138,8 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
   };
   await db.create("referralHistories", record, record._id);
 
-  // Mark the referred user
+  // Mark the referred user (referralApplied already flipped by the claim above)
   await db.update("users", referredUserId, {
-    referralApplied: true,
     isReferral: true,
     referrerId,
     isNewUser: false,
@@ -158,7 +164,7 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
 
   // Credit Stage-1 coins to the referrer's PENDING balance (released by cron).
   await addPending(referrerId, c.stage1Coins);
-  await db.update("users", referrerId, { referralCount: (referrer.referralCount || 0) + 1 });
+  await db.incrementFields("users", referrerId, { referralCount: 1 });
 
   return {
     ok: true,
@@ -190,9 +196,13 @@ async function completeStage2({ referredUserId, totalWatchMinutes }) {
   const referrer = await db.findById("users", rec.referrerId);
   if (!referrer || referrer.isBlock) return { ok: false };
 
+  // Atomic claim — two concurrent watch-time checks crossing the stage-2
+  // threshold around the same moment must not both credit the referrer.
+  const claim = await db.claimOnce("referralHistories", rec._id || rec.id, "stage2Completed");
+  if (!claim.claimed) return { ok: false };
+
   const now = Date.now();
   await db.update("referralHistories", rec._id || rec.id, {
-    stage2Completed: true,
     stage2CompletedAt: new Date().toISOString(),
     stage2RewardCoins: c.stage2Coins,
     stage2HeldUntil: new Date(now + c.stage2HoldHours * 3600e3).toISOString(),
@@ -221,18 +231,25 @@ async function releaseHeldReferrals() {
       const coins = Number(rec[`${stage}RewardCoins`]) || 0;
       if (!done || already || coins <= 0 || !heldUntil || now < heldUntil) continue;
 
-      const referrer = await db.findById("users", rec.referrerId);
-      if (!referrer) { continue; }
+      // Atomic claim — two overlapping cron runs (a retried request, or two
+      // schedulers both configured against this endpoint) must not both
+      // release the same held stage for the same referral record.
+      const releaseClaim = await db.claimOnce("referralHistories", rec._id || rec.id, `${stage}Released`);
+      if (!releaseClaim.claimed) continue;
 
-      const pending = referrer.pendingReferralCoin || 0;
-      const move = Math.min(coins, pending);
-      await db.update("users", rec.referrerId, {
-        pendingReferralCoin: Math.max(0, pending - move),
-        coin: (referrer.coin || 0) + move,
-        referralRewardCoin: (referrer.referralRewardCoin || 0) + move,
-        totalRewardCoin: (referrer.totalRewardCoin || 0) + move,
-        totalEarningAmount: Number(((referrer.totalEarningAmount || 0) + move * 0.01).toFixed(2)),
-      });
+      // moveBalance re-reads pendingReferralCoin inside its own transaction
+      // and clamps to whatever's actually there, so this is safe even if
+      // `referrer.pendingReferralCoin` (read moments ago, above) is stale.
+      const moveResult = await db.moveBalance(
+        "users",
+        rec.referrerId,
+        "pendingReferralCoin",
+        { coin: 1, referralRewardCoin: 1, totalRewardCoin: 1, totalEarningAmount: 0.01 },
+        coins
+      );
+      if (!moveResult.ok || moveResult.moved <= 0) continue;
+      const move = moveResult.moved;
+
       await db.create("histories", {
         userId: String(rec.referrerId),
         uniqueId: await generateHistoryUniqueId(),
@@ -241,10 +258,8 @@ async function releaseHeldReferrals() {
         date: new Date().toISOString(),
         referralId: rec._id || rec.id,
       });
-      await db.update("referralHistories", rec._id || rec.id, {
-        [`${stage}Released`]: true,
+      await db.incrementFields("referralHistories", rec._id || rec.id, { totalRewardCoinsGiven: move }, {
         [`${stage}ReleasedAt`]: new Date().toISOString(),
-        totalRewardCoinsGiven: (rec.totalRewardCoinsGiven || 0) + move,
       });
       released++;
       releasedCoins += move;
@@ -269,11 +284,11 @@ async function handlePaidTierReferral({ buyerId, tierPriceInr, tierName = "" }) 
   const bonusCoins = Math.round((price * c.paidTierPct) / 100 / 0.01); // % of INR -> coins
   if (bonusCoins <= 0) return { ok: false };
 
-  await db.update("users", referrerId, {
-    coin: (referrer.coin || 0) + bonusCoins,
-    referralRewardCoin: (referrer.referralRewardCoin || 0) + bonusCoins,
-    totalRewardCoin: (referrer.totalRewardCoin || 0) + bonusCoins,
-    totalEarningAmount: Number(((referrer.totalEarningAmount || 0) + bonusCoins * 0.01).toFixed(2)),
+  await db.incrementFields("users", referrerId, {
+    coin: bonusCoins,
+    referralRewardCoin: bonusCoins,
+    totalRewardCoin: bonusCoins,
+    totalEarningAmount: bonusCoins * 0.01,
   });
   await db.create("histories", {
     userId: referrerId,

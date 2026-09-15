@@ -114,50 +114,68 @@ exports.handleEngagementVideoWatchReward = async (req, res) => {
 
     const milestoneMin = limits.minWatchMinutesForEngagementReward; // 120
     const prevMinutes = user.totalCurrentWatchTime || 0;
-    const newMinutes = prevMinutes + sessionMinutes;
-    const crossed = prevMinutes < milestoneMin && newMinutes >= milestoneMin;
 
-    const baseUpdates = {
-      totalCurrentWatchTime: newMinutes,
-      totalWatchTime: (user.totalWatchTime || 0) + sessionMinutes,
-      dailyVideoWatchesToday: (user.dailyVideoWatchesToday || 0) + 1,
-    };
+    // Atomic accumulation first — two concurrent watch-time reports (e.g. a
+    // retried request) must not lose each other's minutes the way a plain
+    // read-then-write would.
+    const accumulated = await db.incrementFields("users", id, {
+      totalCurrentWatchTime: sessionMinutes,
+      totalWatchTime: sessionMinutes,
+      dailyVideoWatchesToday: 1,
+    });
+    const newMinutes = accumulated ? (accumulated.totalCurrentWatchTime || 0) : prevMinutes + sessionMinutes;
+    const crossed = prevMinutes < milestoneMin && newMinutes >= milestoneMin;
 
     let credited = 0;
     if (crossed) {
-      const room = limits.dailyEarningCapInCoins - (user.dailyEarningCoinsToday || 0);
+      const dailyEarningSoFar = accumulated ? (accumulated.dailyEarningCoinsToday || 0) : (user.dailyEarningCoinsToday || 0);
+      const room = limits.dailyEarningCapInCoins - dailyEarningSoFar;
       credited = Math.max(0, Math.min(limits.reward.engagementWatch, room));
       if (credited > 0) {
-        baseUpdates.coin = (user.coin || 0) + credited;
-        baseUpdates.engagementRewardCoin = (user.engagementRewardCoin || 0) + credited;
-        baseUpdates.totalRewardCoin = (user.totalRewardCoin || 0) + credited;
-        baseUpdates.dailyEarningCoinsToday = (user.dailyEarningCoinsToday || 0) + credited;
+        // Atomic once-per-day claim — the milestone can only be crossed
+        // once per reset day, so a deterministic per-day id (not per-video,
+        // there's no video here) is what actually stops two concurrent
+        // reports that both compute crossed=true from both paying out.
+        // Deliberately the SAME key format userTaskReward.controller.js's
+        // checkWatchTimeMilestone uses for the identical 2h/500-coin
+        // milestone reached via a different route — without a shared key,
+        // hitting both endpoints on the same day would pay out twice.
+        const dedupeId = `hist_dedupe_${id}_${rewardEngine.todayStr()}_watchMilestone`;
+        const claim = await db.createOnce("histories", dedupeId, {
+          userId: id,
+          uniqueId: await generateHistoryUniqueId(),
+          coin: credited,
+          type: rewardEngine.HISTORY_TYPE.ENGAGEMENT_WATCH,
+          date: new Date().toISOString(),
+        });
+        if (claim.created) {
+          await db.incrementFields("users", id, {
+            coin: credited,
+            engagementRewardCoin: credited,
+            totalRewardCoin: credited,
+            dailyEarningCoinsToday: credited,
+          });
+        } else {
+          credited = 0; // a concurrent request already claimed today's milestone
+        }
       }
     }
 
-    await db.update("users", id, baseUpdates);
-
-    if (credited > 0) {
-      await db.create("histories", {
-        userId: id,
-        uniqueId: await generateHistoryUniqueId(),
-        coin: credited,
-        type: rewardEngine.HISTORY_TYPE.ENGAGEMENT_WATCH,
-        date: new Date().toISOString(),
-      });
-    }
+    const totalWatchTimeNow = accumulated ? (accumulated.totalWatchTime || 0) : (user.totalWatchTime || 0) + sessionMinutes;
 
     // Stage-2 referral: referred user reached the watch-minute threshold in-window
     if (user.isReferral) {
       try {
         await referralService.completeStage2({
           referredUserId: String(id),
-          totalWatchMinutes: baseUpdates.totalWatchTime,
+          totalWatchMinutes: totalWatchTimeNow,
         });
       } catch (e) {
         console.error("stage2 referral check error:", e.message);
       }
     }
+
+    const finalUser = credited > 0 ? await db.findById("users", id) : accumulated;
 
     return res.status(200).json({
       status: true,
@@ -168,10 +186,10 @@ exports.handleEngagementVideoWatchReward = async (req, res) => {
             : "2-hour milestone reached — today's earning cap is already met.")
         : "Watch time updated.",
       coinsEarned: credited,
-      data: { coin: (user.coin || 0) + credited },
+      data: { coin: finalUser ? (finalUser.coin || 0) : (user.coin || 0) + credited },
       totalWatchMinutesToday: newMinutes,
       minutesUntilMilestone: Math.max(0, milestoneMin - newMinutes),
-      dailyEarningCoinsToday: (user.dailyEarningCoinsToday || 0) + credited,
+      dailyEarningCoinsToday: finalUser ? (finalUser.dailyEarningCoinsToday || 0) : (user.dailyEarningCoinsToday || 0) + credited,
       dailyMaxCapInCoins: limits.dailyEarningCapInCoins,
     });
   } catch (error) {
