@@ -43,6 +43,7 @@ const copyrightModeration = require("./copyrightModeration.route");
 const payment = require("./payment.route");
 const grievance = require("./grievance.route");
 const creatorFunding = require("./creatorFunding.route");
+const localBusinessAd = require("./localBusinessAd.route");
 
 //exports admin's route.js
 route.use("/admin", admin);
@@ -81,6 +82,7 @@ route.use("/copyrightModeration", AdminMiddleware, CheckScope, copyrightModerati
 route.use("/payment", AdminMiddleware, CheckScope, payment);
 route.use("/grievance", AdminMiddleware, CheckScope, grievance);
 route.use("/creatorFunding", AdminMiddleware, CheckScope, creatorFunding);
+route.use("/localBusinessAd", AdminMiddleware, CheckScope, localBusinessAd);
 route.use("/", admin);
 
 module.exports = route;

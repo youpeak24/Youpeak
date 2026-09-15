@@ -37,6 +37,7 @@ const grievance = require("./grievance.route");
 const payment = require("./payment.route");
 const partner = require("./partner.route");
 const creatorFunding = require("./creatorFunding.route");
+const localBusinessAd = require("./localBusinessAd.route");
 
 //exports client's route.js
 route.use("/user", user);
@@ -73,5 +74,6 @@ route.use("/grievance", grievance);
 route.use("/payment", payment);
 route.use("/partner", partner);
 route.use("/creatorFunding", creatorFunding);
+route.use("/localBusinessAd", localBusinessAd);
 
 module.exports = route;
