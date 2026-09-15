@@ -141,6 +141,7 @@ class FirestoreDbService {
       partnerprofile: "partnerProfiles", partnerprofiles: "partnerProfiles",
       creatorfundingcampaign: "creatorFundingCampaigns", creatorfundingcampaigns: "creatorFundingCampaigns",
       campaignbacking: "campaignBackings", campaignbackings: "campaignBackings",
+      localbusinessad: "localBusinessAds", localbusinessads: "localBusinessAds",
     };
     return MAP[key] || name;
   }
