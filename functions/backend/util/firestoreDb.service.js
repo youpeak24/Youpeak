@@ -447,6 +447,200 @@ class FirestoreDbService {
     }
   }
 
+  /**
+   * Atomically add (or subtract, for a negative delta) to one or more
+   * numeric fields using Firestore's own FieldValue.increment — a
+   * field-level mutation Firestore applies without a client-side
+   * read-modify-write, so two concurrent credits to the same field (e.g.
+   * two payments landing for the same user at once) can never lose one the
+   * way `update(id, {coin: current + delta})` can — that pattern reads the
+   * same starting value in both requests and the second write simply
+   * overwrites the first with its own (identically stale) computed result.
+   *
+   * Deliberately NOT built on update(): update() JSON-clones its payload
+   * (`JSON.parse(JSON.stringify(...))`), which strips a FieldValue sentinel
+   * down to `{}` — it has to be handed to Firestore untouched.
+   *
+   * No guard/floor here (unlike spendBalance) — increments are always
+   * allowed, in either direction. Use spendBalance() instead when the
+   * write must refuse below a threshold (e.g. spending down to negative).
+   *
+   * @param {string} collectionName
+   * @param {string} id
+   * @param {Object<string, number>} deltas   field -> signed amount to add; zero/NaN entries are skipped
+   * @param {Object} [extraSet]               plain fields to set alongside, not incremented
+   * @returns {Promise<Object|null>} the document after the write, or null if id is missing
+   */
+  async incrementFields(collectionName, id, deltas, extraSet = {}) {
+    if (!id) return null;
+    const normalizedName = this.normalizeCollectionName(collectionName);
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
+    const docRef = db.collection(normalizedName).doc(String(id));
+
+    const payload = { ...extraSet, updatedAt: new Date().toISOString() };
+    for (const [field, amount] of Object.entries(deltas || {})) {
+      const n = Number(amount);
+      if (!n) continue;
+      payload[field] = firebaseAdmin.firestore.FieldValue.increment(n);
+    }
+
+    let merged;
+    try {
+      await this.withTimeout(docRef.set(payload, { merge: true }));
+      const fresh = await this.withTimeout(docRef.get());
+      merged = fresh.exists ? { _id: fresh.id, id: fresh.id, ...fresh.data() } : null;
+    } catch (err) {
+      console.error(`Firestore incrementFields() failed for "${normalizedName}/${id}":`, err.message);
+      throw err;
+    }
+
+    if (merged && this.allowLocalFallback) {
+      const localData = this.readLocalDb();
+      if (!localData[normalizedName]) localData[normalizedName] = {};
+      localData[normalizedName][String(id)] = merged;
+      this.writeLocalDb(localData);
+    }
+    return merged;
+  }
+
+  /**
+   * Atomically test-and-set a boolean "already done" flag on one document —
+   * a real Firestore transaction, same reasoning as spendBalance(). A plain
+   * `if (doc.flag) return; else update(id, {flag:true})` has a window where
+   * two concurrent callers (e.g. a Razorpay webhook and the client's own
+   * /verify call landing milliseconds apart for the same payment) both read
+   * the flag as false before either write lands, and both proceed to do
+   * whatever the flag was supposed to allow only once.
+   *
+   * Only the ONE caller that actually flips false -> true gets
+   * {claimed: true}; every other concurrent (or later) caller gets
+   * {claimed: false} and must not repeat the guarded action.
+   *
+   * @param {string} collectionName
+   * @param {string} id
+   * @param {string} field   the boolean flag field to claim
+   * @returns {Promise<{claimed:boolean, reason?:string, doc:Object|null}>}
+   */
+  async claimOnce(collectionName, id, field) {
+    const normalizedName = this.normalizeCollectionName(collectionName);
+    if (!id) return { claimed: false, reason: "NO_ID", doc: null };
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
+    const ref = db.collection(normalizedName).doc(String(id));
+
+    try {
+      return await this.withTimeout(
+        db.runTransaction(async (tx) => {
+          const snap = await tx.get(ref);
+          if (!snap.exists) return { claimed: false, reason: "NOT_FOUND", doc: null };
+          const data = { _id: snap.id, id: snap.id, ...snap.data() };
+          if (data[field]) return { claimed: false, reason: "ALREADY_CLAIMED", doc: data };
+          tx.update(ref, { [field]: true, updatedAt: new Date().toISOString() });
+          return { claimed: true, doc: { ...data, [field]: true } };
+        })
+      );
+    } catch (err) {
+      console.error(`Firestore claimOnce() failed for "${normalizedName}/${id}.${field}":`, err.message);
+      throw err;
+    }
+  }
+
+  /**
+   * Atomically move up to `amount` out of one numeric field into one or
+   * more others, in a single Firestore transaction. The amount actually
+   * moved is clamped to whatever the source field holds AT TRANSACTION
+   * TIME, so a concurrent invocation (e.g. the same held-referral-release
+   * cron firing twice, from two schedulers or a retried request) can never
+   * move more out of the source than it has, or move the same held amount
+   * twice — the second transaction simply sees an already-drained source.
+   *
+   * @param {string} collectionName
+   * @param {string} id
+   * @param {string} fromField            numeric field to decrement (floored at 0)
+   * @param {Object<string, number>} toFieldMultipliers  destination field -> amount credited per unit moved (usually 1; use e.g. 0.01 for an INR-per-coin field)
+   * @param {number} amount               the most that should move, before clamping
+   * @returns {Promise<{ok:boolean, moved:number, before:number, after:number}>}
+   */
+  async moveBalance(collectionName, id, fromField, toFieldMultipliers, amount) {
+    const normalizedName = this.normalizeCollectionName(collectionName);
+    const amt = Number(amount);
+    if (!id) return { ok: false, moved: 0, before: 0, after: 0 };
+    if (!(amt > 0)) return { ok: false, moved: 0, before: 0, after: 0 };
+
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
+    const ref = db.collection(normalizedName).doc(String(id));
+
+    try {
+      return await this.withTimeout(
+        db.runTransaction(async (tx) => {
+          const snap = await tx.get(ref);
+          if (!snap.exists) return { ok: false, moved: 0, before: 0, after: 0 };
+          const before = Number(snap.data()[fromField]) || 0;
+          const moved = Math.min(amt, before);
+          if (moved <= 0) return { ok: true, moved: 0, before, after: before };
+          const after = before - moved;
+          const update = { [fromField]: after, updatedAt: new Date().toISOString() };
+          for (const [field, perUnit] of Object.entries(toFieldMultipliers || {})) {
+            const delta = Number(perUnit) * moved;
+            if (!delta) continue;
+            update[field] = firebaseAdmin.firestore.FieldValue.increment(delta);
+          }
+          tx.update(ref, update);
+          return { ok: true, moved, before, after };
+        })
+      );
+    } catch (err) {
+      console.error(`Firestore moveBalance() failed for "${normalizedName}/${id}":`, err.message);
+      throw err;
+    }
+  }
+
+  /**
+   * Atomically create a document ONLY if one doesn't already exist at this
+   * id — Firestore's native create() precondition (a single server-side
+   * write with an existence check), not a client-side findOne-then-create
+   * that two concurrent requests can both pass. Give it a deterministic id
+   * derived from whatever must be unique (e.g.
+   * `${userId}_${videoId}_${historyType}`) to turn "reward this at most
+   * once" into a database-enforced guarantee instead of a race a
+   * double-tap or a retried request can slip through.
+   *
+   * @returns {Promise<{created:boolean, doc:Object|null}>} created:false
+   *   means a document already existed at this id — the caller must not
+   *   repeat whatever that document's existence is guarding.
+   */
+  async createOnce(collectionName, id, data) {
+    const normalizedName = this.normalizeCollectionName(collectionName);
+    const docId = String(id);
+    const cleanData = JSON.parse(JSON.stringify(data || {}));
+    cleanData.createdAt = cleanData.createdAt || new Date().toISOString();
+    cleanData.updatedAt = new Date().toISOString();
+    cleanData._id = docId;
+    cleanData.id = docId;
+
+    const db = this.getDb();
+    if (!db) throw new Error("Firestore is not initialised");
+    const ref = db.collection(normalizedName).doc(docId);
+    try {
+      await this.withTimeout(ref.create(cleanData));
+    } catch (err) {
+      const alreadyExists = err.code === 6 || /ALREADY_EXISTS/i.test(err.message || "");
+      if (alreadyExists) return { created: false, doc: null };
+      console.error(`Firestore createOnce() failed for "${normalizedName}/${docId}":`, err.message);
+      throw err;
+    }
+
+    if (this.allowLocalFallback) {
+      const localData = this.readLocalDb();
+      if (!localData[normalizedName]) localData[normalizedName] = {};
+      localData[normalizedName][docId] = cleanData;
+      this.writeLocalDb(localData);
+    }
+    return { created: true, doc: cleanData };
+  }
+
   async delete(collectionName, id) {
     if (!id) return false;
     const normalizedName = this.normalizeCollectionName(collectionName);

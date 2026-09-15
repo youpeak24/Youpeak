@@ -203,31 +203,42 @@ exports.status = async (req, res) => {
 };
 
 // ── Mark a transaction paid and run the purpose-specific fulfilment (idempotent)
+//
+// The idempotency guard itself must be atomic, not just each fulfiller's
+// balance math. A Razorpay webhook and the client's own /verify call
+// routinely land within milliseconds of each other for the SAME payment —
+// both could fetch the same `txn` with fulfilled:false, both pass a plain
+// `if (txn.fulfilled) return`, and both run fulfilCoinPlan etc, double
+// crediting the purchase for a single real payment. db.claimOnce() closes
+// that window with a real transaction: only one caller ever wins the claim.
 async function markPaidAndFulfil(txn, { paymentId, verifiedVia }) {
   const id = txn._id || txn.id;
-  if (txn.fulfilled) return { alreadyFulfilled: true };
+  const claim = await db.claimOnce("paymentTransactions", id, "fulfilled");
+  if (!claim.claimed) return { alreadyFulfilled: true };
+
+  const freshTxn = claim.doc || txn;
 
   await db.update("paymentTransactions", id, {
     status: "paid",
-    paymentId: paymentId || txn.paymentId || null,
+    paymentId: paymentId || freshTxn.paymentId || null,
     paidAt: new Date().toISOString(),
     verifiedVia,
   });
 
   let fulfilment = {};
   try {
-    if (txn.purpose === "joining_fee") fulfilment = await fulfilJoiningFee(txn);
-    else if (txn.purpose === "tier_upgrade") fulfilment = await fulfilTierUpgrade(txn);
-    else if (txn.purpose === "coin_plan") fulfilment = await fulfilCoinPlan(txn);
-    else if (txn.purpose === "premium_plan") fulfilment = await fulfilPremiumPlan(txn);
-    else if (txn.purpose === "digital_partner_license") fulfilment = await fulfilDigitalPartnerLicense(txn);
-    else if (txn.purpose === "campaign_backing") fulfilment = await fulfilCampaignBacking(txn);
+    if (freshTxn.purpose === "joining_fee") fulfilment = await fulfilJoiningFee(freshTxn);
+    else if (freshTxn.purpose === "tier_upgrade") fulfilment = await fulfilTierUpgrade(freshTxn);
+    else if (freshTxn.purpose === "coin_plan") fulfilment = await fulfilCoinPlan(freshTxn);
+    else if (freshTxn.purpose === "premium_plan") fulfilment = await fulfilPremiumPlan(freshTxn);
+    else if (freshTxn.purpose === "digital_partner_license") fulfilment = await fulfilDigitalPartnerLicense(freshTxn);
+    else if (freshTxn.purpose === "campaign_backing") fulfilment = await fulfilCampaignBacking(freshTxn);
   } catch (e) {
-    console.error(`fulfilment failed for ${id} (${txn.purpose}):`, e.message);
+    console.error(`fulfilment failed for ${id} (${freshTxn.purpose}):`, e.message);
     fulfilment = { error: e.message };
   }
 
-  await db.update("paymentTransactions", id, { fulfilled: true, fulfilledAt: new Date().toISOString() });
+  await db.update("paymentTransactions", id, { fulfilledAt: new Date().toISOString() });
   return fulfilment;
 }
 
@@ -254,20 +265,26 @@ async function fulfilDigitalPartnerLicense(txn) {
   });
 
   const existing = await db.findOne("PartnerProfile", { userId: txn.userId });
-  const patch = {
-    userId: txn.userId,
-    licenseFeePaid: amount,
-    paymentTransactionId: txn._id || txn.id,
-    adCreditsBalance: (existing?.adCreditsBalance || 0) + amount,
-    adCreditsGranted: (existing?.adCreditsGranted || 0) + amount,
-    activatedAt: new Date().toISOString(),
-  };
+  let adCreditsBalance = amount;
   if (existing) {
-    await db.update("PartnerProfile", existing._id || existing.id, patch);
+    const updated = await db.incrementFields(
+      "PartnerProfile",
+      existing._id || existing.id,
+      { adCreditsBalance: amount, adCreditsGranted: amount },
+      { licenseFeePaid: amount, paymentTransactionId: txn._id || txn.id, activatedAt: new Date().toISOString() }
+    );
+    adCreditsBalance = updated?.adCreditsBalance ?? (existing.adCreditsBalance || 0) + amount;
   } else {
-    patch.totalReferrals = 0;
-    patch.totalEarnings = 0;
-    await db.create("PartnerProfile", patch);
+    await db.create("PartnerProfile", {
+      userId: txn.userId,
+      licenseFeePaid: amount,
+      paymentTransactionId: txn._id || txn.id,
+      adCreditsBalance: amount,
+      adCreditsGranted: amount,
+      activatedAt: new Date().toISOString(),
+      totalReferrals: 0,
+      totalEarnings: 0,
+    });
   }
 
   // District Partner override — 20% of the license fee, per the V4 chart's
@@ -288,7 +305,7 @@ async function fulfilDigitalPartnerLicense(txn) {
     }
   } catch (e) { /* ignore */ }
 
-  return { isDigitalPartner: true, adCreditsBalance: patch.adCreditsBalance };
+  return { isDigitalPartner: true, adCreditsBalance };
 }
 
 // Creator Funding — a verified backing. Records the backing, bumps the
@@ -307,7 +324,7 @@ async function fulfilCampaignBacking(txn) {
     const refundCoins = Math.round(amountInr / rate);
     const backer = await db.findById("users", txn.userId);
     if (backer) {
-      await db.update("users", backer._id || backer.id, { coin: (backer.coin || 0) + refundCoins });
+      await db.incrementFields("users", backer._id || backer.id, { coin: refundCoins });
     }
     await db.create("campaignBackings", {
       campaignId: txn.campaignId, backerId: txn.userId, amountInr,
@@ -330,11 +347,19 @@ async function fulfilCampaignBacking(txn) {
     status: "ACTIVE",
   });
 
-  const raisedAmountInr = Number((num(campaign.raisedAmountInr) + amountInr).toFixed(2));
-  await db.update("creatorFundingCampaigns", campaign._id || campaign.id, {
-    raisedAmountInr,
-    backerCount: (campaign.backerCount || 0) + 1,
-  });
+  // Atomic — two backers paying within the same moment (very plausible for
+  // a campaign close to its goal) must not have one contribution silently
+  // overwrite the other via a stale read-then-write, which would both
+  // shortchange the creator's eventual payout and make the goal-reached
+  // check below unreliable.
+  const updatedCampaign = await db.incrementFields(
+    "creatorFundingCampaigns",
+    campaign._id || campaign.id,
+    { raisedAmountInr: amountInr, backerCount: 1 }
+  );
+  const raisedAmountInr = updatedCampaign
+    ? Number((updatedCampaign.raisedAmountInr || 0).toFixed(2))
+    : Number((num(campaign.raisedAmountInr) + amountInr).toFixed(2));
 
   let resolvedCampaign = null;
   if (raisedAmountInr >= num(campaign.goalAmountInr)) {
@@ -397,9 +422,9 @@ async function fulfilCoinPlan(txn) {
   const user = await db.findById("users", txn.userId);
   const total = num(plan.coin) + num(plan.extraCoin);
 
-  await db.update("users", txn.userId, {
-    coin: (user.coin || 0) + total,
-    purchasedCoin: (user.purchasedCoin || 0) + num(plan.coin),
+  await db.incrementFields("users", txn.userId, {
+    coin: total,
+    purchasedCoin: num(plan.coin),
   });
   await db.create("histories", {
     userId: txn.userId,

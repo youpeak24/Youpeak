@@ -11,6 +11,11 @@ const withdrawRequestSchema = new mongoose.Schema(
     paymentGateway: { type: String, default: "" },
     paymentDetails: { type: Array, default: [] },
     status: { type: Number, default: 1, enum: WITHDRAWAL_STATUS },
+    // Atomic claim guard for admin acceptWithdrawalRequest() — independent
+    // of `status`: this is what actually stops a double-click/retry from
+    // debiting the user's totalEarningAmount twice. See
+    // controllers/admin/withDrawalRequest.controller.js.
+    accepted: { type: Boolean, default: false },
     reason: { type: String, default: "" },
     uniqueId: { type: String, unique: true, default: "" },
     requestDate: { type: String, default: "" },

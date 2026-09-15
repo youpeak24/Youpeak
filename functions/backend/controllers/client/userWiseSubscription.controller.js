@@ -16,6 +16,9 @@ const admin = require("../../util/privateKey");
 //mongoose
 const mongoose = require("../../util/mongooseShim");
 
+//firestore connection (atomic balance spend — see spendBalance())
+const db = require("../../util/connection");
+
 const dayjs = require("dayjs");
 
 //user wise subscribed or unSubscribed the channel
@@ -125,7 +128,14 @@ exports.subscribedUnSubscibed = async (req, res) => {
       });
     }
 
-    if (user.coin < coinsRequired) {
+    // Atomic debit — a plain "user.coin < coinsRequired" check reads a
+    // stale balance; two concurrent subscribe requests for the same paid
+    // channel could both pass it and both deduct, driving the subscriber's
+    // balance negative. spendBalance() refuses the whole operation (no
+    // write at all) if the real-time balance can't cover it. See
+    // firestoreDb.service.js spendBalance().
+    const spend = await db.spendBalance("users", String(userObjectId), "coin", coinsRequired);
+    if (!spend.ok) {
       return res.status(200).json({
         status: false,
         message: "Insufficient coins to subscribe to this channel.",
@@ -144,34 +154,27 @@ exports.subscribedUnSubscibed = async (req, res) => {
         isPublic: false,
         expiryDate,
       }),
+      // Add coins to channel owner (atomic — see mongooseShim.js $inc handling)
+      User.updateOne({ _id: channel._id }, { $inc: { coin: coinsRequired } }),
+      // Owner history (+)
+      History.create({
+        userId: channel._id,
+        channelId: channel.channelId,
+        uniqueId: uniqueIdOwner,
+        coin: coinsRequired,
+        type: 10,
+        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+      }),
+      // User history (-)  — the debit itself already happened atomically above
+      History.create({
+        otherUserId: userObjectId,
+        channelId: channel.channelId,
+        uniqueId: uniqueIdUser,
+        coin: coinsRequired,
+        type: 10,
+        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+      }),
     ];
-
-    if (coinsRequired > 0) {
-      operations.push(
-        // Add coins to channel owner
-        User.updateOne({ _id: channel._id }, { $inc: { coin: coinsRequired } }),
-        // Owner history (+)
-        History.create({
-          userId: channel._id,
-          channelId: channel.channelId,
-          uniqueId: uniqueIdOwner,
-          coin: coinsRequired,
-          type: 10,
-          date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-        }),
-        // Deduct coins from logged-in user
-        User.updateOne({ _id: userObjectId }, { $inc: { coin: -coinsRequired } }),
-        // User history (-)
-        History.create({
-          otherUserId: userObjectId,
-          channelId: channel.channelId,
-          uniqueId: uniqueIdUser,
-          coin: coinsRequired,
-          type: 10,
-          date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-        }),
-      );
-    }
 
     await Promise.all(operations);
 

@@ -52,6 +52,36 @@ function buildUpdatePayload(existing, updateData) {
   return out;
 }
 
+// $inc resolved here (above) reads `existing[k]` in JS and writes the plain
+// sum back — two concurrent updateOne/findOneAndUpdate calls with the same
+// $inc can both read the same starting value before either write lands,
+// and the second write simply overwrites the first with an identically
+// stale computed result (a real, exploitable double-spend/double-credit on
+// every coin balance, creator earnings field, etc. touched via $inc — not
+// just a theoretical race). The CRUD methods below route $inc through
+// firestoreDb.incrementFields() instead, which uses Firestore's own
+// FieldValue.increment (a field-level atomic mutation, no client-side
+// read-modify-write) — see firestoreDb.service.js for the full reasoning.
+//
+// $mul has no atomic Firestore equivalent and (as of this writing) isn't
+// used anywhere in this codebase, so it's left on the plain read-then-write
+// path above rather than adding transactional machinery nothing exercises.
+function extractIncDeltas(updateData) {
+  if (!updateData || !updateData.$inc) return null;
+  const deltas = {};
+  for (const [k, v] of Object.entries(updateData.$inc)) {
+    const n = Number(v);
+    if (n) deltas[k] = n;
+  }
+  return Object.keys(deltas).length ? deltas : null;
+}
+
+function withoutInc(updateData) {
+  if (!updateData || !updateData.$inc) return updateData;
+  const { $inc, ...rest } = updateData;
+  return rest;
+}
+
 // Best-effort in-memory aggregation pipeline. Supports the stages the YouPeak
 // feed/report controllers actually use: $match (equality + $ne/$gte/$lte/$in),
 // $sort, $skip, $limit, $count, $facet, $group (basic), $project (basic),
@@ -521,6 +551,17 @@ function createFirestoreModel(modelName) {
     return results;
   };
 
+  // Apply one resolved update to a document — $inc deltas (if any) go
+  // through the atomic incrementFields() path; everything else through the
+  // existing plain update() path. Shared by all four CRUD methods below.
+  async function applyUpdate(docId, existing, updateData) {
+    const incDeltas = extractIncDeltas(updateData);
+    if (incDeltas) {
+      return await firestoreDb.incrementFields(collectionName, docId, incDeltas, buildUpdatePayload(existing, withoutInc(updateData)));
+    }
+    return await firestoreDb.update(collectionName, docId, buildUpdatePayload(existing, updateData));
+  }
+
   ModelConstructor.updateOne = async function (query = {}, updateData = {}) {
     const directId = query._id || query.id;
     const existing = directId
@@ -532,7 +573,7 @@ function createFirestoreModel(modelName) {
       return { matchedCount: 1, modifiedCount: 0, acknowledged: true };
     }
 
-    await firestoreDb.update(collectionName, existing._id || existing.id, buildUpdatePayload(existing, updateData));
+    await applyUpdate(existing._id || existing.id, existing, updateData);
     return { matchedCount: 1, modifiedCount: 1, acknowledged: true };
   };
 
@@ -541,7 +582,7 @@ function createFirestoreModel(modelName) {
     let modified = 0;
     for (const item of items) {
       if (!matchesQueryGuards(item, query)) continue;
-      await firestoreDb.update(collectionName, item._id || item.id, buildUpdatePayload(item, updateData));
+      await applyUpdate(item._id || item.id, item, updateData);
       modified++;
     }
     return { matchedCount: items.length, modifiedCount: modified, acknowledged: true };
@@ -550,7 +591,7 @@ function createFirestoreModel(modelName) {
   ModelConstructor.findByIdAndUpdate = async function (id, updateData = {}, options = {}) {
     const existing = await firestoreDb.findById(collectionName, id);
     if (!existing) return null;
-    const updated = await firestoreDb.update(collectionName, existing._id || existing.id, buildUpdatePayload(existing, updateData));
+    const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
     return options && options.new === false ? existing : updated;
   };
 
@@ -563,7 +604,7 @@ function createFirestoreModel(modelName) {
       return null;
     }
     if (!matchesQueryGuards(existing, query)) return existing;
-    const updated = await firestoreDb.update(collectionName, existing._id || existing.id, buildUpdatePayload(existing, updateData));
+    const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
     return options && options.new === false ? existing : updated;
   };
 

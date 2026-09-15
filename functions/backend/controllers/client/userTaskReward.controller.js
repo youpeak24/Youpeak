@@ -134,37 +134,48 @@ exports.checkWatchTimeMilestone = async (req, res) => {
 
     const milestoneMin = limits.minWatchMinutesForEngagementReward; // 120
     const prevMinutesToday = user.totalCurrentWatchTime || 0;
-    const newMinutesToday = prevMinutesToday + sessionMinutes;
-    const newTotalWatchTime = (user.totalWatchTime || 0) + sessionMinutes;
-    const crossedMilestone = prevMinutesToday < milestoneMin && newMinutesToday >= milestoneMin;
 
-    const updates = {
-      totalCurrentWatchTime: newMinutesToday,
-      totalWatchTime: newTotalWatchTime,
-    };
+    // Atomic accumulation — two concurrent watch-time reports (a retried
+    // request, or this same milestone being polled from more than one
+    // screen) must not lose each other's minutes.
+    const accumulated = await db.incrementFields("users", userIdStr, {
+      totalCurrentWatchTime: sessionMinutes,
+      totalWatchTime: sessionMinutes,
+    });
+    const newMinutesToday = accumulated ? (accumulated.totalCurrentWatchTime || 0) : prevMinutesToday + sessionMinutes;
+    const newTotalWatchTime = accumulated ? (accumulated.totalWatchTime || 0) : (user.totalWatchTime || 0) + sessionMinutes;
+    const crossedMilestone = prevMinutesToday < milestoneMin && newMinutesToday >= milestoneMin;
 
     let milestoneCoins = 0;
     if (crossedMilestone) {
-      const room = limits.dailyEarningCapInCoins - (user.dailyEarningCoinsToday || 0);
+      const dailyEarningSoFar = accumulated ? (accumulated.dailyEarningCoinsToday || 0) : (user.dailyEarningCoinsToday || 0);
+      const room = limits.dailyEarningCapInCoins - dailyEarningSoFar;
       milestoneCoins = Math.max(0, Math.min(limits.reward.engagementWatch, room));
       if (milestoneCoins > 0) {
-        updates.coin = (user.coin || 0) + milestoneCoins;
-        updates.engagementRewardCoin = (user.engagementRewardCoin || 0) + milestoneCoins;
-        updates.totalRewardCoin = (user.totalRewardCoin || 0) + milestoneCoins;
-        updates.dailyEarningCoinsToday = (user.dailyEarningCoinsToday || 0) + milestoneCoins;
+        // Atomic once-per-day claim — SAME key format as
+        // user.controller.js's handleEngagementVideoWatchReward, which
+        // credits this identical 2h/500-coin milestone via a different
+        // route. Without a shared key, hitting both endpoints the same day
+        // would pay out twice.
+        const dedupeId = `hist_dedupe_${userIdStr}_${todayStr()}_watchMilestone`;
+        const claim = await db.createOnce("histories", dedupeId, {
+          userId: userIdStr,
+          uniqueId: await generateHistoryUniqueId(),
+          coin: milestoneCoins,
+          type: HISTORY_TYPE.WATCH_TIME_MILESTONE,
+          date: new Date().toISOString(),
+        });
+        if (claim.created) {
+          await db.incrementFields("users", userIdStr, {
+            coin: milestoneCoins,
+            engagementRewardCoin: milestoneCoins,
+            totalRewardCoin: milestoneCoins,
+            dailyEarningCoinsToday: milestoneCoins,
+          });
+        } else {
+          milestoneCoins = 0; // already claimed today (this endpoint or the other one)
+        }
       }
-    }
-
-    await db.update("users", userIdStr, updates);
-
-    if (milestoneCoins > 0) {
-      await db.create("histories", {
-        userId: userIdStr,
-        uniqueId: await generateHistoryUniqueId(),
-        coin: milestoneCoins,
-        type: HISTORY_TYPE.WATCH_TIME_MILESTONE,
-        date: new Date().toISOString(),
-      });
     }
 
     // Stage-2 referral: referred user hits the watch-minute threshold in-window
@@ -179,6 +190,8 @@ exports.checkWatchTimeMilestone = async (req, res) => {
       console.error("Stage 2 referral check error:", stage2Err.message);
     }
 
+    const finalUser = milestoneCoins > 0 ? await db.findById("users", userIdStr) : accumulated;
+
     return res.status(200).json({
       status: true,
       milestoneReached: crossedMilestone,
@@ -190,7 +203,7 @@ exports.checkWatchTimeMilestone = async (req, res) => {
       coinsEarned: milestoneCoins,
       totalWatchMinutesToday: newMinutesToday,
       minutesUntilMilestone: Math.max(0, milestoneMin - newMinutesToday),
-      totalCoins: (user.coin || 0) + milestoneCoins,
+      totalCoins: finalUser ? (finalUser.coin || 0) : (user.coin || 0) + milestoneCoins,
     });
   } catch (error) {
     console.error("Error checking watch time milestone:", error);

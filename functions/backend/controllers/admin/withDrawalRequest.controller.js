@@ -10,6 +10,9 @@ const moment = require("moment");
 //private key
 const admin = require("../../util/privateKey");
 
+//firestore connection (atomic claim + balance spend)
+const db = require("../../util/connection");
+
 exports.index = async (req, res) => {
   try {
     if (!req.query.startDate || !req.query.endDate || !req.query.type) {
@@ -138,24 +141,31 @@ exports.acceptWithdrawalRequest = async (req, res) => {
       return res.status(200).json({ status: false, message: "User does not have enough balance to withdraw this amount." });
     }
 
-    request.paymentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
-    request.status = 2;
-    await request.save();
+    // Atomic claim — two concurrent "accept" clicks on the SAME withdrawal
+    // request (a double-click, or a retried request) must only deduct the
+    // user's balance once. The status === 2/3 checks above read a snapshot
+    // that can already be stale by the time this runs — this is what
+    // actually prevents the double accept, not those checks.
+    const claim = await db.claimOnce("withDrawRequests", request._id || request.id, "accepted");
+    if (!claim.claimed) {
+      return res.status(200).json({ status: false, message: "Withdrawal request already accepted by the admin." });
+    }
+
+    const paymentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    await db.update("withDrawRequests", request._id || request.id, { status: 2, paymentDate });
 
     res.status(200).json({
       status: true,
       message: "Withdrawal request accepted and paid to particular user.",
-      request,
+      request: { ...(request.toObject ? request.toObject() : request), status: 2, paymentDate },
     });
 
-    await User.updateOne(
-      { _id: user._id, totalEarningAmount: { $gt: 0 } },
-      {
-        $inc: {
-          totalEarningAmount: -Math.abs(requestAmount),
-        },
-      },
-    );
+    // Atomic guarded debit — refuses (no write) rather than driving the
+    // balance negative if it's somehow short by the time this runs.
+    const spend = await db.spendBalance("users", String(user._id), "totalEarningAmount", requestAmount);
+    if (!spend.ok) {
+      console.error(`acceptWithdrawalRequest: totalEarningAmount debit failed for user ${user._id}, request ${request._id || request.id}: ${spend.reason}`);
+    }
 
     if (user.fcmToken && user.fcmToken !== null) {
       const payload = {

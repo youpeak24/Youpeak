@@ -24,10 +24,20 @@ function coinToInrRate() {
 // Goal met -> credit the creator (minus the platform fee) as coins, same
 // wallet every other creator-earning path uses, so they cash out through
 // the existing (already-atomic) withdrawal flow like any other earning.
-// Idempotent: no-ops if the campaign isn't ACTIVE anymore.
+//
+// Idempotent via an atomic claim, not just the status !== "ACTIVE" check —
+// this runs from two independent triggers (a payment pushing the campaign
+// over its goal, and the daily deadline cron), which can race each other
+// right at the moment a campaign both hits its goal AND its deadline. A
+// plain status check reads the same "ACTIVE" from both callers before
+// either write lands; db.claimOnce() is a real transaction, so only one of
+// them ever pays the creator out.
 async function resolveCampaignSuccess(campaignId) {
   const campaign = await db.findById("creatorFundingCampaigns", campaignId);
   if (!campaign || campaign.status !== "ACTIVE") return null;
+
+  const claim = await db.claimOnce("creatorFundingCampaigns", campaignId, "resolutionClaimed");
+  if (!claim.claimed) return null;
 
   const feePct = num(campaign.platformFeePercentage, num((global.settingJSON || {}).creatorFundingPlatformFeePercentage, 20));
   const raisedInr = num(campaign.raisedAmountInr);
@@ -37,10 +47,10 @@ async function resolveCampaignSuccess(campaignId) {
 
   const creator = await db.findById("users", campaign.creatorId);
   if (creator) {
-    await db.update("users", creator._id || creator.id, {
-      coin: (creator.coin || 0) + payoutCoins,
-      totalEarningAmount: Number(((creator.totalEarningAmount || 0) + payoutInr).toFixed(2)),
-      totalRewardCoin: (creator.totalRewardCoin || 0) + payoutCoins,
+    await db.incrementFields("users", creator._id || creator.id, {
+      coin: payoutCoins,
+      totalEarningAmount: payoutInr,
+      totalRewardCoin: payoutCoins,
     });
   }
 
@@ -55,9 +65,16 @@ async function resolveCampaignSuccess(campaignId) {
 // contribution back as spendable coins. Real-money Razorpay refunds
 // aren't wired up yet (a separate, bigger integration) — flagged as a
 // known follow-up, not silently skipped.
+//
+// Same atomic claim as resolveCampaignSuccess() — a creator cancelling at
+// the exact moment the deadline cron also expires the same campaign must
+// only refund every backer once, not twice.
 async function refundCampaign(campaignId, finalStatus = "FAILED") {
   const campaign = await db.findById("creatorFundingCampaigns", campaignId);
   if (!campaign || campaign.status !== "ACTIVE") return null;
+
+  const claim = await db.claimOnce("creatorFundingCampaigns", campaignId, "resolutionClaimed");
+  if (!claim.claimed) return null;
 
   const rate = coinToInrRate();
   const backings = await db.find("campaignBackings", { campaignId: String(campaignId), status: "ACTIVE" });
@@ -67,9 +84,7 @@ async function refundCampaign(campaignId, finalStatus = "FAILED") {
     const refundCoins = Math.round(num(b.amountInr) / rate);
     const backer = await db.findById("users", b.backerId);
     if (backer) {
-      await db.update("users", backer._id || backer.id, {
-        coin: (backer.coin || 0) + refundCoins,
-      });
+      await db.incrementFields("users", backer._id || backer.id, { coin: refundCoins });
     }
     await db.update("campaignBackings", b._id || b.id, {
       status: "REFUNDED",

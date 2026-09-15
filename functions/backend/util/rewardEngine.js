@@ -12,9 +12,15 @@
  * settings (global.settingJSON) with per-tier overrides from the
  * `membershipTiers` collection.
  *
- * NOTE: the Firestore shim has no transactions, so counter updates are
- * read-modify-write. The daily *earning* cap still bounds total coins even if
- * two requests race; tighten with Firestore transactions in a later pass.
+ * Double-reward and lost-increment races (e.g. a double-tapped "like", or
+ * two concurrent ad-watch calls) are closed by db.createOnce() (dedup, via a
+ * deterministic history-doc id) and db.incrementFields() (atomic balance
+ * math) below — see firestoreDb.service.js. The per-day COUNT/EARNING caps
+ * themselves stay a best-effort read-then-check: each individual reward is
+ * only a few coins, so the worst case under deliberate concurrent spam is a
+ * few coins over the daily cap, not an unbounded exploit — not worth a
+ * multi-field capped transaction the way the payment/commission paths (real
+ * money, unbounded if raced) needed one.
  */
 "use strict";
 
@@ -177,6 +183,14 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
   const limits = await getLimits(user);
   const id = user._id || user.id;
 
+  // Fast pre-check — cheap early exit with an accurate message. The REAL
+  // atomic gate against a double-tap or a retried request landing twice is
+  // the createOnce() call below, keyed deterministically so two concurrent
+  // requests for the same (user, video, action) can never both win.
+  const historyId = dedupeVideoId
+    ? `hist_dedupe_${id}_${dedupeVideoId}_${historyType}`
+    : `hist_${id}_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
+
   if (dedupeVideoId) {
     const already = await db.findOne("histories", { userId: id, videoId: dedupeVideoId, type: historyType });
     if (already) {
@@ -220,25 +234,38 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
     engagementWatch: "engagementRewardCoin",
   }[kind];
 
-  const updates = {
-    coin: (user.coin || 0) + credited,
-    totalRewardCoin: (user.totalRewardCoin || 0) + credited,
-    dailyEarningCoinsToday: (user.dailyEarningCoinsToday || 0) + credited,
-  };
-  if (bucketField) updates[bucketField] = (user[bucketField] || 0) + credited;
-  if (countField) updates[countField] = currentCount + 1;
-
-  const updatedUser = await db.update("users", id, updates);
-
   if (credited > 0) {
-    await db.create("histories", {
+    const claim = await db.createOnce("histories", historyId, {
       userId: id,
       uniqueId: await generateHistoryUniqueId(),
+      videoId: dedupeVideoId || null,
       coin: credited,
       type: historyType,
       date: new Date().toISOString(),
       ...(meta || {}),
     });
+    if (!claim.created) {
+      // A concurrent request already claimed this exact (user, video,
+      // action) a moment ago — do not credit again.
+      return {
+        ok: false, reason: "ALREADY_REWARDED", credited: 0, limits,
+        message: "Already rewarded for this video.",
+        counts: snapshotCounts(user),
+      };
+    }
+  }
+
+  const incFields = {
+    coin: credited,
+    totalRewardCoin: credited,
+    dailyEarningCoinsToday: credited,
+  };
+  if (bucketField) incFields[bucketField] = credited;
+  if (countField) incFields[countField] = 1;
+
+  const updatedUser = await db.incrementFields("users", id, incFields);
+
+  if (credited > 0) {
     // Tasker Onboarding Commission (YP-TC): whoever referred this tasker
     // earns a % of every reward they earn, as an additional platform-funded
     // bonus — never deducted from the tasker's own payout. Awaited (this runs
@@ -247,7 +274,7 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
     await creditTaskerReferralCommission(id, credited).catch(() => {});
   }
 
-  const merged = { ...user, ...updates };
+  const merged = updatedUser || { ...user, ...incFields };
   return {
     ok: true,
     reason: credited < gross ? "PARTIAL_CAP" : "OK",
@@ -276,16 +303,22 @@ async function reverseReward({ userId, videoId, historyType, countField }) {
   const hist = await db.findOne("histories", { userId: id, videoId, type: historyType });
   if (!hist) return { ok: false, reversed: 0 };
 
-  const amt = Math.max(0, Number(hist.coin) || 0);
-  const updates = {
-    coin: Math.max(0, (user.coin || 0) - amt),
-    engagementRewardCoin: Math.max(0, (user.engagementRewardCoin || 0) - amt),
-    totalRewardCoin: Math.max(0, (user.totalRewardCoin || 0) - amt),
-    dailyEarningCoinsToday: Math.max(0, (user.dailyEarningCoinsToday || 0) - amt),
-  };
-  if (countField) updates[countField] = Math.max(0, (user[countField] || 0) - 1);
+  // Atomic claim — two concurrent reversals of the SAME history record (a
+  // double-tapped "unlike", or a retried request) must only subtract the
+  // coins once, not once per call.
+  const claim = await db.claimOnce("histories", hist._id || hist.id, "reversed");
+  if (!claim.claimed) return { ok: false, reversed: 0 };
 
-  await db.update("users", id, updates);
+  const amt = Math.max(0, Number(hist.coin) || 0);
+  const deltas = {
+    coin: -amt,
+    engagementRewardCoin: -amt,
+    totalRewardCoin: -amt,
+    dailyEarningCoinsToday: -amt,
+  };
+  if (countField) deltas[countField] = -1;
+
+  await db.incrementFields("users", id, deltas);
   await db.delete("histories", hist._id || hist.id);
   return { ok: true, reversed: amt };
 }
@@ -318,10 +351,10 @@ async function creditTaskerReferralCommission(taskerId, taskerCoins) {
   const referrer = await db.findById("users", referrerId);
   if (!referrer || referrer.isBlock) return;
 
-  await db.update("users", referrerId, {
-    coin: (referrer.coin || 0) + bonus,
-    referralRewardCoin: (referrer.referralRewardCoin || 0) + bonus,
-    totalRewardCoin: (referrer.totalRewardCoin || 0) + bonus,
+  await db.incrementFields("users", referrerId, {
+    coin: bonus,
+    referralRewardCoin: bonus,
+    totalRewardCoin: bonus,
   });
   await db.create("histories", {
     userId: referrerId,
