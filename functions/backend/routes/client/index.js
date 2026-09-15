@@ -36,6 +36,7 @@ const videoPromotion = require("./videoPromotion.route");
 const grievance = require("./grievance.route");
 const payment = require("./payment.route");
 const partner = require("./partner.route");
+const creatorFunding = require("./creatorFunding.route");
 
 //exports client's route.js
 route.use("/user", user);
@@ -71,5 +72,6 @@ route.use("/videoPromotion", videoPromotion);
 route.use("/grievance", grievance);
 route.use("/payment", payment);
 route.use("/partner", partner);
+route.use("/creatorFunding", creatorFunding);
 
 module.exports = route;

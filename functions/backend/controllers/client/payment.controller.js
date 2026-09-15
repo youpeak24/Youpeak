@@ -19,11 +19,12 @@ const referralService = require("../../util/referral.service");
 const revenueSplit = require("../../util/revenueSplit.service");
 const { recordAgencyCommission } = require("../../util/revenueCommission.service");
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
+const creatorFunding = require("../../util/creatorFunding.service");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 
 // Resolve how much a given purpose costs, and stash target ids on the txn.
-async function resolveAmount({ purpose, tierId, coinPlanId, premiumPlanId }) {
+async function resolveAmount({ purpose, tierId, coinPlanId, premiumPlanId, campaignId, amountInr: requestedAmountInr }) {
   const s = global.settingJSON || {};
   if (purpose === "joining_fee") {
     const amt = num(s.joiningFeeINR, 0);
@@ -54,6 +55,18 @@ async function resolveAmount({ purpose, tierId, coinPlanId, premiumPlanId }) {
     if (amt <= 0) return { error: "Digital Partner Program is not enabled." };
     return { amountInr: amt };
   }
+  if (purpose === "campaign_backing") {
+    if (!s.creatorFundingEnabled) return { error: "Creator Funding is not enabled." };
+    if (!campaignId) return { error: "campaignId is required." };
+    const amt = num(requestedAmountInr, 0);
+    if (amt < 10) return { error: "Minimum backing amount is ₹10." };
+    const campaign = await db.findById("creatorFundingCampaigns", campaignId);
+    if (!campaign || campaign.status !== "ACTIVE") return { error: "This campaign isn't accepting support right now." };
+    if (campaign.deadlineAt && Date.now() > new Date(campaign.deadlineAt).getTime()) {
+      return { error: "This campaign's deadline has passed." };
+    }
+    return { amountInr: amt, campaign };
+  }
   return { error: "Unknown purpose." };
 }
 
@@ -70,6 +83,7 @@ exports.createOrder = async (req, res) => {
 
     const resolved = await resolveAmount({
       purpose, tierId: b.tierId, coinPlanId: b.coinPlanId, premiumPlanId: b.premiumPlanId,
+      campaignId: b.campaignId, amountInr: b.amountInr,
     });
     if (resolved.error) return res.status(200).json({ status: false, message: resolved.error });
 
@@ -97,6 +111,7 @@ exports.createOrder = async (req, res) => {
       tierId: b.tierId || null,
       coinPlanId: b.coinPlanId || null,
       premiumPlanId: b.premiumPlanId || null,
+      campaignId: b.campaignId || null,
       status: "created",
       fulfilled: false,
       meta: { email: user.email || "", mobileNumber: user.mobileNumber || "" },
@@ -206,6 +221,7 @@ async function markPaidAndFulfil(txn, { paymentId, verifiedVia }) {
     else if (txn.purpose === "coin_plan") fulfilment = await fulfilCoinPlan(txn);
     else if (txn.purpose === "premium_plan") fulfilment = await fulfilPremiumPlan(txn);
     else if (txn.purpose === "digital_partner_license") fulfilment = await fulfilDigitalPartnerLicense(txn);
+    else if (txn.purpose === "campaign_backing") fulfilment = await fulfilCampaignBacking(txn);
   } catch (e) {
     console.error(`fulfilment failed for ${id} (${txn.purpose}):`, e.message);
     fulfilment = { error: e.message };
@@ -273,6 +289,64 @@ async function fulfilDigitalPartnerLicense(txn) {
   } catch (e) { /* ignore */ }
 
   return { isDigitalPartner: true, adCreditsBalance: patch.adCreditsBalance };
+}
+
+// Creator Funding — a verified backing. Records the backing, bumps the
+// campaign's raised total, and resolves the campaign immediately if the
+// goal is hit (no need to wait for the deadline). If the campaign somehow
+// closed between order-creation and this payment landing (deadline passed
+// mid-checkout, or the creator cancelled it), refund the backer as coins
+// rather than silently keeping a payment against a dead campaign.
+async function fulfilCampaignBacking(txn) {
+  const amountInr = num(txn.amountInr);
+  const campaign = await db.findById("creatorFundingCampaigns", txn.campaignId);
+  if (!campaign) return { error: "campaign missing" };
+
+  if (campaign.status !== "ACTIVE") {
+    const rate = num((global.settingJSON || {}).coinToInrRate, 0.01);
+    const refundCoins = Math.round(amountInr / rate);
+    const backer = await db.findById("users", txn.userId);
+    if (backer) {
+      await db.update("users", backer._id || backer.id, { coin: (backer.coin || 0) + refundCoins });
+    }
+    await db.create("campaignBackings", {
+      campaignId: txn.campaignId, backerId: txn.userId, amountInr,
+      paymentTransactionId: txn._id || txn.id, status: "REFUNDED",
+      refundedAt: new Date().toISOString(), refundCoins,
+    });
+    return { refunded: true, reason: "Campaign was no longer active.", refundCoins };
+  }
+
+  const perk = (campaign.perks || [])
+    .filter((p) => num(p.minAmountInr) <= amountInr)
+    .sort((a, b) => num(b.minAmountInr) - num(a.minAmountInr))[0];
+
+  await db.create("campaignBackings", {
+    campaignId: txn.campaignId,
+    backerId: txn.userId,
+    amountInr,
+    paymentTransactionId: txn._id || txn.id,
+    perkUnlocked: perk?.title || "",
+    status: "ACTIVE",
+  });
+
+  const raisedAmountInr = Number((num(campaign.raisedAmountInr) + amountInr).toFixed(2));
+  await db.update("creatorFundingCampaigns", campaign._id || campaign.id, {
+    raisedAmountInr,
+    backerCount: (campaign.backerCount || 0) + 1,
+  });
+
+  let resolvedCampaign = null;
+  if (raisedAmountInr >= num(campaign.goalAmountInr)) {
+    resolvedCampaign = await creatorFunding.resolveCampaignSuccess(campaign._id || campaign.id);
+  }
+
+  return {
+    campaignId: campaign._id || campaign.id,
+    perkUnlocked: perk?.title || null,
+    raisedAmountInr,
+    goalReached: !!resolvedCampaign,
+  };
 }
 
 async function fulfilTierUpgrade(txn) {

@@ -17,6 +17,7 @@
 const db = require("../util/connection");
 const { todayStr } = require("../util/rewardEngine");
 const referralService = require("../util/referral.service");
+const creatorFundingService = require("../util/creatorFunding.service");
 
 function authorised(req) {
   const secret = process.env.CRON_SECRET;
@@ -78,6 +79,11 @@ exports.daily = async (req, res) => {
     result.tasks.releaseHeldReferrals = await referralService.releaseHeldReferrals();
   } catch (e) {
     result.tasks.releaseHeldReferrals = { error: e.message };
+  }
+  try {
+    result.tasks.resolveExpiredCampaigns = await creatorFundingService.resolveExpiredCampaigns();
+  } catch (e) {
+    result.tasks.resolveExpiredCampaigns = { error: e.message };
   }
 
   if (req.query.full === "1" || String(process.env.CRON_BULK_RESET || "").toLowerCase() === "true") {
