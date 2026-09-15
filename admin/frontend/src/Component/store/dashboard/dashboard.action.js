@@ -44,7 +44,7 @@ export const getDashboardUserChart = (startDate, endDate, type) => (dispatch) =>
         payloadData = res.data.chartAnalyticOfUsers; // Change this if needed
       }
 
-      dispatch({ type: ActionType.GET_DASHBOARD_USER, payload: payloadData });
+      dispatch({ type: ActionType.GET_DASHBOARD_USER, payload: payloadData, chartType: type });
     })
     .catch((error) => console.error(error));
 };
