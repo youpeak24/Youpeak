@@ -88,6 +88,29 @@ module.exports = {
   // this — it stays open to every user, partner or not.
   digitalPartnerLicenseFeeINR: 25000,
 
+  // ── Creator Funding Campaigns (fan crowdfunding — perks only) ──
+  // Redesigned from an earlier "tradeable fan card / secondary market /
+  // passive income" concept that would have been an unregistered
+  // securities offering under Indian law (SEBI Act §11AA Collective
+  // Investment Scheme territory) — real public money pooled into a
+  // tradeable instrument with profit expectation from others' trading.
+  // This version: creators set a funding goal, fans back it with real
+  // money via the normal payment.createOrder/verify flow, and receive
+  // ONLY creator-defined perks (a badge, a shoutout, early access) —
+  // never a resellable stake, never a trading market, never a promised
+  // return. Goal met -> creator is credited (minus the platform fee).
+  // Goal missed by the deadline -> every backer is refunded in full.
+  creatorFundingEnabled: true,
+  creatorFundingPlatformFeePercentage: 20,
+  creatorFundingMinAccountAgeDays: 90,
+  creatorFundingMaxDurationDays: 30,
+  creatorFundingTiers: [
+    { minSubscribers: 10000, maxGoalInr: 100000 },
+    { minSubscribers: 50000, maxGoalInr: 500000 },
+    { minSubscribers: 100000, maxGoalInr: 1000000 },
+    { minSubscribers: 1000000, maxGoalInr: 2000000 },
+  ],
+
   // ── Content moderation (IT Rules 2021) ──
   moderationEnabled: true,
   reportAutoHoldThreshold: 5,          // reports within the window -> pending_review

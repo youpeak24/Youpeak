@@ -139,6 +139,8 @@ class FirestoreDbService {
       grievance: "grievances", grievances: "grievances",
       fraudalert: "fraudAlerts", fraudalerts: "fraudAlerts",
       partnerprofile: "partnerProfiles", partnerprofiles: "partnerProfiles",
+      creatorfundingcampaign: "creatorFundingCampaigns", creatorfundingcampaigns: "creatorFundingCampaigns",
+      campaignbacking: "campaignBackings", campaignbackings: "campaignBackings",
     };
     return MAP[key] || name;
   }
