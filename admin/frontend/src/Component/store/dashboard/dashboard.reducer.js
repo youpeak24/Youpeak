@@ -15,14 +15,21 @@ const initialState = {
 
 export const dashboardReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionType.GET_DASHBOARD_USER:
-      
+    case ActionType.GET_DASHBOARD_USER: {
+      // Each dispatch is for exactly one series (User/Video/Short) — only
+      // that field should update, otherwise the last chart type to resolve
+      // overwrites all three lines with its own data.
+      const key =
+        action.chartType === "Short"
+          ? "chartAnalyticOfShorts"
+          : action.chartType === "Video"
+          ? "chartAnalyticOfVideos"
+          : "chartAnalyticOfUsers";
       return {
         ...state,
-        chartAnalyticOfUsers: action.payload || state.chartAnalyticOfUsers,
-        chartAnalyticOfShorts: action.payload || state.chartAnalyticOfShorts,
-        chartAnalyticOfVideos: action.payload || state.chartAnalyticOfVideos,
+        [key]: action.payload || state[key],
       };
+    }
       case ActionType.GET_DASHBOARD_ACTIVE_CHART:
       return {
         ...state,
