@@ -311,10 +311,73 @@ exports.deleteChannelByAdmin = async (req, res) => {
 };
 
 // fetch user coin + VIP history
+// "All Plan Earning" (Order History): every coin-plan (type 8) and premium-
+// plan (type 11) purchase, joined with the buyer's display info. Previously
+// read "wallet_history" — a plain ledger with none of the fields the admin
+// page actually renders (no paymentGateway, no rewardCoins, no user info)
+// — and ignored every query param, so search/date-range/gateway filtering
+// and pagination all did nothing.
 exports.fetchUserCoinVipHistory = async (req, res) => {
   try {
-    const history = await db.find("wallet_history", {});
-    return res.status(200).json({ status: true, message: "Success", total: history.length, history });
+    const start = Math.max(parseInt(req.query.start) || 1, 1);
+    const limit = Math.max(parseInt(req.query.limit) || 20, 1);
+    const { search, paymentGateway, startDate, endDate } = req.query;
+
+    let rows = await db.find("histories", {});
+    rows = rows.filter((r) => r.type === 8 || r.type === 11);
+
+    if (paymentGateway && paymentGateway !== "All") {
+      const wanted = String(paymentGateway).split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
+      rows = rows.filter((r) => wanted.includes(String(r.paymentGateway || "").toLowerCase()));
+    }
+
+    if (startDate && endDate && startDate !== "All" && endDate !== "All") {
+      const s = new Date(startDate).getTime();
+      const e = new Date(endDate);
+      e.setHours(23, 59, 59, 999);
+      const eTime = e.getTime();
+      rows = rows.filter((r) => {
+        const t = new Date(r.createdAt || r.date || 0).getTime();
+        return t >= s && t <= eTime;
+      });
+    }
+
+    const userIds = [...new Set(rows.map((r) => String(r.userId || "")).filter(Boolean))];
+    const users = userIds.length ? await Promise.all(userIds.map((id) => db.findById("users", id).catch(() => null))) : [];
+    const byId = {};
+    userIds.forEach((id, i) => { if (users[i]) byId[id] = users[i]; });
+
+    if (search && String(search).trim()) {
+      const re = new RegExp(String(search).trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      rows = rows.filter((r) => {
+        const u = byId[String(r.userId || "")];
+        return (
+          re.test(r.uniqueId || "") ||
+          re.test(r.paymentGateway || "") ||
+          (u && (re.test(u.fullName || "") || re.test(u.nickName || "") || re.test(u.uniqueId || "")))
+        );
+      });
+    }
+
+    rows.sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
+
+    const total = rows.length;
+    const paginated = rows.slice((start - 1) * limit, start * limit).map((r) => {
+      const u = byId[String(r.userId || "")];
+      return {
+        _id: r._id || r.id,
+        uniqueId: r.uniqueId || "",
+        type: r.type,
+        coin: r.coin || 0,
+        rewardCoins: r.rewardCoins || 0,
+        amount: r.amount || 0,
+        paymentGateway: r.paymentGateway || "",
+        createdAt: r.createdAt || r.date || null,
+        user: u ? { fullName: u.fullName, nickName: u.nickName, image: u.image, userUniqueId: u.uniqueId } : null,
+      };
+    });
+
+    return res.status(200).json({ status: true, message: "Success", total, data: paginated });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }

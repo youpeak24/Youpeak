@@ -189,21 +189,16 @@ exports.handleMonetizationRequest = async (req, res) => {
         message: "Monetization request declined by the admin.",
       });
 
+      // Declining changes nothing about the creator's monetization state —
+      // they were never monetized and still aren't — so unlike acceptance
+      // there is no "fresh start" to reset for. The previous version reset
+      // totalWithdrawableAmount/totalEarningAmount to 0 and wiped
+      // WatchHistory here too, apparently copy-pasted from the accept
+      // branch above: a declined creator would lose real, already-accrued
+      // watch-history/earning data for no reason tied to the decline itself.
       await Promise.all([
-        User.updateOne(
-          { _id: user._id },
-          {
-            $set: {
-              isMonetization: false,
-              // totalWatchTime: 0,
-              // totalCurrentWatchTime: 0,
-              totalWithdrawableAmount: 0,
-              totalEarningAmount: 0,
-            },
-          },
-        ),
+        User.updateOne({ _id: user._id }, { $set: { isMonetization: false } }),
         MonetizationRequest.updateOne({ _id: monetizationRequest._id }, { $set: { status: 3, reason: req.query.reason?.trim() } }),
-        WatchHistory.deleteMany({ videoChannelId: user.channelId }),
       ]);
 
       if (user.fcmToken && user.fcmToken !== null) {

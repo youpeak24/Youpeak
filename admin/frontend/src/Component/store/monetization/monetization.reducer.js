@@ -16,13 +16,16 @@ export const monetizationReducer = (state = initialState, action) => {
         monetizationType: action.payload.type,
       };
    
-      case ActionType.ACCEPT_MONETIZATION_REQUEST:
+      case ActionType.ACCEPT_MONETIZATION_REQUEST: {
+        // requestId is typically a single string here — .includes() on a
+        // string does substring matching, not equality, and could
+        // false-match an unrelated row. Always compare against a real array.
+        const ids = Array.isArray(action.payload.requestId) ? action.payload.requestId : [action.payload.requestId];
         return {
           ...state,
-          monetization: state.monetization.filter(
-            (data) => !action.payload.requestId.includes(data._id)
-          ),
+          monetization: state.monetization.filter((data) => !ids.includes(data._id)),
         };
+      }
     default:
       return state;
   }
