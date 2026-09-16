@@ -26,21 +26,21 @@ export const getUser =
           type: ActionType.GET_USER,
           payload: {
             user: res.users,
-            totalUser: res.totalUsers,
+            totalUser: res.total,
           },
         });
       })
       .catch((error) => console.error(error));
   };
 export const isActiveUser = (id, type, data) => (dispatch) => {
+  const ids = Array.isArray(id) ? id.join(",") : id;
   return axios
-    .patch(`admin/user/isBlock?userId=${id}`)
+    .patch(`admin/user/isBlock?userId=${ids}&isBlock=${data}`)
     .then((res) => {
       if (res.data.status) {
-        console.log("res==>", res);
         dispatch({
           type: ActionType.ACTIVE_SWITCH_USER,
-          payload: { data: res.data.users, id: id, type: type },
+          payload: { data: res.data.users || res.data.user, id: id, type: type },
         });
         setToast(
           "success",
@@ -67,7 +67,7 @@ export const togglePaymentStatus = (id) => (dispatch) => {
         setToast("success", res.data.message);
         dispatch({
           type: ActionType.ACTIVE_SWITCH_USER,
-          payload: { data: res.data.user, id: id },
+          payload: { data: res.data.user, id: id, type: "user" },
         });
       } else {
         setToast("error", res.data.message);
@@ -81,13 +81,16 @@ export const togglePaymentStatus = (id) => (dispatch) => {
 };
 
 export const deleteUser = (id, type) => (dispatch) => {
+  const ids = Array.isArray(id) ? id : [id];
   return axios
-    .delete(`admin/user/deleteUsers?userId=${id}`)
+    .delete(`admin/user/deleteUsers?userId=${ids.join(",")}`)
     .then((res) => {
       if (res.data.status) {
         dispatch({
+          // Always an array — the reducer's `.includes(data._id)` check
+          // does substring matching on a plain string, not membership.
           type: ActionType.DELETE_USER,
-          payload: { id: id, type: type },
+          payload: { id: ids, type: type },
         });
         setToast("success", "User Delete SuccessFully");
       } else {
@@ -174,7 +177,7 @@ export const getFakeUser =
       .then((res) => {
         dispatch({
           type: ActionType.GET_FAKE_USER,
-          payload: { data: res.users, total: res.totalUsersAddByAdmin },
+          payload: { data: res.users, total: res.total },
         });
       })
       .catch((error) => console.error(error));
@@ -212,7 +215,7 @@ export const getUserChannels =
               : ActionType.GET_FAKE_USER_CHANNEL_DATA,
           payload: {
             channel: res.channels,
-            total: res.totalChannels,
+            total: res.total,
           },
         });
       })
@@ -221,7 +224,7 @@ export const getUserChannels =
 
 export const createChannelFakeUser = (id, createChannel) => (dispatch) => {
   axios
-    .patch(`admin/user/updateUser?userId=${id}&isChannel=false`, createChannel)
+    .patch(`admin/user/updateUser?userId=${id}&isChannel=true`, createChannel)
     .then((res) => {
       if (res.data.status) {
         const channelData = res.data.user;

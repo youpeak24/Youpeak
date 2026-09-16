@@ -29,6 +29,8 @@ function CreateChannel(props) {
   const [channelName, setChannelName] = useState();
   const [userSelect, setUserSelect] = useState();
   const [descriptionOfChannel, setDescriptionOfChannel] = useState();
+  const [channelType, setChannelType] = useState(1); // 1 = free, 2 = paid
+  const [subscriptionCost, setSubscriptionCost] = useState(10);
   const [error, setError] = useState({
     channelName: "",
     descriptionOfChannel: "",
@@ -76,6 +78,8 @@ function CreateChannel(props) {
       const createChannel = {
         fullName: channelName?.trim(),
         descriptionOfChannel: descriptionOfChannel?.trim(),
+        channelType: Number(channelType),
+        subscriptionCost: Number(channelType) === 2 ? Number(subscriptionCost) || 0 : 0,
       };
       props.createChannelFakeUser(dialogueData?._id, createChannel);
       handleCloseCreateChannel();
@@ -162,6 +166,28 @@ function CreateChannel(props) {
                 </p>
               )}
             </div>
+            <div className="mb-2">
+              <label className="label-form">Channel Type</label>
+              <select
+                className="form-control"
+                value={channelType}
+                onChange={(e) => setChannelType(Number(e.target.value))}
+              >
+                <option value={1}>Free</option>
+                <option value={2}>Paid (subscription required)</option>
+              </select>
+            </div>
+            {Number(channelType) === 2 && (
+              <div className="mb-2">
+                <Input
+                  label={"Subscription Cost (coins)"}
+                  name={"subscriptionCost"}
+                  type={"number"}
+                  value={subscriptionCost}
+                  onChange={(e) => setSubscriptionCost(e.target.value)}
+                />
+              </div>
+            )}
             <div className="mt-3 d-flex justify-content-end">
               <Button
                 onClick={handleCloseCreateChannel}

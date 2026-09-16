@@ -139,7 +139,7 @@ function FakeChannel(props) {
       Header: "Total Subscribers",
       body: "totalSubscribers",
       Cell: ({ row }) => (
-        <span className="text-capitalize  text-nowrap">{row?.totalSubscribes}</span>
+        <span className="text-capitalize  text-nowrap">{row?.totalSubscribers}</span>
       ),
     },
 
