@@ -95,12 +95,40 @@ exports.defaultCurrency = async (req, res) => {
     }
 
     const currencies = await db.find("currencies", {});
+    let newDefault = null;
     for (const c of currencies) {
       const isDef = c._id === currencyId;
+      if (isDef) newDefault = c;
       await db.update("currencies", c._id, { isDefault: isDef });
     }
 
     const allCurrency = await db.find("currencies", {}, { sort: { createdAt: -1 } });
+
+    // The Currency table here was previously a closed loop — admin could
+    // add/edit/set-default currencies, but nothing anywhere copied that
+    // into settingJSON.currency, which is the ONLY thing the Flutter app
+    // actually reads (via /client/setting). Setting a default here had no
+    // effect on what the app displayed at all. Sync it through now.
+    if (newDefault) {
+      try {
+        let setting = await db.findOne("settings", {});
+        const currencyPatch = {
+          name: newDefault.name,
+          symbol: newDefault.symbol,
+          countryCode: newDefault.countryCode,
+          currencyCode: newDefault.currencyCode,
+          isDefault: true,
+        };
+        if (setting) {
+          await db.update("settings", setting._id || setting.id, { currency: currencyPatch });
+        } else {
+          await db.create("settings", { currency: currencyPatch }, "default_settings");
+        }
+        await require("../../util/loadSettings").loadSettings(true);
+      } catch (e) {
+        console.error("Error syncing default currency into settings:", e.message);
+      }
+    }
 
     return res.status(200).json({
       status: true,
