@@ -67,8 +67,7 @@ exports.createHistory = async (req, res) => {
       planEndDate.setFullYear(planEndDate.getFullYear() + premiumPlan.validity);
     }
 
-    user.isPremiumPlan = true;
-    user.plan = {
+    const planPatch = {
       planStartDate: moment().toISOString(),
       planEndDate: moment(planEndDate).toISOString(),
       premiumPlanId: premiumPlan._id,
@@ -83,6 +82,9 @@ exports.createHistory = async (req, res) => {
       premiumPlanId: premiumPlan._id,
       paymentGateway: paymentGateWay,
       date: moment().toISOString(),
+      amount: premiumPlan.amount,
+      validity: premiumPlan.validity,
+      validityType: premiumPlan.validityType,
     });
 
     const history = new History({
@@ -95,7 +97,16 @@ exports.createHistory = async (req, res) => {
       date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
     });
 
-    await Promise.all([user.save(), premiumPlanHistory.save(), history.save()]);
+    // `user` came from a query (findById(...).select(...)), a plain data
+    // object — it never had a working .save(); calling it threw a
+    // TypeError on every single purchase attempt. Use the same
+    // User.updateOne() pattern handleStripePaymentForPremiumPlan already
+    // uses correctly, below.
+    await Promise.all([
+      User.updateOne({ _id: userId }, { isPremiumPlan: true, plan: planPatch }),
+      premiumPlanHistory.save(),
+      history.save(),
+    ]);
 
     return res.status(200).json({
       status: true,
@@ -401,6 +412,9 @@ exports.handleStripePaymentForPremiumPlan = async (req, res) => {
         premiumPlanId: premiumPlan._id,
         paymentGateway: "stripe",
         date: moment().toISOString(),
+        amount: premiumPlan.amount,
+        validity: premiumPlan.validity,
+        validityType: premiumPlan.validityType,
       }),
       History.create({
         userId: user._id,

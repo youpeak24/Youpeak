@@ -32,7 +32,7 @@ export const addCoinPlan = (formData) => (dispatch) => {
         .post("admin/coinplan/store", formData)
         .then((res) => {
             if (res.data.status) {
-                dispatch({ type: ADD_COIN_PLAN, payload: res.data.coinPlan });
+                dispatch({ type: ADD_COIN_PLAN, payload: res.data.data });
                 dispatch(getCoinPlan())
                 setToast("success", "Coin Added Successfully !");
             }
@@ -47,7 +47,7 @@ export const updateCoinPlan = (formData, id) => (dispatch) => {
             if (res.data.status) {
                 dispatch({
                     type: UPDATE_COIN_PLAN,
-                    payload: { editPlan: res.data.coinPlan, id: id },
+                    payload: { editPlan: res.data.data, id: id },
                 });
                 dispatch(getCoinPlan())
                 setToast("success", "Coin Update Successfully");
@@ -65,7 +65,7 @@ export const isActiveCoinPlan = (id, data) => (dispatch) => {
             if (res.data.status) {
                 dispatch({
                     type: ACTIVE_COIN_PLAN,
-                    payload: { planActiveData: res.data.coinPlan, coinPlanId: id },
+                    payload: { planId: id, planActiveData: res.data.data },
                 });
                 dispatch(getCoinPlan())
                 setToast(
@@ -85,7 +85,7 @@ export const isPopularCoinPlan = (id, data) => (dispatch) => {
             if (res.data.status) {
                 dispatch({
                     type: POPULAR_COIN_PLAN,
-                    payload: { planActiveData: res.data.coinPlan, coinPlanId: id },
+                    payload: { planPopularId: id, planpopularData: res.data.data },
                 });
                 dispatch(getCoinPlan())
                 setToast(
