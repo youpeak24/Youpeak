@@ -6,38 +6,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAdminEarnings, getCoinPlanEarnings } from "../../store/admin/admin.action";
 import dayjs from "dayjs";
 import { getDefaultCurrency } from "../../store/currency/currency.action";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import coin from "../../../../src/assets/images/mcoin.png";
 import { Skeleton } from "@mui/material";
 
 
 
 const CoinPlanHistory = () => {
-    const { earning, total, totalEarning } = useSelector((state) => state.admin);
+    const { earning, total } = useSelector((state) => state.admin);
     const { defaultCurrency } = useSelector((state) => state.currency);
     const { isLoading } = useSelector((state) => state.dialogue);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const location = useLocation();
-
-    const coinPlanHistoryData = location?.state?.data;
-    const [data, setData] = useState();
     const [page, setPage] = useState(1);
     const [size, setSize] = useState(20);
     const [startDate, setStartDate] = useState("All");
     const [endDate, setEndDate] = useState("All");
-    const [showURLs, setShowURLs] = useState([]);
-
 
     useEffect(() => {
         dispatch(getCoinPlanEarnings(startDate, endDate, page, size, "All"));
         dispatch(getDefaultCurrency());
     }, [dispatch, startDate, endDate, page, size]);
 
-    useEffect(() => {
-        setData(coinPlanHistoryData?.coinPlanPurchase);
-    }, [coinPlanHistoryData?.coinPlanPurchase]);
+    // Was reading location?.state?.data?.coinPlanPurchase — the sidebar
+    // links straight here with no router state, so `data` was always
+    // undefined and the table rendered empty despite the fetch above
+    // succeeding. `earning` is the actual Redux state that fetch populates.
+    const data = earning;
 
     const handlePageChange = (pageNumber) => {
         setPage(pageNumber);

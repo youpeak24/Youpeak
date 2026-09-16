@@ -1,4 +1,30 @@
 const AdRewardCoin = require("../../models/adRewardCoin.model");
+const db = require("../../util/connection");
+
+// This admin form is the ONLY place "coins earned from watching an ad" is
+// configured, but rewardEngine.js's actual ad-watch crediting has always
+// read a completely different, disconnected value —
+// settingJSON.adRewardCoins (itself only ever set as a side-effect of the
+// unrelated "Watching Video & Shorts" field on the Engagement Settings
+// page). So every AdRewardCoin record an admin created/edited had zero
+// effect on what a user was actually paid for watching an ad. Sync
+// settingJSON.adRewardCoins to match whenever this form is saved, so the
+// control it's actually labelled for does what it says.
+async function syncAdRewardCoinsIntoSettings(coinEarnedFromAd) {
+  try {
+    const amount = Number(coinEarnedFromAd);
+    if (!Number.isFinite(amount) || amount < 0) return;
+    let setting = await db.findOne("settings", {});
+    if (setting) {
+      await db.update("settings", setting._id || setting.id, { adRewardCoins: amount });
+    } else {
+      await db.create("settings", { adRewardCoins: amount }, "default_settings");
+    }
+    await require("../../util/loadSettings").loadSettings(true);
+  } catch (e) {
+    console.error("syncAdRewardCoinsIntoSettings error:", e.message);
+  }
+}
 
 exports.storeAdReward = async (req, res) => {
   try {
@@ -24,6 +50,7 @@ exports.storeAdReward = async (req, res) => {
     adReward.adDisplayInterval = parseInt(req.body.adDisplayInterval);
     adReward.coinEarnedFromAd = parseInt(req.body.coinEarnedFromAd);
     await adReward.save();
+    await syncAdRewardCoinsIntoSettings(adReward.coinEarnedFromAd);
 
     return res.status(200).json({
       status: true,
@@ -51,6 +78,7 @@ exports.updateAdReward = async (req, res) => {
     adReward.adDisplayInterval = req.body.adDisplayInterval ? parseInt(req.body.adDisplayInterval) : adReward.adDisplayInterval;
     adReward.coinEarnedFromAd = req.body.coinEarnedFromAd ? parseInt(req.body.coinEarnedFromAd) : adReward.coinEarnedFromAd;
     await adReward.save();
+    await syncAdRewardCoinsIntoSettings(adReward.coinEarnedFromAd);
 
     return res.status(200).json({
       status: true,

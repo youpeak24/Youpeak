@@ -647,6 +647,18 @@ function createFirestoreModel(modelName, schema) {
     return this;
   };
 
+  // Same gap as .save() above, found via the same audit: several admin
+  // controllers call instance.deleteOne() (not the static
+  // Model.deleteOne(query)) on a document returned by findById/findOne —
+  // e.g. adRewardCoin/contact/dailyRewardCoin/FAQ/premiumPlan/withdraw
+  // delete handlers, and OTP cleanup. With no prototype method, every one
+  // of those threw "X.deleteOne is not a function" on every call.
+  ModelConstructor.prototype.deleteOne = async function () {
+    await firestoreDb.delete(collectionName, this._id || this.id);
+    return this;
+  };
+  ModelConstructor.prototype.remove = ModelConstructor.prototype.deleteOne;
+
   ModelConstructor.modelName = modelName;
   ModelConstructor.collectionName = collectionName;
   ModelConstructor.schema = schema || null;
