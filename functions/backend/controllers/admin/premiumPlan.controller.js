@@ -2,6 +2,7 @@ const PremiumPlan = require("../../models/premiumPlan.model");
 
 //import model
 const PremiumPlanHistory = require("../../models/premiumPlanHistory.model");
+const History = require("../../models/history.model");
 
 //create premiumPlan by admin
 exports.store = async (req, res) => {
@@ -152,9 +153,6 @@ exports.getpremiumPlanHistory = async (req, res) => {
                 nickName: 1,
                 image: 1,
                 uniqueId: 1,
-                "plan.amount": 1,
-                "plan.validity": 1,
-                "plan.validityType": 1,
               },
             },
           ],
@@ -193,9 +191,14 @@ exports.getpremiumPlanHistory = async (req, res) => {
                 nickName: "$user.nickName",
                 userUniqueId: "$user.uniqueId",
                 image: "$user.image",
-                amount: "$user.plan.amount",
-                validity: "$user.plan.validity",
-                validityType: "$user.plan.validityType",
+                // Snapshot captured at purchase time on the history record
+                // itself (see premiumPlanHistory.model.js) — NOT the
+                // user's current plan, which can since have changed,
+                // renewed, or expired, making every past row show today's
+                // price instead of what was actually paid.
+                amount: 1,
+                validity: 1,
+                validityType: 1,
               },
             },
           ],

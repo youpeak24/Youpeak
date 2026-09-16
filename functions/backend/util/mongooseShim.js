@@ -400,12 +400,15 @@ function matchesQueryGuards(doc, query) {
 }
 
 class FirestoreQuery {
-  constructor(collectionName, opType, query = {}, extraData = null) {
+  constructor(collectionName, opType, query = {}, extraData = null, schema = null, ModelCtor = null) {
     this.collectionName = collectionName;
     this.opType = opType;
     this.query = query;
     this.extraData = extraData;
     this.options = { sort: null, limit: null, skip: 0 };
+    this.schema = schema || null;
+    this.ModelCtor = ModelCtor || null;
+    this._populate = [];
   }
 
   sort(sortObj) {
@@ -434,8 +437,28 @@ class FirestoreQuery {
     return this;
   }
 
+  // select() stays a no-op: too many existing call sites use it purely as
+  // documentation while still reading fields outside the selected list
+  // elsewhere in the same function — since it was always a no-op, those
+  // fields were always present. Making it real risks breaking all of them.
+  // populate() below is different: what it attaches (a resolved
+  // sub-document under the ref field) never existed before, so making it
+  // real can't break anything that used to read more off it.
   select() { return this; }
-  populate() { return this; }
+
+  // Real Mongoose: .populate("path", "select fields") or .populate({path, select}).
+  // Resolved against the field's `ref` from the Schema passed in at model
+  // creation (see createFirestoreModel / mongooseShim.model below) — the
+  // exact same string used to register that target model, so it normalises
+  // to the same Firestore collection the target model itself reads/writes.
+  populate(pathOrSpec, select) {
+    if (pathOrSpec && typeof pathOrSpec === "object") {
+      this._populate.push({ path: pathOrSpec.path, select: pathOrSpec.select });
+    } else if (pathOrSpec) {
+      this._populate.push({ path: pathOrSpec, select });
+    }
+    return this;
+  }
   lean() { return this; }
   exec() { return this.execute(); }
 
@@ -464,12 +487,13 @@ class FirestoreQuery {
   }
 
   async execute() {
+    let result;
     if (this.opType === "find") {
-      return await firestoreDb.find(this.collectionName, this.query, this.options);
+      result = await firestoreDb.find(this.collectionName, this.query, this.options);
     } else if (this.opType === "findOne") {
-      return await firestoreDb.findOne(this.collectionName, this.query);
+      result = await firestoreDb.findOne(this.collectionName, this.query);
     } else if (this.opType === "findById") {
-      return await firestoreDb.findById(this.collectionName, this.query);
+      result = await firestoreDb.findById(this.collectionName, this.query);
     } else if (this.opType === "count" || this.opType === "countDocuments") {
       return await firestoreDb.countDocuments(this.collectionName, this.query);
     } else if (this.opType === "create") {
@@ -478,8 +502,116 @@ class FirestoreQuery {
       return await firestoreDb.update(this.collectionName, this.query, this.extraData);
     } else if (this.opType === "delete") {
       return await firestoreDb.delete(this.collectionName, this.query);
+    } else {
+      return null;
     }
-    return null;
+
+    // Real Mongoose returns Document instances from find/findOne/findById —
+    // callers can mutate fields and call .save() on them. This shim used to
+    // hand back plain data objects instead, so every "load it, mutate a
+    // field, call .save()" pattern in the codebase threw
+    // "X.save is not a function" — a real, live crash (confirmed: editing a
+    // sound/category/FAQ/ad-reward/withdraw-method/premium-plan, toggling
+    // advertise/withdraw settings, fraud user block/restrict, and comment
+    // like/dislike/reply all hit this). Wrapping results in the model's own
+    // constructor restores real .save() via the prototype chain, and is
+    // otherwise behaviourally identical to a plain object (JSON.stringify,
+    // property access, spread, Object.keys all work the same) — nothing
+    // that currently reads plain fields off a query result can break.
+    if (this.ModelCtor && result) {
+      if (Array.isArray(result)) result = result.map((row) => (row ? new this.ModelCtor(row) : row));
+      else result = new this.ModelCtor(result);
+    }
+
+    if (result && this._populate.length && this.schema) {
+      const rows = Array.isArray(result) ? result : [result];
+      if (rows.length) await applyPopulate(rows, this._populate, this.schema);
+    }
+    return result;
+  }
+}
+
+// findByIdAndUpdate/findOneAndUpdate resolve a single document like a plain
+// async function, but at least one call site in this codebase chains
+// .populate(...).lean() onto them before awaiting (real Mongoose supports
+// this). A bare `async function` returns a native Promise, which has no
+// .populate — that chain would throw. This wraps an async factory in a
+// thenable that records .populate() calls made before the await and applies
+// them once the factory resolves; awaiting it directly (no chaining) works
+// exactly like before.
+function makeChainable(promiseFactory, schema, ModelCtor) {
+  const specs = [];
+  const self = {
+    populate(pathOrSpec, select) {
+      if (pathOrSpec && typeof pathOrSpec === "object") specs.push({ path: pathOrSpec.path, select: pathOrSpec.select });
+      else if (pathOrSpec) specs.push({ path: pathOrSpec, select });
+      return self;
+    },
+    select() { return self; },
+    lean() { return self; },
+    then(resolve, reject) {
+      return promiseFactory()
+        .then(async (result) => {
+          if (ModelCtor && result) result = new ModelCtor(result);
+          if (result && specs.length && schema) {
+            const rows = Array.isArray(result) ? result : [result];
+            if (rows.length) await applyPopulate(rows, specs, schema);
+          }
+          return result;
+        })
+        .then(resolve, reject);
+    },
+    catch(reject) {
+      return self.then(undefined, reject);
+    },
+  };
+  return self;
+}
+
+// Resolve a schema field's `{ref: "ModelName"}` (possibly inside an array
+// entry, e.g. `[{type: ObjectId, ref: "Video"}]`) and replace the raw id(s)
+// on each row with the fetched document(s). ref is passed straight through
+// to firestoreDb.findById(), which normalises it the same way the target
+// model's own collectionName was normalised at creation — both sides derive
+// from the identical registered model name, so they always agree.
+async function applyPopulate(rows, specs, schema) {
+  for (const spec of specs) {
+    const path = spec && spec.path;
+    if (!path) continue;
+    let fieldDef = schema.definition ? schema.definition[path] : null;
+    if (Array.isArray(fieldDef)) fieldDef = fieldDef[0];
+    const ref = fieldDef && fieldDef.ref;
+    if (!ref) continue; // no ref info — leave the raw id(s) alone rather than guess
+
+    const ids = new Set();
+    for (const row of rows) {
+      const v = row[path];
+      if (Array.isArray(v)) v.forEach((x) => { if (x != null && x !== "") ids.add(String(x)); });
+      else if (v != null && v !== "") ids.add(String(v));
+    }
+    if (!ids.size) continue;
+
+    const idList = [...ids];
+    const fetched = await Promise.all(idList.map((id) => firestoreDb.findById(ref, id).catch(() => null)));
+    const byId = {};
+    idList.forEach((id, i) => { byId[id] = fetched[i]; });
+
+    const selectFields = spec.select ? String(spec.select).trim().split(/\s+/).filter(Boolean) : null;
+    const project = (doc) => {
+      if (!doc || !selectFields) return doc || null;
+      const out = { _id: doc._id, id: doc.id };
+      for (const f of selectFields) if (!f.startsWith("-")) out[f] = doc[f];
+      return out;
+    };
+
+    for (const row of rows) {
+      const v = row[path];
+      if (Array.isArray(v)) {
+        row[path] = v.map((x) => project(byId[String(x)])).filter(Boolean);
+      } else if (v != null && v !== "") {
+        row[path] = project(byId[String(v)]) || null;
+      }
+    }
   }
 }
 
@@ -502,7 +634,7 @@ ObjectId.prototype.valueOf = function () { return this._id; };
 ObjectId.prototype.toJSON = function () { return this._id; };
 ObjectId.isValid = (id) => Boolean(id);
 
-function createFirestoreModel(modelName) {
+function createFirestoreModel(modelName, schema) {
   const collectionName = firestoreDb.normalizeCollectionName(modelName);
 
   function ModelConstructor(data = {}) {
@@ -517,36 +649,39 @@ function createFirestoreModel(modelName) {
 
   ModelConstructor.modelName = modelName;
   ModelConstructor.collectionName = collectionName;
+  ModelConstructor.schema = schema || null;
 
   ModelConstructor.find = function (query = {}) {
-    return new FirestoreQuery(collectionName, "find", query);
+    return new FirestoreQuery(collectionName, "find", query, null, schema, ModelConstructor);
   };
 
   ModelConstructor.findOne = function (query = {}) {
-    return new FirestoreQuery(collectionName, "findOne", query);
+    return new FirestoreQuery(collectionName, "findOne", query, null, schema, ModelConstructor);
   };
 
   ModelConstructor.findById = function (id) {
-    return new FirestoreQuery(collectionName, "findById", id);
+    return new FirestoreQuery(collectionName, "findById", id, null, schema, ModelConstructor);
   };
 
   ModelConstructor.countDocuments = function (query = {}) {
-    return new FirestoreQuery(collectionName, "countDocuments", query);
+    return new FirestoreQuery(collectionName, "countDocuments", query, null, schema);
   };
 
   ModelConstructor.count = function (query = {}) {
-    return new FirestoreQuery(collectionName, "count", query);
+    return new FirestoreQuery(collectionName, "count", query, null, schema);
   };
 
   ModelConstructor.create = async function (data) {
-    return await firestoreDb.create(collectionName, data);
+    const created = await firestoreDb.create(collectionName, data);
+    return created ? new ModelConstructor(created) : created;
   };
 
   ModelConstructor.insertMany = async function (dataArray) {
     if (!Array.isArray(dataArray)) return [];
     const results = [];
     for (const item of dataArray) {
-      results.push(await firestoreDb.create(collectionName, item));
+      const created = await firestoreDb.create(collectionName, item);
+      results.push(created ? new ModelConstructor(created) : created);
     }
     return results;
   };
@@ -588,24 +723,28 @@ function createFirestoreModel(modelName) {
     return { matchedCount: items.length, modifiedCount: modified, acknowledged: true };
   };
 
-  ModelConstructor.findByIdAndUpdate = async function (id, updateData = {}, options = {}) {
-    const existing = await firestoreDb.findById(collectionName, id);
-    if (!existing) return null;
-    const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
-    return options && options.new === false ? existing : updated;
+  ModelConstructor.findByIdAndUpdate = function (id, updateData = {}, options = {}) {
+    return makeChainable(async () => {
+      const existing = await firestoreDb.findById(collectionName, id);
+      if (!existing) return null;
+      const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
+      return options && options.new === false ? existing : updated;
+    }, schema, ModelConstructor);
   };
 
-  ModelConstructor.findOneAndUpdate = async function (query = {}, updateData = {}, options = {}) {
-    const existing = await firestoreDb.findOne(collectionName, query);
-    if (!existing) {
-      if (options && options.upsert) {
-        return await firestoreDb.create(collectionName, buildUpdatePayload({}, updateData));
+  ModelConstructor.findOneAndUpdate = function (query = {}, updateData = {}, options = {}) {
+    return makeChainable(async () => {
+      const existing = await firestoreDb.findOne(collectionName, query);
+      if (!existing) {
+        if (options && options.upsert) {
+          return await firestoreDb.create(collectionName, buildUpdatePayload({}, updateData));
+        }
+        return null;
       }
-      return null;
-    }
-    if (!matchesQueryGuards(existing, query)) return existing;
-    const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
-    return options && options.new === false ? existing : updated;
+      if (!matchesQueryGuards(existing, query)) return existing;
+      const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
+      return options && options.new === false ? existing : updated;
+    }, schema, ModelConstructor);
   };
 
   ModelConstructor.findByIdAndDelete = async function (id) {
@@ -693,7 +832,7 @@ const mongooseShim = {
   Schema,
   Types: { ObjectId },
   model: function (name, schema) {
-    return createFirestoreModel(name);
+    return createFirestoreModel(name, schema);
   },
   connect: async () => {},
   connection: { readyState: 1, on() {} }

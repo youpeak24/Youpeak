@@ -142,6 +142,13 @@ class FirestoreDbService {
       creatorfundingcampaign: "creatorFundingCampaigns", creatorfundingcampaigns: "creatorFundingCampaigns",
       campaignbacking: "campaignBackings", campaignbackings: "campaignBackings",
       localbusinessad: "localBusinessAds", localbusinessads: "localBusinessAds",
+      // Admin coinplan.controller.js used the raw db wrapper with the
+      // literal string "coinplans" while every client/payment path uses
+      // the CoinPlan Mongoose-shim model (-> collection "CoinPlan") — two
+      // different Firestore collections, so an admin-created coin plan was
+      // invisible to the app and unpurchasable. Both spellings now resolve
+      // to the one collection the client/payment side already depends on.
+      coinplan: "CoinPlan", coinplans: "CoinPlan",
     };
     return MAP[key] || name;
   }
