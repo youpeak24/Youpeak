@@ -81,7 +81,13 @@ export const userReducer = (state = initialState, action) => {
         ? [action.payload.data]
         : [];
 
-      const applyBlockUpdate = (list) =>
+      // Merges the FULL updated user object back into the list, not just
+      // isBlock — this action is reused by togglePaymentStatus (which
+      // never touches isBlock at all), so a hard-coded isBlock-only merge
+      // silently dropped every paymentStatus update: the toggle switch
+      // would visually reset because the state it read from was never
+      // patched.
+      const applyUserPatch = (list) =>
         list.map((data) => {
           if (!userIds.includes(data._id)) return data;
           const matchingUserData = updatedUsers.find(
@@ -90,7 +96,7 @@ export const userReducer = (state = initialState, action) => {
           if (!matchingUserData) return data;
           return {
             ...data,
-            isBlock: matchingUserData.isBlock,
+            ...matchingUserData,
           };
         });
 
@@ -98,11 +104,11 @@ export const userReducer = (state = initialState, action) => {
         ...state,
         user:
           action.payload.type === "user"
-            ? applyBlockUpdate(state.user)
+            ? applyUserPatch(state.user)
             : state.user,
         fakeUser:
           action.payload.type === "fakeUser"
-            ? applyBlockUpdate(state.fakeUser)
+            ? applyUserPatch(state.fakeUser)
             : state.fakeUser,
       };
     }
