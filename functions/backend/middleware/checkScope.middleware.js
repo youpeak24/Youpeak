@@ -8,9 +8,11 @@ const checkScope = async (req, res, next) => {
 
     const role = req.admin.role || "AGENCY_ADMIN";
     const agencyId = req.admin.agencyId || null;
+    const partnerUserId = req.admin.partnerUserId || null;
 
     req.adminRole = role;
     req.agencyId = agencyId;
+    req.partnerUserId = partnerUserId;
 
     // Agency admins are always constrained to their own agency's data.
     req.getScopeFilter = (baseFilter = {}) => {

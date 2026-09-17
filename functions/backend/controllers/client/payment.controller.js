@@ -14,6 +14,8 @@
 "use strict";
 
 const db = require("../../util/connection");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const payment = require("../../util/payment.service");
 const referralService = require("../../util/referral.service");
 const revenueSplit = require("../../util/revenueSplit.service");
@@ -287,13 +289,14 @@ async function fulfilDigitalPartnerLicense(txn) {
     });
   }
 
+  const buyer = await db.findById("users", txn.userId);
+
   // District Partner override — 20% of the license fee, per the V4 chart's
   // "Digital Partner" line (digital platform promotions / network expansion /
   // user acquisition within the district).
   try {
     const rate = num((global.settingJSON || {}).districtPartnerRates?.digitalPartnerLicense, 20);
     if (rate > 0 && amount > 0) {
-      const buyer = await db.findById("users", txn.userId);
       await recordAgencyCommission({
         sourceType: "DIGITAL_PARTNER_LICENSE",
         grossAmount: amount,
@@ -305,7 +308,38 @@ async function fulfilDigitalPartnerLicense(txn) {
     }
   } catch (e) { /* ignore */ }
 
-  return { isDigitalPartner: true, adCreditsBalance };
+  // Web Portal account — mirrors how a District Partner (Agency) gets a
+  // matching AGENCY_ADMIN login the moment the Agency is created
+  // (agency.controller.js store()). Digital Partners don't have that
+  // Super-Admin-driven creation moment — they self-serve by paying for the
+  // license — so this fires here instead, at the equivalent "now they're a
+  // real partner" point. A random password is generated since there's no
+  // password field in this flow; it's returned once below so the app can
+  // show it immediately, and stays in "temporary" mode (isDefaultPassword)
+  // so the dashboard keeps handing back a fresh valid one until the partner
+  // sets their own via the portal (see client/partner.controller.js
+  // getDashboard, and admin.controller.js setPassword/updatePassword).
+  let portalCredentials = null;
+  try {
+    const existingAdmin = await db.findOne("admins", { partnerUserId: txn.userId });
+    if (!existingAdmin && buyer?.email) {
+      const tempPassword = crypto.randomBytes(9).toString("hex");
+      await db.create("admins", {
+        _id: "admin_partner_" + Date.now(),
+        name: buyer.fullName || buyer.email,
+        email: String(buyer.email).trim().toLowerCase(),
+        password: bcrypt.hashSync(tempPassword, 10),
+        role: "DIGITAL_PARTNER_ADMIN",
+        partnerUserId: txn.userId,
+        isDefaultPassword: true,
+      });
+      portalCredentials = { email: buyer.email, password: tempPassword };
+    }
+  } catch (e) {
+    console.error("Digital Partner portal account creation failed:", e.message);
+  }
+
+  return { isDigitalPartner: true, adCreditsBalance, portalCredentials };
 }
 
 // Creator Funding — a verified backing. Records the backing, bumps the

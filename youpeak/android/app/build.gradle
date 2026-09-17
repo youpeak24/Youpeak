@@ -66,9 +66,15 @@ android {
         multiDexEnabled true
         versionCode 2
         versionName "1.1.2"
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
-        }
+        // A hardcoded ndk.abiFilters here (all 3 ABIs — the same set
+        // that's already bundled by default, so removing it doesn't
+        // change a plain `flutter build apk --release`) directly
+        // conflicts with `flutter build apk --split-per-abi`: that flag
+        // makes the Flutter Gradle plugin inject its own `splits { abi {
+        // ... } }` block, and Gradle refuses to have both ndk.abiFilters
+        // and splits.abi.filters set at once ("Conflicting
+        // configuration"). Removing this lets --split-per-abi's own
+        // filter list control which ABIs get built.
     }
 
     signingConfigs {

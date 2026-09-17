@@ -125,22 +125,64 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-// Admin Create
+// Admin Create — reachable two ways:
+//   1. An authenticated SUPER_ADMIN creating another admin from inside the
+//      panel (route.js does NOT attach AdminMiddleware here, since path 2
+//      below must also work unauthenticated — so this function does its
+//      own optional JWT check).
+//   2. The public Registration page (admin/frontend Registration.js,
+//      mounted at "/" — the panel's own landing page) — gated by a
+//      "Purchase Code" field that LOOKED like a real gate but was never
+//      actually validated server-side: req.body.code was accepted by the
+//      frontend form and silently ignored by this handler, and the only
+//      guard (`req.admin && ...`) evaluated to `undefined && ...` = false
+//      for every unauthenticated request — i.e. it let every request
+//      through and created a real AGENCY_ADMIN account, no code required.
+//      Anyone who found this panel's URL could self-register full admin
+//      access. Now requires ADMIN_SIGNUP_CODE (env var) to actually match
+//      req.body.code; if that env var isn't set at all, path 2 is refused
+//      entirely (fail closed, matching checkAccess.js's own precedent) —
+//      set it in the deployment's env vars to re-enable public signup, and
+//      share the code carefully since anyone holding it can self-register.
 exports.create = async (req, res) => {
   try {
+    // `bySuperAdmin` vs the code-gated path are NOT equally trusted — the
+    // signup code is meant for the public Registration page (and could
+    // plausibly be shared more widely, e.g. distributed as a product
+    // "purchase code"), so it must never be able to mint a SUPER_ADMIN
+    // account, only a plain AGENCY_ADMIN. Only a genuine authenticated
+    // SUPER_ADMIN JWT may choose the role.
+    let bySuperAdmin = false;
+    const Authorization = req.get && req.get("Authorization");
+    if (Authorization && process.env.JWT_SECRET) {
+      try {
+        const decoded = jwt.verify(Authorization, process.env.JWT_SECRET);
+        const caller = decoded && (decoded._id || decoded.id) && (await db.findById("admins", decoded._id || decoded.id));
+        if (caller && caller.role === "SUPER_ADMIN" && !caller.isBlock && caller.isActive !== false) {
+          bySuperAdmin = true;
+        }
+      } catch (e) { /* invalid/expired token — fall through to the signup-code path */ }
+    }
+    let byCode = false;
+    if (!bySuperAdmin) {
+      const signupCode = process.env.ADMIN_SIGNUP_CODE;
+      if (signupCode && req.body?.code && String(req.body.code) === signupCode) {
+        byCode = true;
+      }
+    }
+    if (!bySuperAdmin && !byCode) {
+      return res.status(403).json({ status: false, message: "Only a super admin, or a valid purchase code, can create admin accounts" });
+    }
+
     const { name, email, password, role } = req.body;
     if (!email || !password) {
       return res.status(200).json({ status: false, message: "Email and password are required" });
-    }
-    // Only a super admin may create other admins.
-    if (req.admin && req.admin.role !== "SUPER_ADMIN") {
-      return res.status(403).json({ status: false, message: "Only a super admin can create admin accounts" });
     }
     const newAdmin = await db.create("admins", {
       name,
       email: String(email).trim().toLowerCase(),
       password: hashPassword(password),
-      role: role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "AGENCY_ADMIN",
+      role: bySuperAdmin && role === "SUPER_ADMIN" ? "SUPER_ADMIN" : "AGENCY_ADMIN",
       agencyId: req.body.agencyId || null,
       isActive: true,
     });
@@ -151,11 +193,21 @@ exports.create = async (req, res) => {
   }
 };
 
-// Admin Update
+// Admin Update — was `db.update(adminId, req.body)`, an unrestricted
+// pass-through: any authenticated admin (AGENCY_ADMIN, DIGITAL_PARTNER_ADMIN)
+// could PATCH their own doc with {role:"SUPER_ADMIN"} and self-promote.
+// Restricted to genuinely self-service profile fields; role/agencyId/
+// partnerUserId/isActive/isBlock/password/email all require a super admin
+// acting on someone else via a dedicated endpoint (none exists yet — not
+// needed for this change).
 exports.update = async (req, res) => {
   try {
     const adminId = req.admin?._id || req.admin?.id;
-    const updated = await db.update("admins", adminId, req.body);
+    const patch = {};
+    for (const k of ["name", "image"]) {
+      if (req.body[k] !== undefined) patch[k] = req.body[k];
+    }
+    const updated = await db.update("admins", adminId, patch);
     return res.status(200).json({ status: true, message: "Admin updated successfully", admin: updated });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -179,7 +231,7 @@ exports.updatePassword = async (req, res) => {
       return res.status(200).json({ status: false, message: "Old password does not match" });
     }
 
-    await db.update("admins", adminId, { password: hashPassword(newPassword) });
+    await db.update("admins", adminId, { password: hashPassword(newPassword), isDefaultPassword: false });
     return res.status(200).json({ status: true, message: "Password updated successfully" });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -194,7 +246,7 @@ exports.setPassword = async (req, res) => {
     if (!newPassword || String(newPassword).length < 8) {
       return res.status(200).json({ status: false, message: "Password must be at least 8 characters" });
     }
-    await db.update("admins", adminId, { password: hashPassword(newPassword) });
+    await db.update("admins", adminId, { password: hashPassword(newPassword), isDefaultPassword: false });
     return res.status(200).json({ status: true, message: "Password set successfully" });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
