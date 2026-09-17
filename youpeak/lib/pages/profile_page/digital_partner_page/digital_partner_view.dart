@@ -83,6 +83,10 @@ class _DigitalPartnerViewState extends State<DigitalPartnerView> {
         if (verify["status"] == true) {
           CustomToast.show(AppStrings.digitalPartnerActivated.tr);
           await loadDashboard();
+          final creds = (verify["fulfilment"] as Map?)?["portalCredentials"] as Map?;
+          if (creds != null && creds["password"] != null && mounted) {
+            showPortalCredentialsDialog(email: creds["email"]?.toString() ?? "", password: creds["password"].toString());
+          }
         } else {
           CustomToast.show(verify["message"]?.toString() ?? AppStrings.someThingWentWrong.tr);
         }
@@ -93,6 +97,61 @@ class _DigitalPartnerViewState extends State<DigitalPartnerView> {
       },
     );
   }
+
+  void showPortalCredentialsDialog({required String email, required String password}) {
+    Get.dialog(
+      Obx(
+        () => AlertDialog(
+          backgroundColor: isDarkMode.value ? AppColor.secondDarkMode : AppColor.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(AppStrings.portalCredentialsTitle.tr, style: GoogleFonts.urbanist(fontSize: 16, fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(AppStrings.portalCredentialsSubtitle.tr, style: GoogleFonts.urbanist(fontSize: 12, color: AppColor.grey)),
+              const SizedBox(height: 16),
+              portalCredentialRow(AppStrings.portalCredentialsEmail.tr, email),
+              const SizedBox(height: 10),
+              portalCredentialRow(AppStrings.portalCredentialsPassword.tr, password),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text(AppStrings.portalCredentialsGotIt.tr, style: GoogleFonts.urbanist(fontWeight: FontWeight.w700, color: AppColor.primaryColor)),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  Widget portalCredentialRow(String label, String value) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(color: AppColor.primaryColor.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: GoogleFonts.urbanist(fontSize: 11, color: AppColor.grey)),
+                  Text(value, style: GoogleFonts.urbanist(fontSize: 13, fontWeight: FontWeight.w600)),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: value));
+                CustomToast.show(AppStrings.portalCredentialsCopied.tr);
+              },
+              child: Icon(Icons.copy, size: 18, color: AppColor.primaryColor),
+            ),
+          ],
+        ),
+      );
 
   BoxDecoration cardDecoration() => BoxDecoration(
         color: isDarkMode.value ? AppColor.secondDarkMode : AppColor.white,
@@ -202,6 +261,8 @@ class _DigitalPartnerViewState extends State<DigitalPartnerView> {
     final license = Map<String, dynamic>.from(dashboard!["license"] ?? {});
     final recentReferrals = List<Map<String, dynamic>>.from((dashboard!["recentReferrals"] as List? ?? []).map((r) => Map<String, dynamic>.from(r)));
     final status = dashboard!["partnerStatus"]?.toString() ?? "ACTIVE";
+    final portalCredentials = dashboard!["portalCredentials"] as Map?;
+    final showPortalBanner = portalCredentials != null && portalCredentials["isTemporary"] == true && portalCredentials["password"] != null;
 
     return RefreshIndicator(
       onRefresh: loadDashboard,
@@ -222,6 +283,10 @@ class _DigitalPartnerViewState extends State<DigitalPartnerView> {
                   ),
                   child: Text(status, style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w700, color: status == "ACTIVE" ? AppColor.primaryColor : AppColor.grey)),
                 ),
+                if (showPortalBanner) ...[
+                  const SizedBox(height: 16),
+                  portalCredentialsBanner(portalCredentials),
+                ],
                 const SizedBox(height: 16),
                 Row(
                   children: [
@@ -278,6 +343,31 @@ class _DigitalPartnerViewState extends State<DigitalPartnerView> {
       ),
     );
   }
+
+  Widget portalCredentialsBanner(Map portalCredentials) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColor.primaryColor.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColor.primaryColor.withOpacity(0.25)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.info_outline, size: 16, color: AppColor.primaryColor),
+                const SizedBox(width: 8),
+                Expanded(child: Text(AppStrings.portalCredentialsBannerTitle.tr, style: GoogleFonts.urbanist(fontSize: 12, fontWeight: FontWeight.w700))),
+              ],
+            ),
+            const SizedBox(height: 10),
+            portalCredentialRow(AppStrings.portalCredentialsEmail.tr, portalCredentials["email"]?.toString() ?? "-"),
+            const SizedBox(height: 8),
+            portalCredentialRow(AppStrings.portalCredentialsPassword.tr, portalCredentials["password"].toString()),
+          ],
+        ),
+      );
 
   Widget statCard(String label, String value) => Container(
         padding: const EdgeInsets.all(16),

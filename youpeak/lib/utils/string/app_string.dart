@@ -181,6 +181,14 @@ abstract class AppStrings {
   static String activatedOn = "activatedOn";
   static String recentReferralsLabel = "recentReferralsLabel";
   static String noReferralsYet = "noReferralsYet";
+  static String portalCredentialsTitle = "portalCredentialsTitle";
+  static String portalCredentialsSubtitle = "portalCredentialsSubtitle";
+  static String portalCredentialsEmail = "portalCredentialsEmail";
+  static String portalCredentialsPassword = "portalCredentialsPassword";
+  static String portalCredentialsCopied = "portalCredentialsCopied";
+  static String portalCredentialsGotIt = "portalCredentialsGotIt";
+  static String portalCredentialsBannerTitle = "portalCredentialsBannerTitle";
+  static String portalCredentialsCopy = "portalCredentialsCopy";
   static String stripe = "stripe";
   static String googlePay = "googlePay";
   static String applePay = "applePay";
