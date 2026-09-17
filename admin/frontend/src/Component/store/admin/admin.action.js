@@ -55,6 +55,8 @@ export const loginAdmin = (login, navigate, onFinish) => async (dispatch) => {
         setTimeout(() => {
           if (res.data.admin?.role === "AGENCY_ADMIN") {
             navigate("/admin/agencyDashboard");
+          } else if (res.data.admin?.role === "DIGITAL_PARTNER_ADMIN") {
+            navigate("/admin/partnerDashboard");
           } else {
             navigate("/admin/mainDashboard");
           }

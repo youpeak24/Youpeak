@@ -55,6 +55,10 @@ module.exports = async (req, res, next) => {
       const path = req.originalUrl.split("?")[0];
       const allowed =
         path.startsWith("/admin/partnerPortal") ||
+        // Ad creative upload for the local business ad form — shared with
+        // every other admin page that uploads an image (util/AwsFunction.js
+        // uploadFile()), not partner-specific data, safe to allow.
+        path === "/admin/file/upload-file" ||
         ["/admin/admin/profile", "/admin/admin/update", "/admin/admin/updatePassword", "/admin/admin/setPassword"].includes(path);
       if (!allowed) {
         return res.status(403).json({ status: false, message: "This account only has access to the Digital Partner portal." });
