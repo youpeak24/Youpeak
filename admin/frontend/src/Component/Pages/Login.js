@@ -96,7 +96,7 @@ const Login = (props) => {
 
       <div className="d-flex overflow-hidden" style={{ height: "100vh" }}>
         <div className="d-lg-flex d-none col-lg-7 col-xl-6 p-5 h-100 flex-column justify-content-between align-items-start" style={{
-          background: "linear-gradient(135deg, #0A7A44 0%, #1E4D2B 50%, #2D6A4F 100%)",
+          background: "var(--new-color-gradient)",
           color: "#ffffff"
         }}>
           <div>
@@ -129,8 +129,7 @@ const Login = (props) => {
               </div>
               <h2 className="fw-bold" style={{ color: "#1C1C1E" }}>Login to your account</h2>
               <p style={{ color: "#55606E", fontSize: "0.95rem" }}>
-                Let's connect, chat, and spark real connections. Enter your
-                credentials to continue your journey on {projectName}.
+                Enter your credentials to access your {projectName} admin console.
               </p>
               <Input
                 label={`Email`}
@@ -186,7 +185,7 @@ const Login = (props) => {
               <div className="w-100" >
                 <h4
                   className="cursor-pointer fs-6 text-end text-secondary"
-                  style={{ fontWeight: 600, fontSize: "small", color: "#0A7A44" }}
+                  style={{ fontWeight: 600, fontSize: "small", color: "var(--new-color)" }}
                   onClick={() => navigate("/forgotPassword")}
                 >
                   Forgot Password ?
@@ -195,8 +194,7 @@ const Login = (props) => {
               <div className="d-flex flex-column justify-content-center w-100 gap-3 mt-4">
                 <Button
                   btnName={loading ? "Loading..." : "Login"}
-                  newClass={"login-btn login w-100 py-2 fw-medium"}
-                  style={{ backgroundColor: "#0A7A44", borderColor: "#0A7A44", color: "#FFFFFF" }}
+                  newClass={"submit-btn w-100 fw-medium"}
                   onClick={handleSubmit}
                   disabled={loading}
                 />
