@@ -159,6 +159,17 @@ const Sidebar = () => {
           ],
         },
         {
+          heading: "DIGITAL PARTNER",
+          items: [
+            {
+              name: "Manage Digital Partners",
+              path: "/admin/manageDigitalPartner",
+              navIcon: <IconBellDollar />,
+              onClick: handleCloseFunction,
+            },
+          ],
+        },
+        {
           heading: "USER MANAGEMENT",
           items: [
             {
