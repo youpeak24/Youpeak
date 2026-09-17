@@ -1,5 +1,7 @@
 const db = require("../../util/connection");
 
+const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
+
 function sanitizeAgency(agency) {
   if (!agency) return agency;
   const { password, ...rest } = agency;
@@ -70,5 +72,54 @@ exports.getAgencyReport = async (req, res) => {
         commissionBySource: {},
       },
     });
+  }
+};
+
+// GET /admin/agencyReport/getDigitalPartners?agencyId=…
+// A District Partner earns a commissionBySource["DIGITAL_PARTNER_LICENSE"]
+// override the moment a Digital Partner in their territory activates (see
+// util/digitalPartner.service.js), but getAgencyReport only ever returned an
+// aggregate count/amount for that — never who those partners actually are.
+// Same agencyId scoping as getAgencyReport (AGENCY_ADMIN forced to their own
+// territory; SUPER_ADMIN can browse any agency, or all of them unscoped).
+exports.getDigitalPartners = async (req, res) => {
+  try {
+    const { agencyId } = req.query;
+
+    let targetAgencyId = agencyId;
+    if (req.adminRole === "AGENCY_ADMIN" && req.agencyId) {
+      targetAgencyId = req.agencyId;
+    }
+
+    const users = await db.find(
+      "users",
+      targetAgencyId ? { agencyId: targetAgencyId, isDigitalPartner: true } : { isDigitalPartner: true }
+    );
+
+    const partners = await Promise.all(
+      users.map(async (u) => {
+        const userId = u._id || u.id;
+        const profile = await db.findOne("PartnerProfile", { userId });
+        return {
+          userId,
+          fullName: u.fullName || "",
+          email: u.email || "",
+          state: u.state || "",
+          district: u.district || "",
+          partnerStatus: u.partnerStatus || "NONE",
+          licenseFeePaid: num(profile?.licenseFeePaid),
+          adCreditsBalance: num(profile?.adCreditsBalance),
+          totalReferrals: num(profile?.totalReferrals),
+          totalEarnings: num(profile?.totalEarnings),
+          activatedAt: profile?.activatedAt || null,
+        };
+      })
+    );
+
+    partners.sort((a, b) => new Date(b.activatedAt || 0) - new Date(a.activatedAt || 0));
+    return res.status(200).json({ status: true, message: "Digital Partners in this territory.", partners });
+  } catch (error) {
+    console.error("agencyReport.getDigitalPartners error:", error);
+    return res.status(500).json({ status: false, message: error.message });
   }
 };
