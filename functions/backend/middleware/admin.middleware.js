@@ -44,6 +44,23 @@ module.exports = async (req, res, next) => {
       return res.status(403).json({ status: false, message: "This admin account is disabled." });
     }
 
+    // DIGITAL_PARTNER_ADMIN is a much lower-trust, self-service-created
+    // role than AGENCY_ADMIN (potentially many accounts, one per paying
+    // Digital Partner, vs a handful of manually-vetted Agencies) — every
+    // other admin route is otherwise reachable by ANY valid admin JWT
+    // regardless of role (the rest of the panel relies on the FRONTEND
+    // hiding menus, not the backend enforcing them). Confine this role to
+    // its own portal namespace plus basic self-service account routes.
+    if (admin.role === "DIGITAL_PARTNER_ADMIN") {
+      const path = req.originalUrl.split("?")[0];
+      const allowed =
+        path.startsWith("/admin/partnerPortal") ||
+        ["/admin/admin/profile", "/admin/admin/update", "/admin/admin/updatePassword", "/admin/admin/setPassword"].includes(path);
+      if (!allowed) {
+        return res.status(403).json({ status: false, message: "This account only has access to the Digital Partner portal." });
+      }
+    }
+
     req.admin = admin;
     next();
   } catch (error) {

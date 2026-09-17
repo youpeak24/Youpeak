@@ -12,6 +12,8 @@
  * to every user, partner or not.
  */
 const db = require("../../util/connection");
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const payment = require("./payment.controller");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
@@ -56,11 +58,36 @@ exports.getDashboard = async (req, res) => {
     const nameById = {};
     referredUsers.forEach((u, i) => { if (u) nameById[referredIds[i]] = u.fullName || u.nickName || "Youpeak User"; });
 
+    // Web Portal login — see fulfilDigitalPartnerLicense in
+    // payment.controller.js for why this exists. While the account is
+    // still on its auto-generated password (isDefaultPassword), regenerate
+    // a fresh one on every dashboard fetch so a forgotten/lost password is
+    // always recoverable from inside the app instead of a dead end (the
+    // admin panel's own forgotPassword is a non-functional stub). Once the
+    // partner sets their own password via the portal, this stops firing.
+    let portalCredentials = null;
+    try {
+      const portalAdmin = await db.findOne("admins", { partnerUserId: String(userId) });
+      if (portalAdmin && portalAdmin.isDefaultPassword) {
+        const freshPassword = crypto.randomBytes(9).toString("hex");
+        await db.update("admins", portalAdmin._id || portalAdmin.id, {
+          password: bcrypt.hashSync(freshPassword, 10),
+        });
+        portalCredentials = { email: portalAdmin.email, password: freshPassword, isTemporary: true };
+      } else if (portalAdmin) {
+        portalCredentials = { email: portalAdmin.email, isTemporary: false };
+      }
+    } catch (e) {
+      console.error("partner.getDashboard portal credential refresh failed:", e.message);
+    }
+
     return res.status(200).json({
       status: true,
       message: "Partner dashboard.",
       isDigitalPartner: true,
       partnerStatus: user.partnerStatus || "ACTIVE",
+      referralCode: user.referralCode || "",
+      portalCredentials,
       wallet: {
         coinBalance: num(user.coin),
         adCreditsBalance: num(profile.adCreditsBalance),
