@@ -16,7 +16,22 @@ function LanguageRequiredDialog() {
 
   const isOnAppLanguages = location.pathname.includes("/appLanguage");
 
+  // Only SUPER_ADMIN can actually manage languages (Sidebar only shows
+  // "App Languages" in their menu) — AGENCY_ADMIN and DIGITAL_PARTNER_ADMIN
+  // have no way to fix this even if warned. Worse for DIGITAL_PARTNER_ADMIN:
+  // admin.middleware.js hard-blocks every route outside their own portal, so
+  // getLanguages() below would always 403 for them, totalLanguages would
+  // stay 0, and this dialog would trap them on every page with no way out
+  // (clicking "Go to App Languages" just hits another 403).
+  const adminObj = JSON.parse(sessionStorage.getItem("admin") || "{}");
+  const canManageLanguages = adminObj?.role === "SUPER_ADMIN";
+
   useEffect(() => {
+    if (!canManageLanguages) {
+      setHasChecked(true);
+      return;
+    }
+
     let cancelled = false;
 
     const checkLanguages = async () => {
@@ -34,15 +49,15 @@ function LanguageRequiredDialog() {
     return () => {
       cancelled = true;
     };
-  }, [dispatch]);
+  }, [dispatch, canManageLanguages]);
 
   useEffect(() => {
-    if (!hasChecked || isOnAppLanguages) {
+    if (!canManageLanguages || !hasChecked || isOnAppLanguages) {
       setOpen(false);
       return;
     }
     setOpen(totalLanguages === 0);
-  }, [hasChecked, totalLanguages, isOnAppLanguages]);
+  }, [canManageLanguages, hasChecked, totalLanguages, isOnAppLanguages]);
 
   const handleGoToAppLanguages = () => {
     setOpen(false);
