@@ -51,12 +51,22 @@ const Sidebar = () => {
 
   const adminObj = JSON.parse(sessionStorage.getItem("admin") || "{}");
   const isAgencyAdmin = adminObj?.role === "AGENCY_ADMIN";
+  const isDigitalPartnerAdmin = adminObj?.role === "DIGITAL_PARTNER_ADMIN";
 
   const navBarArray = isAgencyAdmin
     ? [
         {
           name: "Agency Dashboard",
           path: "/admin/agencyDashboard",
+          navIcon: <IconHome />,
+          onClick: handleCloseFunction,
+        },
+      ]
+    : isDigitalPartnerAdmin
+    ? [
+        {
+          name: "Partner Dashboard",
+          path: "/admin/partnerDashboard",
           navIcon: <IconHome />,
           onClick: handleCloseFunction,
         },
@@ -99,6 +109,26 @@ const Sidebar = () => {
               name: "Agency Reports",
               path: "/admin/agencyReports",
               navIcon: <IconReport />,
+              onClick: handleCloseFunction,
+            },
+          ],
+        },
+      ]
+    : isDigitalPartnerAdmin
+    ? [
+        {
+          heading: "DIGITAL PARTNER",
+          items: [
+            {
+              name: "Partner Dashboard",
+              path: "/admin/partnerDashboard",
+              navIcon: <IconHome />,
+              onClick: handleCloseFunction,
+            },
+            {
+              name: "Local Business Ads",
+              path: "/admin/partnerLocalBusinessAds",
+              navIcon: <IconBellDollar />,
               onClick: handleCloseFunction,
             },
           ],
