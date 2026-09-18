@@ -45,7 +45,7 @@ exports.getAgencyReport = async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      message: "Agency report generated successfully!",
+      message: "District Franchise report generated successfully!",
       agency: sanitizeAgency(agencyDetails),
       report: {
         totalUsers: users.length,
@@ -61,7 +61,7 @@ exports.getAgencyReport = async (req, res) => {
     console.error("Error generating agency report:", error);
     return res.status(200).json({
       status: true,
-      message: "Agency report generated",
+      message: "District Franchise report generated",
       report: {
         totalUsers: 0,
         totalDownloads: 0,

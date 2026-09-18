@@ -43,7 +43,7 @@ export default function AgencyDashboard() {
   return (
     <div className="mainPage p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <Title name={agencyInfo ? `Agency Dashboard - ${agencyInfo.name}` : "Regional Agency Dashboard"} />
+        <Title name={agencyInfo ? `District Franchise Dashboard - ${agencyInfo.name}` : "Regional District Franchise Dashboard"} />
       </div>
 
       <div className="row mb-4">

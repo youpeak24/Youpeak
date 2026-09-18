@@ -56,7 +56,7 @@ const Sidebar = () => {
   const navBarArray = isAgencyAdmin
     ? [
         {
-          name: "Agency Dashboard",
+          name: "District Franchise Dashboard",
           path: "/admin/agencyDashboard",
           navIcon: <IconHome />,
           onClick: handleCloseFunction,
@@ -97,16 +97,16 @@ const Sidebar = () => {
   const groupedNav = isAgencyAdmin
     ? [
         {
-          heading: "AGENCY & REGIONAL",
+          heading: "DISTRICT FRANCHISE & REGIONAL",
           items: [
             {
-              name: "Agency Dashboard",
+              name: "District Franchise Dashboard",
               path: "/admin/agencyDashboard",
               navIcon: <IconHome />,
               onClick: handleCloseFunction,
             },
             {
-              name: "Agency Reports",
+              name: "District Franchise Reports",
               path: "/admin/agencyReports",
               navIcon: <IconReport />,
               onClick: handleCloseFunction,
@@ -136,22 +136,22 @@ const Sidebar = () => {
       ]
     : [
         {
-          heading: "AGENCY & REGIONAL",
+          heading: "DISTRICT FRANCHISE & REGIONAL",
           items: [
             {
-              name: "Geofenced Agencies",
+              name: "Geofenced District Franchises",
               path: "/admin/agency",
               navIcon: <IconUserSquareRounded />,
               onClick: handleCloseFunction,
             },
             {
-              name: "Agency Dashboard",
+              name: "District Franchise Dashboard",
               path: "/admin/agencyDashboard",
               navIcon: <IconHome />,
               onClick: handleCloseFunction,
             },
             {
-              name: "Agency Reports",
+              name: "District Franchise Reports",
               path: "/admin/agencyReports",
               navIcon: <IconReport />,
               onClick: handleCloseFunction,

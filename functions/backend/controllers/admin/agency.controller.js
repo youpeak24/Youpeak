@@ -38,7 +38,7 @@ exports.store = async (req, res) => {
     const existCode = await db.findOne("agencies", { code: cleanCode });
 
     if (existEmail || existCode) {
-      return res.status(200).json({ status: false, message: "Agency code or email already exists!" });
+      return res.status(200).json({ status: false, message: "District Franchise code or email already exists!" });
     }
 
     const encryptedPassword = bcrypt.hashSync(password.trim(), 10);
@@ -77,10 +77,10 @@ exports.store = async (req, res) => {
 
     await db.create("admins", adminData, adminData._id);
 
-    return res.status(200).json({ status: true, message: "Agency created successfully!", agency: sanitizeAgency(agencyData) });
+    return res.status(200).json({ status: true, message: "District Franchise created successfully!", agency: sanitizeAgency(agencyData) });
   } catch (error) {
     console.error("Error creating agency:", error);
-    return res.status(200).json({ status: false, message: error.message || "Failed to create agency" });
+    return res.status(200).json({ status: false, message: error.message || "Failed to create District Franchise" });
   }
 };
 
@@ -95,7 +95,7 @@ exports.getAgencies = async (req, res) => {
 
     const paginatedAgencies = agencies.slice((start - 1) * limit, start * limit).map(sanitizeAgency);
 
-    return res.status(200).json({ status: true, message: "Agencies fetched successfully!", total: count, agencies: paginatedAgencies });
+    return res.status(200).json({ status: true, message: "District Franchises fetched successfully!", total: count, agencies: paginatedAgencies });
   } catch (error) {
     console.error("Error fetching agencies:", error);
     return res.status(200).json({ status: true, message: "Success", total: 0, agencies: [] });
@@ -108,7 +108,7 @@ exports.update = async (req, res) => {
     const { agencyId } = req.query;
     const agency = await db.findById("agencies", agencyId);
     if (!agency) {
-      return res.status(200).json({ status: false, message: "Agency not found!" });
+      return res.status(200).json({ status: false, message: "District Franchise not found!" });
     }
 
     const updatedData = {
@@ -127,10 +127,10 @@ exports.update = async (req, res) => {
     };
 
     const updatedAgency = await db.update("agencies", agencyId, updatedData);
-    return res.status(200).json({ status: true, message: "Agency updated successfully!", agency: sanitizeAgency(updatedAgency) });
+    return res.status(200).json({ status: true, message: "District Franchise updated successfully!", agency: sanitizeAgency(updatedAgency) });
   } catch (error) {
     console.error("Error updating agency:", error);
-    return res.status(200).json({ status: false, message: error.message || "Failed to update agency" });
+    return res.status(200).json({ status: false, message: error.message || "Failed to update District Franchise" });
   }
 };
 
@@ -140,13 +140,13 @@ exports.toggleStatus = async (req, res) => {
     const { agencyId } = req.query;
     const agency = await db.findById("agencies", agencyId);
     if (!agency) {
-      return res.status(200).json({ status: false, message: "Agency not found!" });
+      return res.status(200).json({ status: false, message: "District Franchise not found!" });
     }
 
     const newStatus = !agency.isActive;
     await db.update("agencies", agencyId, { isActive: newStatus });
 
-    return res.status(200).json({ status: true, message: "Agency status toggled!", isActive: newStatus });
+    return res.status(200).json({ status: true, message: "District Franchise status toggled!", isActive: newStatus });
   } catch (error) {
     console.error("Error toggling agency status:", error);
     return res.status(200).json({ status: false, message: error.message || "Failed to toggle status" });
