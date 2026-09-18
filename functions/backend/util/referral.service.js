@@ -7,9 +7,16 @@
  *            `referralStage2WatchMinutes` (100) within
  *            `referralStage2WindowDays` (7). Held `referralStage2HoldHours` (48h).
  *
+ *   Free Tasker direct bonus (YP-TC §1.5): additive on top of Stage 1/2 above
+ *   — if the REFERRER is currently on the free tier, they also get a flat
+ *   `freeTaskerReferralBonusCoins` (250) the moment the referral is applied,
+ *   credited immediately (no hold, unlike Stage 1/2 — the doc names no
+ *   holding period for it).
+ *
  *   Paid-tier bonus (YP-TC §1.5): when a referred user buys a paid tasker/creator
  *   pass, the referrer gets `paidTierReferralPercentage` (10%) of the price, as
- *   coins.
+ *   coins. Also additive — stacks with Stage 1/2 and the free-tier bonus above,
+ *   same as how it already worked before this bonus existed.
  *
  * Held coins sit in user.pendingReferralCoin until the cron
  * (releaseHeldReferrals) moves them to the spendable `coin` balance.
@@ -43,6 +50,9 @@ function cfg() {
     maxReferralsPerDay: n(s.maxReferralsPerDayPerUser, 20),
     deviceDedup: s.referralDeviceDedup !== false,
     paidTierPct: n(s.paidTierReferralPercentage, 10),
+    // Already a configured setting (admin-editable, exposed via
+    // setting.controller.js) but never actually credited anywhere until now.
+    freeTaskerReferralBonusCoins: n(s.referralRewardCoins, 250),
   };
 }
 
@@ -166,11 +176,37 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
   await addPending(referrerId, c.stage1Coins);
   await db.incrementFields("users", referrerId, { referralCount: 1 });
 
+  // YP-TC §1.5 "Free Tasker Referrals" — additive flat bonus, credited
+  // immediately (not held), only when the referrer is currently on the free
+  // tier. A referrer on a paid tier doesn't get this on top of Stage 1 — they
+  // instead get the (larger, percentage-based) paid-tier bonus above if/when
+  // this same referred user later buys a pass (handlePaidTierReferral).
+  let freeTierBonusCoins = 0;
+  const referrerIsFreeTier = !referrer.membershipTierId || referrer.membershipTierId === "tier_tasker_free";
+  if (referrerIsFreeTier && c.freeTaskerReferralBonusCoins > 0) {
+    freeTierBonusCoins = c.freeTaskerReferralBonusCoins;
+    await db.incrementFields("users", referrerId, {
+      coin: freeTierBonusCoins,
+      referralRewardCoin: freeTierBonusCoins,
+      totalRewardCoin: freeTierBonusCoins,
+      totalEarningAmount: freeTierBonusCoins * 0.01,
+    });
+    await db.create("histories", {
+      userId: referrerId,
+      uniqueId: await generateHistoryUniqueId(),
+      coin: freeTierBonusCoins,
+      type: HISTORY_TYPE_STAGE1_REFERRAL,
+      date: new Date().toISOString(),
+      note: `Free Tasker direct referral bonus (flat ${freeTierBonusCoins} coins)`,
+    });
+  }
+
   return {
     ok: true,
     flagged: false,
-    message: `Referral applied. ₹${(c.stage1Coins * 0.01).toFixed(0)} (${c.stage1Coins} coins) pending for the referrer — released after ${c.stage1HoldHours}h.`,
+    message: `Referral applied. ₹${(c.stage1Coins * 0.01).toFixed(0)} (${c.stage1Coins} coins) pending for the referrer — released after ${c.stage1HoldHours}h.${freeTierBonusCoins > 0 ? ` Plus an immediate ${freeTierBonusCoins}-coin free-tier referral bonus.` : ""}`,
     stage1CoinsPending: c.stage1Coins,
+    freeTierBonusCoins,
     holdHours: c.stage1HoldHours,
   };
 }
