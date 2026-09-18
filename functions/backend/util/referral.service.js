@@ -22,13 +22,14 @@
  * (releaseHeldReferrals) moves them to the spendable `coin` balance.
  *
  * Anti-fraud: one referral per referred device/IP; per-day cap per referrer;
- * fraud-risk hook. Bot / VPN detection is enforced elsewhere (fraud engine).
+ * VPN/proxy check on the referred user's IP (YP-TC §4.1/4.2); fraud-risk hook.
  */
 "use strict";
 
 const db = require("./connection");
 const { generateHistoryUniqueId } = require("./generateHistoryUniqueId");
 const { HISTORY_TYPE, todayStr } = require("./rewardEngine");
+const { isLikelyVpnOrProxy } = require("./vpnDetection.service");
 
 let evaluateFraudRisk = async () => null;
 try {
@@ -93,7 +94,15 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
   // ── Anti-fraud checks ──
   let flaggedReason = null;
 
-  if (c.deviceDedup && deviceId) {
+  // YP-TC §4.1/4.2: VPN/proxy usage is strictly prohibited. Checked on the
+  // new (referred) user's IP — a fresh signup arriving via a known
+  // datacenter/VPN range is a strong signal of referral farming with
+  // disposable accounts. See vpnDetection.service.js for the heuristic and
+  // its known limitations.
+  if (ipAddress && isLikelyVpnOrProxy(ipAddress)) {
+    flaggedReason = "VPN_PROXY_USAGE";
+  }
+  if (!flaggedReason && c.deviceDedup && deviceId) {
     const sameDevice = await db.findOne("referralHistories", { referredDeviceId: deviceId });
     if (sameDevice) flaggedReason = "DUPLICATE_DEVICE";
   }
@@ -157,9 +166,18 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
 
   if (flaggedReason) {
     try {
+      // Map this function's internal reason codes onto FraudAlert's actual
+      // riskType enum — was always hardcoded to SUSPICIOUS_REFERRAL_FARMING
+      // regardless of flaggedReason, which silently downgraded VPN_PROXY_USAGE
+      // to a soft, reviewable flag instead of the hard auto-block it needs.
+      const riskTypeByReason = {
+        VPN_PROXY_USAGE: "VPN_PROXY_USAGE",
+        MULTIPLE_SAME_IP: "MULTIPLE_ACCOUNTS_SAME_IP",
+        DAILY_CAP_EXCEEDED: "EXCEEDED_DAILY_LIMIT_VELOCITY",
+      };
       await evaluateFraudRisk({
         userId: referrerId,
-        riskType: "SUSPICIOUS_REFERRAL_FARMING",
+        riskType: riskTypeByReason[flaggedReason] || "SUSPICIOUS_REFERRAL_FARMING",
         details: `Referral ${record._id} flagged: ${flaggedReason}`,
         ipAddress,
       });

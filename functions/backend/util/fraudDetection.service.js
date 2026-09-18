@@ -14,11 +14,21 @@ const evaluateFraudRisk = async ({ userId, riskType, details = "", ipAddress = "
     if (riskType === "ABNORMAL_AD_CLICK_SPEED") riskScore = 85;
     if (riskType === "SUSPICIOUS_REFERRAL_FARMING") riskScore = 80;
     if (riskType === "EXCEEDED_DAILY_LIMIT_VELOCITY") riskScore = 60;
+    if (riskType === "VPN_PROXY_USAGE") riskScore = 95;
 
     let actionTaken = "FLAGGED";
     const userUpdates = {};
 
-    if (setting && setting.autoBlockHighRiskFraud && riskScore >= 80) {
+    // VPN/proxy usage is an unconditional hard rule (YP-TC §4.1/4.2: "will be
+    // immediately and permanently locked/frozen") — it auto-blocks regardless
+    // of the general autoBlockHighRiskFraud toggle, unlike the other,
+    // softer/reviewable risk types below.
+    if (riskType === "VPN_PROXY_USAGE") {
+      actionTaken = "AUTO_BLOCKED";
+      userUpdates.isBlock = true;
+      userUpdates.isRestricted = true;
+      userUpdates.restrictionReason = "Auto-blocked: VPN/proxy/masked-network usage is strictly prohibited (YP-TC §4.1).";
+    } else if (setting && setting.autoBlockHighRiskFraud && riskScore >= 80) {
       actionTaken = "AUTO_BLOCKED";
       userUpdates.isBlock = true;
       userUpdates.isRestricted = true;
