@@ -79,7 +79,7 @@ exports.updateCampaignStatus = async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      message: `Campaign ${action}d successfully.`,
+      message: action === "approve" ? "Campaign approved successfully." : "Campaign rejected successfully.",
       campaign: updatedCampaign,
     });
   } catch (error) {

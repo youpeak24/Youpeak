@@ -227,6 +227,12 @@ const Sidebar = () => {
           navIcon: <IconMusic />,
           onClick: handleCloseFunction,
         },
+        {
+          name: "Video Promotions",
+          path: "/admin/videoPromotions",
+          navIcon: <IconBellDollar />,
+          onClick: handleCloseFunction,
+        },
       ],
     },
     {

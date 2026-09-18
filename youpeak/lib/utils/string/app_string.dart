@@ -159,6 +159,15 @@ abstract class AppStrings {
   static String dailyCommentLimit = "dailyCommentLimit";
   static String dailyEarningCap = "dailyEarningCap";
   static String adCreditsGranted = "adCreditsGranted";
+  static String videoPromotionTitle = "videoPromotionTitle";
+  static String promoteAVideo = "promoteAVideo";
+  static String myPromotionsLabel = "myPromotionsLabel";
+  static String noPromotionsYet = "noPromotionsYet";
+  static String selectVideoToPromote = "selectVideoToPromote";
+  static String selectAPlan = "selectAPlan";
+  static String promotionActivated = "promotionActivated";
+  static String daysLabel = "daysLabel";
+  static String noVideosToPromote = "noVideosToPromote";
   static String stripe = "stripe";
   static String googlePay = "googlePay";
   static String applePay = "applePay";
