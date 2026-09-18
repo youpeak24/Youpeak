@@ -17,68 +17,17 @@ const PROMOTION_PLANS = {
   "Monthly Pro": { priceINR: 3000, durationDays: 30 },
 };
 
-exports.createCampaign = async (req, res) => {
-  try {
-    const { userId, videoId, planName, paymentGatewayRef } = req.body || {};
+// Campaign creation moved to payment.controller.js (purpose: "video_promotion")
+// — this used to accept a client-supplied paymentGatewayRef and activate the
+// campaign on the spot, no verification at all: any caller could invent a
+// string and get free promotion. Real purchases now go through the same
+// Razorpay createOrder -> verify signature-checked pipeline every other paid
+// feature in the app uses (see fulfilVideoPromotion there). This file keeps
+// only the read-only endpoints.
 
-    if (!userId || !videoId || !planName) {
-      return res.status(200).json({ status: false, message: "Missing required fields!" });
-    }
-
-    if (!PROMOTION_PLANS[planName]) {
-      return res.status(200).json({ status: false, message: "Invalid plan name selected." });
-    }
-
-    const user = await db.findById("users", userId);
-    if (!user || user.isBlock) {
-      return res.status(200).json({ status: false, message: "User not found or blocked." });
-    }
-
-    const video = await db.findById("videos", videoId);
-    if (!video) {
-      return res.status(200).json({ status: false, message: "Video not found." });
-    }
-
-    const videoUserId = video.userId ? (video.userId._id || video.userId.id || video.userId).toString() : "";
-    if (videoUserId !== userId.toString()) {
-      return res.status(200).json({ status: false, message: "You can only promote your own videos." });
-    }
-
-    const planDetails = PROMOTION_PLANS[planName];
-    const status = paymentGatewayRef ? "active" : "pending_payment";
-    const now = new Date();
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + planDetails.durationDays);
-
-    const campaignData = {
-      userId,
-      videoId,
-      planName,
-      planPriceINR: planDetails.priceINR,
-      planDurationDays: planDetails.durationDays,
-      paymentGatewayRef: paymentGatewayRef || null,
-      status,
-      startedAt: status === "active" ? now.toISOString() : null,
-      expiresAt: status === "active" ? expiresAt.toISOString() : null,
-      createdAt: now.toISOString(),
-      updatedAt: now.toISOString(),
-    };
-
-    const campaign = await db.create("videoPromotions", campaignData);
-
-    if (status === "active") {
-      await db.update("videos", videoId, { isPromoted: true });
-    }
-
-    return res.status(200).json({
-      status: true,
-      message: "Promotion campaign created successfully.",
-      campaign,
-    });
-  } catch (error) {
-    console.error("Error creating video promotion campaign:", error);
-    return res.status(500).json({ status: false, message: "Internal Server Error" });
-  }
+exports.getPlans = async (req, res) => {
+  const plans = Object.entries(PROMOTION_PLANS).map(([planName, p]) => ({ planName, ...p }));
+  return res.status(200).json({ status: true, message: "Promotion plans fetched.", plans });
 };
 
 exports.getUserCampaigns = async (req, res) => {
@@ -100,3 +49,5 @@ exports.getUserCampaigns = async (req, res) => {
     return res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 };
+
+module.exports.PROMOTION_PLANS = PROMOTION_PLANS;

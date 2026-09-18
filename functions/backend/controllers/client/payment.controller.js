@@ -9,7 +9,7 @@
  *        -> verifies webhook signature, marks paid, fulfils (idempotent)
  *   GET  /client/payment/status?orderId=…
  *
- * Purposes: joining_fee | tier_upgrade | coin_plan | premium_plan
+ * Purposes: joining_fee | tier_upgrade | coin_plan | premium_plan | video_promotion
  */
 "use strict";
 
@@ -21,11 +21,12 @@ const { recordAgencyCommission } = require("../../util/revenueCommission.service
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 const creatorFunding = require("../../util/creatorFunding.service");
 const { grantDigitalPartnerLicense } = require("../../util/digitalPartner.service");
+const { PROMOTION_PLANS } = require("./videoPromotion.controller");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 
 // Resolve how much a given purpose costs, and stash target ids on the txn.
-async function resolveAmount({ purpose, tierId, coinPlanId, premiumPlanId, campaignId, amountInr: requestedAmountInr }) {
+async function resolveAmount({ purpose, userId, tierId, coinPlanId, premiumPlanId, campaignId, videoId, planName, amountInr: requestedAmountInr }) {
   const s = global.settingJSON || {};
   if (purpose === "joining_fee") {
     const amt = num(s.joiningFeeINR, 0);
@@ -68,6 +69,16 @@ async function resolveAmount({ purpose, tierId, coinPlanId, premiumPlanId, campa
     }
     return { amountInr: amt, campaign };
   }
+  if (purpose === "video_promotion") {
+    if (!videoId || !planName) return { error: "videoId and planName are required." };
+    const plan = PROMOTION_PLANS[planName];
+    if (!plan) return { error: "Invalid plan name selected." };
+    const video = await db.findById("videos", videoId);
+    if (!video) return { error: "Video not found." };
+    const videoOwnerId = video.userId ? (video.userId._id || video.userId.id || video.userId).toString() : "";
+    if (videoOwnerId !== String(userId)) return { error: "You can only promote your own videos." };
+    return { amountInr: num(plan.priceINR), plan };
+  }
   return { error: "Unknown purpose." };
 }
 
@@ -83,8 +94,8 @@ exports.createOrder = async (req, res) => {
     if (user.isBlock) return res.status(200).json({ status: false, message: "You are blocked by the admin." });
 
     const resolved = await resolveAmount({
-      purpose, tierId: b.tierId, coinPlanId: b.coinPlanId, premiumPlanId: b.premiumPlanId,
-      campaignId: b.campaignId, amountInr: b.amountInr,
+      purpose, userId, tierId: b.tierId, coinPlanId: b.coinPlanId, premiumPlanId: b.premiumPlanId,
+      campaignId: b.campaignId, videoId: b.videoId, planName: b.planName, amountInr: b.amountInr,
     });
     if (resolved.error) return res.status(200).json({ status: false, message: resolved.error });
 
@@ -113,6 +124,8 @@ exports.createOrder = async (req, res) => {
       coinPlanId: b.coinPlanId || null,
       premiumPlanId: b.premiumPlanId || null,
       campaignId: b.campaignId || null,
+      videoId: b.videoId || null,
+      planName: b.planName || null,
       status: "created",
       fulfilled: false,
       meta: { email: user.email || "", mobileNumber: user.mobileNumber || "" },
@@ -234,6 +247,7 @@ async function markPaidAndFulfil(txn, { paymentId, verifiedVia }) {
     else if (freshTxn.purpose === "premium_plan") fulfilment = await fulfilPremiumPlan(freshTxn);
     else if (freshTxn.purpose === "digital_partner_license") fulfilment = await fulfilDigitalPartnerLicense(freshTxn);
     else if (freshTxn.purpose === "campaign_backing") fulfilment = await fulfilCampaignBacking(freshTxn);
+    else if (freshTxn.purpose === "video_promotion") fulfilment = await fulfilVideoPromotion(freshTxn);
   } catch (e) {
     console.error(`fulfilment failed for ${id} (${freshTxn.purpose}):`, e.message);
     fulfilment = { error: e.message };
@@ -340,6 +354,48 @@ async function fulfilCampaignBacking(txn) {
     perkUnlocked: perk?.title || null,
     raisedAmountInr,
     goalReached: !!resolvedCampaign,
+  };
+}
+
+// DOC-20260826-WA0214 — activates immediately on verified payment, same as
+// every other purchase in this file. The admin panel's approve/reject
+// (controllers/admin/videoPromotion.controller.js) is a separate, post-hoc
+// moderation tool: "reject" takes down an already-active promoted video that
+// turns out to violate content policy, "approve" is there for the rare case
+// of a campaign that reached active status some other way (e.g. a manually
+// recorded offline payment) and still needs its dates set.
+async function fulfilVideoPromotion(txn) {
+  const plan = PROMOTION_PLANS[txn.planName];
+  if (!plan) return { error: "Invalid plan on transaction." };
+
+  const video = await db.findById("videos", txn.videoId);
+  if (!video) return { error: "video missing" };
+
+  const now = new Date();
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + plan.durationDays);
+
+  const campaign = await db.create("videoPromotions", {
+    userId: txn.userId,
+    videoId: txn.videoId,
+    planName: txn.planName,
+    planPriceINR: plan.priceINR,
+    planDurationDays: plan.durationDays,
+    paymentGatewayRef: txn._id || txn.id,
+    status: "active",
+    approvedByAdmin: false,
+    startedAt: now.toISOString(),
+    expiresAt: expiresAt.toISOString(),
+    createdAt: now.toISOString(),
+    updatedAt: now.toISOString(),
+  });
+
+  await db.update("videos", txn.videoId, { isPromoted: true });
+
+  return {
+    campaignId: campaign._id || campaign.id,
+    planName: txn.planName,
+    expiresAt: expiresAt.toISOString(),
   };
 }
 
