@@ -41,6 +41,7 @@ import ReferralManagement from "./Referral/ReferralManagement";
 import PartnerDashboard from "./DigitalPartner/PartnerDashboard";
 import PartnerLocalBusinessAds from "./DigitalPartner/PartnerLocalBusinessAds";
 import ManageDigitalPartner from "./DigitalPartner/ManageDigitalPartner";
+import ManageVideoPromotion from "./VideoPromotion/ManageVideoPromotion";
 import Loader from "../extra/Loader";
 import LanguageRequiredDialog from "../dialogue/LanguageRequiredDialog";
 
@@ -74,6 +75,7 @@ const Admin = (props) => {
               <Route path="/partnerDashboard" element={<PartnerDashboard />} />
               <Route path="/partnerLocalBusinessAds" element={<PartnerLocalBusinessAds />} />
               <Route path="/manageDigitalPartner" element={<ManageDigitalPartner />} />
+              <Route path="/videoPromotions" element={<ManageVideoPromotion />} />
               <Route path="/membershipTiers" element={<TierManagement />} />
               <Route path="/fraudManagement" element={<FraudManagement />} />
               <Route path="/referralManagement" element={<ReferralManagement />} />
