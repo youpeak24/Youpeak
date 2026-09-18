@@ -192,6 +192,10 @@ class Constant {
   // >>>>> >>>>> >>>>> Tasker Starter Pass Api <<<<< <<<<< <<<<<<
   static const getTaskerTiers = "client/taskerTier/getAvailableTiers";
 
+  // >>>>> >>>>> >>>>> Video Promotion Api <<<<< <<<<< <<<<<<
+  static const getVideoPromotionPlans = "client/videoPromotion/plans";
+  static const getMyVideoPromotions = "client/videoPromotion";
+
 // >>>>> >>>>> >>>>> Comment Page Api <<<<< <<<<< <<<<<<
   static const getAllComment = "client/videoComment/getComments";
   static const createComment = "client/videoComment/createComment";

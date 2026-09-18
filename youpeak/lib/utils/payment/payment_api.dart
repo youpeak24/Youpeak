@@ -14,6 +14,8 @@ class PaymentApi {
     String? tierId,
     String? coinPlanId,
     String? premiumPlanId,
+    String? videoId,
+    String? planName,
     String gateway = "razorpay",
   }) async {
     AppSettings.showLog("Payment CreateOrder Api Calling... purpose=$purpose");
@@ -27,6 +29,8 @@ class PaymentApi {
       if (tierId != null) "tierId": tierId,
       if (coinPlanId != null) "coinPlanId": coinPlanId,
       if (premiumPlanId != null) "premiumPlanId": premiumPlanId,
+      if (videoId != null) "videoId": videoId,
+      if (planName != null) "planName": planName,
     });
 
     try {
