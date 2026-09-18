@@ -7,8 +7,8 @@ const mongoose = require("../util/mongooseShim");
  * Plan Name         | Price  | Duration  | Impressions
  * Starter Plan      | ₹49    | 1 Day     | Targeted
  * Basic Plan        | ₹99    | 2 Days    | Targeted
- * Pro Starter       | ₹199   | 3 Days    | Targeted
- * Boost Plan        | ₹249   | 5 Days    | Targeted
+ * Pro Starter       | ₹199   | 2 Days    | Targeted
+ * Boost Plan        | ₹249   | 4 Days    | Targeted
  * Weekly Mega       | ₹1,000 | 7 Days    | Targeted
  * Monthly Pro       | ₹3,000 | 30 Days   | Targeted
  */
@@ -24,7 +24,7 @@ const videoPromotionSchema = new mongoose.Schema(
       enum: ["Starter Plan", "Basic Plan", "Pro Starter", "Boost Plan", "Weekly Mega", "Monthly Pro"],
     },
     planPriceINR: { type: Number, required: true }, // ₹49, ₹99, ₹199, ₹249, ₹1000, ₹3000
-    planDurationDays: { type: Number, required: true }, // 1, 2, 3, 5, 7, 30
+    planDurationDays: { type: Number, required: true }, // 1, 2, 2, 4, 7, 30
 
     // Campaign status
     status: {

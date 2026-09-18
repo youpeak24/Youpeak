@@ -1,7 +1,7 @@
 /**
  * YouPeak – Pure Firestore Client Video Promotion Controller
  * Per DOC-20260826-WA0214 (Creator Growth & Promotion Plans):
- * 6 Plans: Starter (₹49/1d), Basic (₹99/2d), Pro Starter (₹199/3d), Boost (₹249/5d), Weekly Mega (₹1,000/7d), Monthly Pro (₹3,000/30d)
+ * 6 Plans: Starter (₹49/1d), Basic (₹99/2d), Pro Starter (₹199/2d), Boost (₹249/4d), Weekly Mega (₹1,000/7d), Monthly Pro (₹3,000/30d)
  */
 
 "use strict";
@@ -11,8 +11,8 @@ const db = require("../../util/connection");
 const PROMOTION_PLANS = {
   "Starter Plan": { priceINR: 49, durationDays: 1 },
   "Basic Plan": { priceINR: 99, durationDays: 2 },
-  "Pro Starter": { priceINR: 199, durationDays: 3 },
-  "Boost Plan": { priceINR: 249, durationDays: 5 },
+  "Pro Starter": { priceINR: 199, durationDays: 2 },
+  "Boost Plan": { priceINR: 249, durationDays: 4 },
   "Weekly Mega": { priceINR: 1000, durationDays: 7 },
   "Monthly Pro": { priceINR: 3000, durationDays: 30 },
 };
