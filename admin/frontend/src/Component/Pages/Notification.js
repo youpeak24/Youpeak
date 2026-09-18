@@ -184,7 +184,7 @@ const Notification = (props) => {
                   }}
                 >
                   <option value="selectType">Select Type</option>
-                  <option value="agency">Agency</option>
+                  <option value="agency">District Franchise</option>
                   <option value="host">Host</option>
                   <option value="user">User</option>
                 </select>

@@ -67,17 +67,17 @@ export default function AgencyList() {
       })
       .then((res) => {
         if (res.data && res.data.status) {
-          setToast("success", res.data.message || "Agency created successfully!");
+          setToast("success", res.data.message || "District Franchise created successfully!");
           setOpenModal(false);
           fetchAgencies();
           resetForm();
         } else {
-          setToast("error", res.data?.message || "Failed to create agency!");
+          setToast("error", res.data?.message || "Failed to create District Franchise!");
         }
       })
       .catch((err) => {
         console.error(err);
-        const errMsg = err.response?.data?.message || err.message || "Failed to save agency";
+        const errMsg = err.response?.data?.message || err.message || "Failed to save District Franchise";
         setToast("error", errMsg);
       });
   };
@@ -109,9 +109,9 @@ export default function AgencyList() {
   return (
     <div className="mainPage p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <Title name="Geofenced Agency Management" />
+        <Title name="Geofenced District Franchise Management" />
         <Button
-          btnName="Add Agency"
+          btnName="Add District Franchise"
           newClass="btn-theme"
           onClick={() => setOpenModal(true)}
         />
@@ -123,7 +123,7 @@ export default function AgencyList() {
             <thead>
               <tr>
                 <th>No.</th>
-                <th>Agency Name</th>
+                <th>District Franchise Name</th>
                 <th>Code</th>
                 <th>Email</th>
                 <th>State / District</th>
@@ -137,13 +137,13 @@ export default function AgencyList() {
               {loading ? (
                 <tr>
                   <td colSpan="9" className="text-center py-4">
-                    Loading Agencies...
+                    Loading District Franchises...
                   </td>
                 </tr>
               ) : agencies.length === 0 ? (
                 <tr>
                   <td colSpan="9" className="text-center py-4">
-                    No Agencies found.
+                    No District Franchises found.
                   </td>
                 </tr>
               ) : (
@@ -191,18 +191,18 @@ export default function AgencyList() {
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Create Geofenced Agency</h5>
+                <h5 className="modal-title">Create Geofenced District Franchise</h5>
                 <button type="button" className="btn-close" onClick={() => setOpenModal(false)}></button>
               </div>
               <form onSubmit={handleSubmit}>
                 <div className="modal-body">
                   <div className="mb-3">
-                    <label className="form-label">Agency Name *</label>
+                    <label className="form-label">District Franchise Name *</label>
                     <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
                   </div>
                   <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Agency Code *</label>
+                      <label className="form-label">District Franchise Code *</label>
                       <input type="text" className="form-control" value={code} onChange={(e) => setCode(e.target.value)} required />
                     </div>
                     <div className="col-md-6 mb-3">
@@ -237,7 +237,7 @@ export default function AgencyList() {
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" onClick={() => setOpenModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary">Create Agency</button>
+                  <button type="submit" className="btn btn-primary">Create District Franchise</button>
                 </div>
               </form>
             </div>

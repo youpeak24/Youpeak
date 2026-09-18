@@ -83,14 +83,14 @@ export default function AgencyReports() {
 
   return (
     <div className="mainPage p-4">
-      <Title name="Agency & Regional Performance Reports" />
+      <Title name="District Franchise & Regional Performance Reports" />
 
       <div className="card shadow-sm border-0 p-3 mb-4">
         <form onSubmit={handleFilter} className="row g-3 align-items-end">
           <div className="col-md-4">
-            <label className="form-label">Filter by Agency</label>
+            <label className="form-label">Filter by District Franchise</label>
             <select className="form-select" value={selectedAgency} onChange={(e) => setSelectedAgency(e.target.value)}>
-              <option value="">All Agencies / Platform Global</option>
+              <option value="">All District Franchises / Platform Global</option>
               {agencies.map((agency) => (
                 <option key={agency._id} value={agency._id}>
                   {agency.name} ({agency.district || agency.state})
