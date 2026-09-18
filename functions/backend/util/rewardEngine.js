@@ -130,6 +130,48 @@ async function getLimits(user) {
 }
 
 /**
+ * Dual Level Upgrade Mechanism (YP-TC-2026-FINAL V9, §1.6): a Tasker reaches
+ * the next tier either by buying its Starter Pass directly (handled in
+ * controllers/client/taskerTier.controller.js — an outright purchase, not
+ * this function's concern) OR for free once their all-time totalWatchTime
+ * crosses that tier's watchHoursToUpgrade. Called from
+ * userTaskReward.controller.js checkWatchTimeMilestone right after
+ * totalWatchTime is incremented.
+ *
+ * Only ever moves a user up exactly one level, from whatever level they
+ * currently hold — so a direct purchase that skipped ahead is never
+ * overridden (the "next" tier is always current+1, never re-evaluated past
+ * where a purchase already placed them), and nothing here ever downgrades.
+ *
+ * @param {object} user                        the user doc as loaded BEFORE this watch session's increment
+ * @param {number} newTotalWatchTimeMinutes     user.totalWatchTime AFTER the increment
+ * @returns {Promise<object|null>}              the tier doc just upgraded into, or null if no upgrade happened
+ */
+async function checkTaskerWatchHourUpgrade(user, newTotalWatchTimeMinutes) {
+  try {
+    let currentLevel = 1;
+    if (user && user.membershipTierId) {
+      const currentTier = await db.findById("membershipTiers", user.membershipTierId);
+      if (currentTier && currentTier.tierType === "TASKER") currentLevel = num(currentTier.level, 1);
+    }
+
+    const nextTier = await db.findOne("membershipTiers", { tierType: "TASKER", level: currentLevel + 1 });
+    if (!nextTier || nextTier.isActive === false) return null;
+
+    const requiredHours = num(nextTier.watchHoursToUpgrade, 0);
+    if (requiredHours <= 0) return null;
+    if (num(newTotalWatchTimeMinutes, 0) < requiredHours * 60) return null;
+
+    const userId = user._id || user.id;
+    await db.update("users", userId, { membershipTierId: nextTier._id || nextTier.id });
+    return nextTier;
+  } catch (e) {
+    console.error("checkTaskerWatchHourUpgrade error:", e.message);
+    return null;
+  }
+}
+
+/**
  * Resolve a creator's ad-revenue split. Returns the fraction (0–1) that goes to
  * the creator and to the platform, from their active creator tier (VIP pass) or
  * the Classic default (50/50).
@@ -383,6 +425,7 @@ module.exports = {
   todayStr,
   ensureDailyReset,
   getLimits,
+  checkTaskerWatchHourUpgrade,
   getCreatorRevenueShare,
   creditReward,
   reverseReward,

@@ -12,51 +12,60 @@
  */
 "use strict";
 
+// Updated 2026-09-17 to the founder's V9 rate card (YP-TC-2026-FINAL V9):
+// tiers renamed Free/Bronze/Silver/Gold/Platinum -> Free Tasker/Level 1-4
+// Tasker (same _ids kept — renaming _id would orphan existing users'
+// membershipTierId references), every daily coin cap boosted +500, and a
+// new Dual Level Upgrade Mechanism added: a Tasker reaches a level either by
+// buying its Starter Pass directly (membershipPrice, unchanged) OR for free
+// by accumulating watchHoursToUpgrade cumulative watch hours (checked in
+// util/rewardEngine.js checkTaskerWatchHourUpgrade, hooked into
+// controllers/client/userTaskReward.controller.js checkWatchTimeMilestone).
 const TASKER_TIERS = [
   {
     _id: "tier_tasker_free",
-    tierType: "TASKER", level: 1, tierName: "Free",
-    membershipPrice: 0, adCreditsGranted: 0,
+    tierType: "TASKER", level: 1, tierName: "Free Tasker",
+    membershipPrice: 0, adCreditsGranted: 0, watchHoursToUpgrade: 0,
     dailyAdLimit: 20, dailyLikeLimit: 5, dailyCommentLimit: 2,
-    dailyEarningCapInCoins: 500, dailyEarningCapInINR: 5, coinMultiplier: 1.0,
+    dailyEarningCapInCoins: 1000, dailyEarningCapInINR: 10, coinMultiplier: 1.0,
     isDefault: true, isActive: true,
-    description: "Free tasker — 20 ads / 5 likes / 2 comments, up to ₹5/day.",
+    description: "Free tasker — 20 ads / 5 likes / 2 comments, up to ₹10/day.",
   },
   {
     _id: "tier_tasker_bronze",
-    tierType: "TASKER", level: 2, tierName: "Bronze",
-    membershipPrice: 999, adCreditsGranted: 1000,
+    tierType: "TASKER", level: 2, tierName: "Level 1 Tasker",
+    membershipPrice: 999, adCreditsGranted: 1000, watchHoursToUpgrade: 50,
     dailyAdLimit: 20, dailyLikeLimit: 10, dailyCommentLimit: 5,
-    dailyEarningCapInCoins: 2000, dailyEarningCapInINR: 20, coinMultiplier: 1.0,
+    dailyEarningCapInCoins: 2500, dailyEarningCapInINR: 25, coinMultiplier: 1.0,
     isDefault: false, isActive: true,
-    description: "Bronze Starter — up to ₹20/day.",
+    description: "Level 1 Tasker — up to ₹25/day. Reach it via 50 watch hours or the Starter Pass.",
   },
   {
     _id: "tier_tasker_silver",
-    tierType: "TASKER", level: 3, tierName: "Silver",
-    membershipPrice: 2499, adCreditsGranted: 2500,
+    tierType: "TASKER", level: 3, tierName: "Level 2 Tasker",
+    membershipPrice: 2499, adCreditsGranted: 2500, watchHoursToUpgrade: 100,
     dailyAdLimit: 20, dailyLikeLimit: 20, dailyCommentLimit: 10,
-    dailyEarningCapInCoins: 4000, dailyEarningCapInINR: 40, coinMultiplier: 1.0,
+    dailyEarningCapInCoins: 4500, dailyEarningCapInINR: 45, coinMultiplier: 1.0,
     isDefault: false, isActive: true,
-    description: "Silver Intermediate — up to ₹40/day.",
+    description: "Level 2 Tasker — up to ₹45/day. Reach it via 100 watch hours or the Starter Pass.",
   },
   {
     _id: "tier_tasker_gold",
-    tierType: "TASKER", level: 4, tierName: "Gold",
-    membershipPrice: 4999, adCreditsGranted: 5000,
+    tierType: "TASKER", level: 4, tierName: "Level 3 Tasker",
+    membershipPrice: 4999, adCreditsGranted: 5000, watchHoursToUpgrade: 200,
     dailyAdLimit: 20, dailyLikeLimit: 40, dailyCommentLimit: 20,
-    dailyEarningCapInCoins: 12000, dailyEarningCapInINR: 120, coinMultiplier: 1.0,
+    dailyEarningCapInCoins: 12500, dailyEarningCapInINR: 125, coinMultiplier: 1.0,
     isDefault: false, isActive: true,
-    description: "Gold Advanced — up to ₹120/day.",
+    description: "Level 3 Tasker — up to ₹125/day. Reach it via 200 watch hours or the Starter Pass.",
   },
   {
     _id: "tier_tasker_platinum",
-    tierType: "TASKER", level: 5, tierName: "Platinum",
-    membershipPrice: 9999, adCreditsGranted: 10000,
+    tierType: "TASKER", level: 5, tierName: "Level 4 Tasker",
+    membershipPrice: 9999, adCreditsGranted: 10000, watchHoursToUpgrade: 400,
     dailyAdLimit: 20, dailyLikeLimit: 60, dailyCommentLimit: 30,
-    dailyEarningCapInCoins: 16667, dailyEarningCapInINR: 166.67, coinMultiplier: 1.0,
+    dailyEarningCapInCoins: 17167, dailyEarningCapInINR: 171.67, coinMultiplier: 1.0,
     isDefault: false, isActive: true,
-    description: "Platinum Regional Pro — up to ₹5,000/month.",
+    description: "Level 4 Tasker — up to ₹5,150/month. Reach it via 400 watch hours or the Starter Pass.",
   },
 ];
 

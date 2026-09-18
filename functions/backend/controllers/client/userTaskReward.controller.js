@@ -15,6 +15,7 @@ const {
   todayStr,
   ensureDailyReset,
   getLimits,
+  checkTaskerWatchHourUpgrade,
   creditReward,
   snapshotCounts,
 } = require("../../util/rewardEngine");
@@ -190,7 +191,16 @@ exports.checkWatchTimeMilestone = async (req, res) => {
       console.error("Stage 2 referral check error:", stage2Err.message);
     }
 
-    const finalUser = milestoneCoins > 0 ? await db.findById("users", userIdStr) : accumulated;
+    // Dual Level Upgrade Mechanism (V9 §1.6) — free tier progression via
+    // cumulative watch hours, alongside the paid Starter Pass "instant skip".
+    let upgradedTier = null;
+    try {
+      upgradedTier = await checkTaskerWatchHourUpgrade(user, newTotalWatchTime);
+    } catch (upgradeErr) {
+      console.error("Tasker watch-hour upgrade check error:", upgradeErr.message);
+    }
+
+    const finalUser = (milestoneCoins > 0 || upgradedTier) ? await db.findById("users", userIdStr) : accumulated;
 
     return res.status(200).json({
       status: true,
@@ -204,6 +214,8 @@ exports.checkWatchTimeMilestone = async (req, res) => {
       totalWatchMinutesToday: newMinutesToday,
       minutesUntilMilestone: Math.max(0, milestoneMin - newMinutesToday),
       totalCoins: finalUser ? (finalUser.coin || 0) : (user.coin || 0) + milestoneCoins,
+      tierUpgraded: !!upgradedTier,
+      newTierName: upgradedTier ? upgradedTier.tierName : undefined,
     });
   } catch (error) {
     console.error("Error checking watch time milestone:", error);
