@@ -178,8 +178,16 @@ class _LoginViewState extends State<LoginView> {
                             CustomDialog.show(AppIcons.profileDoneLogo1, AppStrings.congratulations.tr, AppStrings.congratulationsNote.tr);
                             await GetProfileApi.callApi(_signUpModel!.user!.id!);
                             Get.back();
-                            if (AdminSettingsApi.adminSettingsModel?.setting != null && Database.loginUserId != null && GetProfileApi.profileModel?.user != null) {
+                            // Was also gating on Database.loginUserId != null, which this
+                            // flow never sets directly — only as a side effect deep inside
+                            // GetProfileApi.callApi() — so it could read stale/null right
+                            // after a fully successful login, and there was no else branch
+                            // at all, silently stranding the user on this screen. Trust the
+                            // profile we just fetched above instead.
+                            if (GetProfileApi.profileModel?.user != null) {
                               Get.offAll(const MainHomePageView());
+                            } else {
+                              CustomToast.show(AppStrings.getProfileFailed.tr);
                             }
                           } else {
                             Get.offAll(FillProfileView(email: _signUpModel!.user!.email!, loginUserId: _signUpModel!.user!.id!));
@@ -293,10 +301,14 @@ class _LoginViewState extends State<LoginView> {
                                     await GetProfileApi.callApi(_signUpModel!.user!.id!);
                                   }
                                   Get.back();
-                                  if (Database.isNewUser == false &&
-                                      AdminSettingsApi.adminSettingsModel?.setting != null &&
-                                      Database.loginUserId != null &&
-                                      GetProfileApi.profileModel?.user != null) {
+                                  // Was also gating on Database.loginUserId != null and
+                                  // AdminSettingsApi.adminSettingsModel?.setting != null,
+                                  // neither set/needed directly by this flow — the former
+                                  // only gets set as a side effect deep inside
+                                  // GetProfileApi.callApi() and could read stale/null right
+                                  // after a fully successful login. Trust the profile we
+                                  // just fetched above instead.
+                                  if (GetProfileApi.profileModel?.user != null) {
                                     Get.offAll(const MainHomePageView());
                                   } else {
                                     CustomToast.show(AppStrings.getProfileFailed.tr);
@@ -432,10 +444,14 @@ class _LoginViewState extends State<LoginView> {
 
                                         Get.back();
 
-                                        if (Database.isNewUser == false &&
-                                            AdminSettingsApi.adminSettingsModel?.setting != null &&
-                                            Database.loginUserId != null &&
-                                            GetProfileApi.profileModel?.user != null) {
+                                        // Was also gating on Database.loginUserId != null and
+                                        // AdminSettingsApi.adminSettingsModel?.setting != null,
+                                        // neither set/needed directly by this flow — the former
+                                        // only gets set as a side effect deep inside
+                                        // GetProfileApi.callApi() and could read stale/null
+                                        // right after a fully successful login. Trust the
+                                        // profile we just fetched instead.
+                                        if (GetProfileApi.profileModel?.user != null) {
                                           Get.offAll(const MainHomePageView());
                                         } else {
                                           CustomToast.show(AppStrings.getProfileFailed.tr);
@@ -541,10 +557,14 @@ class _LoginViewState extends State<LoginView> {
                               CustomDialog.show(AppIcons.profileDoneLogo1, AppStrings.congratulations.tr, AppStrings.congratulationsNote.tr);
                               if (_signUpModel?.user?.id != null) await GetProfileApi.callApi(_signUpModel!.user!.id!);
                               Get.back();
-                              if (Database.isNewUser == false &&
-                                  AdminSettingsApi.adminSettingsModel?.setting != null &&
-                                  Database.loginUserId != null &&
-                                  GetProfileApi.profileModel?.user != null) {
+                              // Was also gating on Database.loginUserId != null and
+                              // AdminSettingsApi.adminSettingsModel?.setting != null,
+                              // neither set/needed directly by this flow — the former only
+                              // gets set as a side effect deep inside
+                              // GetProfileApi.callApi() and could read stale/null right
+                              // after a fully successful login. Trust the profile we just
+                              // fetched instead.
+                              if (GetProfileApi.profileModel?.user != null) {
                                 Get.offAll(const MainHomePageView());
                               } else {
                                 CustomToast.show(AppStrings.getProfileFailed.tr);

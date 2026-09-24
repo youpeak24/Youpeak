@@ -263,10 +263,15 @@ class _SignUpViewState extends State<SignUpView> {
                                       await GetProfileApi.callApi(_signUpModel!.user!.id!);
                                     }
                                     Get.back();
-                                    if (Database.isNewUser == false &&
-                                        AdminSettingsApi.adminSettingsModel?.setting != null &&
-                                        Database.loginUserId != null &&
-                                        GetProfileApi.profileModel?.user != null) {
+                                    // Was also gating on Database.loginUserId != null and
+                                    // AdminSettingsApi.adminSettingsModel?.setting != null,
+                                    // neither of which this flow sets/needs directly — the
+                                    // first only gets set as a side effect deep inside
+                                    // GetProfileApi.callApi() and could still read stale/null
+                                    // right after a fully successful login. Trust the profile
+                                    // we just fetched above instead, same as the (working)
+                                    // lets_you_in_view.dart Google flow does.
+                                    if (GetProfileApi.profileModel?.user != null) {
                                       Get.offAll(const MainHomePageView());
                                     } else {
                                       CustomToast.show(AppStrings.getProfileFailed.tr);
@@ -500,10 +505,16 @@ class _SignUpViewState extends State<SignUpView> {
                                 CustomDialog.show(AppIcons.profileDoneLogo1, AppStrings.congratulations.tr, AppStrings.congratulationsNote.tr);
                                 if (_signUpModel?.user?.id != null) await GetProfileApi.callApi(_signUpModel!.user!.id!);
                                 Get.back();
-                                if (Database.isNewUser == false &&
-                                    AdminSettingsApi.adminSettingsModel?.setting != null &&
-                                    Database.loginUserId != null &&
-                                    GetProfileApi.profileModel?.user != null) {
+                                // Was also gating on Database.loginUserId != null and
+                                // AdminSettingsApi.adminSettingsModel?.setting != null,
+                                // neither of which this flow sets/needs directly — the
+                                // first only gets set as a side effect deep inside
+                                // GetProfileApi.callApi() and could still read stale/null
+                                // right after a fully successful login. This is the Android
+                                // "sign up with Google" button — trust the profile we just
+                                // fetched above instead, same as the (working)
+                                // lets_you_in_view.dart Google flow does.
+                                if (GetProfileApi.profileModel?.user != null) {
                                   Get.offAll(const MainHomePageView());
                                 } else {
                                   CustomToast.show(AppStrings.getProfileFailed.tr);

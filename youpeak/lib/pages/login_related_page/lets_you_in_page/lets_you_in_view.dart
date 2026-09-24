@@ -22,6 +22,7 @@ import 'package:youpeak/pages/login_related_page/sign_up_page/sign_up_view.dart'
 import 'package:youpeak/pages/main_home_page/main_home_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/style/app_style.dart';
@@ -90,7 +91,14 @@ class _LetsYouInViewState extends State<LetsYouInView> {
                         child: const Image(image: AssetImage(AppIcons.loginLogo)),
                       )),
                   SizedBox(height: Get.height / 35),
-                  Text(AppStrings.letsYouIn.tr, textAlign: TextAlign.center, style: letsInStyle),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(child: Text(AppStrings.letsYouIn.tr, textAlign: TextAlign.center, style: letsInStyle)),
+                      const SizedBox(width: 8),
+                      Image.asset(AppVisuals.wave, width: 40, height: 40),
+                    ],
+                  ),
                   SizedBox(height: Get.height / 35),
                   ButtonItemUi(
                     title: AppStrings.googleLogin.tr,
@@ -245,10 +253,14 @@ class _LetsYouInViewState extends State<LetsYouInView> {
 
                                             Get.back();
 
-                                            if (Database.isNewUser == false &&
-                                                AdminSettingsApi.adminSettingsModel?.setting != null &&
-                                                Database.loginUserId != null &&
-                                                GetProfileApi.profileModel?.user != null) {
+                                            // Was also gating on Database.loginUserId != null
+                                            // and AdminSettingsApi.adminSettingsModel?.setting
+                                            // != null, neither set/needed directly by this
+                                            // flow — the former only gets set as a side effect
+                                            // deep inside GetProfileApi.callApi() and could
+                                            // read stale/null right after a fully successful
+                                            // login. Trust the profile we just fetched instead.
+                                            if (GetProfileApi.profileModel?.user != null) {
                                               Get.offAll(const MainHomePageView());
                                             } else {
                                               CustomToast.show(AppStrings.getProfileFailed.tr);
