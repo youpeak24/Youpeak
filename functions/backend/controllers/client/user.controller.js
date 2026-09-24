@@ -212,6 +212,16 @@ exports.update = async (req, res) => {
     allowedFields.forEach(field => { if (req.body[field] !== undefined) updates[field] = req.body[field]; });
     updates.updatedAt = new Date().toISOString();
 
+    // channelId is never generated anywhere else in the codebase, and every
+    // other query that uses it (videosOfChannel, subscriptions, monetization)
+    // treats it as the channel owner's own userId — videos are saved with
+    // userId: <uploader's own id>, never a separate channel id. So on first
+    // becoming a channel, self-reference it; without this the app's own
+    // "isChannel && channelId != null" gate could never pass for a real user.
+    if (updates.isChannel === true && !user.channelId) {
+      updates.channelId = userId;
+    }
+
     const updatedUser = await db.update("users", userId, updates);
     return res.status(200).json({ status: true, message: "User updated successfully.", user: updatedUser });
   } catch (error) {

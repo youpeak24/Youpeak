@@ -8,6 +8,7 @@ import 'package:youpeak/database/database.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_api.dart';
 import 'package:youpeak/pages/nav_add_page/upload_video_page/check_channel_name_api.dart';
+import 'package:youpeak/pages/profile_page/create_channel_page/create_channel_api.dart';
 import 'package:youpeak/pages/nav_add_page/upload_video_page/upload_video_controller.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/config/size_config.dart';
@@ -47,17 +48,30 @@ class CreateChannelView extends StatelessWidget {
 
             Get.dialog(const LoaderUi(color: AppColor.white), barrierDismissible: false);
 
-            final status = await CheckChannelNameApi.callApi(controller.channelName.text.trim());
+            final nameStatus = await CheckChannelNameApi.callApi(controller.channelName.text.trim());
 
-            if (status == null) {
+            if (nameStatus == null) {
               Get.back();
               CustomToast.show(AppStrings.someThingWentWrong.tr);
-            } else if (status == false) {
+            } else if (nameStatus == false) {
               Get.back();
               CustomToast.show("The provided channelName is already in use. Please choose a different one.");
             } else {
-              await GetProfileApi.callApi(Database.loginUserId!);
-              Get.close(2);
+              // A free name doesn't create the channel by itself — this used to
+              // stop right here and just refresh the profile, so isChannel
+              // stayed false on the server and every upload attempt bounced
+              // back to this same screen. Actually create it now.
+              AppSettings.nameController.text = controller.channelName.text.trim();
+              AppSettings.channelDescriptionController.text = controller.channelDescription.text.trim();
+              await CreateChannelApi.callApi();
+
+              if (CreateChannelApi.status == true) {
+                await GetProfileApi.callApi(Database.loginUserId!);
+                Get.close(2);
+              } else {
+                Get.back();
+                CustomToast.show(CreateChannelApi.message?.toString() ?? AppStrings.someThingWentWrong.tr);
+              }
             }
           }
         },

@@ -79,13 +79,14 @@ class SettingsView extends GetView<ProfileController> {
                 title: AppStrings.darkMode.tr,
                 callback: () {},
                 trailing: GestureDetector(
+                  // The switch's own onChanged used to carry this same logic,
+                  // so one tap could fire both this onTap and onChanged —
+                  // switchTheme() reads-and-flips a *stored* value rather than
+                  // taking an explicit target, so a double-fire could leave the
+                  // real Flutter ThemeMode and isDarkMode pointing opposite
+                  // directions (the "half light, half dark" UI). Single handler
+                  // now; the switch below is display-only.
                   onTap: () {
-                    // if (AppSettings.isIncognitoMode.value && isDarkMode.value) {
-                    //   AppSettings.isIncognitoMode.value = false;
-                    //   AppSettings.isCreateHistory.value = true;
-                    //   Database.onSetIncognitoMode(AppSettings.isIncognitoMode.value);
-                    //   Database.onSetCreateHistory(AppSettings.isCreateHistory.value);
-                    // }
                     isDarkMode.value = !isDarkMode.value;
                     ThemeService().switchTheme();
                   },
@@ -100,19 +101,12 @@ class SettingsView extends GetView<ProfileController> {
                       child: Transform.scale(
                         scale: 0.7,
                         child: Obx(
-                          () => CupertinoSwitch(
-                            activeColor: AppColor.primaryColor,
-                            value: isDarkMode.value,
-                            onChanged: (value) {
-                              // if (AppSettings.isIncognitoMode.value && isDarkMode.value) {
-                              //   AppSettings.isIncognitoMode.value = false;
-                              //   AppSettings.isCreateHistory.value = true;
-                              //   Database.onSetIncognitoMode(AppSettings.isIncognitoMode.value);
-                              //   Database.onSetCreateHistory(AppSettings.isCreateHistory.value);
-                              // }
-                              isDarkMode.value = value;
-                              ThemeService().switchTheme();
-                            },
+                          () => IgnorePointer(
+                            child: CupertinoSwitch(
+                              activeColor: AppColor.primaryColor,
+                              value: isDarkMode.value,
+                              onChanged: (value) {},
+                            ),
                           ),
                         ),
                       ),

@@ -298,17 +298,14 @@ class ProfileView extends GetView<ProfileController> {
                     title: AppStrings.incognito.tr,
                     leading: AppIcons.incognito,
                     trailing: GestureDetector(
+                      // Incognito used to also force isDarkMode on/off as a side
+                      // effect (and duplicated that logic again in the switch's
+                      // own onChanged below, so one tap could fire both handlers
+                      // and leave isDarkMode and the real Flutter ThemeMode
+                      // pointing different directions). Incognito now only
+                      // touches incognito/history state; theme is exclusively
+                      // the Settings > Dark Mode toggle's job.
                       onTap: () {
-                        if (!isDarkMode.value) {
-                          isDarkMode.value = true;
-                          ThemeService().switchTheme();
-                        }
-
-                        if (AppSettings.isIncognitoMode.value && isDarkMode.value) {
-                          isDarkMode.value = false;
-                          ThemeService().switchTheme();
-                        }
-
                         AppSettings.isIncognitoMode.value = !AppSettings.isIncognitoMode.value;
                         AppSettings.isCreateHistory.value = !AppSettings.isIncognitoMode.value;
                         Database.onSetIncognitoMode(AppSettings.isIncognitoMode.value);
@@ -325,38 +322,15 @@ class ProfileView extends GetView<ProfileController> {
                             child: Transform.scale(
                               scale: 0.7,
                               child: Obx(
-                                () => CupertinoSwitch(
-                                  activeColor: AppColor.primaryColor,
-                                  value: AppSettings.isIncognitoMode.value,
-                                  onChanged: (value) {
-                                    if (!isDarkMode.value) {
-                                      isDarkMode.value = true;
-                                      ThemeService().switchTheme();
-                                    }
-
-                                    if (AppSettings.isIncognitoMode.value && isDarkMode.value) {
-                                      isDarkMode.value = false;
-                                      ThemeService().switchTheme();
-                                    }
-
-                                    AppSettings.isIncognitoMode.value = !AppSettings.isIncognitoMode.value;
-                                    AppSettings.isCreateHistory.value = !AppSettings.isIncognitoMode.value;
-                                    Database.onSetIncognitoMode(AppSettings.isIncognitoMode.value);
-                                    Database.onSetCreateHistory(AppSettings.isCreateHistory.value);
-
-                                    // if (!AppSettings.isIncognitoMode.value && !isDarkMode.value) {
-                                    //   isDarkMode.value = true;
-                                    //   ThemeService().switchTheme();
-                                    // } else if (AppSettings.isIncognitoMode.value) {
-                                    //   isDarkMode.value = false;
-                                    //   ThemeService().switchTheme();
-                                    // }
-                                    // AppSettings.isIncognitoMode.value = value;
-                                    // AppSettings.isCreateHistory.value = !value;
-                                    //
-                                    // Database.onSetIncognitoMode(value);
-                                    // Database.onSetCreateHistory(!value);
-                                  },
+                                () => IgnorePointer(
+                                  // Purely visual — the surrounding GestureDetector
+                                  // is the single source of truth so one tap can't
+                                  // double-fire both this and onTap above.
+                                  child: CupertinoSwitch(
+                                    activeColor: AppColor.primaryColor,
+                                    value: AppSettings.isIncognitoMode.value,
+                                    onChanged: (value) {},
+                                  ),
                                 ),
                               ),
                             ),
