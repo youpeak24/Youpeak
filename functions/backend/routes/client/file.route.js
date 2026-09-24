@@ -32,4 +32,7 @@ route.put(
 route.post("/stream-upload-url", checkAccessWithSecretKey(), FileController.getStreamUploadUrl);
 route.get("/stream-upload-url", checkAccessWithSecretKey(), FileController.getStreamUploadUrl);
 
+// Direct-to-R2 presigned upload URL — bypasses our function's 4.5MB body cap
+route.post("/direct-upload-url", checkAccessWithSecretKey(), FileController.getDirectUploadUrl);
+
 module.exports = route;

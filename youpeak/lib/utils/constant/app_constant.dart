@@ -33,6 +33,7 @@ class Constant {
 
   // >>>>> >>>>> >>>>> File Upload Api <<<<< <<<<< <<<<<<
   static String fileUpload = "client/file/upload-file";
+  static const directUploadUrl = "client/file/direct-upload-url";
   static const channelImage = "$folderStructurePath/userImage";
   static const shortsVideo = "$folderStructurePath/Shorts";
   static const shortsVideoImage = "$folderStructurePath/shortsImage";

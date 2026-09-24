@@ -44,6 +44,34 @@ exports.getStreamUploadUrl = async (req, res) => {
   }
 };
 
+// ── Direct-to-R2 presigned upload URL (videos/shorts) ──
+// The client PUTs the raw file straight to R2 with this URL — our function
+// never sees the file body, so Vercel's 4.5MB request-body cap never applies.
+// Always available since it only needs R2 (already configured), unlike
+// getStreamUploadUrl which needs Cloudflare Stream credentials.
+exports.getDirectUploadUrl = async (req, res) => {
+  try {
+    if (!cloudflareStorageService.isConfigured()) {
+      return res.status(200).json({ status: false, message: "Storage is not configured." });
+    }
+    const b = { ...req.query, ...req.body };
+    const folder =
+      String(b.folderStructure || "misc")
+        .toLowerCase()
+        .replace(/[^a-z0-9_-]+/g, "")
+        .slice(0, 40) || "misc";
+    const ext = String(b.keyName || "").match(/\.[a-z0-9]+$/i)?.[0] || ".mp4";
+    const destinationKey = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}${ext}`;
+    const contentType = b.contentType || "video/mp4";
+
+    const { uploadURL, publicUrl } = await cloudflareStorageService.getPresignedPutUrl(destinationKey, contentType);
+    return res.status(200).json({ status: true, message: "Upload URL created.", uploadURL, publicUrl, key: destinationKey });
+  } catch (error) {
+    console.error("getDirectUploadUrl error:", error.message);
+    return res.status(200).json({ status: false, message: "Could not create upload URL." });
+  }
+};
+
 // ── Legacy multipart upload (images + fallback for small videos) ──
 exports.uploadContent = async (req, res) => {
   try {

@@ -1,5 +1,20 @@
 const db = require("../../util/connection");
 
+// The `settings` doc has one surviving field from its pre-Firestore Mongo
+// days: createdAt is stored as {"$date": "..."} instead of a plain string.
+// The Flutter client's AdminSettingsModel declares createdAt/updatedAt as
+// String?, so handing it that nested object throws mid-parse — which
+// AdminSettingsApi swallows in a try/catch, leaving adminSettingsModel null
+// for the entire app session. Every screen that reads it (payment method
+// switches, ad config, currency, watermark, …) then silently sees nothing.
+function toIsoString(v) {
+  if (v == null) return v;
+  if (typeof v === "string") return v;
+  if (typeof v === "object" && v.$date) return v.$date;
+  if (v instanceof Date) return v.toISOString();
+  return v;
+}
+
 //get setting
 exports.get = async (req, res) => {
   try {
@@ -16,6 +31,8 @@ exports.get = async (req, res) => {
     const settingObj = typeof setting.toObject === "function" ? setting.toObject() : { ...setting };
 
     const merged = { ...settingObj, ...advertise };
+    merged.createdAt = toIsoString(merged.createdAt);
+    merged.updatedAt = toIsoString(merged.updatedAt);
 
     // ── Strip every server-only secret before sending settings to the client ──
     // Payments are now server-side (util/payment.service): the client only needs

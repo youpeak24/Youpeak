@@ -169,8 +169,13 @@ class Setting {
     adminCommissionOfPaidChannel = json['adminCommissionOfPaidChannel'];
     adminCommissionOfPaidVideo = json['adminCommissionOfPaidVideo'];
     durationOfShorts = json['durationOfShorts'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    // Legacy Mongo-shaped {"$date": "..."} instead of a plain string used to
+    // throw here and abort the whole fromJson() call, silently leaving
+    // AdminSettingsApi.adminSettingsModel null for the entire app session —
+    // every switch/config read through it (payments, ads, watermark, …) then
+    // saw nothing, with no visible error anywhere. Tolerate either shape.
+    createdAt = json['createdAt'] is Map ? json['createdAt']['\$date']?.toString() : json['createdAt'];
+    updatedAt = json['updatedAt'] is Map ? json['updatedAt']['\$date']?.toString() : json['updatedAt'];
     minWithdrawalRequestedAmount = json['minWithdrawalRequestedAmount'];
     zegoAppId = json['zegoAppId'];
     zegoAppSignIn = json['zegoAppSignIn'];

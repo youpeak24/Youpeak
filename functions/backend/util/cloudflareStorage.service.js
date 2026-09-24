@@ -72,6 +72,28 @@ class CloudflareStorageService {
   }
 
   /**
+   * Presigned PUT URL so the client can upload a file straight to R2,
+   * bypassing our own serverless function entirely — needed because Vercel
+   * hard-caps a serverless function's request body at 4.5MB (not
+   * configurable), which every real phone-recorded video exceeds. The old
+   * multipart-through-the-server route (/client/file/upload-file) silently
+   * fails with a platform-level 413 for any such file before our own code
+   * (and its much higher MAX_SERVER_SIDE_VIDEO_BYTES check) ever runs.
+   */
+  async getPresignedPutUrl(destinationKey, contentType = "application/octet-stream", expiresInSeconds = 900) {
+    const client = this.getS3Client();
+    const command = new PutObjectCommand({
+      Bucket: this.r2BucketName,
+      Key: destinationKey,
+      ContentType: contentType,
+    });
+    const uploadURL = await getSignedUrl(client, command, { expiresIn: expiresInSeconds });
+    const domain = this.r2PublicDomain;
+    const publicUrl = domain ? `${domain.replace(/\/$/, "")}/${destinationKey}` : null;
+    return { uploadURL, publicUrl };
+  }
+
+  /**
    * Create direct video upload URL for Cloudflare Stream
    */
   async createStreamDirectUpload(maxDurationSeconds = 3600) {

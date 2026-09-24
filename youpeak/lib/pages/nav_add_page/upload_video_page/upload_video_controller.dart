@@ -10,6 +10,7 @@ import 'package:youpeak/custom/custom_ui/loader_ui.dart';
 import 'package:youpeak/database/database.dart';
 import 'package:youpeak/notification/local_notification_services.dart';
 import 'package:youpeak/pages/custom_pages/file_upload_page/convert_video_api.dart';
+import 'package:youpeak/pages/custom_pages/file_upload_page/direct_upload_video_api.dart';
 import 'package:youpeak/pages/custom_pages/file_upload_page/convert_video_image_api.dart';
 import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_api.dart';
 import 'package:youpeak/pages/nav_add_page/upload_video_page/upload_video_api.dart';
@@ -164,7 +165,7 @@ class UploadVideoController extends GetxController {
           final videoThumbnail = await ConvertVideoImageApi.callApi(thumbnail.value, videoType == 1 ? true : false);
 
           if (videoThumbnail != null) {
-            final videoUrl = await ConvertVideoApi.callApi(videoPath, videoType == 1 ? true : false);
+            final videoUrl = await DirectUploadVideoApi.callApi(videoPath, videoType == 1 ? true : false);
 
             if (videoUrl != null) {
               // Final Upload Video Api Calling....
