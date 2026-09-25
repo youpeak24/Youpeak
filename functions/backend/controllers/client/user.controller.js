@@ -263,22 +263,65 @@ exports.setPassword = async (req, res) => {
 };
 
 // ─── Channel Details ──────────────────────────────────────────────────────────
+// The Flutter client (ChannelHomeModel.fromJson) reads channelName,
+// channelImage, totalVideosOfChannel, totalSubscribers, isSubscribed,
+// channelType, subscriptionCost, videoUnlockCost and detailsOfChannel (the
+// video list) all at the TOP LEVEL of this response. This used to nest
+// everything under a `channel` key instead (with `totalSubscriber`,
+// singular, never even `totalSubscribers`) and never returned a video list
+// at all — every field the client read came back null, and the app
+// force-unwraps totalVideosOfChannel while rendering the header, so the
+// whole channel page crashed to a blank/grey screen for every channel,
+// every time, regardless of whose channel or how many videos it had.
 exports.detailsOfChannel = async (req, res) => {
   try {
-    const { channelId, userId } = req.query;
+    const { channelId, userId, start = 1, limit = 20 } = req.query;
     if (!channelId) return res.status(200).json({ status: false, message: "channelId is required." });
 
     const channel = await db.findById("users", channelId);
     if (!channel) return res.status(200).json({ status: false, message: "Channel not found." });
 
-    // Subscriber count
-    const subscribers = await db.find("userWiseSubscriptions", { channelId });
-    const isSubscribed = userId ? subscribers.some(s => s.userId === userId) : false;
+    const [subscribers, videos] = await Promise.all([
+      db.find("userWiseSubscriptions", { channelId }),
+      db.find("videos", { userId: channelId, isActive: true }),
+    ]);
+    const isSubscribed = userId ? subscribers.some((s) => s.userId === userId) : false;
+
+    const startNum = Math.max(Number(start) || 1, 1);
+    const limitNum = Number(limit) || 20;
+    const paginated = videos.slice((startNum - 1) * limitNum, startNum * limitNum);
+
+    const detailsOfChannel = paginated.map((v) => ({
+      _id: v._id || v.id,
+      channelId: v.channelId,
+      title: v.title,
+      videoType: v.videoType,
+      videoTime: v.videoTime,
+      videoUrl: v.videoUrl,
+      videoImage: v.videoImage,
+      videoPrivacyType: v.videoPrivacyType,
+      createdAt: v.createdAt,
+      channelType: channel.channelType,
+      subscriptionCost: channel.subscriptionCost,
+      videoUnlockCost: channel.videoUnlockCost,
+      views: v.views || v.totalViews || 0,
+      isSubscribed,
+      isSaveToWatchLater: false,
+      time: v.createdAt,
+    }));
 
     return res.status(200).json({
       status: true,
       message: "Success",
-      channel: { ...channel, totalSubscriber: subscribers.length, isSubscribed }
+      channelName: channel.fullName || "",
+      channelImage: channel.image || "",
+      channelType: channel.channelType,
+      subscriptionCost: channel.subscriptionCost,
+      videoUnlockCost: channel.videoUnlockCost,
+      totalSubscribers: subscribers.length,
+      totalVideosOfChannel: videos.length,
+      isSubscribed,
+      detailsOfChannel,
     });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
