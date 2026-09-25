@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:youpeak/deep_link/config/easy_deep_links.dart';
 import 'package:youpeak/pages/video_details_page/normal_video_details_view.dart';
@@ -50,7 +51,12 @@ class DeepLinkServices {
         }
       });
 
-      await EasyDeepLinks.initialize(EasyDeepLinkConfig(domain: Constant.domain, customScheme: 'myapplication', debug: true));
+      // domain must be a bare host: incoming links are matched against
+      // uri.host and outgoing ones built with Uri.https(domain, ...). This
+      // used to pass Constant.domain ("https://…"), so every incoming link
+      // was ignored and generating a share link threw a FormatException.
+      await EasyDeepLinks.initialize(
+          EasyDeepLinkConfig(domain: Constant.appDomain, customScheme: Constant.appUrlScheme, debug: kDebugMode));
 
       Utils.showLog("✅ DEEP LINK INITIALIZE SUCCESS");
     } catch (e) {

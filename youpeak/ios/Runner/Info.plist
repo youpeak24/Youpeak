@@ -36,24 +36,18 @@
                         	<key>CFBundleTypeRole</key>
                         	<string>Editor</string>
                         	<key>CFBundleURLName</key>
-                        	<string>youpeak.codderlab.com</string><!--Enter Your App Name In Small Character.app Ex:- xyz --> <!-- CREDENTIAL -->
+                        	<string>youpeak.app</string>
                         	<key>CFBundleURLSchemes</key>
                         	<array>
-                        		<string>YouPeak</string><!--Enter Your App Name In Small Character Ex:- xyz --> <!-- CREDENTIAL -->
-                        		<string>myapplication</string>
+                        		<string>youpeak</string>
                         	</array>
                         </dict>
                         <!-- DEEP LINKS CODE END -->
 
 	</array>
 
-
-				<!-- DEEP LINKS CODE START -->
-                <key>com.apple.developer.associated-domains</key>
-                <array>
-                	<string>applinks:youpeak.codderlab.com</string>  <!--applinks:Enter Your Domain Ex:- yourdomain.com --> <!-- CREDENTIAL -->
-                </array>
-                <!-- DEEP LINKS CODE END -->
+	<!-- Associated domains (applinks:) must live in Runner.entitlements to take
+	     effect; iOS ignores them in Info.plist. See Runner.entitlements. -->
 
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

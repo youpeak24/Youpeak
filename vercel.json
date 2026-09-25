@@ -17,6 +17,8 @@
     { "source": "/client/(.*)", "destination": "/api" },
     { "source": "/cron/(.*)", "destination": "/api" },
     { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/.well-known/(.*)", "destination": "/api" },
+    { "source": "/share", "destination": "/api" },
     {
       "source": "/((?!admin/|client/|api/|static/|manifest\\.json|favicon\\.ico|logo192\\.png|logo512\\.png|robots\\.txt|asset-manifest\\.json|.*\\.[a-zA-Z0-9]+$).*)",
       "destination": "/index.html"

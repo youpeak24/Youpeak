@@ -85,8 +85,8 @@
 
                 <data
                     android:scheme="https"
-                    android:host="enter your domain"
-                    android:pathPrefix="/"/>
+                    android:host="youpeak.app"
+                    android:pathPrefix="/share"/>
             </intent-filter>
 
 
@@ -145,8 +145,9 @@
         <!-- Don't delete the meta-data below.
             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_jzbT9GMXZUN6ny6eIQ8bJbhgBsko1i39" />
-        <!-- REPLACE `BranchKey.test` with the value from your Branch Dashboard -->
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_eFkCY7FT7mAZozkw79lDznlyrGjWRPwK" />
+        <!-- BranchKey.test was holding a Branch *secret* key, which ships inside
+             every APK. Test mode is off, so it was never used; removed. If test
+             mode is ever needed, use the key_test_… value from the Branch dashboard. -->
         <!-- Set to `true` to use `BranchKey.test` -->
         <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
         <meta-data

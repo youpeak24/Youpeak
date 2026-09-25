@@ -4,10 +4,18 @@ import 'package:youpeak/pages/admin_settings/admin_settings_api.dart';
 
 class Constant {
   // Build-time config. Override per build with --dart-define, e.g.
-  //   flutter build apk --dart-define=API_BASE_URL=https://api.youpeak.in/ \
+  //   flutter build apk --dart-define=API_BASE_URL=https://youpeak.app/ \
   //                      --dart-define=API_SECRET_KEY=xxxxxxxx
   static const String _defaultBaseUrl =
-      String.fromEnvironment("API_BASE_URL", defaultValue: "https://youpeak.vercel.app/");
+      String.fromEnvironment("API_BASE_URL", defaultValue: "https://youpeak.app/");
+
+  // Bare host (no scheme) for shareable deep links — must match the Android
+  // intent-filter host and the iOS applinks: entitlement exactly. Kept
+  // separate from [domain], which is the API origin *with* its scheme (used
+  // for sockets and image URLs), so the API can move without breaking links.
+  static const String appDomain =
+      String.fromEnvironment("APP_DOMAIN", defaultValue: "youpeak.app");
+  static const String appUrlScheme = "youpeak";
 
   static const bool _useLocalDev =
       bool.fromEnvironment("USE_LOCAL_DEV", defaultValue: false);
