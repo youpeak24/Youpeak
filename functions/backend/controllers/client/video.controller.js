@@ -322,9 +322,16 @@ exports.createVideo = async (req, res) => {
       }
     }
 
-    const [uniqueVideoId, user] = await Promise.all([generateUniqueVideoId(), User.findOne({ _id: req.body.userId, isActive: true, isAddByAdmin: false })]);
+    // isAddByAdmin: false in the query itself would only match documents where
+    // that field was explicitly set to false — Firestore equality doesn't
+    // treat a missing field as false, and 15 of the 18 live user docs (every
+    // real signup, including the founder's own account) never had this field
+    // set at all. That silently rejected every real user's upload with "user
+    // does not found!". Fetch by id/isActive only, then check the flag in code
+    // so missing == not-admin-added, same as it was clearly meant to behave.
+    const [uniqueVideoId, user] = await Promise.all([generateUniqueVideoId(), User.findOne({ _id: req.body.userId, isActive: true })]);
 
-    if (!user) {
+    if (!user || user.isAddByAdmin === true) {
       if (req.body.videoImage) {
         await deleteFromStorage(req.body.videoImage);
       }
