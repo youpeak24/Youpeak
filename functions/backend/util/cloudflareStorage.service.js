@@ -51,6 +51,15 @@ class CloudflareStorageService {
         accessKeyId: c.r2AccessKey,
         secretAccessKey: c.r2SecretKey,
       },
+      // AWS SDK v3 defaults to computing (and signing in) a request checksum
+      // for every PutObjectCommand since ~mid-2024. That's fine for direct
+      // SDK calls, but fatal for a *presigned* PUT URL: the checksum for an
+      // empty body gets baked into the signature before the client ever
+      // attaches the real file, so R2 rejects every upload with a signature
+      // mismatch the moment real bytes are sent. WHEN_REQUIRED restores the
+      // old behaviour (only checksum when explicitly asked), which is what a
+      // presigned URL handed to an external client needs.
+      requestChecksumCalculation: "WHEN_REQUIRED",
     });
   }
 
