@@ -153,10 +153,23 @@ exports.report = async (req, res) => {
     const coinRate = num((global.settingJSON || {}).coinToInrRate, 0.01);
     const ids = new Set(partners.map((u) => String(u._id || u.id)));
 
+    const partnerIdsList = Array.from(ids);
     const [profiles, referrals, ads] = await Promise.all([
       Promise.all(partners.map((u) => db.findOne("PartnerProfile", { userId: String(u._id || u.id) }))),
-      ids.size ? db.find("referralHistories", {}) : [],
-      ids.size ? db.find("localBusinessAds", {}) : [],
+      ids.size === 1
+        ? db.find("referralHistories", { referrerId: partnerIdsList[0] })
+        : ids.size > 0 && ids.size <= 10
+        ? Promise.all(partnerIdsList.map((id) => db.find("referralHistories", { referrerId: id }))).then((arrs) => arrs.flat())
+        : ids.size
+        ? db.find("referralHistories", {})
+        : [],
+      ids.size === 1
+        ? db.find("localBusinessAds", { submittedByUserId: partnerIdsList[0] })
+        : ids.size > 0 && ids.size <= 10
+        ? Promise.all(partnerIdsList.map((id) => db.find("localBusinessAds", { submittedByUserId: id }))).then((arrs) => arrs.flat())
+        : ids.size
+        ? db.find("localBusinessAds", {})
+        : [],
     ]);
 
     const rows = partners.map((u, i) => {

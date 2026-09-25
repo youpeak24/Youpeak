@@ -1,14 +1,27 @@
+/* ── YouPeak Design System Tokens ── */
 :root {
- --new-color : #059669;
- --new-color-dark : #047857;
- --new-border-color : #e2e2e2;
- /* Flat, not a gradient — kept as a variable (rather than inlined at each
-    call site) so every consumer (sidebar active state, login screen) stays
-    in sync from one place. */
- --new-color-gradient : var(--new-color);
- --radius-sm : 4px;
- --radius-md : 6px;
- --radius-lg : 8px;
- --shadow-sm : 0 1px 2px rgba(15, 23, 42, 0.06);
- --shadow-md : 0 2px 8px rgba(15, 23, 42, 0.08);
+  /* Brand accent — Forest Green */
+  --new-color:           #16a34a;
+  --new-color-dark:      #15803d;
+  --new-color-gradient:  #16a34a; /* NO gradient — flat color */
+  --new-border-color:    #e5e7eb;
+
+  /* Old variables kept for legacy compatibility */
+  --prime--:          #16a34a;
+  --btnPrime--:       #16a34a;
+  --pink--:           #16a34a;
+  --blackPrime--:     #111827;
+  --grayPrime--:      #6b7280;
+  --inputBorder--:    #d1d5db;
+  --tablePrime--:     #f9fafb;
+  --lightOrangeColor: #16a34a;
+
+  /* Radius — all zero for flat design */
+  --radius-sm:  0px;
+  --radius-md:  0px;
+  --radius-lg:  0px;
+
+  /* Shadows — minimal */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md:  0 1px 3px rgba(0,0,0,0.07);
 }

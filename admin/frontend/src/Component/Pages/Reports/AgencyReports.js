@@ -146,13 +146,13 @@ export default function AgencyReports() {
             <div className="col-md-4">
               <div className="p-3 border rounded">
                 <h6 className="text-muted">Gross Platform Revenue</h6>
-                <h4 className="text-primary">₹ {report.totalGrossRevenue.toFixed(2)}</h4>
+                <h4 className="text-primary">₹ {Number(report?.totalGrossRevenue || 0).toFixed(2)}</h4>
               </div>
             </div>
             <div className="col-md-4">
               <div className="p-3 border rounded">
                 <h6 className="text-muted">Commission Share</h6>
-                <h4 className="text-success">₹ {report.totalCommissionEarned.toFixed(2)}</h4>
+                <h4 className="text-success">₹ {Number(report?.totalCommissionEarned || 0).toFixed(2)}</h4>
               </div>
             </div>
 

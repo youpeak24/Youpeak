@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -181,7 +183,7 @@ class _GrievanceViewState extends State<GrievanceView> {
             () => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
+                const FeatureArtwork(asset: AppVisuals.grievanceHero),
                 Text(AppStrings.grievanceOfficerSubtitle.tr, style: GoogleFonts.urbanist(fontSize: 13, color: AppColor.grey)),
                 const SizedBox(height: 15),
                 if (isLoadingOfficer)

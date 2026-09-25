@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/pages/admin_settings/admin_settings_api.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
@@ -68,46 +70,7 @@ class _ForceUpdateDialogState extends State<ForceUpdateDialog> with SingleTicker
                     builder: (context, double value, child) {
                       return Transform.scale(
                         scale: 1 + (0.08 * (1 - (value - 0.5).abs() * 2)),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColor.primaryColor.withOpacity(0.2),
-                                AppColor.primaryColor.withOpacity(0.05),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColor.primaryColor.withOpacity(0.3),
-                                blurRadius: 25,
-                                spreadRadius: 3,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Container(
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColor.primaryColor,
-                                    AppColor.primaryColor.withOpacity(0.7),
-                                  ],
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.system_update_alt_rounded,
-                                size: 38,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: const AppArtwork(asset: AppVisuals.update, height: 132),
                       );
                     },
                   ),

@@ -12,7 +12,7 @@ import 'package:youpeak/pages/buy_coin_page/controller/buy_coin_controller.dart'
 import 'package:youpeak/pages/buy_coin_page/widget/buy_coin_plan_shimmer.dart';
 import 'package:youpeak/pages/buy_coin_page/widget/buy_coin_widget.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
-import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/utils.dart';
 
@@ -116,8 +116,12 @@ class BuyCoinView extends StatelessWidget {
                                           child: Column(
                                             children: [
                                               Image.asset(
-                                                AppIcons.coin,
+                                                AppVisuals.coinPack(
+                                                  controller.coinPlans.where((plan) => (plan.coin ?? 0) < (indexData.coin ?? 0)).length,
+                                                  controller.coinPlans.length,
+                                                ),
                                                 width: 70,
+                                                height: 70,
                                               ),
                                               8.height,
                                               RichText(

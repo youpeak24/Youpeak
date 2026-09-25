@@ -46,7 +46,7 @@ class _PreviewPlaylistViewState extends State<PreviewPlaylistView> {
     controller.playListId = widget.playListId;
 
     controller.getPlayListApi(
-      Database.loginUserId!,
+      Database.loginUserId ?? "",
       widget.playListId,
     );
   }
@@ -211,7 +211,7 @@ class _PreviewPlaylistViewState extends State<PreviewPlaylistView> {
                               showRemovePlatListDialog(
                                 () async {
                                   await RemoveIntoPlayListApi.callApi(
-                                    Database.loginUserId!,
+                                    Database.loginUserId ?? "",
                                     controller.getPlayListVideo?[index]
                                             .channelId ??
                                         "",

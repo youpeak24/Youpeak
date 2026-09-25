@@ -320,8 +320,8 @@ class _PreviewShortsVideoState extends State<PreviewShortsVideo> {
       url: controller.mainShortsVideos[widget.index].videoUrl!,
     );
 
-    await ShareCountApiClass.callApi(Database.loginUserId!,
-        controller.mainShortsVideos[widget.index].id.toString());
+    await ShareCountApiClass.callApi(Database.loginUserId ?? "",
+        controller.mainShortsVideos[widget.index].id?.toString() ?? "");
 
     customChanges["share"] += 1;
   }
@@ -401,7 +401,7 @@ class _PreviewShortsVideoState extends State<PreviewShortsVideo> {
     onStopVideo();
     // Get.to(PreviewShortsChannelView(channelId: controller.mainShortsVideos[widget.index].channelId!));
     Get.to(() => YourChannelView(
-        loginUserId: Database.loginUserId!,
+        loginUserId: Database.loginUserId ?? "",
         channelId: controller.mainShortsVideos[widget.index].channelId ?? ""));
   }
 
@@ -461,14 +461,16 @@ class _PreviewShortsVideoState extends State<PreviewShortsVideo> {
 
   Future<void> onCreateHistory() async {
     if (videoPlayerController != null &&
-        (videoPlayerController?.value.isInitialized ?? false)) {
+        (videoPlayerController?.value.isInitialized ?? false) &&
+        Database.loginUserId != null &&
+        Database.loginUserId!.isNotEmpty) {
       final watchTime = videoPlayerController!.value.position.inSeconds;
       AppSettings.showLog("Video Watch Time ${widget.index} => $watchTime");
       await CreateWatchHistoryApi.callApi(
         loginUserId: Database.loginUserId!,
-        videoId: controller.mainShortsVideos[widget.index].id!,
-        videoChannelId: controller.mainShortsVideos[widget.index].channelId!,
-        videoUserId: controller.mainShortsVideos[widget.index].userId!,
+        videoId: controller.mainShortsVideos[widget.index].id ?? "",
+        videoChannelId: controller.mainShortsVideos[widget.index].channelId ?? "",
+        videoUserId: controller.mainShortsVideos[widget.index].userId ?? "",
         watchTimeInMinute: watchTime.toDouble(),
       );
     }

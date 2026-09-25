@@ -1,183 +1,149 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Skeleton } from "@mui/material";
 
 function Table(props) {
   const {
     data,
-    checkBoxShow,
     mapData,
     PerPage,
     Page,
     type,
     style,
-    onChildValue,
     selectAllChecked,
     handleSelectAll,
-    loading
+    loading,
   } = props;
 
-  const [sortColumn, setSortColumn] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [checkBox, setCheckBox] = useState();
-
-
-
-
   const sortedData =
-    data?.length > 0 &&
-    [...data].sort((a, b) => {
-      const valueA = a[sortColumn];
-      const valueB = b[sortColumn];
+    data?.length > 0 ? [...data] : [];
 
-      if (valueA < valueB) {
-        return sortOrder === "asc" ? -1 : 1;
-      }
-      if (valueA > valueB) {
-        return sortOrder === "asc" ? 1 : -1;
-      }
-      return 0;
-    });
-
-  // Slice the data if it's defined
   const startIndex = (Page - 1) * PerPage;
   const endIndex = startIndex + PerPage;
-  const currentPageData = data && data?.slice(startIndex, endIndex);
+  const currentPageData = data && data.slice(startIndex, endIndex);
 
   return (
-    <>
-      <div className="primeMain table-custom">
-        <table
-          width="100%"
-          className="primeTable text-center"
-          style={{ ...style }}
-        >
-          <thead
-            className=""
-            style={{ zIndex: "2", position: "sticky", top: "0" }}
-          >
-            <tr>
-              {mapData?.map((res) => {
-                return (
-                  <th className="text-nowrap" key={res.Header}>
-                    <div className="table-head">
-                      {res?.Header === "checkBox" ? (
-                        <input
-                          type="checkbox"
-                          checked={selectAllChecked}
-                          onChange={handleSelectAll}
-                        />
-                      ) : (
-                        `${" "}${res?.Header}`
-                      )}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
+    <div className="primeMain table-custom" style={{ overflowX: "auto" }}>
+      <table width="100%" className="primeTable" style={{ ...style }}>
+        <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
+          <tr>
+            {mapData?.map((res) => (
+              <th className="text-nowrap" key={res.Header}>
+                <div className="table-head">
+                  {res?.Header === "checkBox" ? (
+                    <input
+                      type="checkbox"
+                      checked={selectAllChecked}
+                      onChange={handleSelectAll}
+                      style={{ accentColor: "var(--accent)", cursor: "pointer" }}
+                    />
+                  ) : (
+                    res?.Header
+                  )}
+                </div>
+              </th>
+            ))}
+          </tr>
+        </thead>
 
-          {loading ? (
-            <tbody>
-              {[1, 2, 3, 4, 5].map((_, index) => (
-                <tr key={index}>
-                  {mapData.map((res, i) => (
-                    <td key={i}>
-                      <Skeleton variant="rectangular" height={30} style={{ borderRadius: '4px', margin: '10px' }} />
+        {loading ? (
+          <tbody>
+            {[1, 2, 3, 4, 5].map((_, index) => (
+              <tr key={index}>
+                {mapData.map((res, i) => (
+                  <td key={i}>
+                    <Skeleton
+                      variant="rectangular"
+                      height={22}
+                      style={{ borderRadius: 0 }}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        ) : (
+          <>
+            {type === "server" && (
+              <tbody>
+                {sortedData?.length > 0 ? (
+                  sortedData.map((i, k) => (
+                    <React.Fragment key={i?._id || `server-row-${k}`}>
+                      <tr>
+                        {mapData.map((res) => (
+                          <td key={`${res?.Header || res?.body || "col"}-${k}`}>
+                            {res.Cell ? (
+                              <res.Cell row={i} index={k} />
+                            ) : (
+                              <span className={res.class}>
+                                {i[res.body] || "—"}
+                              </span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={mapData.length}
+                      className="text-center"
+                      style={{
+                        padding: "40px 20px",
+                        color: "var(--text-tertiary)",
+                        fontSize: "0.8rem",
+                        borderBottom: "none",
+                      }}
+                    >
+                      No data found
                     </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          ) : (
-            <>
-              {type == "server" && (
-                <>
-                  <tbody>
-                    {sortedData?.length > 0 ? (
-                      <>
-                        {sortedData.map((i, k) => {
-                          return (
-                            <React.Fragment key={i?._id || `server-row-${k}`}>
-                              <tr>
-                                {mapData.map((res) => {
-                                  return (
-                                    <td key={`${res?.Header || res?.body || "col"}-${k}`}>
-                                      {res.Cell ? (
-                                        <res.Cell row={i} index={k} />
-                                      ) : (
-                                        <span className={res.class}>
-                                          {i[res.body] || "-"}
-                                        </span>
-                                      )}
-                                    </td>
-                                  );
-                                })}
-                              </tr>
-                            </React.Fragment>
-                          );
-                        })}
-                      </>
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="25"
-                          className="text-center"
-                          style={{ borderBottom: "none", padding: '20px' }}
-                        >
-                          No Data Found !
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </>
-              )}
+                  </tr>
+                )}
+              </tbody>
+            )}
 
-              {type == "client" && (
-                <>
-                  <tbody>
-                    {currentPageData?.length > 0 ? (
-                      <>
-                        {currentPageData?.map((i, k) => {
-                          return (
-                            <React.Fragment key={i?._id || `client-row-${k}`}>
-                              <tr>
-                                {mapData.map((res) => {
-                                  return (
-                                    <td key={`${res?.Header || res?.body || "col"}-${k}`}>
-                                      {res.Cell ? (
-                                        <res.Cell row={i} index={k} />
-                                      ) : (
-                                        <span className={res.class}>
-                                          {i[res.body]}
-                                        </span>
-                                      )}
-                                    </td>
-                                  );
-                                })}
-                              </tr>
-                            </React.Fragment>
-                          );
-                        })}
-                      </>
-                    ) : (
+            {type === "client" && (
+              <tbody>
+                {currentPageData?.length > 0 ? (
+                  currentPageData.map((i, k) => (
+                    <React.Fragment key={i?._id || `client-row-${k}`}>
                       <tr>
-                        <td
-                          colSpan="16"
-                          className="text-center"
-                          style={{ borderBottom: "none", padding: "20px" }}
-                        >
-                          No Data Found !
-                        </td>
+                        {mapData.map((res) => (
+                          <td key={`${res?.Header || res?.body || "col"}-${k}`}>
+                            {res.Cell ? (
+                              <res.Cell row={i} index={k} />
+                            ) : (
+                              <span className={res.class}>
+                                {i[res.body]}
+                              </span>
+                            )}
+                          </td>
+                        ))}
                       </tr>
-                    )}
-                  </tbody>
-                </>
-              )}
-            </>
-          )}
-        </table>
-      </div>
-    </>
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={mapData.length}
+                      className="text-center"
+                      style={{
+                        padding: "40px 20px",
+                        color: "var(--text-tertiary)",
+                        fontSize: "0.8rem",
+                        borderBottom: "none",
+                      }}
+                    >
+                      No data found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )}
+          </>
+        )}
+      </table>
+    </div>
   );
 }
 

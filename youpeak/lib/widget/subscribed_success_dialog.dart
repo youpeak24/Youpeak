@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
-import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/utils.dart';
 
@@ -34,7 +35,7 @@ class SubscribedSuccessDialog {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     25.height,
-                    Center(child: SizedBox(height: 180, width: 180, child: Image.asset(AppIcons.withdrawalDone))),
+                    const Center(child: SuccessArtwork(asset: AppVisuals.subscribed)),
                     15.height,
                     Center(
                       child: Text(

@@ -57,8 +57,12 @@ function AppLanguage(props) {
   };
 
   const handleDelete = (row) => {
-
-    props.deleteLanguage(row.languageCode);
+    const confirmation = warning(null, "Are you sure you want to delete this language?");
+    confirmation.then((res) => {
+      if (res.isConfirmed) {
+        props.deleteLanguage(row.languageCode);
+      }
+    });
   };
 
   const handleToggleState = (row, toggleType) => {

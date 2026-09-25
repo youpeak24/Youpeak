@@ -1,3 +1,4 @@
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'dart:convert';
 
 import 'package:get/get.dart';
@@ -100,7 +101,7 @@ class UploadVideoApi {
         _uploadVideoModel = UploadVideoModel.fromJson(jsonResponse);
 
         if (_uploadVideoModel?.status ?? false) {
-          CustomToast.show(AppStrings.videoUploadSuccessfully.tr);
+          CustomToast.celebrate(AppStrings.videoUploadSuccessfully.tr, AppVisuals.uploadDone);
           return true;
         }
         AppSettings.showLog(

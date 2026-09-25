@@ -126,7 +126,7 @@ class BuyCoinHistoryView extends StatelessWidget {
                 builder: (controller) => controller.isLoading
                     ? const HistoryShimmer()
                     : controller.coinHistory.isEmpty
-                        ? DataNotFoundUi(title: AppStrings.coinHistoryNotAvailable.tr)
+                        ? DataNotFoundUi(type: EmptyStateType.history, title: AppStrings.coinHistoryNotAvailable.tr)
                         : SingleChildScrollView(
                             controller: controller.scrollController,
                             physics: const BouncingScrollPhysics(),
@@ -252,11 +252,7 @@ class CoinHistoryItem extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Obx(() => Image.asset(
-                          width: 18,
-                          AppIcons.coin,
-                          color: isDarkMode.value ? AppColor.white : null,
-                        )),
+                    Image.asset(AppIcons.coin, width: 18),
                     const SizedBox(width: 3),
                     Text(
                       coin,

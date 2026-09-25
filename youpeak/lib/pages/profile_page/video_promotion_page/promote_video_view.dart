@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -230,7 +232,7 @@ class _PromoteVideoViewState extends State<PromoteVideoView> {
                     () => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 10),
+                        const FeatureArtwork(asset: AppVisuals.promoteHero),
                         GestureDetector(
                           onTap: isPurchasing ? null : openVideoPicker,
                           child: Container(

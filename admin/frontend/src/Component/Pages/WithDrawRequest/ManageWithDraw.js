@@ -17,7 +17,7 @@ const ManageWithDraw = () => {
 
   const [dayAnalytics, setDayAnalytics] = useState("today");
   const { multiButtonSelect, setMultiButtonSelect, handleMultiButtonSelect } =
-    useTabSelectWithClearSearch("User");
+    useTabSelectWithClearSearch("Pending");
   const [startDate, setStartDate] = useState("All");
   const [endDate, setEndDate] = useState("All");
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/youpeak_emoji.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/custom/custom_ui/loader_ui.dart';
@@ -127,6 +128,7 @@ class CommentBottomSheet {
               ),
             ),
             SizedBox(height: SizeConfig.blockSizeVertical * 1),
+            EmojiQuickBar(size: 26, onPick: (emoji) => EmojiQuickBar.insertInto(_commentController.commentController, emoji)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -249,7 +251,7 @@ class CommentBottomSheet {
                                                 SizedBox(height: SizeConfig.blockSizeVertical * 2),
                                                 SizedBox(
                                                   width: SizeConfig.screenWidth / 1.1,
-                                                  child: Text(controller.mainComments[controller.selectedCommentType][index].commentText.toString(),
+                                                  child: EmojiText(controller.mainComments[controller.selectedCommentType][index].commentText.toString(),
                                                       style: GoogleFonts.urbanist(), maxLines: 3, overflow: TextOverflow.ellipsis),
                                                 ),
                                                 Row(

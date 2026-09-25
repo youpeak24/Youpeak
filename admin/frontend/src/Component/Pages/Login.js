@@ -2,83 +2,36 @@ import { useEffect, useState } from "react";
 import Button from "../extra/Button";
 import Input from "../extra/Input";
 import Logo from "../../assets/images/logo.svg";
-import LoginContain from "../../assets/images/LoginContain.png";
 import { useNavigate } from "react-router-dom";
 import { loginAdmin } from "../store/admin/admin.action";
-import LoginImg from "../../assets/images/login2.png";
 import { connect, useSelector } from "react-redux";
 import { projectName } from "../../util/config";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { setToast } from "../../util/toast";
 
 const Login = (props) => {
   let navigate = useNavigate();
-
   const isAuth = useSelector((state) => state.admin.isAuth);
 
-  // Commented out to prevent navigation race condition
   useEffect(() => {
     isAuth && navigate("/admin");
   }, [isAuth]);
 
- 
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
-
-  const [error, setError] = useState({
-    email: "",
-    password: "",
-  });
-
-  const copyToClipboard = async (text) => {
-    const value = String(text ?? "");
-    if (!value) return false;
-
-    try {
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(value);
-        return true;
-      }
-    } catch (err) {
-      // Fall back below.
-    }
-
-    try {
-      const textarea = document.createElement("textarea");
-      textarea.value = value;
-      textarea.setAttribute("readonly", "");
-      textarea.style.position = "absolute";
-      textarea.style.left = "-9999px";
-      document.body.appendChild(textarea);
-      textarea.select();
-      const successful = document.execCommand("copy");
-      document.body.removeChild(textarea);
-      return successful;
-    } catch (err) {
-      return false;
-    }
-  };
-
-  
+  const [error, setError] = useState({ email: "", password: "" });
 
   const handleSubmit = async () => {
     if (!email || !password) {
       let error = {};
       if (!email) error.email = "Email Is Required !";
-      if (!password) error.password = "password is required !";
+      if (!password) error.password = "Password is required !";
       return setError({ ...error });
     } else {
-      let login = {
-        email,
-        password,
-      };
-
-      setLoading(true)
+      let login = { email, password };
+      setLoading(true);
       props.loginAdmin(login, navigate, () => {
-        setLoading(false)
+        setLoading(false);
       });
     }
   };
@@ -90,120 +43,205 @@ const Login = (props) => {
     }
   };
 
-
   return (
-    <>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+      {/* ─── Left Panel ─── */}
+      <div
+        className="d-lg-flex d-none"
+        style={{
+          width: "50%",
+          background: "#111827",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "48px",
+          borderRight: "1px solid #1f2937",
+        }}
+      >
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <img src={Logo} alt="Logo" width={32} height={32} />
+          <span
+            style={{
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "0.95rem",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            {projectName}
+          </span>
+        </div>
 
-      <div className="d-flex overflow-hidden" style={{ height: "100vh" }}>
-        <div className="d-lg-flex d-none col-lg-7 col-xl-6 p-5 h-100 flex-column justify-content-between align-items-start" style={{
-          background: "var(--new-color-gradient)",
-          color: "#ffffff"
-        }}>
-          <div>
-            <div className="d-flex align-items-center gap-3 mb-5">
-              <img src={Logo} alt="YouPeak" height={55} width={55} />
-              <h1 className="fw-bold m-0" style={{ fontSize: "2.2rem", letterSpacing: "0.5px" }}>YouPeak</h1>
-            </div>
-            <h2 className="fw-bold mt-5" style={{ fontSize: "2.6rem", lineHeight: "1.2" }}>
-              Control Center & Platform Management
-            </h2>
-            <p style={{ opacity: 0.9, fontSize: "1.15rem", maxWidth: "480px", marginTop: "1.2rem" }}>
-              Manage users, live video broadcasts, monetization rewards, coin transactions, and app settings dynamically on YouPeak.
-            </p>
+        {/* Center content */}
+        <div>
+          <div
+            style={{
+              display: "inline-block",
+              background: "#16a34a",
+              color: "#fff",
+              fontSize: "0.65rem",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              padding: "3px 8px",
+              marginBottom: "20px",
+            }}
+          >
+            Admin Console
           </div>
-          <div style={{ opacity: 0.85, fontSize: "0.95rem" }}>
-            © {new Date().getFullYear()} YouPeak Platform. All rights reserved.
+          <h1
+            style={{
+              color: "#fff",
+              fontSize: "2rem",
+              fontWeight: 700,
+              lineHeight: 1.2,
+              letterSpacing: "-0.03em",
+              marginBottom: "16px",
+            }}
+          >
+            Control Center &amp;
+            <br />
+            Platform Management
+          </h1>
+          <p
+            style={{
+              color: "#9ca3af",
+              fontSize: "0.85rem",
+              lineHeight: 1.7,
+              maxWidth: "360px",
+            }}
+          >
+            Manage users, live broadcasts, monetization, coin transactions,
+            and app settings for the {projectName} platform.
+          </p>
+
+          {/* Feature list */}
+          <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "10px" }}>
+            {["User & Content Management", "Financial Controls & Plans", "Real-time Analytics", "Fraud & Security"].map((item) => (
+              <div
+                key={item}
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                <div
+                  style={{
+                    width: "4px",
+                    height: "4px",
+                    background: "#16a34a",
+                    flexShrink: 0,
+                  }}
+                />
+                <span style={{ color: "#d1d5db", fontSize: "0.8rem" }}>{item}</span>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="col-12 col-lg-5 col-xl-6 h-100 overflow-auto" style={{ backgroundColor: "#F8FAFC", color: "#1C1C1E" }}>
-          <div className="p-4 p-md-5 d-flex align-items-center justify-content-center min-vh-100">
-            <div className="w-100 mx-auto" style={{ maxWidth: "440px" }}>
-              <div>
-                <img
-                  src={Logo}
-                  alt="Logo"
-                  className="mb-2"
-                  height={75}
-                  width={75}
-                />
-              </div>
-              <h2 className="fw-bold" style={{ color: "#1C1C1E" }}>Login to your account</h2>
-              <p style={{ color: "#55606E", fontSize: "0.95rem" }}>
-                Enter your credentials to access your {projectName} admin console.
-              </p>
-              <Input
-                label={`Email`}
-                name={"email"}
-                id={`loginEmail`}
-                placeholder={"Enter Email"}
-                type={`email`}
-                value={email}
-                errorMessage={error.email && error.email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (!e.target.value) {
-                    return setError({
-                      ...error,
-                      email: `Email Is Required`,
-                    });
-                  } else {
-                    return setError({
-                      ...error,
-                      email: "",
-                    });
-                  }
-                }}
-                autoComplete="username"
-                onKeyPress={handleKeyPress}
-              />
-              <Input
-                label={`Password`}
-                name={"password"}
-                id={`loginPassword`}
-                placeholder={"Enter Password"}
-                type={`password`}
-                value={password}
-                errorMessage={error.password && error.password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (!e.target.value) {
-                    return setError({
-                      ...error,
-                      password: `Password Is Required`,
-                    });
-                  } else {
-                    return setError({
-                      ...error,
-                      password: "",
-                    });
-                  }
-                }}
-                autoComplete="current-password"
-                onKeyPress={handleKeyPress}
-              />
 
-              <div className="w-100" >
-                <h4
-                  className="cursor-pointer fs-6 text-end text-secondary"
-                  style={{ fontWeight: 600, fontSize: "small", color: "var(--new-color)" }}
-                  onClick={() => navigate("/forgotPassword")}
-                >
-                  Forgot Password ?
-                </h4>
-              </div>
-              <div className="d-flex flex-column justify-content-center w-100 gap-3 mt-4">
-                <Button
-                  btnName={loading ? "Loading..." : "Login"}
-                  newClass={"submit-btn w-100 fw-medium"}
-                  onClick={handleSubmit}
-                  disabled={loading}
-                />
-              </div>
+        {/* Footer */}
+        <p style={{ color: "#4b5563", fontSize: "0.72rem" }}>
+          © {new Date().getFullYear()} {projectName}. All rights reserved.
+        </p>
+      </div>
+
+      {/* ─── Right Panel ─── */}
+      <div
+        style={{
+          flex: 1,
+          background: "#f9fafb",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "40px 24px",
+          overflowY: "auto",
+        }}
+      >
+        <div style={{ width: "100%", maxWidth: "360px" }}>
+          {/* Mobile logo */}
+          <div className="d-flex d-lg-none align-items-center gap-2 mb-4">
+            <img src={Logo} alt="Logo" width={28} height={28} />
+            <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "#111827" }}>
+              {projectName}
+            </span>
+          </div>
+
+          <h2
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              color: "#111827",
+              letterSpacing: "-0.02em",
+              marginBottom: "4px",
+            }}
+          >
+            Sign in
+          </h2>
+          <p style={{ color: "#6b7280", fontSize: "0.8rem", marginBottom: "28px" }}>
+            Enter your credentials to access the admin console.
+          </p>
+
+          {/* Form */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+            <Input
+              label="Email"
+              name="email"
+              id="loginEmail"
+              placeholder="you@example.com"
+              type="email"
+              value={email}
+              errorMessage={error.email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError({ ...error, email: e.target.value ? "" : "Email Is Required" });
+              }}
+              autoComplete="username"
+              onKeyPress={handleKeyPress}
+            />
+            <Input
+              label="Password"
+              name="password"
+              id="loginPassword"
+              placeholder="••••••••"
+              type="password"
+              value={password}
+              errorMessage={error.password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError({ ...error, password: e.target.value ? "" : "Password Is Required" });
+              }}
+              autoComplete="current-password"
+              onKeyPress={handleKeyPress}
+            />
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "20px",
+                marginTop: "-6px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#16a34a",
+                  cursor: "pointer",
+                  fontWeight: 500,
+                }}
+                onClick={() => navigate("/forgotPassword")}
+              >
+                Forgot password?
+              </span>
             </div>
+
+            <Button
+              btnName={loading ? "Signing in..." : "Sign in"}
+              newClass="submit-btn w-100"
+              onClick={handleSubmit}
+              disabled={loading}
+            />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

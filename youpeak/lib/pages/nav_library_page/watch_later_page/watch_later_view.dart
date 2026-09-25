@@ -79,7 +79,7 @@ class WatchLaterView extends StatelessWidget {
               child: controller.mainWatchLaterVideos == null
                   ? const VideoListShimmerUi()
                   : controller.mainWatchLaterVideos!.isEmpty
-                      ? DataNotFoundUi(title: AppStrings.videoNotSaved.tr)
+                      ? DataNotFoundUi(type: EmptyStateType.playlist, title: AppStrings.videoNotSaved.tr)
                       : RefreshIndicator(
                           color: AppColor.primaryColor,
                           onRefresh: () async => await controller.onGetWatchLaterVideo(),

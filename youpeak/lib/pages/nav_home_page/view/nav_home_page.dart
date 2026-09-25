@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/database/database.dart';
@@ -27,6 +28,12 @@ class NavHomePageView extends StatefulWidget {
   State<NavHomePageView> createState() => _NavHomePageViewState();
 }
 
+const _chipBadges = {
+  "Popular": AppVisuals.topCreatorBadge,
+  "New": AppVisuals.newBadge,
+  "Live": AppVisuals.liveBadge,
+};
+
 class _NavHomePageViewState extends State<NavHomePageView> {
   @override
   void initState() {
@@ -40,15 +47,22 @@ class _NavHomePageViewState extends State<NavHomePageView> {
         elevation: 0,
         leadingWidth: 45,
         backgroundColor: Colors.transparent,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: Icon(Icons.play_arrow_rounded, color: AppColor.primaryColor, size: 30),
-        ),
-        titleSpacing: 5,
-        title: Text(
-          AppStrings.appName.tr,
-          style: GoogleFonts.urbanist(fontSize: 22, fontWeight: FontWeight.w800, color: isDarkMode.value ? AppColor.white : AppColor.primaryTextIcons),
-        ),
+        // The wordmark's charcoal "You" disappears on dark surfaces, so dark
+        // mode pairs the brand mark with live text instead.
+        automaticallyImplyLeading: false,
+        leading: isDarkMode.value
+            ? Padding(
+                padding: const EdgeInsets.only(left: 12),
+                child: Image.asset(AppIcons.logo, width: 32, height: 32),
+              )
+            : null,
+        titleSpacing: isDarkMode.value ? 5 : 4,
+        title: isDarkMode.value
+            ? Text(
+                AppStrings.appName.tr,
+                style: GoogleFonts.urbanist(fontSize: 22, fontWeight: FontWeight.w800, color: AppColor.white),
+              )
+            : Image.asset(AppVisuals.wordmark, height: 46, semanticLabel: AppStrings.appName.tr),
         actions: [
           GestureDetector(
             onTap: () => Get.to(() => const NotificationPageView()),
@@ -157,13 +171,22 @@ class _NavHomePageViewState extends State<NavHomePageView> {
                         color: isSelected ? AppColor.primaryColor : AppColor.secondaryMintGreen,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Text(
-                        controller.tabTitles[index],
-                        style: GoogleFonts.urbanist(
-                          fontSize: 13,
-                          color: isSelected ? AppColor.white : AppColor.primaryTextIcons,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (_chipBadges[controller.tabTitles[index]] != null) ...[
+                            Image.asset(_chipBadges[controller.tabTitles[index]]!, width: 18, height: 18),
+                            const SizedBox(width: 4),
+                          ],
+                          Text(
+                            controller.tabTitles[index],
+                            style: GoogleFonts.urbanist(
+                              fontSize: 13,
+                              color: isSelected ? AppColor.white : AppColor.primaryTextIcons,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );

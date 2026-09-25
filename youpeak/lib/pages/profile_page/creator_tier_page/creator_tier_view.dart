@@ -11,6 +11,8 @@ import 'package:youpeak/pages/profile_page/creator_tier_page/creator_tier_api.da
 import 'package:youpeak/pages/profile_page/payment_page/razor_pay/razor_pay_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
 import 'package:youpeak/utils/payment/payment_api.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
@@ -86,7 +88,7 @@ class _CreatorTierViewState extends State<CreatorTierView> {
         if (Get.isDialogOpen == true) Get.back();
         if (verify["status"] == true) {
           await GetProfileApi.callApi(Database.loginUserId ?? "");
-          CustomToast.show(AppStrings.tierUpgradeSuccess.tr);
+          CustomToast.celebrate(AppStrings.tierUpgradeSuccess.tr, AppVisuals.partyPopper);
           await loadTiers();
         } else {
           CustomToast.show(verify["message"]?.toString() ?? AppStrings.someThingWentWrong.tr);
@@ -131,7 +133,7 @@ class _CreatorTierViewState extends State<CreatorTierView> {
                   () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 10),
+                      const FeatureArtwork(asset: AppVisuals.creatorHero),
                       Text(AppStrings.creatorVipPassSubtitle.tr, style: GoogleFonts.urbanist(fontSize: 13, color: AppColor.grey)),
                       const SizedBox(height: 12),
                       Container(
@@ -187,6 +189,8 @@ class _CreatorTierViewState extends State<CreatorTierView> {
         children: [
           Row(
             children: [
+              Image.asset(AppVisuals.creatorTier(name), width: 44, height: 44),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(name, style: GoogleFonts.urbanist(fontSize: 17, fontWeight: FontWeight.bold)),
               ),
@@ -194,7 +198,14 @@ class _CreatorTierViewState extends State<CreatorTierView> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(color: AppColor.primaryColor.withOpacity(0.15), borderRadius: BorderRadius.circular(99)),
-                  child: Text(AppStrings.currentTier.tr, style: GoogleFonts.urbanist(fontSize: 11, fontWeight: FontWeight.w700, color: AppColor.primaryColor)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(AppVisuals.medal, width: 14, height: 14),
+                      const SizedBox(width: 3),
+                      Text(AppStrings.currentTier.tr, style: GoogleFonts.urbanist(fontSize: 11, fontWeight: FontWeight.w700, color: AppColor.primaryColor)),
+                    ],
+                  ),
                 ),
             ],
           ),

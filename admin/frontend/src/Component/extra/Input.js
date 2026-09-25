@@ -27,7 +27,7 @@ const Input = (props) => {
     accept,
     fieldClass,
     labelShow,
-    loading
+    loading,
   } = props;
 
   const [types, setTypes] = useState(type);
@@ -36,26 +36,31 @@ const Input = (props) => {
     types === "password" ? setTypes("text") : setTypes("password");
   };
 
-  return loading ? (
-    <div className={`custom-input ${type} ${newClass}`}>
-      {labelShow !== false && <Skeleton variant="text" width="60%" height={20} className="mb-2" />}
-      <Skeleton variant="rectangular" width="100%" height={45} style={{ borderRadius: "8px" }} />
-    </div>
-  ) : (
-    <>
-      <div
-        className={`custom-input ${type} ${newClass} ${
-          type === "gender" && "me-2 mb-0"
-        }`}
-      >
-        {
-          labelShow == false ? " " : 
+  if (loading) {
+    return (
+      <div className={`custom-input ${type} ${newClass}`}>
+        {labelShow !== false && (
+          <Skeleton variant="text" width="40%" height={16} style={{ marginBottom: 4 }} />
+        )}
+        <Skeleton variant="rectangular" width="100%" height={34} style={{ borderRadius: 0 }} />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`custom-input ${type || ""} ${newClass || ""} ${
+        type === "gender" ? "me-2 mb-0" : ""
+      }`}
+    >
+      {labelShow !== false && label && (
         <label htmlFor={id}>{label}</label>
-        }
+      )}
+
+      <div style={{ position: "relative" }}>
         <input
           type={types}
-          className={`form-control ${fieldClass}`}
-          // id={id}
+          className={`form-control ${fieldClass || ""}`}
           onChange={onChange}
           value={value}
           defaultValue={defaultValue}
@@ -64,7 +69,6 @@ const Input = (props) => {
           placeholder={placeholder}
           disabled={disabled}
           readOnly={readOnly}
-          errorMessage={errorMessage}
           onKeyPress={onKeyPress}
           checked={checked}
           onClick={onClick}
@@ -76,28 +80,48 @@ const Input = (props) => {
           autoComplete={autoComplete}
         />
 
-        {type !== "search" && (
-          errorMessage &&(
-            <p className="errorMessage">{errorMessage && errorMessage}</p>
-          )
-        )}
-
         {type === "password" && (
-          <div className="passHideShow" onClick={hideShow}>
-            {types === "password" ? (
-              <IconEye size={20} />
-            ) : (
-              <IconEyeOff size={20} />
-            )}
+          <div
+            className="passHideShow"
+            onClick={hideShow}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--text-tertiary)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {types === "password" ? <IconEye size={16} /> : <IconEyeOff size={16} />}
           </div>
         )}
+
         {type === "search" && !value && (
-          <div className="searching">
-            <i className="fa-solid fa-magnifying-glass"></i>
+          <div
+            className="searching"
+            style={{
+              position: "absolute",
+              left: 10,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "var(--text-tertiary)",
+              pointerEvents: "none",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <i className="fa-solid fa-magnifying-glass" style={{ fontSize: "12px" }} />
           </div>
         )}
       </div>
-    </>
+
+      {type !== "search" && errorMessage && (
+        <p className="errorMessage">{errorMessage}</p>
+      )}
+    </div>
   );
 };
 

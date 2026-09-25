@@ -1,35 +1,14 @@
-import React, { useEffect, useState } from "react";
-//material-ui
+import React from "react";
 import TablePagination from "react-js-pagination";
 
-//useStyle
-
 const Pagination = (props) => {
-  const [pages, setPages] = useState([]);
-
   const {
-    customSelectDataShow,
-    customSelectData,
     type,
-    // server props
     setPage,
     userTotal,
     rowsPerPage,
     activePage,
-    actionShow,
-    // client props
-    size,
-    totalData,
-    data,
-    setData,
-    // selector
-    setActionPagination,
-    actionPagination,
-    paginationSubmitButton,
-    setActivePage,
   } = props;
-
-  const [clientData, setClientData] = useState();
 
   const handlePage = (pageNumber) => {
     if (props.handlePageChange) {
@@ -39,7 +18,6 @@ const Pagination = (props) => {
     }
   };
 
-  const totalPages = Math.ceil(userTotal / rowsPerPage);
   const startIndex = userTotal === 0 ? 0 : (activePage - 1) * rowsPerPage + 1;
   const endIndex = userTotal === 0 ? 0 : Math.min(activePage * rowsPerPage, userTotal);
 
@@ -48,20 +26,18 @@ const Pagination = (props) => {
       {props.handleRowsPerPage && (
         <div className="pagination-select">
           <select
-            className="form-select form-select-sm"
             value={rowsPerPage}
             onChange={(e) => props.handleRowsPerPage(parseInt(e.target.value))}
-            style={{ width: "auto", cursor: "pointer", display: "inline-block" }}
           >
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
+            <option value={10}>10 / page</option>
+            <option value={25}>25 / page</option>
+            <option value={50}>50 / page</option>
+            <option value={100}>100 / page</option>
           </select>
         </div>
       )}
       <p className="pagination-text">
-        Showing {startIndex} to {endIndex} out of {userTotal} entries
+        {startIndex}–{endIndex} of {userTotal}
       </p>
     </div>
   );
@@ -69,50 +45,47 @@ const Pagination = (props) => {
   return (
     <>
       {userTotal > 0 && (
-        <div className="row gx-0 custom-pagination m-0 w-100 px-3">
-          <div className="col-12 pagination-content d-flex flex-column mt-3 mb-3">
-            {type === "server" && userTotal > 0 && (
-              <div className="pagination-wrapper">
-                {renderLimitAndText()}
-                <TablePagination
-                  activePage={activePage}
-                  itemsCountPerPage={rowsPerPage}
-                  totalItemsCount={userTotal}
-                  pageRangeDisplayed={3}
-                  onChange={(page) => handlePage(page)}
-                  itemClass="page-item"
-                  linkClass="page-link"
-                  firstPageText="|<"
-                  prevPageText="<"
-                  nextPageText=">"
-                  lastPageText=">|"
-                />
-              </div>
-            )}
-            <div className="w-100">
-              {type === "client" && userTotal > 0 && (
-                <div className="pagination-wrapper">
-                  {renderLimitAndText()}
-                  <TablePagination
-                    activePage={activePage}
-                    itemsCountPerPage={rowsPerPage}
-                    totalItemsCount={userTotal}
-                    pageRangeDisplayed={3}
-                    onChange={handlePage}
-                    itemClass="page-item"
-                    linkClass="page-link"
-                    firstPageText="|<"
-                    prevPageText="<"
-                    nextPageText=">"
-                    lastPageText=">|"
-                  />
-                </div>
-              )}
+        <div className="custom-pagination px-3">
+          {type === "server" && userTotal > 0 && (
+            <div className="pagination-wrapper">
+              {renderLimitAndText()}
+              <TablePagination
+                activePage={activePage}
+                itemsCountPerPage={rowsPerPage}
+                totalItemsCount={userTotal}
+                pageRangeDisplayed={3}
+                onChange={(page) => handlePage(page)}
+                itemClass="page-item"
+                linkClass="page-link"
+                firstPageText="«"
+                prevPageText="‹"
+                nextPageText="›"
+                lastPageText="»"
+              />
             </div>
-          </div>
+          )}
+          {type === "client" && userTotal > 0 && (
+            <div className="pagination-wrapper">
+              {renderLimitAndText()}
+              <TablePagination
+                activePage={activePage}
+                itemsCountPerPage={rowsPerPage}
+                totalItemsCount={userTotal}
+                pageRangeDisplayed={3}
+                onChange={handlePage}
+                itemClass="page-item"
+                linkClass="page-link"
+                firstPageText="«"
+                prevPageText="‹"
+                nextPageText="›"
+                lastPageText="»"
+              />
+            </div>
+          )}
         </div>
       )}
     </>
   );
 };
+
 export default Pagination;

@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import "../src/assets/css/style.css";
 import "../src/assets/css/default.css";
 import "../src/assets/css/custom.css";
 import "../src/assets/css/dateRange.css";
 import "../src/assets/css/responsive.css";
+import "./index.css"; /* ← Design system LAST — wins all overrides */
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, useLocation } from "react-router-dom";

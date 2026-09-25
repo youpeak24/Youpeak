@@ -17,6 +17,15 @@ exports.forgeLanguage = async (req, res) => {
       return res.status(200).json({ status: false, message: "Language already exists" });
     }
 
+    if (isDefault) {
+      const allLangs = await db.find("languages", {});
+      for (const lang of allLangs) {
+        if (lang.isDefault) {
+          await db.update("languages", lang._id || lang.id, { isDefault: false });
+        }
+      }
+    }
+
     const newLang = await db.create("languages", {
       languageTitle: languageTitle.trim(),
       languageCode: code,
@@ -99,6 +108,15 @@ exports.refineLanguage = async (req, res) => {
     const language = await db.findOne("languages", { languageCode: (languageCode || "").toLowerCase() });
     if (!language) return res.status(200).json({ status: false, message: "Language not found" });
 
+    if (req.body.isDefault === true || req.body.isDefault === "true") {
+      const allLangs = await db.find("languages", {});
+      for (const lang of allLangs) {
+        if ((lang._id || lang.id) !== (language._id || language.id) && lang.isDefault) {
+          await db.update("languages", lang._id || lang.id, { isDefault: false });
+        }
+      }
+    }
+
     const updated = await db.update("languages", language._id || language.id, req.body);
     return res.status(200).json({ status: true, message: "Language updated successfully", data: updated });
   } catch (error) {
@@ -115,7 +133,15 @@ exports.shiftLanguageState = async (req, res) => {
 
     const updateData = {};
     if (Number(toggleType) === 1) updateData.isActive = !language.isActive;
-    if (Number(toggleType) === 2) updateData.isDefault = true;
+    if (Number(toggleType) === 2) {
+      updateData.isDefault = true;
+      const allLangs = await db.find("languages", {});
+      for (const lang of allLangs) {
+        if ((lang._id || lang.id) !== (language._id || language.id) && lang.isDefault) {
+          await db.update("languages", lang._id || lang.id, { isDefault: false });
+        }
+      }
+    }
 
     const updated = await db.update("languages", language._id || language.id, updateData);
     return res.json({ status: true, message: "Language updated successfully", data: updated });

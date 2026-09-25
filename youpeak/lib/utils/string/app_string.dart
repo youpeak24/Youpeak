@@ -261,6 +261,7 @@ abstract class AppStrings {
   static String someThingWentWrong = "someThingWentWrong";
   static String pleaseFillUpDetails = "pleaseFillUpDetails";
   static String videoDownloadingFailed = "videoDownloadingFailed";
+  static String videoDownloadSuccess = "videoDownloadSuccess";
   static String pleaseSelectVideo = "pleaseSelectVideo";
   static String reportSending = "reportSending";
   static String reportSendSuccess = "reportSendSuccess";

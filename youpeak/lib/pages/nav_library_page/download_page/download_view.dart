@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,7 +74,7 @@ class DownloadView extends StatelessWidget {
                               clipBehavior: Clip.antiAlias,
                               padding: const EdgeInsets.all(0),
                               decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                              child: Image.asset("assets/icons/Internet.jpg", width: 200),
+                              child: Image.asset(AppVisuals.noInternet, width: 200),
                             ),
                             isDarkMode.value ? const SizedBox(height: 10) : const Offstage(),
                             Text("Lost Connection", style: GoogleFonts.urbanist(fontSize: 25, fontWeight: FontWeight.bold)),
@@ -160,7 +161,7 @@ class DownloadView extends StatelessWidget {
                           clipBehavior: Clip.antiAlias,
                           padding: const EdgeInsets.all(0),
                           decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                          child: Image.asset("assets/icons/Internet.jpg", width: 200),
+                          child: Image.asset(AppVisuals.noInternet, width: 200),
                         ),
                         isDarkMode.value ? const SizedBox(height: 10) : const Offstage(),
                         Text("Lost Connection", style: GoogleFonts.urbanist(fontSize: 25, fontWeight: FontWeight.bold)),
@@ -200,7 +201,7 @@ class DownloadView extends StatelessWidget {
         },
         child: Obx(
           () => DownloadHistory.mainDownloadHistory.isEmpty
-              ? DataNotFoundUi(title: AppStrings.downloadNotAvailable.tr)
+              ? DataNotFoundUi(type: EmptyStateType.downloads, title: AppStrings.downloadNotAvailable.tr)
               : SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: ListView.builder(

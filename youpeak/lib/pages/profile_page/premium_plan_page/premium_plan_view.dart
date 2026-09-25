@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/custom/custom_method/custom_filled_button.dart';
@@ -51,11 +53,7 @@ class PremiumPlanView extends StatelessWidget {
                   ? DataNotFoundUi(title: AppStrings.premiumPlanNotAvailable.tr)
                   : Column(
                       children: [
-                        Image.asset(
-                          AppIcons.logo,
-                          width: 80,
-                          height: 80,
-                        ),
+                        const SuccessArtwork(asset: AppVisuals.premiumHero, size: 150, burst: AppVisuals.sparkles),
                         SizedBox(
                           width: Get.width / 1.1,
                           child: Text(

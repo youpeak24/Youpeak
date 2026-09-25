@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/custom/basic_button.dart';
@@ -99,7 +101,7 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: SizeConfig.screenHeight / 60),
+                  const FeatureArtwork(asset: AppVisuals.channelHero),
                   const ChannelNameTextFormField(),
                   SizedBox(height: SizeConfig.screenHeight / 30),
                   const DescriptionOfChannelTextFormField(),

@@ -36,7 +36,7 @@ class AllTabWidget extends StatelessWidget {
           child: controller.isLoadingAllTab
               ? const SingleChildScrollView(child: NormalVideoShimmerUi())
               : controller.allVideos.isEmpty
-                  ? const DataNotFoundUi(title: "Video Not Found !!")
+                  ? const DataNotFoundUi(type: EmptyStateType.videos, title: "Video Not Found !!")
                   : SingleChildScrollView(
                       controller: controller.allTabScrollController,
                       child: ListView.separated(
@@ -365,7 +365,7 @@ class PopularTabWidget extends StatelessWidget {
           child: controller.isLoadingPopularTab
               ? const SingleChildScrollView(child: NormalVideoShimmerUi())
               : controller.popularVideos.isEmpty
-                  ? const DataNotFoundUi(title: "Video Not Found !!")
+                  ? const DataNotFoundUi(type: EmptyStateType.videos, title: "Video Not Found !!")
                   : SingleChildScrollView(
                       controller: controller.popularTabScrollController,
                       child: ListView.separated(
@@ -696,7 +696,7 @@ class NewTabWidget extends StatelessWidget {
           child: controller.isLoadingNewTab
               ? const SingleChildScrollView(child: NormalVideoShimmerUi())
               : controller.newVideos.isEmpty
-                  ? const DataNotFoundUi(title: "Video Not Found !!")
+                  ? const DataNotFoundUi(type: EmptyStateType.videos, title: "Video Not Found !!")
                   : SingleChildScrollView(
                       controller: controller.newTabScrollController,
                       child: ListView.separated(
@@ -1033,7 +1033,7 @@ class LiveTabWidget extends StatelessWidget {
                         height: Get.height + 1,
                         child: const Padding(
                           padding: EdgeInsets.only(bottom: 200),
-                          child: DataNotFoundUi(title: "Live Not Found !!"),
+                          child: DataNotFoundUi(type: EmptyStateType.videos, title: "Live Not Found !!"),
                         ),
                       ),
                     )

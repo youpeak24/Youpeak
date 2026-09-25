@@ -14,6 +14,7 @@ import 'package:youpeak/pages/profile_page/monetization_page/preview_monetizatio
 import 'package:youpeak/pages/profile_page/my_wallet_page/my_wallet_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
@@ -249,6 +250,7 @@ class _PreviewMonetizationState extends State<PreviewMonetization> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
+                          Image.asset(AppVisuals.moneyBag, width: 44, height: 44),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/main.dart';
@@ -33,7 +34,7 @@ class WithdrawalDoneDialog {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: 25),
-                    Center(child: SizedBox(height: 180, width: 180, child: Image.asset(AppIcons.withdrawalDone))),
+                    const Center(child: SuccessArtwork(asset: AppIcons.withdrawalDone)),
                     const SizedBox(height: 15),
                     Center(
                       child: Text(

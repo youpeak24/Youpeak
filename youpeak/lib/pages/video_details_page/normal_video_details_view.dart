@@ -243,7 +243,7 @@ class _NormalVideoDetailsViewState extends State<NormalVideoDetailsView> {
                                     ? const NormalVideoShimmerUi()
                                         .paddingOnly(top: 10)
                                     : controller.mainRelatedVideos!.isEmpty
-                                        ? const DataNotFoundUi()
+                                        ? const DataNotFoundUi(type: EmptyStateType.videos)
                                             .paddingSymmetric(vertical: 50)
                                         : ListView.builder(
                                             shrinkWrap: true,
@@ -2358,7 +2358,7 @@ class VideoDetailsUi extends GetView<NormalVideoDetailsController> {
                           );
 
                           await ShareCountApiClass.callApi(
-                              Database.loginUserId!, controller.videoId);
+                              Database.loginUserId ?? "", controller.videoId);
                         },
                       ),
                       Obx(() => controller.isDownloading.value
@@ -2501,6 +2501,10 @@ class VideoDetailsUi extends GetView<NormalVideoDetailsController> {
                               ? AppIcons.saveDone1
                               : AppIcons.addToSave,
                           callback: () async {
+                            if (Database.loginUserId == null || Database.loginUserId!.isEmpty) {
+                              CustomToast.show("Please login first");
+                              return;
+                            }
                             if (controller.isSave.value) {
                               // 🔴 Unsave
                               controller.isSave.value = false;
@@ -2532,9 +2536,10 @@ class VideoDetailsUi extends GetView<NormalVideoDetailsController> {
                 GestureDetector(
                   onTap: () => Get.to(
                     () => YourChannelView(
-                      loginUserId: Database.loginUserId!,
+                      loginUserId: Database.loginUserId ?? "",
                       channelId: controller
-                          .videoDetailsModel!.detailsOfVideo!.channelId!,
+                              .videoDetailsModel?.detailsOfVideo?.channelId ??
+                          "",
                     ),
                   ),
                   child: ListTile(

@@ -283,6 +283,7 @@ final Map<String, String> enUS = {
   "someThingWentWrong": "Some thing went wrong !!",
   "pleaseFillUpDetails": "Please fill up details !!",
   "videoDownloadingFailed": "Video downloading failed !!",
+  "videoDownloadSuccess": "Video saved to your downloads",
   "pleaseSelectVideo": "Please select video !!",
   "reportSending": "Report sending...",
   "reportSendSuccess": "Report send success",

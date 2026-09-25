@@ -15,6 +15,7 @@ import 'package:youpeak/pages/profile_page/referral_program_page/referral_progra
 import 'package:youpeak/pages/profile_page/tasker_tier_page/tasker_tier_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 
 class EarnRewardView extends StatefulWidget {
@@ -276,12 +277,18 @@ class _EarnRewardViewState extends State<EarnRewardView> {
                                                     padding: const EdgeInsets.symmetric(horizontal: 5),
                                                     child: Row(
                                                       children: [
-                                                        Text(
-                                                          AppStrings.youHaveCheckedInFor.tr,
-                                                          style: GoogleFonts.urbanist(
-                                                            fontSize: 15,
-                                                            color: isDarkMode.value ? AppColor.primaryColor : AppColor.black.withOpacity(0.5),
-                                                            fontWeight: FontWeight.w500,
+                                                        Image.asset(AppVisuals.streak, width: 24, height: 24),
+                                                        const SizedBox(width: 6),
+                                                        Flexible(
+                                                          child: Text(
+                                                            AppStrings.youHaveCheckedInFor.tr,
+                                                            maxLines: 1,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.urbanist(
+                                                              fontSize: 15,
+                                                              color: isDarkMode.value ? AppColor.primaryColor : AppColor.black.withOpacity(0.5),
+                                                              fontWeight: FontWeight.w500,
+                                                            ),
                                                           ),
                                                         ),
                                                         Container(
@@ -443,13 +450,20 @@ class _EarnRewardViewState extends State<EarnRewardView> {
                                                           : AppColor.primaryColor,
                                                       borderRadius: BorderRadius.circular(50),
                                                     ),
-                                                    child: Text(
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Image.asset(AppVisuals.checkIn, width: 26, height: 26),
+                                                        const SizedBox(width: 8),
+                                                        Text(
                                                       AppStrings.checkIn.tr,
                                                       style: GoogleFonts.urbanist(
                                                         fontSize: 16,
                                                         color: Colors.white,
                                                         fontWeight: FontWeight.bold,
                                                       ),
+                                                    ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
@@ -714,13 +728,19 @@ class _EarnRewardViewState extends State<EarnRewardView> {
                                                       topRight: Radius.circular(28),
                                                     ),
                                                   ),
-                                                  child: Text(
+                                                  child: Row(
+                                                    children: [
+                                                      Image.asset(AppVisuals.dailyTasks, width: 30, height: 30),
+                                                      const SizedBox(width: 10),
+                                                      Text(
                                                     AppStrings.myDailyTasks.tr,
                                                     style: GoogleFonts.urbanist(
                                                       fontSize: 18,
                                                       color: AppColor.primaryColor,
                                                       fontWeight: FontWeight.w700,
                                                     ),
+                                                  ),
+                                                    ],
                                                   ),
                                                 ),
                                                 const SizedBox(height: 5),

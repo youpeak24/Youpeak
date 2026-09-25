@@ -10,6 +10,8 @@ import 'package:youpeak/pages/nav_add_page/live_page/add_thumbnail_page/controll
 import 'package:youpeak/pages/nav_shorts_page/nav_shorts_details_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/utils.dart';
@@ -33,8 +35,11 @@ class AddThumbnailView extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
+        // Scrollable so the hero never overflows once the keyboard opens for the title.
+        child: SingleChildScrollView(
+          child: Column(
           children: [
+            const FeatureArtwork(asset: AppVisuals.liveHero),
             Row(
               children: [
                 GestureDetector(
@@ -81,6 +86,7 @@ class AddThumbnailView extends StatelessWidget {
               ],
             ),
           ],
+        ),
         ),
       ),
       bottomNavigationBar: GestureDetector(

@@ -27,9 +27,10 @@ class EditSubscriptionPlanApi {
       AppSettings.showLog("Edit Subscription Plan Api Response => ${response.body}");
 
       if (response.statusCode == 200) {
-        return GetProfileModel?.fromJson(jsonResponse);
+        return GetProfileModel.fromJson(jsonResponse);
       } else {
         AppSettings.showLog("Edit Subscription Plan Api Status Code Error");
+        return null;
       }
     } catch (e) {
       AppSettings.showLog("Edit Subscription Plan Api Error => $e");

@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/ads/google_ads/google_large_native_ad.dart';
@@ -125,7 +126,7 @@ class NavSubscriptionView extends GetView<NavSubscriptionPageController> {
                 builder: (controller) => controller.mainSubscribedChannels == null
                     ? const LoaderUi()
                     : controller.mainSubscribedChannels!.isEmpty
-                        ? DataNotFoundUi(title: AppStrings.noSubscribedChannel.tr)
+                        ? DataNotFoundUi(type: EmptyStateType.subscriptions, title: AppStrings.noSubscribedChannel.tr)
                         : GetBuilder<NavSubscriptionPageController>(
                             id: "onChangeVideoType",
                             builder: (controller) => NestedScrollView(
@@ -226,8 +227,12 @@ class NavSubscriptionView extends GetView<NavSubscriptionPageController> {
                                                                                     borderRadius: BorderRadius.circular(5),
                                                                                     border: Border.all(color: AppColor.white),
                                                                                   ),
-                                                                                  child: Center(
-                                                                                    child: Text(
+                                                                                  child: Row(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: [
+                                                                                      Image.asset(AppVisuals.liveBadge, width: 9, height: 9),
+                                                                                      const SizedBox(width: 2),
+                                                                                      Text(
                                                                                       "Live",
                                                                                       style: GoogleFonts.urbanist(
                                                                                         color: AppColor.white,
@@ -235,6 +240,7 @@ class NavSubscriptionView extends GetView<NavSubscriptionPageController> {
                                                                                         fontWeight: FontWeight.bold,
                                                                                       ),
                                                                                     ),
+                                                                                    ],
                                                                                   ),
                                                                                 ),
                                                                               )
@@ -393,7 +399,7 @@ class TypeWiseSubscribedVideo extends StatelessWidget {
         builder: (controller) => controller.mainAllChannelVideos[controller.selectedSubscribeType] == null
             ? const NormalVideoShimmerUi()
             : controller.mainAllChannelVideos[controller.selectedSubscribeType]!.isEmpty
-                ? const DataNotFoundUi()
+                ? const DataNotFoundUi(type: EmptyStateType.subscriptions)
                 : SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: ListView.separated(
@@ -515,7 +521,7 @@ class SubscribeChannelNormalVideo extends StatelessWidget {
       builder: (controller) => controller.particularChannelVideos[0] == null
           ? const VideoListShimmerUi()
           : controller.particularChannelVideos[0]!.isEmpty
-              ? DataNotFoundUi(title: AppStrings.videosNotAvailable)
+              ? DataNotFoundUi(type: EmptyStateType.videos, title: AppStrings.videosNotAvailable)
               : SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: ListView.builder(
@@ -622,7 +628,7 @@ class SubscribeChannelShortsVideo extends StatelessWidget {
       builder: (controller) => controller.particularChannelVideos[1] == null
           ? const ShortsListShimmerUi()
           : controller.particularChannelVideos[1]!.isEmpty
-              ? DataNotFoundUi(title: AppStrings.shortsNotAvailable)
+              ? DataNotFoundUi(type: EmptyStateType.videos, title: AppStrings.shortsNotAvailable)
               : SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: GridView.builder(
@@ -705,7 +711,7 @@ class SubscribeChannelShortsVideo extends StatelessWidget {
 //             builder: (controller) => controller.mainSubscribedChannels == null
 //                 ? const LoaderUi()
 //                 : (controller.mainSubscribedChannels?.isEmpty ?? true)
-//                     ? const DataNotFoundUi(title: "No Subscribed Channel !!!")
+//                     ? const DataNotFoundUi(type: EmptyStateType.subscriptions, title: "No Subscribed Channel !!!")
 //                     : Column(children: [
 //                         SizedBox(
 //                           height: 190,

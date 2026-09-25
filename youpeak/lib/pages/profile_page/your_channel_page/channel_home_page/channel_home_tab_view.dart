@@ -22,7 +22,7 @@ class ChannelHomeTabView extends StatelessWidget {
         return controller.channelHomeVideos == null
             ? const SingleChildScrollView(child: NormalVideoShimmerUi())
             : controller.channelHomeVideos!.isEmpty
-                ? const DataNotFoundUi()
+                ? const DataNotFoundUi(type: EmptyStateType.videos)
                 // : NotificationListener<ScrollNotification>(
                 //     onNotification: (notification) {
                 //       if (notification is UserScrollNotification) {

@@ -177,7 +177,7 @@ class CreatePlayListView extends GetView<CreatePlaylistController> {
           builder: (controller) => controller.isLoadingPlayList
               ? const LoaderUi()
               : controller.videos.isEmpty
-                  ? const DataNotFoundUi()
+                  ? const DataNotFoundUi(type: EmptyStateType.playlist)
                   : RefreshIndicator(
                       onRefresh: () => controller.init(),
                       color: AppColor.primaryColor,

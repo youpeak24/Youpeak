@@ -83,47 +83,37 @@ const Dashboard = (props) => {
     dispatch(getChartAnalyticOfActiveUser(startDateData, endDateData));
   }, [dispatch, startDate, endDate]);
 
-  // Process users' data
+  // Collect unique dates from all 3 analytics sources
+  const userMap = new Map();
   chartAnalyticOfUsers?.forEach((data_) => {
-    const newDate = data_?._id;
-    const date = newDate;
-    label.push(date);
-    dataUser.push(data_?.count || 0); // Use 0 if count is undefined
+    if (data_?._id) {
+      label.push(data_._id);
+      userMap.set(data_._id, data_?.count || 0);
+    }
   });
 
+  const videoMap = new Map();
   chartAnalyticOfVideos?.forEach((data_) => {
-    const newDate = data_?._id;
-    const date = newDate;
-    label.push(date);
-    dataVideo.push(data_?.count || 0); // Use 0 if count is undefined
+    if (data_?._id) {
+      label.push(data_._id);
+      videoMap.set(data_._id, data_?.count || 0);
+    }
   });
 
-  // Process shorts' data
+  const shortMap = new Map();
   chartAnalyticOfShorts?.forEach((data_) => {
-    const newDate = data_?._id;
-    const date = newDate;
-    label.push(date);
-    dataShort.push(data_?.count || 0); // Use 0 if count is undefined
+    if (data_?._id) {
+      label.push(data_._id);
+      shortMap.set(data_._id, data_?.count || 0);
+    }
   });
 
   let labelSet = new Set(label);
-  // Convert labelSet back to array and sort
   label = [...labelSet].sort((a, b) => new Date(a) - new Date(b));
 
-  // Ensure all arrays have the same length and are aligned properly with labels
-  const maxLength = label?.length;
-
-  for (let i = 0; i < maxLength; i++) {
-    if (dataUser[i] === undefined) {
-      dataUser[i] = 0;
-    }
-    if (dataVideo[i] === undefined) {
-      dataVideo[i] = 0;
-    }
-    if (dataShort[i] === undefined) {
-      dataShort[i] = 0;
-    }
-  }
+  dataUser = label.map((d) => userMap.get(d) || 0);
+  dataVideo = label.map((d) => videoMap.get(d) || 0);
+  dataShort = label.map((d) => shortMap.get(d) || 0);
   var webSize = $(window).width();
   const resHeight =
     webSize >= 992 ? 500 : webSize < 992 && webSize > 576 ? 400 : 300;

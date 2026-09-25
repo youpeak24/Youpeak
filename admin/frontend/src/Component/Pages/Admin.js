@@ -1,4 +1,5 @@
 import {
+  Navigate,
   Outlet,
   Route,
   Routes,
@@ -12,7 +13,6 @@ import { useEffect } from "react";
 import "../../assets/js/custom";
 import UserPage from "./UserPage/User";
 import VideoPage from "./VideoPage/VideoPage";
-import PaymentSetting2 from "./PaymentSetting";
 import ChannelPage from "./Channel/ChannelPage";
 import ContactUsPage from "./ContactUs";
 import ShortsPage from "./Shorts/ShortsPage";
@@ -86,7 +86,7 @@ const Admin = (props) => {
               <Route path="/shorts" element={<ShortsPage />} />
               <Route path="/channel" element={<ChannelPage />} />
               <Route path="/sound" element={<SoundPage />} />
-              <Route path="/paymentSetting2" element={<PaymentSetting2 />} />
+              <Route path="/paymentSetting2" element={<Navigate to="/admin/settingPage" replace />} />
               <Route path="/settingPage" element={<ManageSetting />} />
               <Route path="/faqs" element={<FAQ />} />
               <Route path="/profile" element={<Profile />} />

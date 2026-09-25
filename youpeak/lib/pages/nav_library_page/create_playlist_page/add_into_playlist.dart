@@ -73,7 +73,7 @@ class AddIntoPlayList {
                 () => isLoading.value
                     ? const LoaderUi()
                     : mainPlayList.value.isEmpty
-                        ? const DataNotFoundUi()
+                        ? const DataNotFoundUi(type: EmptyStateType.playlist)
                         : SingleChildScrollView(
                             child: ListView.builder(
                               shrinkWrap: true,

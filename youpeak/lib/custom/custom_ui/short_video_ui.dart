@@ -11,6 +11,7 @@ import 'package:youpeak/pages/video_details_page/more_information_bottom_sheet.d
 import 'package:youpeak/pages/video_details_page/more_information_model.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/style/app_style.dart';
@@ -169,6 +170,7 @@ class ShortsPrivateContentWidget extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(top: 8, right: 8, child: Image.asset(AppVisuals.paidVideoBadge, width: 32, height: 32)),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

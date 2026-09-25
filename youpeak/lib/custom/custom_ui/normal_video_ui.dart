@@ -15,6 +15,7 @@ import 'package:youpeak/pages/video_details_page/more_information_model.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/config/size_config.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/utils.dart';
@@ -211,6 +212,7 @@ class PrivateContentNormalVideoUi extends StatelessWidget {
                   ),
                 ),
               ),
+              Positioned(top: 12, right: 16, child: Image.asset(AppVisuals.paidVideoBadge, width: 40, height: 40)),
               Positioned.fill(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

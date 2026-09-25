@@ -10,6 +10,7 @@ import 'package:youpeak/firebase_options.dart';
 import 'package:floating/floating.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -176,6 +177,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
               ),
               const SizedBox(height: 5),
+              Image.asset(AppVisuals.offline, height: 120),
               Text(
                 AppStrings.noInternetConnection.tr,
                 style: GoogleFonts.urbanist(

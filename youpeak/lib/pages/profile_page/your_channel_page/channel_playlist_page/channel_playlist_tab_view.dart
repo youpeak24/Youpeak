@@ -26,7 +26,7 @@ class ChannelPlayListTabView extends StatelessWidget {
         return controller.channelPlayList == null
             ? const VideoListShimmerUi()
             : (controller.channelPlayList!.isEmpty)
-                ? DataNotFoundUi(title: AppStrings.playlistNotAvailable.tr)
+                ? DataNotFoundUi(type: EmptyStateType.playlist, title: AppStrings.playlistNotAvailable.tr)
 
                 // : NotificationListener<ScrollNotification>(
                 //     onNotification: (notification) {
@@ -155,7 +155,7 @@ class ChannelPlayListTabView extends StatelessWidget {
                           },
                         ),
                       )
-                    : DataNotFoundUi(title: AppStrings.playlistNotAvailable.tr);
+                    : DataNotFoundUi(type: EmptyStateType.playlist, title: AppStrings.playlistNotAvailable.tr);
       },
     );
   }

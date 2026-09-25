@@ -36,7 +36,7 @@ class PremiumPlanPurchaseHistoryView extends StatelessWidget {
         builder: (controller) => controller.isLoading
             ? const LoaderUi()
             : controller.premiumPurchaseHistory.isEmpty
-                ? DataNotFoundUi(title: AppStrings.paymentHistoryNotAvailable.tr)
+                ? DataNotFoundUi(type: EmptyStateType.history, title: AppStrings.paymentHistoryNotAvailable.tr)
                 : ListView.builder(
                     controller: controller.scrollController,
                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),

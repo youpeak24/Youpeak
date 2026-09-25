@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/youpeak_emoji.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/custom/custom_ui/loader_ui.dart';
@@ -104,7 +105,7 @@ class ReplyBottomSheet {
                 SizedBox(height: SizeConfig.blockSizeVertical * 2),
                 SizedBox(
                   width: SizeConfig.screenWidth / 1.1,
-                  child: Text(_commentController.mainComments[_commentController.selectedCommentType][commentIndex].commentText!,
+                  child: EmojiText(_commentController.mainComments[_commentController.selectedCommentType][commentIndex].commentText!,
                       style: GoogleFonts.urbanist(), maxLines: 3, overflow: TextOverflow.ellipsis),
                 ),
                 SizedBox(height: SizeConfig.blockSizeVertical * 2),
@@ -186,6 +187,7 @@ class ReplyBottomSheet {
                 SizedBox(height: SizeConfig.blockSizeVertical * 1),
               ],
             ),
+            EmojiQuickBar(size: 26, onPick: (emoji) => EmojiQuickBar.insertInto(_controller.repliesController, emoji)),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -294,7 +296,7 @@ class ReplyBottomSheet {
                                                 SizedBox(height: SizeConfig.blockSizeVertical * 2),
                                                 SizedBox(
                                                   width: SizeConfig.screenWidth / 1.1,
-                                                  child: Text(controller.mainReplies[index].commentText.toString(),
+                                                  child: EmojiText(controller.mainReplies[index].commentText.toString(),
                                                       style: GoogleFonts.urbanist(), maxLines: 3, overflow: TextOverflow.ellipsis),
                                                 ),
                                                 Row(

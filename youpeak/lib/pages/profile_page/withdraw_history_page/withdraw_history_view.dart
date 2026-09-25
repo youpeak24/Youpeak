@@ -133,7 +133,7 @@ class WithdrawHistoryView extends StatelessWidget {
                                 child: SizedBox(
                                   height: Get.height * 0.7,
                                   child: Center(
-                                    child: DataNotFoundUi(title: AppStrings.withdrawHistoryNotAvailable.tr),
+                                    child: DataNotFoundUi(type: EmptyStateType.history, title: AppStrings.withdrawHistoryNotAvailable.tr),
                                   ),
                                 ),
                               )

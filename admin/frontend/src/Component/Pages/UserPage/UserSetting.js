@@ -41,12 +41,14 @@ function UserSetting() {
   };
 
   useEffect(() => {
-    if (dialogueData) {
-      dispatch(getUserProfile(dialogueData?._id));
+    if (dialogueData?._id) {
+      dispatch(getUserProfile(dialogueData._id));
+    } else if (location?.state?.id) {
+      dispatch(getUserProfile(location.state.id));
     } else {
-      dispatch(getUserProfile(location?.state?.id));
+      navigate("/admin/userTable");
     }
-  }, [dispatch, location?.state?.id]);
+  }, [dispatch, location?.state?.id, dialogueData, navigate]);
   return (
     <div className="userSetting">
       <div className="d-flex justify-content-between align-content-center">

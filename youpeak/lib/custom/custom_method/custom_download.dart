@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:youpeak/custom/custom_method/custom_toast.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,6 +31,8 @@ class CustomDownload {
         final File file = File(downloaded);
 
         await file.writeAsBytes(bytes);
+
+        CustomToast.celebrate(AppStrings.videoDownloadSuccess.tr, AppVisuals.downloadDone);
 
         return downloaded;
       } else {

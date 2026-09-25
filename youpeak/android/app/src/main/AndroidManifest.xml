@@ -46,7 +46,7 @@
     <application
         android:label="YouPeak"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:largeHeap="true">

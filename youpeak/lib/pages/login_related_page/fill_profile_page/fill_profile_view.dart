@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -121,7 +122,8 @@ class _FillProfileViewState extends State<FillProfileView> {
                                       fit: BoxFit.cover,
                                     )
                               : const DecorationImage(
-                                  image: AssetImage(AppIcons.profileImage),
+                                  image: AssetImage(AppVisuals.profileSetup),
+                                  fit: BoxFit.contain,
                                 ),
                           // AppSettings.pickImagePath.isEmpty
                           //     ? const DecorationImage(image: AssetImage(AppIcons.profileImage))

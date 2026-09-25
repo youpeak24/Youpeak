@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/youpeak_emoji.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/custom/custom_method/custom_format_number.dart';
@@ -119,6 +120,22 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
 
   RxInt countTime = 0.obs;
   bool isLivePage = false;
+
+  void sendLiveChat(String text) {
+    final data = jsonEncode({
+      "name of user": AppSettings.channelName.value,
+      "image": AppSettings.profileImage.value,
+      "liveChat text": text,
+      "liveHistoryId": widget.roomID,
+    });
+
+    if (socket != null && socket!.connected) {
+      socket!.emit("liveChat", data);
+      log("User Chat Emit Success");
+    } else {
+      log("Socket is not connected.");
+    }
+  }
 
   void onChangeTime() {
     isLivePage = true;
@@ -299,7 +316,7 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 80),
+                  padding: const EdgeInsets.only(bottom: 118),
                   child: SizedBox(
                     height: Get.height * 0.3,
                     child: SingleChildScrollView(
@@ -331,7 +348,7 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
                               ),
                               subtitle: SizedBox(
                                 width: Get.width / 4,
-                                child: Text(
+                                child: EmojiText(
                                   controller.mainLiveChats[index]["liveChat text"] ?? "",
                                   style: GoogleFonts.urbanist(color: AppColor.grey, fontSize: 13),
                                 ),
@@ -488,9 +505,13 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
                     child: SingleChildScrollView(
                       child: Container(
                         width: Get.width,
-                        height: 80,
+                        height: 118,
                         alignment: Alignment.center,
                         color: AppColor.black.withOpacity(0.5),
+                        child: Column(
+                          children: [
+                            EmojiQuickBar(size: 26, onPick: sendLiveChat),
+                            Expanded(
                         child: Row(
                           children: [
                             Expanded(
@@ -523,19 +544,7 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
                                         onFieldSubmitted: (value) {
                                           FocusManager.instance.primaryFocus?.unfocus();
                                           if (commentController.text.isNotEmpty) {
-                                            final data = jsonEncode({
-                                              "name of user": AppSettings.channelName.value,
-                                              "image": AppSettings.profileImage.value,
-                                              "liveChat text": commentController.text,
-                                              "liveHistoryId": widget.roomID,
-                                            });
-
-                                            if (socket != null && socket!.connected) {
-                                              socket!.emit("liveChat", data);
-                                              log("User Chat Emit Success");
-                                            } else {
-                                              log("Socket is not connected.");
-                                            }
+                                            sendLiveChat(commentController.text);
                                             commentController.clear();
                                           }
                                         },
@@ -556,19 +565,7 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
                               onTap: () {
                                 if (commentController.text.isNotEmpty) {
                                   FocusManager.instance.primaryFocus?.unfocus();
-                                  final data = jsonEncode({
-                                    "name of user": AppSettings.channelName.value,
-                                    "image": AppSettings.profileImage.value,
-                                    "liveChat text": commentController.text,
-                                    "liveHistoryId": widget.roomID,
-                                  });
-
-                                  if (socket != null && socket!.connected) {
-                                    socket!.emit("liveChat", data);
-                                    log("User Chat Emit Success");
-                                  } else {
-                                    log("Socket is not connected.");
-                                  }
+                                  sendLiveChat(commentController.text);
                                   commentController.clear();
                                 }
                               },
@@ -584,6 +581,9 @@ class _LivePageState extends State<LivePage> with WidgetsBindingObserver {
                                 ),
                                 child: Image.asset(AppIcons.textSend, width: 22, height: 22),
                               ),
+                            ),
+                          ],
+                        ),
                             ),
                           ],
                         ),

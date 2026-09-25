@@ -67,7 +67,7 @@ class _NavShortsViewState extends State<NavShortsView> {
                         },
                       ),
                     )
-                  : DataNotFoundUi(title: AppStrings.shortsNotAvailable),
+                  : DataNotFoundUi(type: EmptyStateType.videos, title: AppStrings.shortsNotAvailable),
         ),
       ),
     );

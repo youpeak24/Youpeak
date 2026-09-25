@@ -14,6 +14,7 @@ import 'package:youpeak/pages/notification_page/local_notification_storage.dart'
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/config/size_config.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
@@ -186,7 +187,7 @@ class NotificationPageView extends GetView<NotificationController> {
                         child: SizedBox(
                           height: Get.height * 0.8,
                           child: Center(
-                            child: DataNotFoundUi(title: AppStrings.notificationNotAvailable.tr),
+                            child: DataNotFoundUi(type: EmptyStateType.notifications, title: AppStrings.notificationNotAvailable.tr),
                           ),
                         ),
                       )
@@ -208,16 +209,14 @@ class NotificationPageView extends GetView<NotificationController> {
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                        clipBehavior: Clip.hardEdge,
-                                        height: 37,
-                                        width: 37,
-                                        decoration: const BoxDecoration(shape: BoxShape.circle),
-                                        child: PreviewNetworkImage(
-                                          image: controller.mainNotifications![index].channelImage ?? "",
-                                          id: controller.mainNotifications![index].id ?? "",
-                                          fit: BoxFit.contain,
-                                        )),
+                                    NotificationAvatar(
+                                      id: controller.mainNotifications![index].id ?? "",
+                                      image: controller.mainNotifications![index].channelImage,
+                                      typeArt: AppVisuals.notification(
+                                        controller.mainNotifications![index].title,
+                                        controller.mainNotifications![index].message,
+                                      ),
+                                    ),
                                     SizedBox(width: Get.width * 0.03),
                                     Expanded(
                                       child: Column(
@@ -343,6 +342,39 @@ class NotificationShimmer extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Sender avatar with a type badge in the corner; the type artwork stands in
+/// for system notifications that have no sender image.
+class NotificationAvatar extends StatelessWidget {
+  const NotificationAvatar({super.key, required this.id, required this.image, required this.typeArt});
+
+  final String id;
+  final String? image;
+  final String typeArt;
+
+  bool get _hasImage => image != null && image!.isNotEmpty && image != "null" && image != "undefined";
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_hasImage) return Image.asset(typeArt, height: 44, width: 44);
+    return SizedBox(
+      height: 44,
+      width: 44,
+      child: Stack(
+        children: [
+          Container(
+            clipBehavior: Clip.hardEdge,
+            height: 40,
+            width: 40,
+            decoration: const BoxDecoration(shape: BoxShape.circle),
+            child: PreviewNetworkImage(image: image!, id: id, fit: BoxFit.contain),
+          ),
+          Positioned(right: 0, bottom: 0, child: Image.asset(typeArt, height: 20, width: 20)),
+        ],
       ),
     );
   }

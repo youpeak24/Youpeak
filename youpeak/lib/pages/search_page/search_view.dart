@@ -745,7 +745,7 @@ class _ChannelListTileWidgetState extends State<ChannelListTileWidget> {
     return GestureDetector(
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          Get.to(() => YourChannelView(loginUserId: Database.loginUserId!, channelId: widget.indexData.channelId!));
+          Get.to(() => YourChannelView(loginUserId: Database.loginUserId ?? "", channelId: widget.indexData.channelId ?? ""));
         },
         child: Container(
           height: 50,
@@ -930,7 +930,7 @@ class SearchHistoryWidget extends GetView<SearchingController> {
         ),
         Obx(
           () => SearchHistory.mainSearchHistory.isEmpty
-              ? const Expanded(child: DataNotFoundUi())
+              ? const Expanded(child: DataNotFoundUi(type: EmptyStateType.search))
               : SizedBox(
                   height: Get.height / 3,
                   child: ListView.builder(

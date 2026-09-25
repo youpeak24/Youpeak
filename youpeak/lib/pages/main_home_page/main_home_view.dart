@@ -280,7 +280,7 @@ class _MainHomePageViewState extends State<MainHomePageView> {
                                 },
                               ),
                               CreateShortsOption(
-                                logo: AppIcons.boldPlay,
+                                logo: AppIcons.goLive,
                                 option: AppStrings.goLive.tr,
                                 onTap: () async {
                                   Get.back();

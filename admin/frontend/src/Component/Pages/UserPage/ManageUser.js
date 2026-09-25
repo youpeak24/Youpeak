@@ -49,12 +49,6 @@ function ManageUser(props) {
   useEffect(() => {
     setData(user);
   }, [user]);
-  $(document).ready(function () {
-    $("img").bind("error", function () {
-      // Set the default image
-      $(this).attr("src", UserImage);
-    });
-  });
 
 
   const handlePageChange = (pageNumber) => {

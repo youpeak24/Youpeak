@@ -83,7 +83,7 @@ class HistoryPageView extends StatelessWidget {
       ),
       body: Obx(
         () => WatchHistory.mainWatchHistory.isEmpty
-            ? const DataNotFoundUi()
+            ? const DataNotFoundUi(type: EmptyStateType.history)
             : SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: ListView.builder(

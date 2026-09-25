@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:youpeak/utils/colors/app_color.dart';
@@ -39,6 +41,19 @@ ${deepLink != null ? '🔗 $deepLink' : ''}
     } catch (e) {
       Get.back();
       print("Share failed: $e");
+    }
+  }
+
+  /// Share a bundled image with [text] as its caption; falls back to text only.
+  static Future<void> shareAsset({required String assetPath, required String text}) async {
+    try {
+      final bytes = await rootBundle.load(assetPath);
+      final file = File('${(await getTemporaryDirectory()).path}/${assetPath.split('/').last}');
+      await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
+      await Share.shareXFiles([XFile(file.path)], text: text);
+    } catch (e) {
+      debugPrint("Asset share failed, sharing text only: $e");
+      await Share.share(text);
     }
   }
 

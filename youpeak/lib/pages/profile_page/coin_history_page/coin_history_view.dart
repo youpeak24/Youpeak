@@ -112,7 +112,7 @@ class CoinHistoryView extends StatelessWidget {
                 builder: (controller) => controller.isLoadingHistory
                     ? const HistoryShimmer()
                     : controller.convertedCoinHistory.isEmpty
-                        ? DataNotFoundUi(title: AppStrings.coinHistoryNotAvailable.tr)
+                        ? DataNotFoundUi(type: EmptyStateType.history, title: AppStrings.coinHistoryNotAvailable.tr)
                         : SingleChildScrollView(
                             child: ListView.builder(
                               itemCount: controller.convertedCoinHistory.length,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/main.dart';
@@ -35,13 +36,20 @@ class PremiumVideosShelf extends StatelessWidget {
                         color: AppColor.goldVipAccent,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(
-                        "👑 VIP",
-                        style: GoogleFonts.urbanist(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.black,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(AppVisuals.vipMedallion, width: 16, height: 16),
+                          const SizedBox(width: 3),
+                          Text(
+                            "VIP",
+                            style: GoogleFonts.urbanist(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -110,18 +118,25 @@ class PremiumVideosShelf extends StatelessWidget {
                                   top: 6,
                                   left: 6,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    padding: const EdgeInsets.fromLTRB(3, 2, 6, 2),
                                     decoration: BoxDecoration(
                                       color: AppColor.goldVipAccent,
                                       borderRadius: BorderRadius.circular(4),
                                     ),
-                                    child: Text(
-                                      "PREMIUM",
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w900,
-                                        color: AppColor.black,
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(AppVisuals.premiumBadge, width: 14, height: 14),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          "PREMIUM",
+                                          style: GoogleFonts.urbanist(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w900,
+                                            color: AppColor.black,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),

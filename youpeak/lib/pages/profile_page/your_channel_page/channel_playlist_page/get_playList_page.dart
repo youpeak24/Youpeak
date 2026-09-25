@@ -61,7 +61,7 @@ class _GetPlaylistPageState extends State<GetPlaylistPage> {
           return controller.channelPlayList == null
               ? const VideoListShimmerUi()
               : (controller.channelPlayList!.isEmpty)
-                  ? DataNotFoundUi(title: AppStrings.playlistNotAvailable.tr)
+                  ? DataNotFoundUi(type: EmptyStateType.playlist, title: AppStrings.playlistNotAvailable.tr)
                   : (controller.channelPlayList!.where((element) => element.playListType == 2 || element.channelId == Database.channelId).isNotEmpty)
                       ? SingleChildScrollView(
                           // controller: controller.playListScrollController,
@@ -174,7 +174,7 @@ class _GetPlaylistPageState extends State<GetPlaylistPage> {
                             },
                           ),
                         )
-                      : DataNotFoundUi(title: AppStrings.playlistNotAvailable.tr);
+                      : DataNotFoundUi(type: EmptyStateType.playlist, title: AppStrings.playlistNotAvailable.tr);
         },
       ),
     );

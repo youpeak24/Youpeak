@@ -15,6 +15,8 @@ import 'package:youpeak/pages/profile_page/your_channel_page/main_page/your_chan
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
+import 'package:youpeak/pages/login_related_page/fill_profile_page/get_profile_api.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/utils/utils.dart';
@@ -117,22 +119,53 @@ class _YourChannelViewState extends State<YourChannelView> {
                                     ? const ChannelProfileShimmerUi()
                                     : Column(
                                         children: [
-                                          PreviewProfileImage(
-                                            size: 100,
-                                            id: widget.channelId,
-                                            image: controller.channelHomeModel?.channelImage ?? "",
-                                            fit: BoxFit.cover,
+                                          // Channels have no custom cover yet, so every channel gets the brand banner.
+                                          SizedBox(
+                                            height: 160,
+                                            child: Stack(
+                                              alignment: Alignment.topCenter,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(16),
+                                                  child: Image.asset(AppVisuals.channelBanner, height: 110, width: double.infinity, fit: BoxFit.cover),
+                                                ).paddingSymmetric(horizontal: 15),
+                                                Positioned(
+                                                  bottom: 0,
+                                                  child: Container(
+                                                    padding: const EdgeInsets.all(3),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: isDarkMode.value ? AppColor.mainDark : AppColor.white,
+                                                    ),
+                                                    child: PreviewProfileImage(
+                                                      size: 94,
+                                                      id: widget.channelId,
+                                                      image: controller.channelHomeModel?.channelImage ?? "",
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           const SizedBox(height: 5), //  [0-15]
                                           SizedBox(
                                             width: Get.width / 1.5,
-                                            child: Center(
-                                              child: Text(
-                                                controller.channelHomeModel!.channelName ?? "",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: GoogleFonts.urbanist(fontSize: 22, fontWeight: FontWeight.bold),
-                                              ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    controller.channelHomeModel!.channelName ?? "",
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: GoogleFonts.urbanist(fontSize: 22, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                                // Monetization status is only known for the signed-in user's own channel.
+                                                if (Database.channelId == controller.channelId && (GetProfileApi.profileModel?.user?.isMonetization ?? false))
+                                                  Image.asset(AppVisuals.verified, width: 22, height: 22).paddingOnly(left: 4),
+                                              ],
                                             ),
                                           ),
 

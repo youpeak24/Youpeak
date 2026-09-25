@@ -9,6 +9,7 @@ import 'package:youpeak/pages/profile_page/my_wallet_page/my_wallet_controller.d
 import 'package:youpeak/pages/profile_page/withdraw_page/withdraw_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 
 class MyWalletView extends StatelessWidget {
@@ -66,41 +67,44 @@ class MyWalletView extends StatelessWidget {
             Container(
               height: 135,
               width: Get.width,
-              padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(left: 20, right: 12, top: 10, bottom: 10),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF1D4ED8),
-                    Color(0xFF2563EB),
-                    Color(0xFF3B82F6),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient: AppColor.pinkLinearGradient,
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0x592563EB),
+                    color: AppColor.primaryColor.withValues(alpha: 0.35),
                     blurRadius: 16,
-                    offset: Offset(0, 8),
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Row(
                 children: [
-                  Text(
-                    AppStrings.myBalance.tr,
-                    style: GoogleFonts.urbanist(fontSize: 16, color: AppColor.white, fontWeight: FontWeight.bold),
-                  ),
-                  GetBuilder<MyWalletController>(
-                    id: "onGetWalletHistory",
-                    builder: (controller) => Text(
-                      "${AppStrings.currencySymbol} ${controller.myBalance ?? 0}",
-                      style: GoogleFonts.urbanist(fontSize: 34, color: AppColor.white, fontWeight: FontWeight.w900),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          AppStrings.myBalance.tr,
+                          style: GoogleFonts.urbanist(fontSize: 16, color: AppColor.white, fontWeight: FontWeight.bold),
+                        ),
+                        GetBuilder<MyWalletController>(
+                          id: "onGetWalletHistory",
+                          builder: (controller) => FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "${AppStrings.currencySymbol} ${controller.myBalance ?? 0}",
+                              style: GoogleFonts.urbanist(fontSize: 34, color: AppColor.white, fontWeight: FontWeight.w900),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  Image.asset(AppVisuals.wallet, width: 96, height: 96),
                 ],
               ),
             ),
@@ -171,7 +175,7 @@ class MyWalletView extends StatelessWidget {
                                 child: SizedBox(
                                   height: Get.height * 0.5,
                                   child: Center(
-                                    child: DataNotFoundUi(title: AppStrings.noEarningTransactionsRecorded.tr),
+                                    child: DataNotFoundUi(type: EmptyStateType.history, title: AppStrings.noEarningTransactionsRecorded.tr),
                                   ),
                                 ),
                               )

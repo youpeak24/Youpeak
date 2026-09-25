@@ -33,6 +33,8 @@ import 'package:youpeak/pages/subscription_plan_page/view/subscription_plan_view
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/config/size_config.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
@@ -196,7 +198,6 @@ class ProfileView extends GetView<ProfileController> {
                     Image.asset(
                       // (GetProfileApi.profileModel?.user?.isPremiumPlan ?? false) ? AppIcons.tick : AppIcons.premiumImage,
                       AppIcons.premiumImage,
-                      color: Colors.white,
                       width: 60,
                     ),
                     15.width,
@@ -438,9 +439,10 @@ class ProfileView extends GetView<ProfileController> {
                           title: AppStrings.monetization.tr,
                           icon: (GetProfileApi.profileModel?.user?.isMonetization ?? false)
                               ? Image.asset(
-                                  AppIcons.tick,
-                                  width: 12,
-                                ).paddingOnly(left: 3)
+                                  AppVisuals.verified,
+                                  width: 18,
+                                  height: 18,
+                                  ).paddingOnly(left: 3)
                               : const Offstage(),
                           // (GetProfileApi.profileModel?.user?.isMonetization ?? false) ? Get.to(() => const PreviewMonetization()) :
                           callback: () async {
@@ -494,14 +496,15 @@ class ProfileView extends GetView<ProfileController> {
                           padding: EdgeInsets.only(
                             left: SizeConfig.blockSizeHorizontal * 3,
                             right: SizeConfig.blockSizeHorizontal * 3,
+                            bottom: 24,
                           ),
-                          height: 180,
                           decoration: BoxDecoration(
                             color: isDarkMode.value ? AppColor.secondDarkMode : AppColor.white,
                             borderRadius: const BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40)),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               const SizedBox(height: 10),
                               Container(
@@ -512,7 +515,8 @@ class ProfileView extends GetView<ProfileController> {
                                   color: isDarkMode.value ? AppColor.white.withOpacity(0.2) : AppColor.grey_200,
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 6),
+                              const AppArtwork(asset: AppVisuals.logout, height: 112),
                               Text(
                                 AppStrings.logOut.tr,
                                 style: GoogleFonts.urbanist(
@@ -526,6 +530,7 @@ class ProfileView extends GetView<ProfileController> {
                               const SizedBox(height: 5),
                               Text(
                                 AppStrings.logOutText.tr,
+                                textAlign: TextAlign.center,
                                 style: GoogleFonts.urbanist(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -598,14 +603,15 @@ class ProfileView extends GetView<ProfileController> {
                           padding: EdgeInsets.only(
                             left: SizeConfig.blockSizeHorizontal * 3,
                             right: SizeConfig.blockSizeHorizontal * 3,
+                            bottom: 24,
                           ),
-                          height: 180,
                           decoration: BoxDecoration(
                             color: isDarkMode.value ? AppColor.secondDarkMode : AppColor.white,
                             borderRadius: const BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40)),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               const SizedBox(height: 10),
                               Container(
@@ -616,7 +622,8 @@ class ProfileView extends GetView<ProfileController> {
                                   color: isDarkMode.value ? AppColor.white.withOpacity(0.2) : AppColor.grey_200,
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 6),
+                              const AppArtwork(asset: AppVisuals.deleteAccount, height: 112),
                               Text(
                                 AppStrings.deleteAccount.tr,
                                 style: GoogleFonts.urbanist(
@@ -630,6 +637,7 @@ class ProfileView extends GetView<ProfileController> {
                               const SizedBox(height: 5),
                               Text(
                                 AppStrings.deleteAccountText.tr,
+                                textAlign: TextAlign.center,
                                 style: GoogleFonts.urbanist(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,46 +69,7 @@ class _BlockedUserDialogState extends State<BlockedUserDialog> with SingleTicker
                     builder: (context, double value, child) {
                       return Transform.scale(
                         scale: 1 + (0.05 * (1 - (value - 0.5).abs() * 2)),
-                        child: Container(
-                          width: 86,
-                          height: 86,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColor.primaryColor.withOpacity(0.1),
-                                AppColor.primaryColor.withOpacity(0.02),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColor.primaryColor.withOpacity(0.1),
-                                blurRadius: 20,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColor.primaryColor.withOpacity(0.85),
-                                    AppColor.primaryColor.withOpacity(0.6),
-                                  ],
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.block_rounded,
-                                size: 32,
-                                color: AppColor.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: const AppArtwork(asset: AppVisuals.accountBlocked, height: 132),
                       );
                     },
                   ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/custom/custom_ui/app_artwork.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -95,7 +97,7 @@ class CreateChannelView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: SizeConfig.screenHeight / 60),
+                  const FeatureArtwork(asset: AppVisuals.channelHero),
                   ChannelNameField(controller: controller.channelName),
                   SizedBox(height: SizeConfig.screenHeight / 30),
                   ChannelDescriptionField(controller: controller.channelDescription),

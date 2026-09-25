@@ -4,13 +4,18 @@ import "../../assets/js/custom";
 import Navigator from "../extra/Navigator";
 import { warning } from "../../util/Alert";
 import $ from "jquery";
-import { ReactComponent as DownArrow } from "../../assets/icons/DownArrow.svg";
 import { useEffect, useState } from "react";
 import { LOGOUT_ADMIN } from "../store/admin/admin.type";
 import { useDispatch } from "react-redux";
 import { CLOSE_DIALOGUE } from "../store/dialogue/dialogue.type";
 import { projectName } from "../../util/config";
-import { IconAddressBook, IconAward, IconBellDollar, IconBrandYoutube, IconCoin, IconCurrencyDollar, IconEyeQuestion, IconHelpOctagon, IconHome, IconLogout, IconMovie, IconMusic, IconPremiumRights, IconReport, IconSettings, IconUser, IconUserQuestion, IconUserSquareRounded, IconVideo, IconLanguage, IconX } from "@tabler/icons-react";
+import {
+  IconAddressBook, IconAward, IconBellDollar, IconBrandYoutube,
+  IconCoin, IconCurrencyDollar, IconEyeQuestion, IconHelpOctagon,
+  IconHome, IconLogout, IconMovie, IconMusic, IconPremiumRights,
+  IconReport, IconSettings, IconUser, IconUserQuestion, IconUserSquareRounded,
+  IconVideo, IconLanguage, IconX,
+} from "@tabler/icons-react";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -35,16 +40,8 @@ const Sidebar = () => {
   };
 
   const handleCloseFunction = () => {
-    dispatch({
-      type: CLOSE_DIALOGUE,
-      payload: {
-        dialogue: false,
-      },
-    });
-
-    let dialogueData_ = {
-      dialogue: false,
-    };
+    dispatch({ type: CLOSE_DIALOGUE, payload: { dialogue: false } });
+    let dialogueData_ = { dialogue: false };
     sessionStorage.setItem("dialogueData", JSON.stringify(dialogueData_));
     sessionStorage.removeItem("multiButton");
   };
@@ -54,63 +51,23 @@ const Sidebar = () => {
   const isDigitalPartnerAdmin = adminObj?.role === "DIGITAL_PARTNER_ADMIN";
 
   const navBarArray = isAgencyAdmin
-    ? [
-        {
-          name: "District Franchise Dashboard",
-          path: "/admin/agencyDashboard",
-          navIcon: <IconHome />,
-          onClick: handleCloseFunction,
-        },
-      ]
+    ? [{ name: "District Franchise Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }]
     : isDigitalPartnerAdmin
-    ? [
-        {
-          name: "Partner Dashboard",
-          path: "/admin/partnerDashboard",
-          navIcon: <IconHome />,
-          onClick: handleCloseFunction,
-        },
-      ]
-    : [
-        {
-          name: "Dashboard",
-          path: "/admin/mainDashboard",
-          navIcon: <IconHome />,
-          onClick: handleCloseFunction,
-        },
-      ];
+    ? [{ name: "Partner Dashboard", path: "/admin/partnerDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }]
+    : [{ name: "Dashboard", path: "/admin/mainDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }];
 
   const generalArray = [
-    {
-      name: "Profile",
-      path: "/admin/profile",
-      navIcon: <IconUserSquareRounded />,
-      onClick: handleCloseFunction,
-    },
-    {
-      name: "Logout",
-      navIcon: <IconLogout />,
-      onClick: handleLogout,
-    },
+    { name: "Profile", path: "/admin/profile", navIcon: <IconUserSquareRounded size={15} />, onClick: handleCloseFunction },
+    { name: "Logout", navIcon: <IconLogout size={15} />, onClick: handleLogout },
   ];
 
   const groupedNav = isAgencyAdmin
     ? [
         {
-          heading: "DISTRICT FRANCHISE & REGIONAL",
+          heading: "DISTRICT FRANCHISE",
           items: [
-            {
-              name: "District Franchise Dashboard",
-              path: "/admin/agencyDashboard",
-              navIcon: <IconHome />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "District Franchise Reports",
-              path: "/admin/agencyReports",
-              navIcon: <IconReport />,
-              onClick: handleCloseFunction,
-            },
+            { name: "District Franchise Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction },
+            { name: "District Franchise Reports", path: "/admin/agencyReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
         },
       ]
@@ -119,225 +76,75 @@ const Sidebar = () => {
         {
           heading: "DIGITAL PARTNER",
           items: [
-            {
-              name: "Partner Dashboard",
-              path: "/admin/partnerDashboard",
-              navIcon: <IconHome />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "Local Business Ads",
-              path: "/admin/partnerLocalBusinessAds",
-              navIcon: <IconBellDollar />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "My Reports",
-              path: "/admin/digitalPartnerReports",
-              navIcon: <IconReport />,
-              onClick: handleCloseFunction,
-            },
+            { name: "Partner Dashboard", path: "/admin/partnerDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction },
+            { name: "Local Business Ads", path: "/admin/partnerLocalBusinessAds", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
+            { name: "My Reports", path: "/admin/digitalPartnerReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
         },
       ]
     : [
         {
-          heading: "DISTRICT FRANCHISE & REGIONAL",
+          heading: "FRANCHISE & REGIONAL",
           items: [
-            {
-              name: "Geofenced District Franchises",
-              path: "/admin/agency",
-              navIcon: <IconUserSquareRounded />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "District Franchise Dashboard",
-              path: "/admin/agencyDashboard",
-              navIcon: <IconHome />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "District Franchise Reports",
-              path: "/admin/agencyReports",
-              navIcon: <IconReport />,
-              onClick: handleCloseFunction,
-            },
+            { name: "Geofenced Franchises", path: "/admin/agency", navIcon: <IconUserSquareRounded size={15} />, onClick: handleCloseFunction },
+            { name: "Franchise Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction },
+            { name: "Franchise Reports", path: "/admin/agencyReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
         },
         {
           heading: "DIGITAL PARTNER",
           items: [
-            {
-              name: "Manage Digital Partners",
-              path: "/admin/manageDigitalPartner",
-              navIcon: <IconBellDollar />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "Digital Partner Reports",
-              path: "/admin/digitalPartnerReports",
-              navIcon: <IconReport />,
-              onClick: handleCloseFunction,
-            },
+            { name: "Manage Partners", path: "/admin/manageDigitalPartner", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
+            { name: "Partner Reports", path: "/admin/digitalPartnerReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
         },
         {
-          heading: "USER MANAGEMENT",
+          heading: "USERS",
           items: [
-            {
-              name: "User",
-              path: "/admin/userTable",
-              path2: "/admin/userProfile",
-              navIcon: <IconUser />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "Membership Tiers",
-              path: "/admin/membershipTiers",
-              navIcon: <IconAward />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "Fraud & Account Security",
-              path: "/admin/fraudManagement",
-              navIcon: <IconHelpOctagon />,
-              onClick: handleCloseFunction,
-            },
-            {
-              name: "Referral Management",
-              path: "/admin/referralManagement",
-              navIcon: <IconAddressBook />,
-              onClick: handleCloseFunction,
-            },
+            { name: "Users", path: "/admin/userTable", path2: "/admin/userProfile", navIcon: <IconUser size={15} />, onClick: handleCloseFunction },
+            { name: "Membership Tiers", path: "/admin/membershipTiers", navIcon: <IconAward size={15} />, onClick: handleCloseFunction },
+            { name: "Fraud & Security", path: "/admin/fraudManagement", navIcon: <IconHelpOctagon size={15} />, onClick: handleCloseFunction },
+            { name: "Referral Management", path: "/admin/referralManagement", navIcon: <IconAddressBook size={15} />, onClick: handleCloseFunction },
           ],
         },
-    {
-      heading: "CONTENT MANAGEMENT",
-      items: [
         {
-          name: "Channel",
-          path: "/admin/channel",
-
-          navIcon: <IconBrandYoutube />,
-          onClick: handleCloseFunction,
+          heading: "CONTENT",
+          items: [
+            { name: "Channel", path: "/admin/channel", navIcon: <IconBrandYoutube size={15} />, onClick: handleCloseFunction },
+            { name: "Videos", path: "/admin/videos", navIcon: <IconVideo size={15} />, onClick: handleCloseFunction },
+            { name: "Bites", path: "/admin/shorts", navIcon: <IconMovie size={15} />, onClick: handleCloseFunction },
+            { name: "Sound", path: "/admin/sound", navIcon: <IconMusic size={15} />, onClick: handleCloseFunction },
+            { name: "Video Promotions", path: "/admin/videoPromotions", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
+          ],
         },
         {
-          name: "Videos",
-          path: "/admin/videos",
-          navIcon: <IconVideo />,
-          onClick: handleCloseFunction,
+          heading: "LANGUAGE",
+          items: [
+            { name: "App Language", path: "/admin/appLanguage", navIcon: <IconLanguage size={15} />, onClick: handleCloseFunction },
+          ],
         },
         {
-          name: "Bites",
-          path: "/admin/shorts",
-          navIcon: <IconMovie />,
-          onClick: handleCloseFunction,
+          heading: "REPORTS & SUPPORT",
+          items: [
+            { name: "Reports", path: "/admin/allreport", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
+            { name: "FAQ", path: "/admin/faqs", navIcon: <IconHelpOctagon size={15} />, onClick: handleCloseFunction },
+            { name: "Contact Us", path: "/admin/contactUs", navIcon: <IconAddressBook size={15} />, onClick: handleCloseFunction },
+            { name: "Grievance Officer", path: "/admin/grievance", navIcon: <IconHelpOctagon size={15} />, onClick: handleCloseFunction },
+          ],
         },
         {
-          name: "Sound",
-          path: "/admin/sound",
-          navIcon: <IconMusic />,
-          onClick: handleCloseFunction,
+          heading: "FINANCIALS",
+          items: [
+            { name: "Coin Plan", path: "/admin/coinPlanTable", navIcon: <IconCoin size={15} />, onClick: handleCloseFunction },
+            { name: "Premium Plan", path: "/admin/premiumPlanTable", navIcon: <IconPremiumRights size={15} />, onClick: handleCloseFunction },
+            { name: "Currency", path: "/admin/allCurrency", navIcon: <IconCurrencyDollar size={15} />, onClick: handleCloseFunction },
+            { name: "Monetization Request", path: "/admin/allmonetizationRequest", navIcon: <IconEyeQuestion size={15} />, onClick: handleCloseFunction },
+            { name: "Withdraw Request", path: "/admin/withdrawRequest", navIcon: <IconUserQuestion size={15} />, onClick: handleCloseFunction },
+            { name: "Order History", path: "/admin/adminEarnings", path2: "/admin/coinplanhistory", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
+            { name: "Reward", path: "/admin/reward", navIcon: <IconAward size={15} />, onClick: handleCloseFunction },
+          ],
         },
-        {
-          name: "Video Promotions",
-          path: "/admin/videoPromotions",
-          navIcon: <IconBellDollar />,
-          onClick: handleCloseFunction,
-        },
-      ],
-    },
-    {
-      heading: "LANGUAGE MANAGEMENT",
-      items: [
-        {
-          name: "App Language",
-          path: "/admin/appLanguage",
-          navIcon: <IconLanguage />,
-          onClick: handleCloseFunction,
-        },
-      ],
-    },
-    {
-      heading: "REPORT & SUPPORT",
-      items: [
-        {
-          name: "Report",
-          path: "/admin/allreport",
-          navIcon: <IconReport />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "FAQ",
-          path: "/admin/faqs",
-          navIcon: <IconHelpOctagon />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Contact Us",
-          path: "/admin/contactUs",
-          navIcon: <IconAddressBook />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Grievance Officer",
-          path: "/admin/grievance",
-          navIcon: <IconHelpOctagon />,
-          onClick: handleCloseFunction,
-        },
-      ],
-    },
-    {
-      heading: "FINANCIAL & PLANS",
-      items: [
-        {
-          name: "Coin Plan",
-          path: "/admin/coinPlanTable",
-          navIcon: <IconCoin />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Premium Plan",
-          path: "/admin/premiumPlanTable",
-          navIcon: <IconPremiumRights />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Currency",
-          path: "/admin/allCurrency",
-          navIcon: <IconCurrencyDollar />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Monetization Request",
-          path: "/admin/allmonetizationRequest",
-          navIcon: <IconEyeQuestion />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Withdraw Request",
-          path: "/admin/withdrawRequest",
-          navIcon: <IconUserQuestion />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Order History",
-          path: "/admin/adminEarnings",
-          path2: "/admin/coinplanhistory",
-          navIcon: <IconBellDollar />,
-          onClick: handleCloseFunction,
-        },
-        {
-          name: "Reward",
-          path: "/admin/reward",
-          navIcon: <IconAward />,
-          onClick: handleCloseFunction,
-        }
-      ],
-    },
-  ]
-
-  const [totalPage, setTotalPage] = useState(20);
+      ];
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 1024px)");
@@ -350,94 +157,85 @@ const Sidebar = () => {
 
   return (
     <>
-      <Script totalPage={totalPage} />
+      <Script />
       <div className="mainSidebar">
-        <div className="sideBar webSidebar">
-          <div className="sideBarLogo d-flex align-items-center justify-content-between">
+        <div className="sideBar webSidebar" style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+          {/* ─── Logo / Brand ─── */}
+          <div className="sideBarLogo" style={{ flexShrink: 0 }}>
             <Link
-              to={"/admin/mainDashboard"}
-              className="d-flex align-items-center cursor-pointer"
+              to="/admin/mainDashboard"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                textDecoration: "none",
+                flex: 1,
+              }}
             >
-              <img src={Logo} alt="" width={"35px"} />
+              <img src={Logo} alt="" width={24} height={24} />
               <span
-                className="fs-4 fw-semibold"
-                style={{ color: "var(--text-white)", letterSpacing: '0.5px' }}
+                style={{
+                  color: "var(--text-primary)",
+                  fontWeight: 700,
+                  fontSize: "0.85rem",
+                  letterSpacing: "-0.02em",
+                }}
               >
                 {projectName}
               </span>
             </Link>
-            <div className="sidebar-close-btn close-sidebar-icon" style={{ cursor: "pointer" }}>
-              <IconX size={20} />
+            <div
+              className="sidebar-close-btn close-sidebar-icon"
+              style={{
+                cursor: "pointer",
+                color: "var(--text-tertiary)",
+                display: "flex",
+                alignItems: "center",
+                padding: "4px",
+              }}
+            >
+              <IconX size={16} />
             </div>
           </div>
-          {/* ======= Navigation ======= */}
-          <div className="navigation">
-            <p
-              className="sideBarTitle sidebar-title "
-            >
-              MENU
-            </p>
-            {/* <nav style={{ backgroundColor: "#f0f0f0" }}> */}
+
+          {/* ─── Scrollable Nav ─── */}
+          <div
+            className="navigation"
+            style={{ flex: 1, overflowY: "auto", overflowX: "hidden", paddingBottom: "16px" }}
+          >
+            {/* Overview / Main */}
+            <p className="sideBarTitle sidebar-title">OVERVIEW</p>
             <nav className="sidebar-nav-container">
-              {/* About */}
-              {navBarArray?.length > 0 && (
-                <>
-                  {(totalPage > 0
-                    ? navBarArray.slice(0, totalPage)
-                    : navBarArray
-                  ).map((res) => {
-                    return (
-                      <>
-                        <Navigator
-                          name={res?.name}
-                          path={res?.path}
-                          path2={res?.path2}
-                          navIcon={res?.navIcon}
-                          navIconImg={res?.navIconImg}
-                          navSVG={res?.navSVG}
-                          onClick={res?.onClick && res?.onClick}
-                        >
-                          {res?.subMenu &&
-                            res?.subMenu?.map((subMenu) => {
-                              return (
-                                <Navigator
-                                  subName={subMenu.subName}
-                                  subPath={subMenu.subPath}
-                                  subPath2={subMenu.subPath2}
-                                  onClick={subMenu.onClick}
-                                />
-                              );
-                            })}
-                        </Navigator>
-                      </>
-                    );
-                  })}
-                </>
-              )}
+              {navBarArray.map((res) => (
+                <Navigator
+                  key={res.path}
+                  name={res?.name}
+                  path={res?.path}
+                  path2={res?.path2}
+                  navIcon={res?.navIcon}
+                  onClick={res?.onClick && res?.onClick}
+                />
+              ))}
             </nav>
 
+            {/* Grouped sections */}
             {groupedNav.map((group, idx) => (
               <div key={idx}>
-                <p
-                  className="sideBarTitle sidebar-title "
-                >
-                  {group.heading}
-                </p>
+                <p className="sideBarTitle sidebar-title">{group.heading}</p>
                 <nav className="sidebar-nav-container">
                   {group.items.map((res) => (
                     <Navigator
+                      key={res.path}
                       name={res?.name}
                       path={res?.path}
                       path2={res?.path2}
                       navIcon={res?.navIcon}
-                      navIconImg={res?.navIconImg}
-                      navSVG={res?.navSVG}
                       onClick={res?.onClick && res?.onClick}
                     >
-                      {/* subMenu if any */}
                       {res?.subMenu &&
                         res?.subMenu?.map((subMenu) => (
                           <Navigator
+                            key={subMenu.subPath}
                             subName={subMenu.subName}
                             subPath={subMenu.subPath}
                             subPath2={subMenu.subPath2}
@@ -450,59 +248,20 @@ const Sidebar = () => {
               </div>
             ))}
 
-            <p
-              className="sideBarTitle sidebar-title "
-            >
-              SYSTEM
-            </p>
+            {/* System */}
+            <p className="sideBarTitle sidebar-title">SYSTEM</p>
             <nav className="sidebar-nav-container">
-              {/* About */}
-              {generalArray?.length > 0 && (
-                <>
-                  {(totalPage > 0
-                    ? generalArray.slice(0, totalPage)
-                    : generalArray
-                  ).map((res) => {
-                    return (
-                      <>
-                        <Navigator
-                          name={res?.name}
-                          path={res?.path}
-                          path2={res?.path2}
-                          navIcon={res?.navIcon}
-                          navIconImg={res?.navIconImg}
-                          navSVG={res?.navSVG}
-                          onClick={res?.onClick && res?.onClick}
-                        >
-                          {res?.subMenu &&
-                            res?.subMenu?.map((subMenu) => {
-                              return (
-                                <Navigator
-                                  subName={subMenu.subName}
-                                  subPath={subMenu.subPath}
-                                  subPath2={subMenu.subPath2}
-                                  onClick={subMenu.onClick}
-                                />
-                              );
-                            })}
-                        </Navigator>
-                      </>
-                    );
-                  })}
-                </>
-              )}
+              {generalArray.map((res, i) => (
+                <Navigator
+                  key={i}
+                  name={res?.name}
+                  path={res?.path}
+                  navIcon={res?.navIcon}
+                  onClick={res?.onClick && res?.onClick}
+                />
+              ))}
             </nav>
-            <div className="boxCenter mt-2">
-              <DownArrow
-                onClick={() => setTotalPage(navBarArray.length)}
-                className={`text-center mx-auto cursor ${totalPage === navBarArray.length && "d-none"
-                  }`}
-                style={{ transition: "0.5s" }}
-              />
-            </div>
           </div>
-
-
         </div>
       </div>
     </>
@@ -516,28 +275,18 @@ export const Script = (props) => {
     const handleClick = (event) => {
       const target = $(event.currentTarget);
       const submenu = target.next(".subMenu");
-
       $(".subMenu").not(submenu).slideUp();
       submenu.slideToggle();
-
-      // Toggle rotation class on the clicked icon
       target.children("i").toggleClass("rotate90");
-
-      // Remove rotation class from other icons
-      $(".mainMenu > li > a > i")
-        .not(target.children("i"))
-        .removeClass("rotate90");
+      $(".mainMenu > li > a > i").not(target.children("i")).removeClass("rotate90");
     };
 
     const handleToggle = () => {
       $(".mainNavbar").toggleClass("mobNav webNav");
       $(".sideBar").toggleClass("mobSidebar webSidebar");
-
       $(".mainAdmin").toggleClass("mobAdmin");
       $(".fa-angle-right").toggleClass("rotated toggleIcon");
       $(".comShow").toggleClass("mobCom webCom");
-
-      // $(".sideBarTitle").toggleClass("hidden");
       $(".sideBarLogo a").toggleClass("justify-content-center");
 
       var checkClass = $(".sideBar").hasClass("mobSidebar");
@@ -561,7 +310,7 @@ export const Script = (props) => {
       $(".sidebar-close-btn").off("click", handleToggle);
       $(".mobSidebar-bg").off("click", handleToggle);
     };
-  }, [props.totalPage]);
+  }, []);
 
   return null;
 };

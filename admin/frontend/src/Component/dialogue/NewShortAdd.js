@@ -592,12 +592,18 @@ function NewShortAdd(props) {
       // }
 
       if (thumbnailFile) {
-        const thumbnailFileName = `${Date.now()}.jpeg`;
-        const thumbnailFile = new File([video.thumbnailBlob], thumbnailFileName, { type: "image/jpeg" });
+        const fileToUpload =
+          thumbnailFile instanceof File
+            ? thumbnailFile
+            : new File(
+                [video?.thumbnailBlob || thumbnailFile],
+                `${Date.now()}.jpeg`,
+                { type: "image/jpeg" }
+              );
 
         // ✅ Upload thumbnail
         const { resDataUrl: thumbnailUrl } = await uploadFile(
-          thumbnailFile,
+          fileToUpload,
           "shortsImage",
           dispatch,
           "imageLoader"

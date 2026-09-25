@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'dart:io' show Platform;
 import 'package:youpeak/pages/admin_settings/admin_settings_api.dart';
 
 class Constant {
@@ -147,8 +146,8 @@ class Constant {
 
   // >>>>>>>>>> Use Live1 Streaming <<<<<<<<<<
 
-  static int appId = int.parse(AdminSettingsApi.adminSettingsModel?.setting?.zegoAppId.toString() ?? "");
-  static final appSign = AdminSettingsApi.adminSettingsModel?.setting?.zegoAppSignIn ?? "";
+  static int get appId => int.tryParse(AdminSettingsApi.adminSettingsModel?.setting?.zegoAppId?.toString() ?? "") ?? 0;
+  static String get appSign => AdminSettingsApi.adminSettingsModel?.setting?.zegoAppSignIn ?? "";
   static const serverSecret = '';
 
   // >>>>>>>>>  Monetization Api <<<<<<<<<<<

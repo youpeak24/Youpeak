@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +20,7 @@ class NetworkIssueView extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             padding: const EdgeInsets.all(0),
             decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-            child: Image.asset("assets/icons/Internet.jpg", width: 200),
+            child: Image.asset(AppVisuals.noInternet, width: 200),
           ),
           Obx(() => isDarkMode.value ? const SizedBox(height: 20) : const Offstage()),
           Text("Something went wrong", style: GoogleFonts.urbanist(fontSize: 25, fontWeight: FontWeight.bold)),

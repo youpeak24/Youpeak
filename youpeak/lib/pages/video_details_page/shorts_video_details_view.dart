@@ -85,16 +85,16 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
   }
 
   void getVideoDetails() async {
-    videoDetailsModel = await VideoDetailsApi.callApi(Database.loginUserId!, widget.videoId, 2);
+    videoDetailsModel = await VideoDetailsApi.callApi(Database.loginUserId ?? "", widget.videoId, 2);
     if (videoDetailsModel != null) {
-      isSubscribe.value = videoDetailsModel!.detailsOfVideo!.isSubscribed!;
-      isLike.value = videoDetailsModel!.detailsOfVideo!.isLike!;
-      isDisLike.value = videoDetailsModel!.detailsOfVideo!.isDislike!;
+      isSubscribe.value = videoDetailsModel?.detailsOfVideo?.isSubscribed ?? false;
+      isLike.value = videoDetailsModel?.detailsOfVideo?.isLike ?? false;
+      isDisLike.value = videoDetailsModel?.detailsOfVideo?.isDislike ?? false;
 
-      customChanges["like"] = videoDetailsModel!.detailsOfVideo!.like!;
-      customChanges["disLike"] = videoDetailsModel!.detailsOfVideo!.dislike!;
-      customChanges["comment"] = videoDetailsModel!.detailsOfVideo!.totalComments!;
-      customChanges["share"] = videoDetailsModel!.detailsOfVideo!.shareCount!;
+      customChanges["like"] = videoDetailsModel?.detailsOfVideo?.like ?? 0;
+      customChanges["disLike"] = videoDetailsModel?.detailsOfVideo?.dislike ?? 0;
+      customChanges["comment"] = videoDetailsModel?.detailsOfVideo?.totalComments ?? 0;
+      customChanges["share"] = videoDetailsModel?.detailsOfVideo?.shareCount ?? 0;
 
       isPrivateContent.value = (videoDetailsModel?.detailsOfVideo?.videoPrivacyType == 2 && videoDetailsModel?.detailsOfVideo?.isSubscribed == false && videoDetailsModel?.detailsOfVideo?.userId != Database.loginUserId);
 
@@ -103,14 +103,14 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
   }
 
   Future<void> onCreateHistory() async {
-    if (videoDetailsModel?.detailsOfVideo != null && videoPlayerController != null) {
+    if (videoDetailsModel?.detailsOfVideo != null && videoPlayerController != null && Database.loginUserId != null && Database.loginUserId!.isNotEmpty) {
       final watchTime = videoPlayerController!.value.position.inSeconds;
       AppSettings.showLog("Video Watch Time => $watchTime");
       await CreateWatchHistoryApi.callApi(
         loginUserId: Database.loginUserId!,
-        videoId: videoDetailsModel!.detailsOfVideo!.id!,
-        videoChannelId: videoDetailsModel!.detailsOfVideo!.channelId!,
-        videoUserId: videoDetailsModel!.detailsOfVideo!.userId!,
+        videoId: videoDetailsModel?.detailsOfVideo?.id ?? "",
+        videoChannelId: videoDetailsModel?.detailsOfVideo?.channelId ?? "",
+        videoUserId: videoDetailsModel?.detailsOfVideo?.userId ?? "",
         watchTimeInMinute: watchTime.toDouble(),
       );
     }
@@ -321,18 +321,19 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
     // );
 
     await CommonShare.onShare(
-      url: videoDetailsModel!.detailsOfVideo!.videoUrl!,
-      channelId: videoDetailsModel!.detailsOfVideo!.channelId!,
-      id: videoDetailsModel!.detailsOfVideo!.id!,
-      image: videoDetailsModel!.detailsOfVideo!.videoImage!,
-      // sellerName: '${controller.mainReels[widget.index].sellerId?.firstName} ${controller.mainReels[widget.index].sellerId?.lastName}',
-      title: videoDetailsModel!.detailsOfVideo!.title!,
+      url: videoDetailsModel?.detailsOfVideo?.videoUrl ?? "",
+      channelId: videoDetailsModel?.detailsOfVideo?.channelId ?? "",
+      id: videoDetailsModel?.detailsOfVideo?.id ?? "",
+      image: videoDetailsModel?.detailsOfVideo?.videoImage ?? "",
+      title: videoDetailsModel?.detailsOfVideo?.title ?? "",
       pageRoutes: "ShortsVideo",
     );
 
-    await ShareCountApiClass.callApi(Database.loginUserId!, videoDetailsModel!.detailsOfVideo!.id.toString());
+    if (videoDetailsModel?.detailsOfVideo?.id != null) {
+      await ShareCountApiClass.callApi(Database.loginUserId ?? "", videoDetailsModel!.detailsOfVideo!.id.toString());
+    }
 
-    customChanges["share"] += 1;
+    customChanges["share"] = (customChanges["share"] ?? 0) + 1;
   }
 
   void onClickMoreOption() async {
@@ -404,7 +405,7 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
   void onClickProfile() async {
     onStopVideo();
     // Get.to(PreviewShortsChannelView(channelId: videoDetailsModel!.detailsOfVideo!.channelId!));
-    Get.to(() => YourChannelView(loginUserId: Database.loginUserId!, channelId: videoDetailsModel?.detailsOfVideo?.channelId ?? ""));
+    Get.to(() => YourChannelView(loginUserId: Database.loginUserId ?? "", channelId: videoDetailsModel?.detailsOfVideo?.channelId ?? ""));
   }
 
   void onClickSearch() async {

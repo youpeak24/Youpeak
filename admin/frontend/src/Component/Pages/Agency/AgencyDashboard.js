@@ -68,7 +68,7 @@ export default function AgencyDashboard() {
         <div className="col-md-3">
           <div className="card text-white bg-info p-3 shadow-sm border-0">
             <h6 className="card-title">Commission Earned</h6>
-            <h3 className="fw-bold">₹ {report ? report.totalCommissionEarned.toFixed(2) : "0.00"}</h3>
+            <h3 className="fw-bold">₹ {Number(report?.totalCommissionEarned || 0).toFixed(2)}</h3>
           </div>
         </div>
       </div>

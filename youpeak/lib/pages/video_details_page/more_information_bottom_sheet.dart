@@ -55,6 +55,10 @@ class MoreInfoBottomSheet {
                 widget: ImageIcon(AssetImage(element.isSave ? AppIcons.saveDone2 : AppIcons.timeCircle), size: 23),
                 name: element.isSave ? AppStrings.saved.tr : AppStrings.saveToWatchLater.tr,
                 onTap: () {
+                  if (Database.loginUserId == null || Database.loginUserId!.isEmpty) {
+                    CustomToast.show("Please login first");
+                    return;
+                  }
                   if (element.isSave == false) {
                     CustomToast.show(AppStrings.addToWatchLater.tr);
                     CreateWatchLater.callApi(Database.loginUserId!, element.videoId);
@@ -180,7 +184,7 @@ class MoreInfoBottomSheet {
                           title: element.title,
                           pageRoutes: "NormalVideo",
                         );
-                  await ShareCountApiClass.callApi(Database.loginUserId!, element.videoId);
+                  await ShareCountApiClass.callApi(Database.loginUserId ?? "", element.videoId);
                 },
               ),
               const SizedBox(height: 16),

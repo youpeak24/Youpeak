@@ -8,9 +8,10 @@ import 'package:youpeak/pages/profile_page/withdraw_page/withdraw_setting_api.da
 import 'package:youpeak/pages/profile_page/referral_history_page/referral_history_view.dart';
 import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
+import 'package:youpeak/deep_link/share_manager/pure_flutter_share_service.dart';
 import 'package:youpeak/utils/settings/app_settings.dart';
 import 'package:youpeak/utils/string/app_string.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ReferralProgramView extends StatelessWidget {
   const ReferralProgramView({super.key});
@@ -208,7 +209,7 @@ class ReferralProgramView extends StatelessWidget {
       bottomNavigationBar: GestureDetector(
         onTap: () async {
           try {
-            Share.share(AppSettings.referralCodeLink);
+            await PureFlutterShareService.shareAsset(assetPath: AppVisuals.referralShareBanner, text: AppSettings.referralCodeLink);
           } catch (e) {
             AppSettings.showLog("Share Error => $e");
           }

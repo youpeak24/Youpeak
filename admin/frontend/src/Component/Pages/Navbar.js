@@ -3,11 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import UserImage from "../../assets/images/defaultUserImage.avif";
 import Logo from "../../assets/images/logo.svg";
 import { useDispatch, useSelector } from "react-redux";
-
 import { getDefaultCurrency } from "../store/currency/currency.action";
 import { projectName } from "../../util/config";
-import { IconMenuDeep } from "@tabler/icons-react";
-import { IconLogout, IconSettings, IconUserSquareRounded } from "@tabler/icons-react";
+import { IconMenuDeep, IconLogout, IconSettings, IconUserSquareRounded, IconChevronDown } from "@tabler/icons-react";
 import { warning } from "../../util/Alert";
 import { LOGOUT_ADMIN } from "../store/admin/admin.type";
 
@@ -19,9 +17,7 @@ const Navbar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // setTimeout(()=>{
     dispatch(getDefaultCurrency());
-    // },1000)
   }, [dispatch]);
 
   const adminName = useMemo(() => admin?.name || "Admin", [admin?.name]);
@@ -33,9 +29,7 @@ const Navbar = (props) => {
       if (!dropdownRef.current) return;
       if (!dropdownRef.current.contains(e.target)) setIsOpen(false);
     };
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
+    const onKeyDown = (e) => { if (e.key === "Escape") setIsOpen(false); };
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("keydown", onKeyDown);
     return () => {
@@ -59,122 +53,143 @@ const Navbar = (props) => {
   };
 
   return (
-    <>
-      <div className="mainNavbar webNav me-4">
-        <div className="row">
-          <div className="navBox ">
-            <div style={{ padding: "0px 20px" }}>
-              <div
-                className="navBar boxBetween"
-                style={{ padding: "10px 15px" }}
-              >
-                <div className="navToggle" id={"toggle"}>
-                  <IconMenuDeep className="text-secondary" />
-                </div>
+    <div className="mainNavbar webNav me-4">
+      <div className="row">
+        <div className="navBox">
+          <div style={{ padding: "0 20px" }}>
+            <div
+              className="navBar boxBetween"
+              style={{ padding: "0 12px", height: "56px" }}
+            >
+              {/* Left: Toggle */}
+              <div className="d-flex align-items-center gap-3">
+                <button
+                  className="navToggle"
+                  id="toggle"
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "var(--text-secondary)",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "4px",
+                  }}
+                >
+                  <IconMenuDeep size={18} />
+                </button>
+
+                {/* Mobile logo */}
                 <div className="col-7 logo-show-nav">
-                  <div className="d-flex align-items-center">
-                    <Link
-                      to={"/admin/mainDashboard"}
-                      className="d-flex align-items-center gap-2"
-                      style={{marginLeft: "5px"}}
+                  <Link
+                    to="/admin/mainDashboard"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      textDecoration: "none",
+                    }}
+                  >
+                    <img src={Logo} alt="" width={24} height={24} />
+                    <span
+                      style={{
+                        fontWeight: 700,
+                        fontSize: "0.85rem",
+                        color: "var(--text-primary)",
+                        letterSpacing: "-0.02em",
+                      }}
                     >
-                      <img src={Logo} alt="" width={"40px"} />
-                      <span className="fs-3 fw-bold" style={{ color: "var(--text-white)" }}>
-                        {projectName}
-                      </span>
-                    </Link>
-                  </div>
+                      {projectName}
+                    </span>
+                  </Link>
                 </div>
-                <div className="col-4">
-                  <div className="navIcons d-flex align-items-center justify-content-end">
-                    <div
-                      className="pe-4 cursor"
-                      style={{ backgroundColor: "inherit", position: "relative" }}
-                    ></div>
-                    <div className="navbar-profile-dropdown" ref={dropdownRef}>
-                      <button
-                        type="button"
-                        className="navbar-profile-trigger"
-                        onClick={() => setIsOpen((v) => !v)}
-                        aria-haspopup="menu"
-                        aria-expanded={isOpen}
-                      >
-                        <div className="navbar-profile-meta">
-                          <span className="navbar-profile-name">{adminName}</span>
-                        </div>
-                        <img
-                          src={admin?.image && admin.image.trim() !== "" ? admin.image : UserImage}
-                          alt="Admin Profile"
-                          width="40px"
-                          height="40px"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = UserImage;
-                          }}
-                          className="navbar-profile-avatar"
-                          style={{ objectFit: "cover", borderRadius: "8px" }}
-                        />
-                      </button>
+              </div>
 
-                      {isOpen && (
-                        <div className="navbar-profile-menu" role="menu">
-                          <div className="navbar-profile-header">
-                            <div className="navbar-profile-header-name">{adminName}</div>
-                            {!!adminEmail && (
-                              <div className="navbar-profile-header-email">
-                                {adminEmail}
-                              </div>
-                            )}
-                          </div>
+              {/* Right: Profile */}
+              <div className="navbar-profile-dropdown" ref={dropdownRef}>
+                <button
+                  type="button"
+                  className="navbar-profile-trigger"
+                  onClick={() => setIsOpen((v) => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={isOpen}
+                >
+                  <img
+                    src={
+                      admin?.image && admin.image.trim() !== ""
+                        ? admin.image
+                        : UserImage
+                    }
+                    alt="Admin"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = UserImage;
+                    }}
+                    className="navbar-profile-avatar"
+                  />
+                  <div className="d-none d-sm-block">
+                    <div className="navbar-profile-name">{adminName}</div>
+                  </div>
+                  <IconChevronDown
+                    size={14}
+                    style={{
+                      color: "var(--text-tertiary)",
+                      transition: "transform 0.15s ease",
+                      transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                  />
+                </button>
 
-                          <button
-                            type="button"
-                            className="navbar-profile-item"
-                            role="menuitem"
-                            onClick={() => {
-                              setIsOpen(false);
-                              navigate("/admin/profile");
-                            }}
-                          >
-                            <IconUserSquareRounded size={18} />
-                            <span>My Profile</span>
-                          </button>
-
-                          <button
-                            type="button"
-                            className="navbar-profile-item"
-                            role="menuitem"
-                            onClick={() => {
-                              setIsOpen(false);
-                              navigate("/admin/settingPage");
-                            }}
-                          >
-                            <IconSettings size={18} />
-                            <span>Setting</span>
-                          </button>
-
-                          <div className="navbar-profile-divider" />
-
-                          <button
-                            type="button"
-                            className="navbar-profile-logout"
-                            role="menuitem"
-                            onClick={handleLogout}
-                          >
-                            <span className="navbar-profile-logout-text">Logout</span>
-                            <IconLogout size={18} />
-                          </button>
-                        </div>
+                {isOpen && (
+                  <div className="navbar-profile-menu" role="menu">
+                    {/* Header */}
+                    <div className="navbar-profile-header">
+                      <div className="navbar-profile-header-name">{adminName}</div>
+                      {!!adminEmail && (
+                        <div className="navbar-profile-header-email">{adminEmail}</div>
                       )}
                     </div>
+
+                    {/* Items */}
+                    <button
+                      type="button"
+                      className="navbar-profile-item"
+                      role="menuitem"
+                      onClick={() => { setIsOpen(false); navigate("/admin/profile"); }}
+                    >
+                      <IconUserSquareRounded size={15} />
+                      <span>My Profile</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="navbar-profile-item"
+                      role="menuitem"
+                      onClick={() => { setIsOpen(false); navigate("/admin/settingPage"); }}
+                    >
+                      <IconSettings size={15} />
+                      <span>Settings</span>
+                    </button>
+
+                    <div className="navbar-profile-divider" />
+
+                    <button
+                      type="button"
+                      className="navbar-profile-logout"
+                      role="menuitem"
+                      onClick={handleLogout}
+                    >
+                      <span>Sign out</span>
+                      <IconLogout size={15} />
+                    </button>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:youpeak/main.dart';
-import 'package:youpeak/utils/colors/app_color.dart';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 
 class PreviewProfileImage extends StatelessWidget {
   const PreviewProfileImage({
@@ -55,12 +54,21 @@ class PreviewVideoImage extends StatelessWidget {
       fit: fit ?? BoxFit.cover,
       imageUrl: videoImage,
       useOldImageOnUrlChange: true,
-      placeholder: (context, url) =>
-          Center(child: Image.asset(AppIcons.logo, color: isDarkMode.value ? AppColor.primaryColor : AppColor.white, width: 50)),
-      errorWidget: (context, string, dynamic) =>
-          Center(child: Image.asset(AppIcons.logo, color: isDarkMode.value ? AppColor.primaryColor : AppColor.white, width: 50)),
+      placeholder: (context, url) => const _VideoPlaceholder(),
+      errorWidget: (context, string, dynamic) => const _VideoPlaceholder(),
     );
   }
+}
+
+class _VideoPlaceholder extends StatelessWidget {
+  const _VideoPlaceholder();
+
+  @override
+  Widget build(BuildContext context) => const FractionallySizedBox(
+        widthFactor: 0.7,
+        heightFactor: 0.7,
+        child: Image(image: AssetImage(AppVisuals.videoPlaceholder), fit: BoxFit.contain),
+      );
 }
 
 class PreviewNetworkImage extends StatelessWidget {

@@ -18,6 +18,7 @@ import 'package:youpeak/pages/notification_page/notification_model.dart' as mode
 import 'package:youpeak/pages/notification_page/local_notification_storage.dart';
 import 'dart:math';
 import 'package:youpeak/utils/icons/app_icons.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:youpeak/utils/services/preview_image.dart';
 import 'package:youpeak/utils/string/app_string.dart';
 import 'package:youpeak/pages/profile_page/withdraw_history_page/withdraw_history_controller.dart';
@@ -194,9 +195,15 @@ class _WithdrawViewState extends State<WithdrawView> {
               ).paddingSymmetric(horizontal: 15),
             ),
             const SizedBox(height: 10),
-            Text(
-              AppStrings.selectPaymentGateway.tr,
-              style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w600),
+            Row(
+              children: [
+                Image.asset(AppVisuals.withdrawBank, width: 32, height: 32),
+                const SizedBox(width: 8),
+                Text(
+                  AppStrings.selectPaymentGateway.tr,
+                  style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ],
             ).paddingSymmetric(horizontal: 15),
             const SizedBox(height: 10),
             GestureDetector(

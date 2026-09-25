@@ -50,7 +50,7 @@ class PreviewPlayListController extends GetxController {
   void onGetPlayListScrolling() async {
     if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
       isPlayListPaginationLoading.value = true;
-      await getPlayListApi(Database.loginUserId!, playListId);
+      await getPlayListApi(Database.loginUserId ?? "", playListId);
       isPlayListPaginationLoading.value = false;
     }
   }

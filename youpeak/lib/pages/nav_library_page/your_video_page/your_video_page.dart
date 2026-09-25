@@ -133,7 +133,7 @@ class ChannelNormalVideo extends StatelessWidget {
         builder: (controller) => controller.mainChannelVideos[0] == null
             ? const VideoListShimmerUi()
             : controller.mainChannelVideos[0]!.isEmpty
-                ? DataNotFoundUi(title: AppStrings.videosNotAvailable)
+                ? DataNotFoundUi(type: EmptyStateType.videos, title: AppStrings.videosNotAvailable)
                 : SingleChildScrollView(
                     controller: controller.channelNormalVideo,
                     physics: const BouncingScrollPhysics(),
@@ -289,7 +289,7 @@ class ChannelShortsVideo extends StatelessWidget {
         builder: (controller) => controller.mainChannelVideos[1] == null
             ? const ShortsListShimmerUi()
             : controller.mainChannelVideos[1]!.isEmpty
-                ? DataNotFoundUi(title: AppStrings.shortsNotAvailable)
+                ? DataNotFoundUi(type: EmptyStateType.videos, title: AppStrings.shortsNotAvailable)
                 : SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     controller: controller.channelShortVideo,

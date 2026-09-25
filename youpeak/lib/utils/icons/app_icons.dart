@@ -73,6 +73,7 @@ abstract class AppIcons {
   static const String boldHome = "assets/icons/boldHome.png";
   static const String boldVideo = "assets/icons/boldVideo.png";
   static const String boldPlay = "assets/icons/boldPlay.png";
+  static const String goLive = "assets/icons/go_live.png";
   static const String boldLibrary = "assets/icons/boldDocument.png";
   static const String document = "assets/icons/document.png";
   static const String search = "assets/icons/search.png";
@@ -149,11 +150,11 @@ abstract class AppIcons {
   static const String icEditVideo = "assets/icons/ic_edit_video.png";
   static const String icDeleteVideo = "assets/icons/ic_delete_video.png";
 
-  // static const String liveChat = "assets/icons/liveChat.png";
+  static const String liveChat = "assets/icons/live_chat.png";
 
   static const String boldShare = "assets/icons/boldShare.png";
 
-  static const String blueTik = "assets/icons/blueTik.png";
+  static const String blueTik = "assets/icons/verified_badge.png";
   static const String swap = "assets/icons/swap.png";
   static const String pause = "assets/icons/pause.png";
 

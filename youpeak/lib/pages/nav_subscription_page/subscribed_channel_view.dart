@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youpeak/utils/icons/app_visuals.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/custom/custom_ui/data_not_found_ui.dart';
@@ -45,7 +46,7 @@ class SubscribedChannelView extends GetView<NavSubscriptionPageController> {
       body: controller.mainSubscribedChannels == null
           ? const LoaderUi()
           : controller.mainSubscribedChannels!.isEmpty
-              ? const DataNotFoundUi()
+              ? const DataNotFoundUi(type: EmptyStateType.subscriptions)
               : SingleChildScrollView(
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -104,13 +105,20 @@ class SubscribedChannelView extends GetView<NavSubscriptionPageController> {
                             style: GoogleFonts.urbanist(fontWeight: FontWeight.bold),
                           ),
                           trailing: GetLiveUsersApi.isLive(controller.mainSubscribedChannels![index].channelId!)
-                              ? Text(
-                                  "Live",
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.primaryColor,
-                                  ),
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(AppVisuals.liveBadge, width: 16, height: 16),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "Live",
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.primaryColor,
+                                      ),
+                                    ),
+                                  ],
                                 )
                               : null,
                         ),

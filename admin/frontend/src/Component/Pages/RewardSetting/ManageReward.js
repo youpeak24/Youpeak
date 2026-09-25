@@ -7,7 +7,7 @@ import EngagementSetting from "./EngagementSetting";
 import LoginRewardSetting from "./LoginRewardSetting";
 
 const ManageReward = () => {
-  const [multiButtonSelect, setMultiButtonSelect] = useState("Setting");
+  const [multiButtonSelect, setMultiButtonSelect] = useState("Ads Coin Reward");
 
   return (
     <div className="userPage">
