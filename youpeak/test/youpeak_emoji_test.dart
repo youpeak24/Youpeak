@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:youpeak/custom/custom_ui/youpeak_emoji.dart';
+import 'package:youpeak/shared/widgets/youpeak_emoji.dart';
 
 String render(String text) => YouPeakEmoji.spans(text, null)
     .map((s) => s is TextSpan ? s.text! : '[${((s as WidgetSpan).child as Image).semanticLabel}]')
