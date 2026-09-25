@@ -131,6 +131,12 @@ const Sidebar = () => {
               navIcon: <IconBellDollar />,
               onClick: handleCloseFunction,
             },
+            {
+              name: "My Reports",
+              path: "/admin/digitalPartnerReports",
+              navIcon: <IconReport />,
+              onClick: handleCloseFunction,
+            },
           ],
         },
       ]
@@ -165,6 +171,12 @@ const Sidebar = () => {
               name: "Manage Digital Partners",
               path: "/admin/manageDigitalPartner",
               navIcon: <IconBellDollar />,
+              onClick: handleCloseFunction,
+            },
+            {
+              name: "Digital Partner Reports",
+              path: "/admin/digitalPartnerReports",
+              navIcon: <IconReport />,
               onClick: handleCloseFunction,
             },
           ],
@@ -216,7 +228,7 @@ const Sidebar = () => {
           onClick: handleCloseFunction,
         },
         {
-          name: "Shorts",
+          name: "Bites",
           path: "/admin/shorts",
           navIcon: <IconMovie />,
           onClick: handleCloseFunction,

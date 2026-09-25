@@ -116,6 +116,116 @@ exports.activate = async (req, res) => {
   }
 };
 
+// GET /admin/digitalPartner/report?startDate=&endDate=&state=&district=&partnerUserId=
+// Scoped by role rather than super-admin-only: a DIGITAL_PARTNER_ADMIN only
+// ever sees their own row, an AGENCY_ADMIN only partners in their territory.
+// Every figure is derived from the source collections (PartnerProfile,
+// referralHistories, localBusinessAds) — nothing here is a stored total that
+// could drift. startDate/endDate filter the period activity (referrals, ads,
+// license activations); referral earnings are lifetime (the profile keeps
+// one running total, there is no dated ledger for it).
+exports.report = async (req, res) => {
+  try {
+    const role = req.adminRole;
+    const q = req.query || {};
+
+    const inRange = (value) => {
+      if (!value) return !(q.startDate || q.endDate);
+      const t = new Date(value).getTime();
+      if (Number.isNaN(t)) return false;
+      if (q.startDate && t < new Date(`${q.startDate}T00:00:00`).getTime()) return false;
+      if (q.endDate && t > new Date(`${q.endDate}T23:59:59.999`).getTime()) return false;
+      return true;
+    };
+
+    let partners = await db.find("users", { isDigitalPartner: true });
+    if (role === "DIGITAL_PARTNER_ADMIN") {
+      partners = partners.filter((u) => String(u._id || u.id) === String(req.partnerUserId));
+    } else if (role === "AGENCY_ADMIN") {
+      partners = partners.filter((u) => req.agencyId && String(u.agencyId || "") === String(req.agencyId));
+    } else if (role !== "SUPER_ADMIN") {
+      return res.status(403).json({ status: false, message: "Not allowed to view Digital Partner reports." });
+    }
+    if (q.partnerUserId) partners = partners.filter((u) => String(u._id || u.id) === String(q.partnerUserId));
+    if (q.state) partners = partners.filter((u) => (u.state || "").toLowerCase() === String(q.state).toLowerCase());
+    if (q.district) partners = partners.filter((u) => (u.district || "").toLowerCase() === String(q.district).toLowerCase());
+
+    const coinRate = num((global.settingJSON || {}).coinToInrRate, 0.01);
+    const ids = new Set(partners.map((u) => String(u._id || u.id)));
+
+    const [profiles, referrals, ads] = await Promise.all([
+      Promise.all(partners.map((u) => db.findOne("PartnerProfile", { userId: String(u._id || u.id) }))),
+      ids.size ? db.find("referralHistories", {}) : [],
+      ids.size ? db.find("localBusinessAds", {}) : [],
+    ]);
+
+    const rows = partners.map((u, i) => {
+      const userId = String(u._id || u.id);
+      const profile = profiles[i] || {};
+      const myRefs = referrals.filter((r) => String(r.referrerId) === userId && inRange(r.createdAt));
+      const valid = myRefs.filter((r) => r.status !== "FLAGGED_SUSPICIOUS");
+      const myAds = ads.filter((a) => String(a.submittedByUserId) === userId && inRange(a.createdAt));
+      const approved = myAds.filter((a) => a.commissionCredited || a.status === "ACTIVE" || a.status === "COMPLETED" || a.status === "EXPIRED");
+      const commissionCoins = approved.reduce((s, a) => s + num(a.digitalPartnerCommissionCoins), 0);
+
+      return {
+        userId,
+        fullName: u.fullName || "",
+        email: u.email || "",
+        state: u.state || "",
+        district: u.district || "",
+        partnerStatus: u.partnerStatus || "NONE",
+        activatedAt: profile.activatedAt || null,
+        licenseFeePaid: inRange(profile.activatedAt) ? num(profile.licenseFeePaid) : 0,
+        adCreditsBalance: num(profile.adCreditsBalance),
+        referrals: {
+          total: valid.length,
+          completed: valid.filter((r) => r.stage1Completed && r.stage2Completed).length,
+          pending: valid.filter((r) => !(r.stage1Completed && r.stage2Completed)).length,
+          flagged: myRefs.length - valid.length,
+        },
+        referralEarningsInr: num(profile.totalEarnings),
+        ads: {
+          submitted: myAds.length,
+          pending: myAds.filter((a) => a.status === "PENDING_REVIEW").length,
+          active: myAds.filter((a) => a.status === "ACTIVE").length,
+          rejected: myAds.filter((a) => a.status === "REJECTED").length,
+          approvedBudgetInr: approved.reduce((s, a) => s + num(a.adBudgetInr), 0),
+          commissionInr: Number((commissionCoins * coinRate).toFixed(2)),
+          impressions: myAds.reduce((s, a) => s + num(a.impressionCount), 0),
+          clicks: myAds.reduce((s, a) => s + num(a.clickCount), 0),
+        },
+      };
+    });
+
+    const sum = (fn) => rows.reduce((s, r) => s + fn(r), 0);
+    const summary = {
+      totalPartners: rows.length,
+      activePartners: rows.filter((r) => r.partnerStatus === "ACTIVE").length,
+      licenseRevenueInr: sum((r) => r.licenseFeePaid),
+      referrals: sum((r) => r.referrals.total),
+      completedReferrals: sum((r) => r.referrals.completed),
+      flaggedReferrals: sum((r) => r.referrals.flagged),
+      referralEarningsInr: sum((r) => r.referralEarningsInr),
+      adsSubmitted: sum((r) => r.ads.submitted),
+      adsPending: sum((r) => r.ads.pending),
+      adsActive: sum((r) => r.ads.active),
+      adsRejected: sum((r) => r.ads.rejected),
+      approvedAdBudgetInr: sum((r) => r.ads.approvedBudgetInr),
+      adCommissionInr: Number(sum((r) => r.ads.commissionInr).toFixed(2)),
+      impressions: sum((r) => r.ads.impressions),
+      clicks: sum((r) => r.ads.clicks),
+      adCreditsBalance: sum((r) => r.adCreditsBalance),
+    };
+
+    rows.sort((a, b) => (b.ads.commissionInr + b.referralEarningsInr) - (a.ads.commissionInr + a.referralEarningsInr));
+    return res.status(200).json({ status: true, message: "Digital Partner report.", summary, partners: rows });
+  } catch (error) {
+    console.error("digitalPartner.report error:", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
 // POST /admin/digitalPartner/regeneratePassword   { userId }
 // For an already-activated Digital Partner whose portal password needs to
 // be reissued (lost, or never picked up the first reveal). forgotPassword

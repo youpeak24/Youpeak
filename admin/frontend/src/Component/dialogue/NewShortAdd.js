@@ -122,7 +122,7 @@ function NewShortAdd(props) {
   }, [thumbnailPreviewSrc]);
 
   useEffect(() => {
-    if (multiButtonSelect === "Import Shorts") {
+    if (multiButtonSelect === "Import Bite") {
       setCountryDataSelect([]);
     }
   }, []);
@@ -532,9 +532,9 @@ function NewShortAdd(props) {
     ) {
       const error = {};
       if (!title) error.title = "Title Is Required !";
-      if (dialogueData ? "" : !video?.file) error.video = "Short Is Required !";
+      if (dialogueData ? "" : !video?.file) error.video = "Bite Is Required !";
       if (!dialogueData && videoDescription === undefined)
-        error.videoDescription = "Short Description Is Required !";
+        error.videoDescription = "Bite Description Is Required !";
       if (!dialogueData && hashTag === undefined)
         error.hashTag = "Hash Tag Is Required !";
       if (!dialogueData && !fakeUserSelect)
@@ -668,7 +668,7 @@ function NewShortAdd(props) {
       } else {
         props.createShort(newVideoAddData);
         setTimeout(() => {
-          setMultiButtonSelect("Manage Short");
+          setMultiButtonSelect("Manage Bite");
         }, 2000)
       }
     }
@@ -681,7 +681,7 @@ function NewShortAdd(props) {
           <div className=" d-flex  align-items-center w-100">
             <div className="w-100">
               <h5 className="mb-0">
-                {dialogueType ? "Edit Short" : "Import Short"}
+                {dialogueType ? "Edit Bite" : "Import Bite"}
               </h5>
             </div>
             {dialogueType && (
@@ -705,7 +705,7 @@ function NewShortAdd(props) {
             <div className="row d-flex  align-items-center">
               {/* <div className="col-6">
                 <h5 className="mb-0">
-                  {dialogueType ? "Edit Short" : "Import Short"}
+                  {dialogueType ? "Edit Bite" : "Import Bite"}
                 </h5>
               </div>
               {dialogueType && (
@@ -870,7 +870,7 @@ function NewShortAdd(props) {
                   <div className="col-12  col-lg-6 col-sm-12 mt-2 mb-3 video-upload">
                     <Input
                       type={"file"}
-                      label={"Short Upload"}
+                      label={"Bite Upload"}
                       accept={"video/mp4,video/x-m4v,video/*"}
                       onChange={handleFileUpload}
                       errorMessage={error.video && error.video}
@@ -904,10 +904,10 @@ function NewShortAdd(props) {
 
                   {/* <div className="col-12  col-lg-6 col-sm-12 mt-2 mb-3">
                     <Input
-                      label={"Short Time"}
+                      label={"Bite Time"}
                       name={"videoTime"}
                       accept={"video/*"}
-                      placeholder={"Short Video Upload"}
+                      placeholder={"Bite Video Upload"}
                       value={videoTime}
                       disabled={true}
                     />
@@ -950,14 +950,14 @@ function NewShortAdd(props) {
                         className=""
                         style={{ fontWeight: "500", marginBottom: "5px" }}
                       >
-                        Short Description
+                        Bite Description
                       </label>
                       <textarea
                         cols={1}
                         rows={4}
                         className="form-control"
                         value={videoDescription}
-                        label={"Short Description"}
+                        label={"Bite Description"}
                         name={"videoDescription"}
                         placeholder={"Enter Details..."}
                         onChange={(e) => {
@@ -965,7 +965,7 @@ function NewShortAdd(props) {
                           if (!e.target.value && !dialogueData) {
                             return setError({
                               ...error,
-                              videoDescription: `Short Description Is Required`,
+                              videoDescription: `Bite Description Is Required`,
                             });
                           } else {
                             return setError({

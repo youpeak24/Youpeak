@@ -185,7 +185,7 @@ function ShortComment(props) {
       ),
     },
     {
-      Header: "SHORT ID",
+      Header: "BITE ID",
       body: "uniqueVideoId",
       Cell: ({ row }) => (
         <span className="cursorPointer">{row?.uniqueVideoId}</span>

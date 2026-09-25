@@ -3,6 +3,7 @@ const route = express.Router();
 const digitalPartner = require("../../controllers/admin/digitalPartner.controller");
 
 route.get("/list", digitalPartner.list);
+route.get("/report", digitalPartner.report);
 route.post("/activate", digitalPartner.activate);
 route.post("/regeneratePassword", digitalPartner.regeneratePassword);
 

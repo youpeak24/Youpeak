@@ -11,7 +11,7 @@ import NewShortAdd from "../../dialogue/NewShortAdd";
 
 export default function ShortsPage() {
   const { multiButtonSelect, setMultiButtonSelect, handleMultiButtonSelect } =
-    useTabSelectWithClearSearch("Manage Short");
+    useTabSelectWithClearSearch("Manage Bite");
   const [startDate, setStartDate] = useState("All");
   const [endDate, setEndDate] = useState("All");
   const { dialogue, dialogueType, dialogueData } = useSelector(
@@ -51,20 +51,20 @@ export default function ShortsPage() {
             setMultiButtonSelect={handleMultiButtonSelect}
             multiButtonSelect={multiButtonSelect}
             labelData={[
-              "Manage Short",
-              "Manage Short Comment",
-              "Import Short",
+              "Manage Bite",
+              "Manage Bite Comment",
+              "Import Bite",
             ]}
           />
         </div>
-   
-        {multiButtonSelect == "Manage Short" && (
+
+        {multiButtonSelect == "Manage Bite" && (
           <ManageShorts endDate={endDateData} startDate={startDateData} />
         )}
-        {multiButtonSelect == "Manage Short Comment" && (
+        {multiButtonSelect == "Manage Bite Comment" && (
           <ShortComment endDate={endDateData} startDate={startDateData} />
         )}
-        {multiButtonSelect == "Import Short" && (
+        {multiButtonSelect == "Import Bite" && (
           <NewShortAdd
             setMultiButtonSelect={setMultiButtonSelect}
             multiButtonSelect={multiButtonSelect}

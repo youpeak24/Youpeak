@@ -367,7 +367,7 @@ function ManageShorts(props) {
                   marginBottom: "4px",
                 }}
               >
-                Manage Short
+                Manage Bite
               </h5>
 
             </div>
