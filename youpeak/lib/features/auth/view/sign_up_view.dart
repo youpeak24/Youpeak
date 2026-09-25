@@ -34,6 +34,7 @@ import 'package:youpeak/core/theme/app_style.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'package:youpeak/features/live/widget/device_orientation.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -102,9 +103,9 @@ class _SignUpViewState extends State<SignUpView> {
             const AppExitDialog(),
           );
           if (shouldExit == true) {
-            if (Platform.isAndroid) {
+            if (PlatformInfo.isAndroid) {
               SystemNavigator.pop();
-            } else if (Platform.isIOS) {
+            } else if (PlatformInfo.isIOS) {
               exit(0);
             }
           }
@@ -224,7 +225,7 @@ class _SignUpViewState extends State<SignUpView> {
                   ),
                 ),
                 SizedBox(height: Get.height / 35),
-                Platform.isIOS
+                PlatformInfo.isIOS
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -293,7 +294,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ),
                           const SizedBox(width: 20),
                           CustomBoxButton(
-                            callback: Platform.isIOS
+                            callback: PlatformInfo.isIOS
                                 ? () async {
                                     try {
                                       // Show loading dialog

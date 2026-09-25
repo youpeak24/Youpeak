@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +20,7 @@ import 'package:youpeak/core/services/convert_to_network.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/utils/utils.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class NormalVideoDetailsController extends GetxController {
   final yourChannelController = Get.find<YourChannelController>();
@@ -389,7 +389,7 @@ class NormalVideoDetailsController extends GetxController {
       if (videoPath.startsWith('http://') || videoPath.startsWith('https://')) {
         videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(videoPath));
       } else {
-        videoPlayerController = VideoPlayerController.file(File(videoPath));
+        videoPlayerController = LocalMedia.videoController(videoPath);
       }
 
       await videoPlayerController?.initialize();

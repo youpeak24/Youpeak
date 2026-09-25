@@ -1,9 +1,7 @@
-import 'dart:io';
-
+import 'package:youpeak/core/platform/local_media.dart';
 class CustomVideoSize {
   static Future<double?> onGet(String videoPath) async {
-    File videoFile = File(videoPath);
-    int fileSizeInBytes = videoFile.lengthSync();
+    int fileSizeInBytes = await LocalMedia.length(videoPath);
     double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
     return fileSizeInMB;
   }

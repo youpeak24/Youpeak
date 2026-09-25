@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +25,7 @@ import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class UploadVideoView extends StatefulWidget {
   const UploadVideoView({
@@ -438,10 +437,7 @@ class _UploadVideoViewState extends State<UploadVideoView> {
                         ),
                         child: Obx(
                           () => controller.thumbnail.value != ""
-                              ? Image.file(
-                                  File(controller.thumbnail.value),
-                                  fit: BoxFit.cover,
-                                )
+                              ? LocalMedia.image(controller.thumbnail.value, fit: BoxFit.cover)
                               : Center(
                                   child: Image.asset(
                                     AppIcons.logo,

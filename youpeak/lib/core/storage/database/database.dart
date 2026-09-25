@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +15,7 @@ import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class Database {
   static final localStorage = GetStorage();
@@ -170,14 +172,16 @@ class Database {
 
     if (loginType == 2) {
       AppSettings.showLog("Google Logout Success");
-      await GoogleSignIn().signOut();
+      // The web app signs in through Firebase's popup, not the GoogleSignIn
+      // plugin (which isn't configured in the browser).
+      kIsWeb ? await FirebaseAuth.instance.signOut() : await GoogleSignIn().signOut();
     }
     if (loginType == 3) {
       FirebaseAuth.instance.signOut();
     }
     await localStorage.erase();
     await preferences.clear();
-    if (Platform.isAndroid) {
+    if (PlatformInfo.isAndroid) {
       await onDeleteDownload();
     }
     AppSettings.navigationIndex.value = 0;
@@ -203,7 +207,7 @@ class Database {
 }
 
 Future<void> onDeleteDownload() async {
-  Directory? externalDir = Platform.isAndroid ? await getExternalStorageDirectory() : await getApplicationSupportDirectory();
+  Directory? externalDir = PlatformInfo.isAndroid ? await getExternalStorageDirectory() : await getApplicationSupportDirectory();
   if (await externalDir?.exists() ?? false) {
     try {
       await externalDir?.delete(recursive: true);

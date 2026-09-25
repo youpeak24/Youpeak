@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -29,7 +28,8 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:mobile_device_identifier/mobile_device_identifier.dart';
+import 'package:youpeak/core/platform/device_identity.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class SplashScreenView extends StatefulWidget {
   const SplashScreenView({super.key});
@@ -49,14 +49,19 @@ class _SplashScreenViewState extends State<SplashScreenView> {
 
   Future<void> initApp() async {
     try {
-      final deviceId = await MobileDeviceIdentifier().getDeviceId().timeout(
+      final deviceId = await DeviceIdentity.get().timeout(
         const Duration(seconds: 3),
         onTimeout: () => "",
       );
-      final fcmToken = await FirebaseMessaging.instance.getToken().timeout(
-        const Duration(seconds: 3),
-        onTimeout: () => "",
-      );
+      // Web push needs a service worker + VAPID key that aren't set up, so
+      // the web app registers without an FCM token (as a denied-permission
+      // phone would).
+      final fcmToken = PlatformInfo.isWeb
+          ? ""
+          : await FirebaseMessaging.instance.getToken().timeout(
+              const Duration(seconds: 3),
+              onTimeout: () => "",
+            );
 
       if (deviceId != null && fcmToken != null) {
         await Database().init(deviceId, fcmToken);
@@ -75,11 +80,16 @@ class _SplashScreenViewState extends State<SplashScreenView> {
   }
 
   Future<void> checkForceUpdate() async {
+    // Every page load already runs the latest deployed web build.
+    if (PlatformInfo.isWeb) {
+      splashScreen();
+      return;
+    }
     final packageInfo = await PackageInfo.fromPlatform();
     final currentVersion = packageInfo.version;
     log("Current version ==> ${packageInfo.version}");
 
-    final latestVersion = Platform.isIOS
+    final latestVersion = PlatformInfo.isIOS
         ? AdminSettingsApi.adminSettingsModel?.setting?.iosAppVersion ?? ""
         : AdminSettingsApi.adminSettingsModel?.setting?.androidAppVersion ?? "";
 
@@ -126,7 +136,9 @@ class _SplashScreenViewState extends State<SplashScreenView> {
           }
         } else {
           if (Database.loginUserId != null) {
-            if (!CustomCheckInternet.isConnect.value) {
+            // Offline, the phone app falls back to downloaded videos; the web
+            // app has no downloads, so it carries on and shows its offline dialog.
+            if (!CustomCheckInternet.isConnect.value && !PlatformInfo.isWeb) {
               print("No internet — navigating to DownloadView...");
               Get.offAll(() => const DownloadView());
             } else if (GetProfileApi.profileModel?.user == null) {

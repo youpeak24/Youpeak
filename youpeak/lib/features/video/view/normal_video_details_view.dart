@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
-import 'package:floating/floating.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +54,8 @@ import 'package:youpeak/shared/widgets/subscribed_success_dialog.dart';
 import 'package:youpeak/shared/widgets/unlock_premium_video_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/core/platform/platform_pip_switcher.dart';
 
 class NormalVideoDetailsView extends StatefulWidget {
   const NormalVideoDetailsView(
@@ -199,7 +199,7 @@ class _NormalVideoDetailsViewState extends State<NormalVideoDetailsView> {
         ]);
       },
       canPop: MediaQuery.of(context).orientation != Orientation.landscape,
-      child: PiPSwitcher(
+      child: PlatformPiPSwitcher(
         childWhenEnabled: GetBuilder<NormalVideoDetailsController>(
           id: "onVideoInitialize",
           builder: (controller) => (_controller.chewieController != null &&
@@ -583,7 +583,7 @@ class PreviewVideoUi extends StatelessWidget {
                                   ),
                                 ),
                                 Positioned(
-                                  top: Platform.isAndroid ? 30 : 40,
+                                  top: PlatformInfo.isAndroidOrWeb ? 30 : 40,
                                   child: SizedBox(
                                     width: Get.width,
                                     child: Row(

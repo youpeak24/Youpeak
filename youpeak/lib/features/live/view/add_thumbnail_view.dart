@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -15,6 +13,7 @@ import 'package:youpeak/shared/widgets/app_artwork.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class AddThumbnailView extends StatelessWidget {
   const AddThumbnailView({super.key});
@@ -60,7 +59,7 @@ class AddThumbnailView extends StatelessWidget {
                               width: 50,
                               color: AppColor.grey_400,
                             )
-                          : Image.file(File(AppSettings.pickImagePath.value), height: 170, width: 120, fit: BoxFit.cover),
+                          : LocalMedia.image(AppSettings.pickImagePath.value, height: 170, width: 120, fit: BoxFit.cover),
                     ),
                   ),
                 ),

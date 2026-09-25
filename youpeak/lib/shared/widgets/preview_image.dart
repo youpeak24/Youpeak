@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
@@ -25,16 +26,18 @@ class PreviewProfileImage extends StatelessWidget {
       height: size,
       width: size,
       decoration: const BoxDecoration(shape: BoxShape.circle),
-      child: CachedNetworkImage(
-        imageUrl: image,
-        fit: fit,
-        // imageBuilder: (context, imageProvider) => Image(
-        //   image: ResizeImage(imageProvider, width: 600, height: 500),
-        //   fit: fit,
-        // ),
-        placeholder: (context, url) => Image.asset(AppIcons.profileImage, fit: fit),
-        errorWidget: (context, url, error) => Image.asset(AppIcons.profileImage, fit: fit),
-      ),
+      child: kIsWeb
+          ? _webImage(image, fit: fit, placeholder: Image.asset(AppIcons.profileImage, fit: fit), error: Image.asset(AppIcons.profileImage, fit: fit))
+          : CachedNetworkImage(
+              imageUrl: image,
+              fit: fit,
+              // imageBuilder: (context, imageProvider) => Image(
+              //   image: ResizeImage(imageProvider, width: 600, height: 500),
+              //   fit: fit,
+              // ),
+              placeholder: (context, url) => Image.asset(AppIcons.profileImage, fit: fit),
+              errorWidget: (context, url, error) => Image.asset(AppIcons.profileImage, fit: fit),
+            ),
     );
   }
 }
@@ -48,6 +51,10 @@ class PreviewVideoImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return _webImage(videoImage,
+          fit: fit ?? BoxFit.cover, height: Get.height, width: Get.width, placeholder: const _VideoPlaceholder(), error: const _VideoPlaceholder());
+    }
     return CachedNetworkImage(
       height: Get.height,
       width: Get.width,
@@ -84,10 +91,31 @@ class PreviewNetworkImage extends StatelessWidget {
         ? fit == BoxFit.contain
             ? Image.asset(AppIcons.profileImage, fit: BoxFit.cover)
             : const Offstage()
-        : CachedNetworkImage(
-            imageUrl: image,
-            fit: fit,
-            errorWidget: (context, url, error) => fit == BoxFit.contain ? Image.asset(AppIcons.profileImage, fit: BoxFit.cover) : const Offstage(),
-          );
+        : kIsWeb
+            ? _webImage(image,
+                fit: fit,
+                placeholder: const SizedBox.shrink(),
+                error: fit == BoxFit.contain ? Image.asset(AppIcons.profileImage, fit: BoxFit.cover) : const Offstage())
+            : CachedNetworkImage(
+                imageUrl: image,
+                fit: fit,
+                errorWidget: (context, url, error) => fit == BoxFit.contain ? Image.asset(AppIcons.profileImage, fit: BoxFit.cover) : const Offstage(),
+              );
   }
+}
+
+// Web: CachedNetworkImage decodes through fetch(), which fails for image hosts
+// that don't send CORS headers. Image.network can fall back to a plain <img>
+// element in that case, so thumbnails and avatars still show.
+Widget _webImage(String url, {BoxFit? fit, double? height, double? width, required Widget placeholder, required Widget error}) {
+  return Image.network(
+    url,
+    fit: fit,
+    height: height,
+    width: width,
+    gaplessPlayback: true,
+    webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+    loadingBuilder: (context, child, progress) => progress == null ? child : placeholder,
+    errorBuilder: (context, _, __) => error,
+  );
 }

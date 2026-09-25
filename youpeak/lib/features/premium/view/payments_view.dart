@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -14,7 +12,7 @@ import 'package:youpeak/core/settings/admin_settings_api.dart';
 import 'package:youpeak/features/profile/api/get_profile_api.dart';
 import 'package:youpeak/core/payment/in_app_purchase/iap_callback.dart';
 import 'package:youpeak/core/payment/in_app_purchase/in_app_purchase_helper.dart';
-import 'package:youpeak/core/payment/razor_pay_view.dart';
+import 'package:youpeak/core/payment/razorpay/razorpay_service.dart';
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/config/size_config.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
@@ -23,6 +21,7 @@ import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/theme/app_style.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class PaymentView extends StatefulWidget {
   const PaymentView({super.key, required this.amount, required this.premiumPlanId, required this.productKey});
@@ -41,9 +40,12 @@ class _PaymentViewState extends State<PaymentView> implements IAPCallback {
 
   @override
   void initState() {
-    InAppPurchaseHelper().getAlreadyPurchaseItems(this);
-    purchases = InAppPurchaseHelper().getPurchases();
-    InAppPurchaseHelper().clearTransactions();
+    // Google Play / App Store billing exists only in the phone app.
+    if (!PlatformInfo.isWeb) {
+      InAppPurchaseHelper().getAlreadyPurchaseItems(this);
+      purchases = InAppPurchaseHelper().getPurchases();
+      InAppPurchaseHelper().clearTransactions();
+    }
 
     super.initState();
   }
@@ -139,62 +141,62 @@ class _PaymentViewState extends State<PaymentView> implements IAPCallback {
               style: GoogleFonts.urbanist(fontSize: 14, fontWeight: FontWeight.w500),
             ).paddingOnly(left: 20),
             SizedBox(height: SizeConfig.blockSizeVertical * 2),
-            ((Platform.isAndroid && AdminSettingsApi.adminSettingsModel?.setting?.razorPaySwitch == true) ||
-                    (Platform.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.razorpayIosEnabled == true))
+            ((PlatformInfo.isAndroidOrWeb && AdminSettingsApi.adminSettingsModel?.setting?.razorPaySwitch == true) ||
+                    (PlatformInfo.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.razorpayIosEnabled == true))
                 ? PaymentItemView(
                     title: AppStrings.razorPay.tr,
                     leading: AppIcons.razorPay,
                     iconSize: 40,
                   )
                 : const Offstage(),
-            ((AdminSettingsApi.adminSettingsModel?.setting!.googlePlaySwitch ?? false) && Platform.isAndroid)
+            ((AdminSettingsApi.adminSettingsModel?.setting!.googlePlaySwitch ?? false) && PlatformInfo.isAndroid)
                 ? PaymentItemView(
                     title: AppStrings.googlePay.tr,
                     leading: AppIcons.googleLogo,
                     iconSize: 25,
                   )
                 : const Offstage(),
-            ((AdminSettingsApi.adminSettingsModel?.setting!.googlePlaySwitch ?? false) && Platform.isIOS)
+            ((AdminSettingsApi.adminSettingsModel?.setting!.googlePlaySwitch ?? false) && PlatformInfo.isIOS)
                 ? PaymentItemView(
                     title: AppStrings.applePay.tr,
                     leading: AppIcons.appleLogo,
                     iconSize: 25,
                   )
                 : const Offstage(),
-            ((Platform.isAndroid && AdminSettingsApi.adminSettingsModel?.setting?.stripeSwitch == true) ||
-                    (Platform.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.stripeIosEnabled == true))
+            ((PlatformInfo.isAndroidOrWeb && AdminSettingsApi.adminSettingsModel?.setting?.stripeSwitch == true) ||
+                    (PlatformInfo.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.stripeIosEnabled == true))
                 ? PaymentItemView(
                     title: AppStrings.stripe.tr,
                     leading: AppIcons.stripe,
                     iconSize: 45,
                   )
                 : const Offstage(),
-            ((Platform.isAndroid && AdminSettingsApi.adminSettingsModel?.setting?.flutterWaveSwitch == true) ||
-                    (Platform.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.flutterwaveIosEnabled == true))
+            ((PlatformInfo.isAndroidOrWeb && AdminSettingsApi.adminSettingsModel?.setting?.flutterWaveSwitch == true) ||
+                    (PlatformInfo.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.flutterwaveIosEnabled == true))
                 ? PaymentItemView(
                     title: AppStrings.flutterWave.tr,
                     leading: AppIcons.flutterWaveIcon,
                     iconSize: 45,
                   )
                 : const Offstage(),
-            ((Platform.isAndroid && AdminSettingsApi.adminSettingsModel?.setting?.paypalAndroidEnabled == true) ||
-                    (Platform.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.paypalIosEnabled == true))
+            ((PlatformInfo.isAndroidOrWeb && AdminSettingsApi.adminSettingsModel?.setting?.paypalAndroidEnabled == true) ||
+                    (PlatformInfo.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.paypalIosEnabled == true))
                 ? PaymentItemView(
                     title: AppStrings.payPal.tr,
                     leading: AppIcons.paypal,
                     iconSize: 45,
                   )
                 : const Offstage(),
-            ((Platform.isAndroid && AdminSettingsApi.adminSettingsModel?.setting?.paystackAndroidEnabled == true) ||
-                    (Platform.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.paystackIosEnabled == true))
+            ((PlatformInfo.isAndroidOrWeb && AdminSettingsApi.adminSettingsModel?.setting?.paystackAndroidEnabled == true) ||
+                    (PlatformInfo.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.paystackIosEnabled == true))
                 ? PaymentItemView(
                     title: AppStrings.payStack.tr,
                     leading: AppIcons.payStackIcon,
                     iconSize: 45,
                   )
                 : const Offstage(),
-            ((Platform.isAndroid && AdminSettingsApi.adminSettingsModel?.setting?.cashfreeAndroidEnabled == true) ||
-                    (Platform.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.cashfreeIosEnabled == true))
+            ((PlatformInfo.isAndroidOrWeb && AdminSettingsApi.adminSettingsModel?.setting?.cashfreeAndroidEnabled == true) ||
+                    (PlatformInfo.isIOS && AdminSettingsApi.adminSettingsModel?.setting?.cashfreeIosEnabled == true))
                 ? PaymentItemView(
                     title: AppStrings.cashFree.tr,
                     leading: AppIcons.cashFreeIcon,

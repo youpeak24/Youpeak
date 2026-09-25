@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:youpeak/core/assets/app_visuals.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +36,7 @@ import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/theme/app_style.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class FillProfileView extends StatefulWidget {
   const FillProfileView({super.key, required this.email, required this.loginUserId, this.username, this.profileImage});
@@ -118,7 +120,7 @@ class _FillProfileViewState extends State<FillProfileView> {
                                       fit: BoxFit.cover,
                                     )
                                   : DecorationImage(
-                                      image: FileImage(File(AppSettings.pickImagePath.value)),
+                                      image: LocalMedia.imageProvider(AppSettings.pickImagePath.value),
                                       fit: BoxFit.cover,
                                     )
                               : const DecorationImage(
@@ -272,15 +274,22 @@ class _FillProfileViewState extends State<FillProfileView> {
 
                     String? url;
                     if (AppSettings.pickImagePath.isNotEmpty) {
-                      if (AppSettings.pickImagePath.value.startsWith('https://') || AppSettings.pickImagePath.value.startsWith('http://')) {
-                        try {
-                          AppSettings.pickImagePath.value = await urlToFile(AppSettings.pickImagePath.value);
-                        } catch (e) {
-                          AppSettings.showLog("URL to file error: $e");
+                      final isRemote = AppSettings.pickImagePath.value.startsWith('https://') || AppSettings.pickImagePath.value.startsWith('http://');
+                      if (isRemote && kIsWeb) {
+                        // No temp files in the browser: keep the remote picture
+                        // (e.g. the Google account photo) as the profile image.
+                        url = AppSettings.pickImagePath.value;
+                      } else {
+                        if (isRemote) {
+                          try {
+                            AppSettings.pickImagePath.value = await urlToFile(AppSettings.pickImagePath.value);
+                          } catch (e) {
+                            AppSettings.showLog("URL to file error: $e");
+                          }
                         }
-                      }
-                      if (AppSettings.pickImagePath.isNotEmpty && File(AppSettings.pickImagePath.value).existsSync()) {
-                        url = await ConvertChannelImageApi.callApi(AppSettings.pickImagePath.value);
+                        if (AppSettings.pickImagePath.isNotEmpty && LocalMedia.exists(AppSettings.pickImagePath.value)) {
+                          url = await ConvertChannelImageApi.callApi(AppSettings.pickImagePath.value);
+                        }
                       }
                     }
 

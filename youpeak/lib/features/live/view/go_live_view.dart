@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class GoLiveView extends StatefulWidget {
   const GoLiveView({super.key});
@@ -81,7 +81,7 @@ class _GoLiveViewState extends State<GoLiveView> {
                     },
                   ),
                   Positioned(
-                    top: Platform.isAndroid ? 35 : 45,
+                    top: PlatformInfo.isAndroidOrWeb ? 35 : 45,
                     left: 20,
                     child: SizedBox(
                       width: Get.width / 1.15,
@@ -110,7 +110,7 @@ class _GoLiveViewState extends State<GoLiveView> {
                     ),
                   ),
                   Positioned(
-                    bottom: Platform.isAndroid ? 20 : 30,
+                    bottom: PlatformInfo.isAndroidOrWeb ? 20 : 30,
                     child: SizedBox(
                       width: Get.width,
                       child: Padding(
@@ -127,7 +127,7 @@ class _GoLiveViewState extends State<GoLiveView> {
                                 ),
                               ),
                               SizedBox(
-                                height: Platform.isAndroid ? 290 : 310,
+                                height: PlatformInfo.isAndroidOrWeb ? 290 : 310,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -299,7 +299,7 @@ class _GoLiveViewState extends State<GoLiveView> {
                                         ),
                                       ),
                                     ),
-                                    Platform.isAndroid ? const Offstage() : const SizedBox(height: 20),
+                                    PlatformInfo.isAndroidOrWeb ? const Offstage() : const SizedBox(height: 20),
                                   ],
                                 ),
                               ),

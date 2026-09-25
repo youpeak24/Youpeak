@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
@@ -9,6 +8,7 @@ import 'package:youpeak/features/coins/api/get_my_coin_api.dart';
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class SubscribePremiumChannelBottomSheet {
   static void onShow({required String coin, required Callback callback}) {
@@ -22,7 +22,7 @@ class SubscribePremiumChannelBottomSheet {
         ),
       ),
       SizedBox(
-        height: Platform.isAndroid ? 225 : 310,
+        height: PlatformInfo.isAndroidOrWeb ? 225 : 310,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,7 +124,7 @@ class SubscribePremiumChannelBottomSheet {
                 ),
               ),
             ),
-            Platform.isAndroid ? const Offstage() : const SizedBox(height: 20),
+            PlatformInfo.isAndroidOrWeb ? const Offstage() : const SizedBox(height: 20),
           ],
         ),
       ),

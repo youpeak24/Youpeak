@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
@@ -15,6 +14,7 @@ import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class PreviewNormalVideo extends StatefulWidget {
   const PreviewNormalVideo({super.key, required this.index});
@@ -34,7 +34,7 @@ class _PreviewNormalVideoState extends State<PreviewNormalVideo> {
   Future<void> initializeVideoPlayer(String videoUrl) async {
     200.milliseconds.delay();
 
-    videoPlayerController = VideoPlayerController.file(File(videoUrl));
+    videoPlayerController = LocalMedia.videoController(videoUrl);
     try {
       await videoPlayerController.initialize();
 

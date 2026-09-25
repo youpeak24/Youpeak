@@ -29,6 +29,7 @@ import 'package:youpeak/core/theme/app_style.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'package:youpeak/features/live/widget/device_orientation.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class LetsYouInView extends StatefulWidget {
   const LetsYouInView({super.key});
@@ -52,9 +53,9 @@ class _LetsYouInViewState extends State<LetsYouInView> {
             const AppExitDialog(),
           );
           if (shouldExit == true) {
-            if (Platform.isAndroid) {
+            if (PlatformInfo.isAndroid) {
               SystemNavigator.pop();
-            } else if (Platform.isIOS) {
+            } else if (PlatformInfo.isIOS) {
               exit(0);
             }
           }
@@ -158,13 +159,13 @@ class _LetsYouInViewState extends State<LetsYouInView> {
                     },
                   ),
                   SizedBox(height: Get.height / 35),
-                  Platform.isIOS
+                  PlatformInfo.isIOS
                       ? Column(
                           children: [
                             ButtonItemUi(
                               title: AppStrings.appleLogin.tr,
                               icon: Image.asset(AppIcons.appleLogo, width: 28, color: isDarkMode.value ? AppColor.white : AppColor.black),
-                              callback: Platform.isIOS
+                              callback: PlatformInfo.isIOS
                                   ? () async {
                                       try {
                                         // Show loading dialog

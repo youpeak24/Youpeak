@@ -1,4 +1,5 @@
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:youpeak/core/payment/razorpay/razorpay_success.dart';
 
 // Thin wrapper around the Razorpay SDK. The checkout map MUST come from the
 // backend's POST /client/payment/createOrder response (key/order_id/amount/
@@ -12,7 +13,7 @@ class RazorPayService {
     required String appName,
     String? email,
     String? contact,
-    required void Function(PaymentSuccessResponse response) onSuccess,
+    required void Function(RazorpaySuccess response) onSuccess,
     required void Function(String message) onError,
   }) {
     // Fresh instance per checkout — reusing one across purchases stacks
@@ -21,7 +22,10 @@ class RazorPayService {
     final razorpay = Razorpay();
     _razorpay = razorpay;
 
-    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse r) => onSuccess(r));
+    razorpay.on(
+      Razorpay.EVENT_PAYMENT_SUCCESS,
+      (PaymentSuccessResponse r) => onSuccess(RazorpaySuccess(orderId: r.orderId, paymentId: r.paymentId, signature: r.signature)),
+    );
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse r) => onError(r.message ?? "Payment failed."));
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse r) {});
 

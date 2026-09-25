@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:youpeak/shared/widgets/app_artwork.dart';
 import 'package:youpeak/core/assets/app_visuals.dart';
@@ -6,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:youpeak/core/settings/admin_settings_api.dart';
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 
 class ForceUpdateDialog extends StatefulWidget {
@@ -193,7 +193,7 @@ class _ForceUpdateDialogState extends State<ForceUpdateDialog> with SingleTicker
   }
 
   void _openStore() async {
-    final url = Platform.isAndroid
+    final url = PlatformInfo.isAndroid
         ? AdminSettingsApi.adminSettingsModel?.setting?.androidAppLink ?? ""
         : AdminSettingsApi.adminSettingsModel?.setting?.iosAppLink ?? "";
 

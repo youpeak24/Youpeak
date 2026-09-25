@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
@@ -40,6 +39,7 @@ import 'package:youpeak/shared/widgets/subscribe_premium_channel_bottom_sheet.da
 import 'package:youpeak/shared/widgets/subscribed_success_dialog.dart';
 import 'package:youpeak/shared/widgets/unlock_premium_video_bottom_sheet.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class PreviewShortsVideo extends StatefulWidget {
   const PreviewShortsVideo(
@@ -113,7 +113,7 @@ class _PreviewShortsVideoState extends State<PreviewShortsVideo> {
         videoPlayerController =
             VideoPlayerController.networkUrl(Uri.parse(videoPath));
       } else {
-        videoPlayerController = VideoPlayerController.file(File(videoPath));
+        videoPlayerController = LocalMedia.videoController(videoPath);
       }
 
       await videoPlayerController?.initialize();

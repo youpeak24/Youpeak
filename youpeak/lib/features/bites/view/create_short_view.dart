@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +18,8 @@ import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class CreateShortView extends StatelessWidget {
   CreateShortView({super.key});
@@ -85,7 +86,7 @@ class CreateShortView extends StatelessWidget {
                 },
               ),
               Positioned(
-                top: Platform.isAndroid ? 30 : 45,
+                top: PlatformInfo.isAndroidOrWeb ? 30 : 45,
                 left: 20,
                 child: SizedBox(
                   width: Get.width / 1.2,
@@ -104,7 +105,9 @@ class CreateShortView extends StatelessWidget {
                           Get.back();
                         },
                       ),
-                      GestureDetector(
+                      // Adding music needs FFmpeg to merge the audio, which the
+                      // browser build doesn't have.
+                      if (PlatformInfo.isWeb) const SizedBox(width: 20) else GestureDetector(
                         onTap: () {
                           controller.onGetSoundList();
 
@@ -133,7 +136,7 @@ class CreateShortView extends StatelessWidget {
                       ),
                       GetBuilder<CreateShortController>(
                         id: "onChangeFlashMode",
-                        builder: (controller) => GestureDetector(
+                        builder: (controller) => PlatformInfo.isWeb ? const SizedBox(width: 20) : GestureDetector(
                           onTap: () => controller.onChangeFlashMode(),
                           child: ImageIcon(const AssetImage(AppIcons.flash), color: controller.isFlashModeOn ? AppColor.primaryColor : AppColor.white, size: 20),
                         ),
@@ -228,7 +231,11 @@ class CreateShortView extends StatelessWidget {
                           children: [
                             GestureDetector(
                                 onTap: () async {
-                                  await controller.cameraController!.setFlashMode(FlashMode.off);
+                                  // Throws where there is no torch (laptop webcams) or no camera
+                                  // permission; that must not block picking from the gallery.
+                                  try {
+                                    await controller.cameraController?.setFlashMode(FlashMode.off);
+                                  } catch (_) {}
                                   controller.isFlashModeOn = false;
                                   Timer(const Duration(milliseconds: 200), () => controller.cameraController?.dispose());
 
@@ -300,12 +307,12 @@ const _supportedShortsExtensions = {
 
 Future<int?> isSupport(String path) async {
   try {
-    final file = File(path);
-    if (!await file.exists() || await file.length() <= 0) {
+    // LocalMedia: a device path on the phone, a blob: URL in the browser.
+    if (!LocalMedia.exists(path) || await LocalMedia.length(path) <= 0) {
       AppSettings.showLog("isSupport (shorts): missing/empty file => $path");
       return null;
     }
-    final ext = path.split('.').last.toLowerCase();
+    final ext = LocalMedia.fileName(path).split('.').last.toLowerCase();
     if (!_supportedShortsExtensions.contains(ext)) {
       AppSettings.showLog("isSupport (shorts): unsupported extension .$ext => $path");
       return null;
@@ -322,7 +329,7 @@ Future<int?> isSupport(String path) async {
   // enforce limits after transcoding if needed.
   VideoPlayerController? controller;
   try {
-    controller = VideoPlayerController.file(File(path));
+    controller = LocalMedia.videoController(path);
     await controller.initialize().timeout(const Duration(seconds: 8));
     return controller.value.isInitialized ? controller.value.duration.inMilliseconds : 0;
   } catch (e) {

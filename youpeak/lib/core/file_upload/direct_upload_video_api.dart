@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:youpeak/core/constants/app_constant.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 // Uploads video/shorts files straight to R2, bypassing our own backend.
 // The legacy ConvertVideoApi PUTs the whole file through client/file/upload-file,
@@ -19,13 +20,19 @@ class DirectUploadVideoApi {
   static Future<String?> callApi(String videoPath, bool isNormalVideo) async {
     AppSettings.showLog("Direct Upload Video Api Calling...");
 
+    // The phone app always uploads MP4. In the browser the picked or recorded
+    // file can also be WebM/MOV; the R2 object must carry its real type (it is
+    // part of the presigned signature and what players rely on).
+    final contentType = kIsWeb ? (LocalMedia.mimeType(videoPath) ?? _videoContentType) : _videoContentType;
+    final extension = const {"video/webm": "webm", "video/quicktime": "mov"}[contentType] ?? "mp4";
+
     try {
       final urlUri = Uri.parse(Constant.baseURL + Constant.directUploadUrl);
       final headers = {"key": Constant.secretKey, "Content-Type": "application/json"};
       final body = json.encode({
         "folderStructure": isNormalVideo ? Constant.normalVideo : Constant.shortsVideo,
-        "keyName": "${DateTime.now().millisecondsSinceEpoch}.mp4",
-        "contentType": _videoContentType,
+        "keyName": "${DateTime.now().millisecondsSinceEpoch}.$extension",
+        "contentType": contentType,
       });
 
       final urlResponse = await http.post(urlUri, headers: headers, body: body);
@@ -43,10 +50,10 @@ class DirectUploadVideoApi {
       final uploadURL = urlJson["uploadURL"] as String;
       final publicUrl = urlJson["publicUrl"] as String;
 
-      final fileBytes = await File(videoPath).readAsBytes();
+      final fileBytes = await LocalMedia.readBytes(videoPath);
       final putResponse = await http.put(
         Uri.parse(uploadURL),
-        headers: {"Content-Type": _videoContentType},
+        headers: {"Content-Type": contentType},
         body: fileBytes,
       );
 

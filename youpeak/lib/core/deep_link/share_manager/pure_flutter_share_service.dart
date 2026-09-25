@@ -48,6 +48,12 @@ ${deepLink != null ? '🔗 $deepLink' : ''}
   static Future<void> shareAsset({required String assetPath, required String text}) async {
     try {
       final bytes = await rootBundle.load(assetPath);
+      final name = assetPath.split('/').last;
+      // No temp directory in the browser: share the bytes directly.
+      if (kIsWeb) {
+        await Share.shareXFiles([XFile.fromData(bytes.buffer.asUint8List(), name: name, mimeType: _imageType(name))], text: text);
+        return;
+      }
       final file = File('${(await getTemporaryDirectory()).path}/${assetPath.split('/').last}');
       await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true);
       await Share.shareXFiles([XFile(file.path)], text: text);
@@ -57,11 +63,14 @@ ${deepLink != null ? '🔗 $deepLink' : ''}
     }
   }
 
+  static String _imageType(String name) => name.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+
   static Future<XFile?> _downloadImage(String imageUrl) async {
     try {
       final response = await http.get(Uri.parse(imageUrl));
 
       if (response.statusCode == 200) {
+        if (kIsWeb) return XFile.fromData(response.bodyBytes, name: 'share.jpg', mimeType: 'image/jpeg');
         final tempDir = await getTemporaryDirectory();
         final fileName = 'share_${DateTime.now().millisecondsSinceEpoch}.jpg';
         final file = File('${tempDir.path}/$fileName');

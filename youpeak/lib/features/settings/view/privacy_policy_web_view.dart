@@ -9,10 +9,23 @@ import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class PrivacyPolicyWebView extends StatefulWidget {
   const PrivacyPolicyWebView({super.key});
+
+  // Browsers have no embeddable WebView (and policy sites usually refuse to
+  // load in an iframe), so the web app opens the page in a new tab.
+  static void open() {
+    final link = AdminSettingsApi.adminSettingsModel?.setting?.privacyPolicyLink ?? "";
+    if (PlatformInfo.isWeb) {
+      if (link.isNotEmpty) launchUrl(Uri.parse(link));
+      return;
+    }
+    Get.to(const PrivacyPolicyWebView());
+  }
 
   @override
   State<PrivacyPolicyWebView> createState() => _PrivacyPolicyWebViewState();

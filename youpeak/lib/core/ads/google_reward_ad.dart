@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:youpeak/core/ads/google_ad_helper.dart';
+import 'package:youpeak/core/utils/custom_toast.dart';
 
 class GoogleRewardAd {
   static bool _isLoaded = false; // This Variable Use to Check Ads Is Loaded or Not
@@ -10,6 +12,7 @@ class GoogleRewardAd {
   static RewardedAd? rewardedAd;
 
   static void loadAd() {
+    if (kIsWeb) return; // no AdMob in the browser
     debugPrint("Google Rewarded Ads Loading...");
     _isLoaded = false;
 
@@ -45,6 +48,10 @@ class GoogleRewardAd {
   }
 
   static showAd({required Callback fun}) {
+    if (kIsWeb) {
+      CustomToast.show("Watch-ad rewards are available in the YouPeak mobile app.");
+      return;
+    }
     function = fun;
     if (_isLoaded) {
       debugPrint("Rewarded Ad Show Success");

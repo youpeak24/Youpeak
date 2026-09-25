@@ -8,7 +8,7 @@ import 'package:youpeak/core/storage/database/database.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/features/profile/api/get_profile_api.dart';
 import 'package:youpeak/features/tiers/api/creator_tier_api.dart';
-import 'package:youpeak/core/payment/razor_pay_view.dart';
+import 'package:youpeak/core/payment/razorpay/razorpay_service.dart';
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/assets/app_visuals.dart';

@@ -9,7 +9,7 @@ import 'package:youpeak/shared/widgets/loader_ui.dart';
 import 'package:youpeak/core/storage/database/database.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/features/profile/api/get_profile_api.dart';
-import 'package:youpeak/core/payment/razor_pay_view.dart';
+import 'package:youpeak/core/payment/razorpay/razorpay_service.dart';
 import 'package:youpeak/features/video_promotion/api/video_promotion_api.dart';
 import 'package:youpeak/features/channel/api/channel_home_api.dart';
 import 'package:youpeak/features/channel/model/channel_home_model.dart';
@@ -102,7 +102,7 @@ class _PromoteVideoViewState extends State<PromoteVideoView> {
             return ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(v.videoImage ?? "", width: 56, height: 40, fit: BoxFit.cover,
+                child: Image.network(v.videoImage ?? "", width: 56, height: 40, fit: BoxFit.cover, webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
                     errorBuilder: (c, e, s) => Container(width: 56, height: 40, color: AppColor.grey_200)),
               ),
               title: Text(v.title ?? "", maxLines: 1, overflow: TextOverflow.ellipsis, style: GoogleFonts.urbanist(fontSize: 14, fontWeight: FontWeight.w600)),

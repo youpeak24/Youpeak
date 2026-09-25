@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:youpeak/core/deep_link/config/easy_deep_link_config.dart';
 import 'package:app_links/app_links.dart';
@@ -54,7 +55,10 @@ class EasyDeepLinkManager {
   void _processLink(Uri uri, {required bool isInitial}) {
     if (_config == null) return;
 
-    final isOurHttpsLink = (uri.scheme == 'https' || uri.scheme == 'http') && uri.host == _config!.domain;
+    // In the web app the initial link is the page URL itself, which may be
+    // served from a host other than the share domain (preview deployments).
+    final isOurHost = uri.host == _config!.domain || (kIsWeb && uri.host == Uri.base.host);
+    final isOurHttpsLink = (uri.scheme == 'https' || uri.scheme == 'http') && isOurHost;
     final isOurCustomScheme = _config!.customScheme != null && uri.scheme == _config!.customScheme;
 
     if (!isOurHttpsLink && !isOurCustomScheme) {

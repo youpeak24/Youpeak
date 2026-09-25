@@ -25,6 +25,7 @@ import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/shared/widgets/preview_image.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class NavLibraryView extends GetView<NavLibraryPageController> {
   const NavLibraryView({super.key});
@@ -234,17 +235,22 @@ class NavLibraryView extends GetView<NavLibraryPageController> {
                   }
                 },
               ),
-              const SizedBox(height: 15),
-              LibraryItem(
-                iconPath: AppIcons.boldDownload,
-                title: AppStrings.download.tr,
-                callback: () {
-                  if (DownloadHistory.mainDownloadHistory.isEmpty) {
-                    DownloadHistory.onGet();
-                  }
-                  Get.to(() => const DownloadView());
-                },
-              ),
+              // Offline downloads live in app storage on the phone. The web app
+              // saves downloads to the browser's Downloads folder instead, so
+              // it has no in-app downloads list.
+              if (!PlatformInfo.isWeb) ...[
+                const SizedBox(height: 15),
+                LibraryItem(
+                  iconPath: AppIcons.boldDownload,
+                  title: AppStrings.download.tr,
+                  callback: () {
+                    if (DownloadHistory.mainDownloadHistory.isEmpty) {
+                      DownloadHistory.onGet();
+                    }
+                    Get.to(() => const DownloadView());
+                  },
+                ),
+              ],
               const SizedBox(height: 10),
               const Divider(indent: 15, endIndent: 15),
               SizedBox(height: Get.height * 0.01),

@@ -51,6 +51,8 @@ import 'package:youpeak/core/theme/app_style.dart';
 import 'package:youpeak/core/utils/utils.dart';
 import 'package:quick_actions/quick_actions.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 final List navigationPages = [
   const NavHomePageView(),
@@ -118,12 +120,16 @@ class _MainHomePageViewState extends State<MainHomePageView> {
     });
     Utils.showLog("INTERNET LAGGG");
     Timer(const Duration(milliseconds: 100), () {
-      if (!CustomCheckInternet.isConnect.value) {
+      // Offline fallback to downloaded videos exists only in the phone app.
+      if (!CustomCheckInternet.isConnect.value && !PlatformInfo.isWeb) {
         AppSettings.navigationIndex.value = 3;
         Get.to(const DownloadView());
       }
     });
     super.initState();
+
+    // Home-screen shortcuts (long-press the app icon) are a phone feature.
+    if (PlatformInfo.isWeb) return;
 
     quickAction.setShortcutItems([
       const ShortcutItem(
@@ -168,9 +174,9 @@ class _MainHomePageViewState extends State<MainHomePageView> {
             const AppExitDialog(),
           );
           if (shouldExit == true) {
-            if (Platform.isAndroid) {
+            if (PlatformInfo.isAndroid) {
               SystemNavigator.pop();
-            } else if (Platform.isIOS) {
+            } else if (PlatformInfo.isIOS) {
               exit(0);
             }
           }
@@ -201,7 +207,7 @@ class _MainHomePageViewState extends State<MainHomePageView> {
                   ),
                 ),
                 SizedBox(
-                  height: Platform.isAndroid ? 330 : 350,
+                  height: PlatformInfo.isAndroidOrWeb ? 330 : 350,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -296,7 +302,7 @@ class _MainHomePageViewState extends State<MainHomePageView> {
                           ),
                         ),
                       ),
-                      Platform.isAndroid ? const Offstage() : const SizedBox(height: 20),
+                      PlatformInfo.isAndroidOrWeb ? const Offstage() : const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -321,9 +327,9 @@ class _MainHomePageViewState extends State<MainHomePageView> {
         backgroundColor: isDarkMode.value ? AppColor.mainDark : AppColor.white,
         bottomNavigationBar: Obx(
           () => Container(
-            height: (Platform.isIOS)
+            height: (PlatformInfo.isIOS)
                 ? Get.height / 9.5
-                : (Platform.isAndroid)
+                : (PlatformInfo.isAndroidOrWeb)
                     ? Get.height / 13.1
                     : 0,
             width: Get.width,
@@ -387,16 +393,16 @@ const _supportedVideoExtensions = {
 
 Future<bool> isSupport(String path) async {
   try {
-    final file = File(path);
-    if (!await file.exists()) {
+    // LocalMedia: a device path on the phone, a blob: URL in the browser.
+    if (!LocalMedia.exists(path)) {
       AppSettings.showLog("isSupport (video): file does not exist => $path");
       return false;
     }
-    if (await file.length() <= 0) {
+    if (await LocalMedia.length(path) <= 0) {
       AppSettings.showLog("isSupport (video): zero-byte file => $path");
       return false;
     }
-    final ext = path.split('.').last.toLowerCase();
+    final ext = LocalMedia.fileName(path).split('.').last.toLowerCase();
     if (!_supportedVideoExtensions.contains(ext)) {
       AppSettings.showLog("isSupport (video): unsupported extension .$ext => $path");
       return false;

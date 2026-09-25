@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
@@ -8,6 +7,7 @@ import 'package:youpeak/features/coins/view/buy_coin_view.dart';
 import 'package:youpeak/features/coins/api/get_my_coin_api.dart';
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class UnlockPremiumVideoBottomSheet {
   static void onShow({required String coin, required Callback callback}) {
@@ -21,7 +21,7 @@ class UnlockPremiumVideoBottomSheet {
         ),
       ),
       SizedBox(
-        height: Platform.isAndroid ? 225 : 310,
+        height: PlatformInfo.isAndroidOrWeb ? 225 : 310,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,7 +123,7 @@ class UnlockPremiumVideoBottomSheet {
                 ),
               ),
             ),
-            Platform.isAndroid ? const Offstage() : const SizedBox(height: 20),
+            PlatformInfo.isAndroidOrWeb ? const Offstage() : const SizedBox(height: 20),
           ],
         ),
       ),

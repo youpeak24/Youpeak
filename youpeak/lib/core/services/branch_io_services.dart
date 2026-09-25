@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:youpeak/core/deep_link/services/deep_link_services.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,9 @@ class BranchIoServices {
 
   // This is Use to Splash Screen...
   static void onListenBranchIoLinks() async {
+    // Branch isn't initialised in the browser; web links arrive as the page
+    // URL and are handled by DeepLinkServices.
+    if (kIsWeb) return;
     StreamController<String> streamController = StreamController<String>();
     StreamSubscription<Map>? streamSubscription = FlutterBranchSdk.listSession().listen(
       (data) {
@@ -107,6 +111,7 @@ class BranchIoServices {
   }
 
   static Future<String?> onGenerateLink() async {
+    if (kIsWeb || branchUniversalObject == null) return null;
     BranchResponse response = await FlutterBranchSdk.getShortUrl(buo: branchUniversalObject!, linkProperties: branchLinkProperties);
     if (response.success) {
       log("Generated Branch Io Link => ${response.result}");

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
@@ -20,6 +19,7 @@ import 'package:youpeak/core/storage/prefrens.dart';
 
 import 'package:youpeak/core/payment/in_app_purchase/iap_callback.dart';
 import 'package:youpeak/core/payment/in_app_purchase/iap_receipt_data.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class InAppPurchaseHelper {
   static final InAppPurchaseHelper _inAppPurchaseHelper = InAppPurchaseHelper._internal();
@@ -66,7 +66,7 @@ class InAppPurchaseHelper {
   IAPCallback? _iapCallback;
 
   initialize() {
-    if (Platform.isAndroid) {
+    if (PlatformInfo.isAndroid) {
       /// ignore: deprecated_member_use
       // InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
     } else {
@@ -138,7 +138,7 @@ class InAppPurchaseHelper {
   Future<void> getPastPurchases(List<PurchaseDetails> verifiedPurchases) async {
     verifiedPurchases.sort((a, b) => a.transactionDate!.compareTo(b.transactionDate!));
 
-    if (Platform.isIOS) {
+    if (PlatformInfo.isIOS) {
       if (verifiedPurchases.isNotEmpty) {
         await _verifyProductReceipts(verifiedPurchases);
       } else {
@@ -255,7 +255,7 @@ class InAppPurchaseHelper {
   }
 
   finishTransaction() async {
-    if (Platform.isIOS) {
+    if (PlatformInfo.isIOS) {
       final transactions = await SKPaymentQueueWrapper().transactions();
 
       if (transactions != []) {
@@ -275,7 +275,7 @@ class InAppPurchaseHelper {
   }
 
   buySubscription(ProductDetails productDetails, Map<String, PurchaseDetails> purchases) async {
-    if (Platform.isIOS) {
+    if (PlatformInfo.isIOS) {
       final transactions = await SKPaymentQueueWrapper().transactions();
 
       log(transactions.toString());
@@ -308,13 +308,13 @@ class InAppPurchaseHelper {
         }
       }
     } else {
-      if (Platform.isIOS) {
+      if (PlatformInfo.isIOS) {
         _iapCallback?.onBillingError("");
       }
     }
     PurchaseParam purchaseParam;
 
-    if (Platform.isAndroid) {
+    if (PlatformInfo.isAndroid) {
       final oldSubscription = _getOldSubscription(productDetails, purchases);
 
       purchaseParam = GooglePlayPurchaseParam(
@@ -341,7 +341,7 @@ class InAppPurchaseHelper {
   }
 
   Future<void> clearTransactions() async {
-    if (Platform.isIOS) {
+    if (PlatformInfo.isIOS) {
       final transactions = await SKPaymentQueueWrapper().transactions();
       for (final transaction in transactions) {
         try {

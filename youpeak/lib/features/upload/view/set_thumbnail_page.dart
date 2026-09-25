@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +7,7 @@ import 'package:youpeak/features/upload/controller/upload_video_controller.dart'
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/constants/app_string.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class SetThumbnailPage extends GetView<UploadVideoController> {
   const SetThumbnailPage({super.key});
@@ -50,10 +49,7 @@ class SetThumbnailPage extends GetView<UploadVideoController> {
                 ),
                 child: Obx(
                   () => controller.thumbnail.value != ""
-                      ? Image.file(
-                          File(controller.thumbnail.value),
-                          fit: BoxFit.cover,
-                        )
+                      ? LocalMedia.image(controller.thumbnail.value, fit: BoxFit.cover)
                       : Center(
                           child: Image.asset(
                             AppIcons.logo,

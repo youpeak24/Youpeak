@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:ffmpeg_kit_flutter_new_min/ffmpeg_kit.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:youpeak/core/utils/custom_toast.dart';
 import 'package:youpeak/core/utils/custom_video_size.dart';
@@ -18,6 +19,7 @@ import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class CreateShortController extends GetxController {
   final uploadVideoController = Get.find<UploadVideoController>();
@@ -57,6 +59,8 @@ class CreateShortController extends GetxController {
   }
 
   Future<void> onRequestPermissions() async {
+    // In the browser the camera plugin asks for camera access itself.
+    if (kIsWeb) return onInitializeCamera();
     final status = await Permission.camera.request();
     if (status.isGranted) {
       onInitializeCamera();
@@ -86,7 +90,7 @@ class CreateShortController extends GetxController {
       }
       cameraLensDirection = cameraLensDirection == CameraLensDirection.back ? CameraLensDirection.front : CameraLensDirection.back;
       final cameras = await availableCameras();
-      final camera = cameras.firstWhere((camera) => camera.lensDirection == cameraLensDirection);
+      final camera = cameras.firstWhere((camera) => camera.lensDirection == cameraLensDirection, orElse: () => cameras.first);
       cameraController = CameraController(camera, ResolutionPreset.high);
       await cameraController!.initialize();
       update(["onInitializeCamera"]);
@@ -123,7 +127,7 @@ class CreateShortController extends GetxController {
   }
 
   void onUpload(String videoPath) async {
-    if (selectedSoundUrl != null) {
+    if (selectedSoundUrl != null && !kIsWeb) {
       Get.dialog(barrierDismissible: false, const LoaderUi());
       final removeAudioPath = await onRemoveAudio(videoPath);
       if (removeAudioPath != null) {
@@ -205,7 +209,7 @@ class CreateShortController extends GetxController {
         update(["onPressRecordingButton"]);
         AppSettings.showLog("Video Path : ${videoUrl.path}");
         Get.back();
-        return videoUrl.path;
+        return LocalMedia.remember(videoUrl);
       } catch (e) {
         Get.back();
         CustomToast.show(AppStrings.someThingWentWrong.tr);

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +24,8 @@ import 'package:youpeak/core/constants/app_string.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:youpeak/core/platform/local_media.dart';
+import 'package:youpeak/core/platform/video_frame.dart';
 
 class UploadVideoController extends GetxController {
   final libraryController = Get.put(NavLibraryPageController());
@@ -52,6 +55,12 @@ class UploadVideoController extends GetxController {
 
   void onGetThumbnail(String videoPath) async {
     thumbnail.value = "";
+    if (kIsWeb) {
+      // video_thumbnail is native-only; the browser grabs a frame itself.
+      final frame = await captureVideoFrame(videoPath);
+      if (frame != null) thumbnail.value = LocalMedia.remember(XFile(frame, name: "thumbnail.jpg", mimeType: "image/jpeg"));
+      return;
+    }
     try {
       final videoThumbnail = await VideoThumbnail.thumbnailFile(
         video: videoPath,
@@ -75,7 +84,7 @@ class UploadVideoController extends GetxController {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image != null) {
         AppSettings.showLog("Pick Image Path => ${image.path}");
-        thumbnail.value = image.path;
+        thumbnail.value = LocalMedia.remember(image);
         Get.back();
       } else {
         Get.back();
@@ -96,7 +105,7 @@ class UploadVideoController extends GetxController {
   RxBool isPlaying = false.obs;
 
   Future<void> initializeVideoPlayer(String videoUrl) async {
-    videoPlayerController = VideoPlayerController.file(File(videoUrl));
+    videoPlayerController = LocalMedia.videoController(videoUrl);
     try {
       await videoPlayerController?.initialize();
 
@@ -250,6 +259,7 @@ class UploadVideoController extends GetxController {
   }
 
   Future<void> onDeleteDirectory() async {
+    if (kIsWeb) return; // browser uploads leave no temp files behind
     Directory tempDir = await getTemporaryDirectory();
 
     if (await tempDir.exists()) {

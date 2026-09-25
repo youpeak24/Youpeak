@@ -16,7 +16,8 @@ class ConvertToNetwork {
       return path;
     }
 
-    // 2. If it's a local file that exists on device, return as-is
+    // 2. A file the user just picked: a device path, or a blob: URL on web
+    if (path.startsWith('blob:')) return path;
     try {
       if (File(path).existsSync()) {
         return path;
@@ -35,7 +36,7 @@ class ConvertToNetwork {
   static bool isValidVideoUrl(String? url) {
     if (url == null || url.trim().isEmpty) return false;
     String u = url.trim();
-    if (u.startsWith('http://') || u.startsWith('https://')) return true;
+    if (u.startsWith('http://') || u.startsWith('https://') || u.startsWith('blob:')) return true;
     try {
       if (File(u).existsSync()) return true;
     } catch (_) {}

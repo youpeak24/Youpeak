@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.YouPeak.Live1",
+      "sha256_cert_fingerprints": [
+        "50:C0:A1:30:DE:3B:E1:0A:29:6B:85:52:0F:F2:C2:70:C0:C0:70:64:27:23:37:2E:56:4E:7E:D9:A0:C0:F9:86"
+      ]
+    }
+  }
+]

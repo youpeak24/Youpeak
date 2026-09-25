@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
@@ -7,6 +8,7 @@ import 'package:youpeak/core/storage/database/database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:youpeak/features/notifications/model/notification_model.dart' as model;
 import 'package:youpeak/core/notification/local_notification_storage.dart';
+import 'package:youpeak/core/utils/custom_toast.dart';
 class LocalNotificationServices {
   static Callback callback = () {};
 
@@ -41,6 +43,11 @@ class LocalNotificationServices {
   static void onSendNotification(String title, String body, Callback function) {
     debugPrint("Local Notification: Title=$title, Body=$body");
     // type >>> 0 => upload : 1 => download
+    if (kIsWeb) {
+      // Browsers get no local notifications from this plugin; tell the user in-app.
+      if (Database.showNotification) CustomToast.show(body.isEmpty ? title : "$title: $body");
+      return;
+    }
     if (Database.showNotification) {
       callback = function;
       AndroidNotificationDetails androidNotificationDetails = const AndroidNotificationDetails(

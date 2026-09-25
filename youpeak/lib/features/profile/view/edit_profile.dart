@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/theme/app_style.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -159,11 +159,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                                       fit: BoxFit.cover,
                                     )
                               : DecorationImage(
-                                  image: FileImage(
-                                    File(
-                                      AppSettings.pickImagePath.value,
-                                    ),
-                                  ),
+                                  image: LocalMedia.imageProvider(AppSettings.pickImagePath.value),
                                   fit: BoxFit.cover,
                                 ),
                         ),

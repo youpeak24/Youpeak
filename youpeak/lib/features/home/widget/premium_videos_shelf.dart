@@ -107,6 +107,8 @@ class PremiumVideosShelf extends StatelessWidget {
                                     child: Image.network(
                                       video.videoImage ?? "",
                                       fit: BoxFit.cover,
+                                      // web: fall back to <img> if the host sends no CORS headers
+                                      webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
                                       errorBuilder: (_, __, ___) => Container(
                                         color: AppColor.secondaryMintGreen,
                                         child: const Icon(Icons.play_circle_fill, color: AppColor.primaryColor, size: 40),

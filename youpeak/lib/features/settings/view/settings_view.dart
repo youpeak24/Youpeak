@@ -150,7 +150,7 @@ class SettingsView extends GetView<ProfileController> {
                 ),
               ),
               SettingItemUi(
-                callback: () => Get.to(const PrivacyPolicyWebView()),
+                callback: () => PrivacyPolicyWebView.open(),
                 leading: AppIcons.help,
                 title: AppStrings.privacyPolicy.tr,
               ),

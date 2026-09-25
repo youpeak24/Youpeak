@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 
@@ -10,6 +11,7 @@ class GoogleLogin {
   // always reaches logcat (adb logcat, tag "flutter") regardless of build
   // mode, so use it here specifically to make this diagnosable.
   static Future<UserCredential?> signInWithGoogle() async {
+    if (kIsWeb) return _signInOnWeb();
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
@@ -30,6 +32,26 @@ class GoogleLogin {
     } catch (error, stackTrace) {
       print("GOOGLE_SIGNIN_DEBUG: FAILED => $error");
       print("GOOGLE_SIGNIN_DEBUG: stack => $stackTrace");
+    }
+    return null;
+  }
+
+  // Browsers have no native account picker: Firebase Auth opens Google's
+  // sign-in popup. The page's domain must be listed under Firebase Console >
+  // Authentication > Settings > Authorized domains.
+  static Future<UserCredential?> _signInOnWeb() async {
+    try {
+      final provider = GoogleAuthProvider()
+        ..addScope("email")
+        ..setCustomParameters({"prompt": "select_account"});
+      final result = await FirebaseAuth.instance.signInWithPopup(provider);
+      print("GOOGLE_SIGNIN_DEBUG: web popup success => ${result.user?.email}, isNewUser=${result.additionalUserInfo?.isNewUser}");
+      return result;
+    } on FirebaseAuthException catch (error) {
+      // popup-closed-by-user / cancelled-popup-request are a normal cancel.
+      print("GOOGLE_SIGNIN_DEBUG: web popup FAILED => ${error.code} ${error.message}");
+    } catch (error) {
+      print("GOOGLE_SIGNIN_DEBUG: web popup FAILED => $error");
     }
     return null;
   }

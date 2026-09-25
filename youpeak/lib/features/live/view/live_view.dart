@@ -24,6 +24,7 @@ import 'package:youpeak/core/constants/app_string.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class LivePage extends StatefulWidget {
   const LivePage({
@@ -39,8 +40,31 @@ class LivePage extends StatefulWidget {
   final String localUserName;
   final String roomID;
 
+  // Live rooms run on Zego's native engine plus device-orientation sensors,
+  // which the web build doesn't start; browsers get a pointer to the app.
   @override
-  State<LivePage> createState() => _LivePageState();
+  State<LivePage> createState() => PlatformInfo.isWeb ? _LiveUnavailableState() : _LivePageState();
+}
+
+class _LiveUnavailableState extends State<LivePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Get.back()),
+      ),
+      body: Center(
+        child: Text(
+          "Live streams are available in the YouPeak mobile app.",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.urbanist(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+        ).paddingSymmetric(horizontal: 32),
+      ),
+    );
+  }
 }
 
 class _LivePageState extends State<LivePage> with WidgetsBindingObserver {

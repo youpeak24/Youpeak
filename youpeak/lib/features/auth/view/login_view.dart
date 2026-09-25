@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +31,7 @@ import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/theme/app_style.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -261,7 +261,7 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
               SizedBox(height: Get.height / 30),
-              Platform.isIOS
+              PlatformInfo.isIOS
                   ? Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -334,7 +334,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const SizedBox(width: 20),
                         CustomBoxButton(
-                          callback: Platform.isIOS
+                          callback: PlatformInfo.isIOS
                               ? () async {
                                   try {
                                     // Show loading dialog

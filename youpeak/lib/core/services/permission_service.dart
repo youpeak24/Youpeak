@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
   static Future<bool> requestMicPermission() async {
+    // In the browser, speech recognition asks for the microphone itself.
+    if (kIsWeb) return true;
     var status = await Permission.microphone.status;
 
     if (status.isGranted) {

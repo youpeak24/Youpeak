@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:youpeak/core/file_upload/file_upload_model.dart';
 import 'package:youpeak/core/constants/app_constant.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class ConvertChannelImageApi {
   static FileUploadModel? _fileUploadModel;
@@ -15,7 +16,7 @@ class ConvertChannelImageApi {
       var request = http.MultipartRequest('PUT', Uri.parse(Constant.baseURL + Constant.fileUpload));
       request.fields.addAll({'folderStructure': Constant.channelImage, 'keyName': '${DateTime.now().millisecondsSinceEpoch}.jpg'});
 
-      request.files.add(await http.MultipartFile.fromPath('content', imagePath));
+      request.files.add(await LocalMedia.multipartFile('content', imagePath));
 
       request.headers.addAll(headers);
 

@@ -11,6 +11,10 @@ class CustomToast {
       backgroundColor: AppColor.grey.withOpacity(0.9),
       textColor: AppColor.white,
       gravity: ToastGravity.BOTTOM,
+      // Browser toasts default to the right edge with a green gradient;
+      // match the phone app's centred grey toast instead.
+      webPosition: "center",
+      webBgColor: "rgba(60, 60, 60, 0.92)",
     );
   }
 

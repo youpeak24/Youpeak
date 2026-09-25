@@ -1,59 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+  <!-- Replaced by the value of `flutter build web --base-href` (default "/"). -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="YouPeak: watch videos and Bites, follow creators, and earn rewards.">
+  <meta name="theme-color" content="#0F3B20">
 
-  <!-- iOS meta tags & icons -->
+  <!-- Installable web app (Android "Install app" / iOS "Add to Home Screen") -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="youpeak">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="YouPeak">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>youpeak</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
+  <title>YouPeak</title>
+
+  <!-- hls.js 1.7.3 (Apache-2.0), bundled rather than loaded from a CDN:
+       video_player_web_hls uses it to play HLS (.m3u8) videos in browsers
+       without native HLS (Chrome, Firefox, Edge). Every video's player
+       checks for it, so it must always load. -->
+  <script src="js/hls.min.js" defer></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #0F3B20;
+    }
+
+    /* Flutter renders into #app (see flutter_bootstrap.js). Phones get the
+       whole screen; on wide desktop windows the app keeps a phone-width
+       column, because its layouts are sized from the screen. */
+    #app {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+    }
+
+    @media (min-width: 600px) {
+      #app {
+        left: 50%;
+        right: auto;
+        width: 480px;
+        transform: translateX(-50%);
+        box-shadow: 0 0 32px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    /* Shown until the first Flutter frame. */
+    #loading {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: linear-gradient(135deg, #0F3B20 0%, #1E4D2B 30%, #0A7A44 65%, #129B57 100%);
+      z-index: 1;
+      transition: opacity 200ms ease-out;
+    }
+
+    #loading img {
+      width: 84px;
+      height: 84px;
+      border-radius: 22px;
+    }
+
+    #loading .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255, 255, 255, 0.25);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-  <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
-    });
-  </script>
+  <div id="app"></div>
+  <div id="loading" aria-label="Loading YouPeak">
+    <img src="icons/Icon-192.png" alt="YouPeak">
+    <div class="spinner"></div>
+  </div>
+  <noscript>YouPeak needs JavaScript enabled to run.</noscript>
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

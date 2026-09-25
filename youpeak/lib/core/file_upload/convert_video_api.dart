@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:youpeak/core/file_upload/file_upload_model.dart';
 import 'package:youpeak/core/constants/app_constant.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
+import 'package:youpeak/core/platform/local_media.dart';
 
 class ConvertVideoApi {
   static FileUploadModel? _fileUploadModel;
@@ -20,7 +21,7 @@ class ConvertVideoApi {
             : {'folderStructure': Constant.shortsVideo, 'keyName': '${DateTime.now().millisecondsSinceEpoch}.mp4'},
       );
 
-      request.files.add(await http.MultipartFile.fromPath('content', videoPath));
+      request.files.add(await LocalMedia.multipartFile('content', videoPath));
 
       request.headers.addAll(headers);
 

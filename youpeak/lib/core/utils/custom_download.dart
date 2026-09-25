@@ -8,15 +8,25 @@ import 'package:youpeak/core/assets/app_visuals.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/core/platform/browser_download.dart';
 
 class CustomDownload {
   static Future<String?> download(String videoUrl, String videoId) async {
+    // The browser can't keep videos for in-app offline playback; it saves them
+    // to the device's Downloads folder instead. Returning null keeps them out
+    // of the offline list.
+    if (kIsWeb) {
+      final saved = await saveInBrowser(videoUrl, "$videoId.mp4");
+      saved ? CustomToast.celebrate(AppStrings.videoDownloadSuccess.tr, AppVisuals.downloadDone) : CustomToast.show(AppStrings.videoDownloadingFailed.tr);
+      return null;
+    }
     try {
       final response = await http.get(Uri.parse(videoUrl));
       if (response.statusCode == 200) {
         final Uint8List bytes = response.bodyBytes;
 
-        final filePath = Platform.isAndroid
+        final filePath = PlatformInfo.isAndroid
             ? await getExternalStorageDirectory()
             : await getApplicationSupportDirectory();
 

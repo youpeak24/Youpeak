@@ -45,6 +45,7 @@ import 'package:youpeak/core/theme/theme_services.dart';
 import 'package:youpeak/core/theme/theme_view.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:youpeak/core/platform/platform_info.dart';
 
 RxBool isDarkMode = false.obs;
 
@@ -61,31 +62,37 @@ void main() async {
   Get.put(LocalizationService());
   await Get.find<LocalizationService>().init();
 
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
+  // Crashlytics, Branch, AdMob, local notifications, runtime permissions,
+  // Zego and Stripe have no browser implementation; the web app skips them.
+  if (!kIsWeb) {
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
 
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
 
   // Non-blocking background initializations
-  onInitializeBranchIo();
   CustomCheckInternet.onCheck();
   DeepLinkServices.onInitDeepLinks();
-  MobileAds.instance.initialize();
-  PermissionHandler.requestPermission();
-  LocalNotificationServices.initNotification();
-  NotificationServices().firebaseInit();
   CustomWatchTime.init();
-  createEngine();
-  stripeInit();
+  if (!kIsWeb) {
+    onInitializeBranchIo();
+    MobileAds.instance.initialize();
+    PermissionHandler.requestPermission();
+    LocalNotificationServices.initNotification();
+    NotificationServices().firebaseInit();
+    createEngine();
+    stripeInit();
+  }
 
   runApp(const MyApp());
 }
@@ -137,6 +144,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   Future<bool> hasRealInternet() async {
+    // Browsers can't do raw DNS lookups; they report connectivity directly.
+    if (kIsWeb) {
+      return await connectivity.checkConnectivity() != ConnectivityResult.none;
+    }
     try {
       final result = await InternetAddress.lookup('google.com').timeout(const Duration(seconds: 3));
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
@@ -259,7 +270,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       CustomWatchTime.isAppOn = false;
       AppSettings.showLog("User Try To Exit...");
 
-      if (Get.currentRoute == "/NormalVideoDetailsView" && await Floating().isPipAvailable) {
+      if (!kIsWeb && Get.currentRoute == "/NormalVideoDetailsView" && await Floating().isPipAvailable) {
         Floating().enable(
           const ImmediatePiP(aspectRatio: Rational(16, 9)),
         );
@@ -308,7 +319,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           final mediaQuery = MediaQuery.of(context);
 
           // Only apply SafeArea for non-iOS devices
-          if (Platform.isIOS) {
+          if (PlatformInfo.isIOS) {
             return child ?? const SizedBox();
           } else {
             return MediaQuery(
@@ -354,10 +365,11 @@ Future<void> stripeInit() async {
 Future<void> onConnectInternet() async {
   await AdminSettingsApi.callApi();
   if (Database.loginUserId != null) await GetProfileApi.callApi(Database.loginUserId!);
-  await MobileAds.instance.initialize();
-
-  LoadMultipleAds.init();
-  await stripeInit();
+  if (!kIsWeb) {
+    await MobileAds.instance.initialize();
+    LoadMultipleAds.init();
+    await stripeInit();
+  }
 
   if (Database.loginUserId != null) {
     final shortsController = Get.put(NavShortsController());

@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:youpeak/core/deep_link/services/deep_link_services.dart';
 import 'package:youpeak/core/settings/admin_settings_api.dart';
 import 'package:youpeak/features/profile/api/get_profile_api.dart';
 import 'package:youpeak/features/referral/api/referral_code_apply_api.dart';
@@ -45,6 +47,8 @@ class AppSettings {
   // static int showAdsIndex = 2;
 
   static bool get isShowAds {
+    // AdMob (google_mobile_ads) has no browser implementation.
+    if (kIsWeb) return false;
     bool isPremium = GetProfileApi.profileModel?.user?.isPremiumPlan ?? false;
     bool hasAdFreeBenefit = false;
 
@@ -108,7 +112,16 @@ class AppSettings {
       referralCode: GetProfileApi.profileModel?.user?.referralCode ?? "",
     );
 
-    final link = await BranchIoServices.onGenerateLink() ?? "";
+    // The web app has no Branch SDK, so it shares a youpeak.app/share link
+    // (opens the app when installed, otherwise the web app).
+    final link = await BranchIoServices.onGenerateLink() ??
+        (kIsWeb
+            ? DeepLinkServices.onGenerateLink(
+                pageRoutes: "referralCode",
+                referralCode: GetProfileApi.profileModel?.user?.referralCode ?? "",
+                channelId: GetProfileApi.profileModel?.user?.channelId ?? "",
+              )
+            : "");
 
     showLog("Referral Code Link => $link");
     referralCodeLink = link;
@@ -116,7 +129,10 @@ class AppSettings {
 
   static Future<void> onLoginWithReferral({required String loginUserId}) async {
     if (BranchIoServices.userId != loginUserId) {
-      ReferralCodeApplyApi.callApi(loginUserId: loginUserId, referralCode: BranchIoServices.referralCode);
+      // Branch fills referralCode on the phone app; a youpeak.app/share link
+      // (the web app's referral link) fills DeepLinkServices.referralCode.
+      final referralCode = BranchIoServices.referralCode.isNotEmpty ? BranchIoServices.referralCode : DeepLinkServices.referralCode;
+      ReferralCodeApplyApi.callApi(loginUserId: loginUserId, referralCode: referralCode);
     }
   }
 }
