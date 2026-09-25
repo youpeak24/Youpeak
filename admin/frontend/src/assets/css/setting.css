@@ -131,7 +131,7 @@
 
     margin-bottom: 1.25rem;
 
-    border-radius: 0px 0px 12px 12px;
+    border-radius: 0px 0px 6px 6px;
     /* Let tab row scroll horizontally without clipping overlap; clip only on Y if needed */
     overflow-x: visible;
     overflow-y: visible;
@@ -385,7 +385,7 @@
     color: #ffffff;
     padding: 8px 16px;
     margin-right: 10px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-weight: 600;
     border: none;
     cursor: pointer;
@@ -415,7 +415,7 @@ button.themeButton.settings-submit-btn:hover {
     padding: 0.5rem 1.35rem;
     margin: 0;
     margin-right: 0;
-    border-radius: 8px;
+    border-radius: 4px;
     border: none;
     box-sizing: border-box;
     line-height: 1.35;
@@ -578,7 +578,7 @@ button.themeButton.settings-submit-btn:hover {
     background: var(--settings-surface);
     border: 1px solid var(--settings-border);
     padding: 0;
-    border-radius: 12px;
+    border-radius: 6px;
     margin-bottom: 1.5rem;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     overflow: hidden;
@@ -737,7 +737,7 @@ button.themeButton.settings-submit-btn:hover {
 /* Tab toolbar: section title (+ optional Submit) in a card-style bar */
 .mainAdminGrid .settings-page .mainSetting .settings-tab-submit-box {
     border: 1px solid var(--settings-border);
-    border-radius: 12px;
+    border-radius: 6px;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     background: var(--settings-surface);
     margin-bottom: 1rem;
@@ -775,7 +775,7 @@ button.themeButton.settings-submit-btn:hover {
 .mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter {
     /* background-color: #ffffff !important; */
     border: 1px solid var(--settings-border) !important;
-    border-radius: 12px !important;
+    border-radius: 6px !important;
     border-top-left-radius: 12px !important;
     border-top-right-radius: 12px !important;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
@@ -976,7 +976,7 @@ button.themeButton.settings-submit-btn:hover {
 .mainAdminGrid .settings-page .mainSetting .setting-box-body .custom-input textarea {
     background-color: #f1f3f5 !important;
     border: none !important;
-    border-radius: 10px !important;
+    border-radius: 6px !important;
     padding: 10px 12px !important;
     color: #111827;
     width: 100%;
@@ -1045,7 +1045,7 @@ button.themeButton.settings-submit-btn:hover {
 
 .mainAdminGrid .settings-page .mainSetting .card1 {
     border: 1px solid var(--settings-border);
-    border-radius: 12px;
+    border-radius: 6px;
     background: var(--settings-surface);
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     overflow: hidden;
@@ -1060,7 +1060,7 @@ button.themeButton.settings-submit-btn:hover {
 .mainAdminGrid .settings-page .mainSetting .withdrawal-box.settingBoxOuter {
     background-color: #ffffff !important;
     border: 1px solid var(--settings-border) !important;
-    border-radius: 12px !important;
+    border-radius: 6px !important;
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
     padding: 0 !important;
     overflow: hidden;
@@ -1084,7 +1084,7 @@ button.themeButton.settings-submit-btn:hover {
 .mainAdminGrid .settings-page .payment-setting .themeBtn.submit-btn {
     background-color: var(--settings-accent) !important;
     color: #ffffff !important;
-    border-radius: 8px !important;
+    border-radius: 4px !important;
 }
 
 .mainAdminGrid .settings-page .themeBtn.submit-btn:hover,

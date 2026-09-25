@@ -55,7 +55,7 @@
   font-size: 18px;
   padding: 10px 0px;
   border: 2px solid var(--new-border-color);
-  border-radius: 5px;
+  border-radius: 4px;
   margin-top: 10px;
 }
 
@@ -90,7 +90,7 @@
 }
 
 .navbar-profile-avatar {
-  border-radius: 5px;
+  border-radius: 4px;
   border: 1px solid white;
   object-fit: cover;
 }
@@ -102,7 +102,7 @@
   width: 260px;
   background: #fff;
   border: 1px solid var(--new-border-color);
-  border-radius: 10px;
+  border-radius: 6px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   z-index: 2000;
@@ -154,7 +154,7 @@
   margin: 10px 14px 14px 14px;
   width: calc(100% - 28px);
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--new-color);
   color: #fff;
   display: flex;
@@ -262,7 +262,7 @@
 }
 
 .sideBarLogo img {
-  border-radius: 20px;
+  border-radius: 8px;
   margin-right: 10px !important;
 }
 
@@ -370,7 +370,7 @@ textarea::-webkit-scrollbar {
   font-size: 15px;
   font-weight: 400;
   padding: 9px 20px;
-  /* border-radius: 6px; */
+  /* border-radius: 4px; */
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
   display: flex;
@@ -398,7 +398,7 @@ textarea::-webkit-scrollbar {
   /* border-left: 2px solid var(--lightOrangeColor) !important; */
   /* transition: 0.1; */
   background-color: rgba(37, 99, 235, 0.14);
-  border-radius: 5px;
+  border-radius: 4px;
   /* color: #fff; */
   /* box-shadow: 0px 2px 6px rgb(115 103 240 / 0.3); */
   /* background: linear-gradient(270deg, rgba(115, 103, 240, 0.7) 0%, #7367F0 100%) !important; */
@@ -406,9 +406,8 @@ textarea::-webkit-scrollbar {
 }
 
 .activeMenu {
-  border-radius: 5px !important;
+  border-radius: 4px !important;
   color: #fff !important;
-  box-shadow: 0px 2px 6px rgb(115 103 240 / 0.3);
   background: var(--new-color-gradient) !important;
 }
 
@@ -456,7 +455,7 @@ textarea::-webkit-scrollbar {
   /* padding-left: 15px; */
   column-gap: 10px;
   /* padding-right: 15px; */
-  border-radius: 10px;
+  border-radius: 6px;
   border: none;
   outline: none;
   color: white;
@@ -469,7 +468,7 @@ textarea::-webkit-scrollbar {
   background: #8A82FB;
   padding: 20px;
   /* Adjust as needed */
-  border-radius: 10px;
+  border-radius: 6px;
   /* Optional */
   display: inline-block;
   /* Ensure the background only applies to the chart */
@@ -561,7 +560,7 @@ textarea::-webkit-scrollbar {
   background-clip: border-box;
   background-color: white;
   border: 2px solid var(--new-border-color);
-  border-radius: 5px;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   margin-bottom: 1.5rem;
@@ -605,7 +604,7 @@ textarea::-webkit-scrollbar {
   width: 35px;
   height: 35px;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
   /* border: 2px solid var(--new-border-color); */
 }
@@ -718,7 +717,7 @@ textarea::-webkit-scrollbar {
 
 .dashBoxData {
   border: 1px solid #997cfa;
-  border-radius: 20px;
+  border-radius: 8px;
   /* box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14),
   0 7px 10px -5px rgba(64, 64, 64, 0.4) !important; */
 }
@@ -779,9 +778,8 @@ textarea::-webkit-scrollbar {
 }
 
 .dashDataBox {
-  border-radius: 15px;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14),
-    0 7px 10px -5px rgba(64, 64, 64, 0.4) !important;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
 
 .lineCss {
@@ -791,9 +789,8 @@ textarea::-webkit-scrollbar {
 }
 
 .chart1 {
-  border-radius: 15px;
-  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14),
-    0 7px 10px -5px rgba(64, 64, 64, 0.4) !important;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
 }
 
 .chartHeader {
@@ -872,12 +869,8 @@ textarea::-webkit-scrollbar {
 }
 
 .custom-shortie-color {
-  background: linear-gradient(90deg, #6c61fb 0%, #c74cf2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-fill-color: transparent;
-  font-weight: 900;
+  color: var(--new-color);
+  font-weight: 700;
 }
 
 .dashBoxData .dashBox-text {
@@ -951,7 +944,7 @@ textarea::-webkit-scrollbar {
   /* box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.16); */
   border: 2px solid var(--new-border-color);
   background: #fff;
-  border-radius: 5px;
+  border-radius: 4px;
   /* padding: 25px; */
 }
 
@@ -979,7 +972,7 @@ textarea::-webkit-scrollbar {
 }
 
 .dashboard .dashboard-user-count {
-  border-radius: 5px;
+  border-radius: 4px;
   border: 2px solid var(--new-border-color);
   background: #fff;
 }
@@ -1002,7 +995,7 @@ textarea::-webkit-scrollbar {
 }
 
 .dashboard .user-activity .total-user-chart span {
-  border-radius: 100px;
+  border-radius: 8px;
   background: var(--new-color);
   width: 20px;
   display: block;
@@ -1019,7 +1012,7 @@ textarea::-webkit-scrollbar {
   width: 20px !important;
   height: 20px !important;
   margin-right: 5px !important;
-  /* border-radius: 6px !important; */
+  /* border-radius: 4px !important; */
 }
 
 .dashboard .dashboard-user-count .apexcharts-legend-text {
@@ -1038,7 +1031,7 @@ textarea::-webkit-scrollbar {
 }
 
 .dashboard .user-activity .total-active-chart span {
-  border-radius: 100px;
+  border-radius: 8px;
   background: #786d81;
 
   margin-right: 8px;
@@ -1049,7 +1042,7 @@ textarea::-webkit-scrollbar {
 
 .dashboard .date-range-picker input {
   margin-left: auto;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: gray !important;
   color: white;
   cursor: pointer;
@@ -1091,7 +1084,7 @@ textarea::-webkit-scrollbar {
 }
 
 .userPage .searching-box input {
-  border-radius: 5px !important;
+  border-radius: 4px !important;
   min-width: 300px;
   border: 1px solid #c9c9c9 !important;
 }
@@ -1107,7 +1100,7 @@ textarea::-webkit-scrollbar {
 }
 
 .userPage .table-custom img {
-  border-radius: 6px;
+  border-radius: 4px;
   object-fit: cover;
 }
 
@@ -1131,7 +1124,7 @@ textarea::-webkit-scrollbar {
 .userPage .table-custom input[type="checkbox"]:not(.MuiSwitch-input) {
   appearance: none;
   -webkit-appearance: none;
-  border-radius: 5px;
+  border-radius: 4px;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -1182,8 +1175,8 @@ textarea::-webkit-scrollbar {
 }
 
 .user-table-top input {
-  border-radius: 5px;
-  /* border-radius: 40px; */
+  border-radius: 4px;
+  /* border-radius: 8px; */
   border: 1px solid #c9c9c9;
   background: #fff;
   width: 100%;
@@ -1202,7 +1195,7 @@ textarea::-webkit-scrollbar {
 
 .user-table-top .MuiInputBase-root {
   height: 43px;
-  border-radius: 40px;
+  border-radius: 8px;
 }
 
 .user-table-top .MuiSelect-outlined {
@@ -1217,7 +1210,7 @@ textarea::-webkit-scrollbar {
 
 .user-table {
   /* margin-top: 15px; */
-  border-radius: 5px;
+  border-radius: 4px;
   background: white;
   /* box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.16); */
   border: 2px solid var(--new-border-color);
@@ -1267,7 +1260,7 @@ textarea::-webkit-scrollbar {
 
 .pagination-select .MuiInputBase-root {
   height: 43px;
-  border-radius: 40px;
+  border-radius: 8px;
 }
 
 .pagination-select .MuiFormLabel-root {
@@ -1276,29 +1269,12 @@ textarea::-webkit-scrollbar {
 }
 
 .new-fake-btn button {
-  /* width: 100px; */
-  /* height: 38px; */
-  /* display: flex; */
-  /* align-items: 'center'; */
-  /* justify-content: center; */
-  /* background: radial-gradient(circle,
-      rgba(139, 130, 252, 1),
-      rgba(125, 130, 251, 1),
-      rgba(210, 111, 244, 1)); */
-  /* color: white; */
-  /* padding-top: 7px; */
-  /* border-radius: 5px; */
-
   width: 100px;
   height: 38px;
-  /* display: flex
-; */
   align-items: 'center';
-  /* justify-content: center; */
-  background: radial-gradient(circle, rgba(139, 130, 252, 1), rgba(125, 130, 251, 1), rgba(210, 111, 244, 1));
+  background: var(--new-color);
   color: white;
-  /* padding-top: 7px; */
-  border-radius: 5px;
+  border-radius: 4px;
   border: none;
 }
 
@@ -1311,7 +1287,7 @@ textarea::-webkit-scrollbar {
 .fake-create-img img {
   width: 100px;
   height: 80px;
-  border-radius: 15px;
+  border-radius: 6px;
   border: 1px solid white;
   object-fit: cover;
   margin-top: 15px;
@@ -1320,7 +1296,7 @@ textarea::-webkit-scrollbar {
 .fake-user .fake-create-img img {
   width: 150px;
   height: 80px;
-  border-radius: 15px;
+  border-radius: 6px;
   border: 1px solid white;
   object-fit: cover;
   margin-top: 15px;
@@ -1359,7 +1335,7 @@ textarea::-webkit-scrollbar {
 }
 
 /* .userSettingBox {
-  border-radius: 22px;
+  border-radius: 8px;
   border: 1px solid #c9c9c9;
   background: #fcfcfc;
   /* padding: 25px; */
@@ -1386,7 +1362,7 @@ textarea::-webkit-scrollbar {
 
 .general-setting textarea {
   border: 1px solid var(--inputBorder--) !important;
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 10px;
   color: #495057 !important;
 }
@@ -1405,7 +1381,7 @@ textarea::-webkit-scrollbar {
   width: 100%;
   margin-top: 30px;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 8px;
 }
 
 /* .avatar-setting .image-avatar-box .avatar-img-user {
@@ -1419,7 +1395,7 @@ textarea::-webkit-scrollbar {
   /* width: 200px;
   height: 200px; */
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 8px;
   border: 2px solid #fcfcfc;
 }
 
@@ -1448,7 +1424,7 @@ textarea::-webkit-scrollbar {
 }
 
 textarea.custom-textarea {
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid #997cfa;
   background: #fcfcfc;
 }
@@ -1469,7 +1445,7 @@ textarea.custom-textarea:focus {
   border: none;
   padding: 10px 20px;
   margin-top: 10px;
-  border-radius: 10px;
+  border-radius: 6px;
   font-size: 16px;
 }
 
@@ -1497,7 +1473,7 @@ textarea:focus {
 .app-setting {}
 
 .payment-setting-box {
-  border-radius: 10px;
+  border-radius: 6px;
   /* border: 1px solid #c9c9c9; */
   background: #fcfcfc;
   /* margin-top: 20px; */
@@ -1513,7 +1489,7 @@ textarea:focus {
 }
 
 .withdrawal-box {
-  border-radius: 5px;
+  border-radius: 4px;
   border: 2px solid rgba(0, 0, 0, 0.12);
   background: white;
   padding: 15px;
@@ -1527,7 +1503,7 @@ textarea:focus {
 }
 
 .withdrawal-box .withdrawal-requests {
-  border-radius: 12px;
+  border-radius: 6px;
   padding: 8px;
   background: #0fb515;
 }
@@ -1540,7 +1516,7 @@ textarea:focus {
 }
 
 .payment-setting .payment-content-button {
-  border-radius: 8px;
+  border-radius: 4px;
   min-width: 89px;
   border: none;
   min-width: 60px;
@@ -1564,7 +1540,7 @@ textarea:focus {
 }
 
 .payment-setting .Mui-checked+.MuiSwitch-track {
-  border-radius: 52px;
+  border-radius: 8px;
   border: 0.5px solid rgba(0, 0, 0, 0.14);
   background: #eff6ff !important;
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.08) inset;
@@ -1609,7 +1585,7 @@ textarea:focus {
 }
 
 .payment-setting .withdrawal-input input {
-  border-radius: 5px;
+  border-radius: 4px;
   /* border: 1px solid #997cfa !important; */
   background: #fcfcfc;
 }
@@ -1621,7 +1597,7 @@ textarea:focus {
 .ima-tags-box .ima-tag-input {
   background: #f5f5f5 !important;
   border: 1px solid rgba(0, 0, 0, 0.12) !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
   font-size: 13px;
   padding: 10px 12px;
 }
@@ -1712,7 +1688,7 @@ textarea:focus {
 }
 
 .payment-setting .selector-payment-setting select {
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   border: 1px solid #ff4d67 !important;
 }
 
@@ -1794,7 +1770,7 @@ textarea:focus {
 }
 
 .login-page-content .login-page-box {
-  border-radius: 32px;
+  border-radius: 8px;
   background: #fffafa;
   padding: 30px;
   width: 100%;
@@ -1869,7 +1845,7 @@ textarea:focus {
 }
 
 .login-page-box .login-left-form input {
-  border-radius: 10px;
+  border-radius: 6px;
   margin-top: 5px;
   border: none !important;
   font-weight: 500 !important;
@@ -1893,7 +1869,7 @@ textarea:focus {
 }
 
 .demologin {
-  border-radius: 5px;
+  border-radius: 4px;
   width: 150px;
   color: white;
   /* margin-top: 20px; */
@@ -1901,7 +1877,7 @@ textarea:focus {
 }
 
 .login {
-  border-radius: 5px;
+  border-radius: 4px;
   width: 150px;
   color: white;
   /* margin-top: 20px; */
@@ -1968,7 +1944,7 @@ textarea:focus {
 }
 
 .login-form .custom-input input {
-  border-radius: 5px !important;
+  border-radius: 4px !important;
   /* background: #f4f4f4 !important; */
 }
 
@@ -1987,7 +1963,7 @@ textarea:focus {
 }
 
 .login-form .login-btn {
-  border-radius: 28px;
+  border-radius: 8px;
   width: 224px;
   color: white;
   margin-top: 20px;
@@ -2000,7 +1976,7 @@ textarea:focus {
   margin-top: 10px;
   border: 1px solid rgba(0, 0, 0, 0.09);
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 6px;
   padding: 12px 14px;
 }
 
@@ -2044,7 +2020,7 @@ textarea:focus {
   border: none;
   background: var(--new-color);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 6px;
   width: 42px;
   height: 42px;
   display: flex;
@@ -2084,7 +2060,7 @@ textarea:focus {
   justify-content: center;
   background-color: var(--lightOrangeColor);
   color: white;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .type-radio-box label {
@@ -2107,7 +2083,7 @@ textarea:focus {
 .video-show-upload video {
   width: 200px;
   height: 138px;
-  border-radius: 15px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   border: 1px solid white;
@@ -2119,7 +2095,7 @@ textarea:focus {
   width: 100%;
   height: 138px;
   max-width: 200px;
-  border-radius: 15px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   border: 1px solid white;
@@ -2136,7 +2112,7 @@ textarea:focus {
 .video-upload-page .video-show img {
   width: 200px;
   height: 138px;
-  border-radius: 15px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   border: 1px solid white;
@@ -2156,7 +2132,7 @@ textarea:focus {
   height: 138px;
   border: 1px solid white;
   object-fit: cover;
-  border-radius: 15px;
+  border-radius: 6px;
 }
 
 /* .videoPage .multi-video-btn{ */
@@ -2189,7 +2165,7 @@ textarea:focus {
 
 .sound-add-box::-webkit-scrollbar-thumb {
   background: var(--scrollColor--);
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .sound-add-box-post {
@@ -2219,7 +2195,7 @@ textarea:focus {
 
 .sound-add-box-post::-webkit-scrollbar-thumb {
   background: var(--scrollColor--);
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .channelPage .multiButton .MuiToggleButtonGroup-root:nth-last-child(1) {
@@ -2255,7 +2231,7 @@ textarea:focus {
 
 .create-channel-model textarea {
   border: 1px solid var(--inputBorder--) !important;
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 10px;
 }
 
@@ -2265,7 +2241,7 @@ textarea:focus {
 }
 
 .create-channel-model form {
-  border-radius: 22px 22px 0px 0px;
+  border-radius: 8px 8px 0px 0px;
   border-top: 1px solid #c9c9c9;
   border-right: 1px solid #c9c9c9;
   border-left: 1px solid #c9c9c9;
@@ -2286,7 +2262,7 @@ textarea:focus {
 }
 
 .close-model-btn {
-  border-radius: 5px;
+  border-radius: 4px;
   color: white;
   background-color: #6e6e6eef !important;
   display: flex;
@@ -2348,7 +2324,7 @@ textarea:focus {
   padding: 15px;
   justify-content: center;
   align-items: center;
-  border-radius: 100px;
+  border-radius: 8px;
   transition: all 0.2s ease-out;
   box-shadow: none;
   background: #ff4d67;
@@ -2411,7 +2387,7 @@ textarea:focus {
   color: rgb(255, 255, 255);
   cursor: pointer;
   background: rgb(31, 28, 48);
-  border-radius: 50px;
+  border-radius: 8px;
   height: 29px;
   text-align: center;
   top: 55%;
@@ -2493,7 +2469,7 @@ textarea:focus {
 }
 
 .reset-password input {
-  border-radius: 5px;
+  border-radius: 4px;
   margin-top: 5px;
   /* border: none !important; */
   font-weight: 500 !important;
@@ -2521,7 +2497,7 @@ textarea:focus {
   height: min-content;
   width: 100%;
   max-width: 494px;
-  border-radius: 5px;
+  border-radius: 4px;
   background: #fffafa;
   box-shadow: 0px 1px 20px 0px rgba(0, 0, 0, 0.08);
   padding: 26px;
@@ -2607,7 +2583,7 @@ textarea:focus {
   object-fit: fill;
   width: 150px;
   height: auto;
-  border-radius: 13px;
+  border-radius: 6px;
   border: 1px solid #cbd5e1;
 }
 
@@ -2637,10 +2613,10 @@ textarea:focus {
 
 .giftCategoryBox .giftCategory {
   margin-bottom: 21px;
-  border-radius: 5px;
+  border-radius: 4px;
   /* background-color: #c9c9c930; */
   background-color: white;
-  border-radius: 5px;
+  border-radius: 4px;
   border: none;
   box-shadow: 0px 2px 8px rgb(47 43 61 / 0.12);
 }
@@ -2709,7 +2685,7 @@ textarea:focus {
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-left: 5px;
   margin-right: 5px;
   background: #f4f4f4;
@@ -2741,14 +2717,14 @@ a.badge-success:hover {
   justify-content: center;
   width: 45px;
   height: 45px;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-left: 5px;
   margin-right: 5px;
   background: #f4f4f4;
 }
 
 .action-button .closeIcon svg {
-  border-radius: 6px;
+  border-radius: 4px;
   object-fit: cover;
   width: 30px;
   height: 30px;
@@ -2758,7 +2734,7 @@ a.badge-success:hover {
 /* For Back Button */
 
 .back-btn {
-  border-radius: 5px;
+  border-radius: 4px;
   max-width: 120px;
   color: white;
   width: 88px;
@@ -2852,7 +2828,7 @@ a.badge-success:hover {
   width: 35px;
   height: 35px;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
   z-index: 111;
   /* /* border: 2px solid var(--new-border-color); */
@@ -2865,7 +2841,7 @@ a.badge-success:hover {
   transform: translate(-50%, -50%);
   width: 600px;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 4px;
   border: 1px solid #C9C9C9;
 }
 
@@ -2921,7 +2897,7 @@ a.badge-success:hover {
 .custom-input.password input {
   padding-right: 45px !important;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 4px;
   height: 45px;
 }
 

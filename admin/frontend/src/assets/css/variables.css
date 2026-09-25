@@ -1,5 +1,14 @@
 :root {
  --new-color : #059669;
- --new-border-color : #dfdfdfef;
- --new-color-gradient : linear-gradient(98deg, #047857 0%, #10b981 66%);
+ --new-color-dark : #047857;
+ --new-border-color : #e2e2e2;
+ /* Flat, not a gradient — kept as a variable (rather than inlined at each
+    call site) so every consumer (sidebar active state, login screen) stays
+    in sync from one place. */
+ --new-color-gradient : var(--new-color);
+ --radius-sm : 4px;
+ --radius-md : 6px;
+ --radius-lg : 8px;
+ --shadow-sm : 0 1px 2px rgba(15, 23, 42, 0.06);
+ --shadow-md : 0 2px 8px rgba(15, 23, 42, 0.08);
 }
