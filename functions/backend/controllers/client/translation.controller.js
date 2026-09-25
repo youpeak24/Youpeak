@@ -1,7 +1,7 @@
 const Translation = require("../../models/translation.model");
 const Language = require("../../models/language.model");
 
-const { getLatestVersion } = require("../../util/versionUtils");
+const { getGlobalLanguageVersion } = require("../../util/versionUtils");
 
 // get single Language's translations
 exports.harvestTranslation = async (req, res) => {
@@ -56,8 +56,10 @@ exports.harvestAllTranslations = async (req, res) => {
 // get latest version of global Language system
 exports.revealLatestVersion = async (req, res) => {
   try {
-    const version = await getLatestVersion();
-    return res.status(200).json({ status: true, message: "Version fetched", data: version });
+    // This imported a non-existent getLatestVersion, so every call threw and
+    // returned 500. The app reads `data` as a string (LocalizationVersion).
+    const version = await getGlobalLanguageVersion();
+    return res.status(200).json({ status: true, message: "Version fetched", data: String(version) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
