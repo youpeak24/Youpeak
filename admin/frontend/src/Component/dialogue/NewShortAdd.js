@@ -1031,7 +1031,7 @@ function NewShortAdd(props) {
                         Schedule Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1046,14 +1046,14 @@ function NewShortAdd(props) {
                           checked={scheduleType == 1 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="scheduleType"
+                          className="form-check-label mb-1 "
+                          htmlFor="scheduleType"
                         >
                           Schedule
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1068,8 +1068,8 @@ function NewShortAdd(props) {
                           checked={scheduleType == 2 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="scheduleType"
+                          className="form-check-label mb-1 "
+                          htmlFor="scheduleType"
                         >
                           Not Schedule
                         </label>
@@ -1114,7 +1114,7 @@ function NewShortAdd(props) {
                         Visibility Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1128,7 +1128,7 @@ function NewShortAdd(props) {
                           }}
                           checked={visibilityType == 1 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="normalVideo">
+                        <label className="form-check-label mb-1 " htmlFor="normalVideo">
                           Public
                         </label>
                       </div>
@@ -1147,7 +1147,7 @@ function NewShortAdd(props) {
                           }}
                           checked={visibilityType == 2 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="shortVideo">
+                        <label className="form-check-label mb-1 " htmlFor="shortVideo">
                           Private
                         </label>
                       </div>
@@ -1166,7 +1166,7 @@ function NewShortAdd(props) {
                           }}
                           checked={visibilityType == 3 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="shortVideo">
+                        <label className="form-check-label mb-1 " htmlFor="shortVideo">
                           Unlisted
                         </label>
                       </div>
@@ -1187,7 +1187,7 @@ function NewShortAdd(props) {
                         Comment Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1201,12 +1201,12 @@ function NewShortAdd(props) {
                           }}
                           checked={commentType == 1 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="commentType">
+                        <label className="form-check-label mb-1 " htmlFor="commentType">
                           Allow All
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1220,12 +1220,12 @@ function NewShortAdd(props) {
                           }}
                           checked={commentType == 2 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="commentType">
+                        <label className="form-check-label mb-1 " htmlFor="commentType">
                           Disable
                         </label>
                       </div>
                       {/* <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <div style={{ width: "17px" }}>
@@ -1241,12 +1241,12 @@ function NewShortAdd(props) {
                             checked={commentType == 3 ? true : false}
                           />
                         </div>
-                        <label class="form-check-label mb-1 " for="commentType">
+                        <label className="form-check-label mb-1 " htmlFor="commentType">
                           Hold Potentially InApproPrivate For Review
                         </label>
                       </div> */}
                       {/* <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1260,7 +1260,7 @@ function NewShortAdd(props) {
                           }}
                           checked={commentType == 4 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="commentType">
+                        <label className="form-check-label mb-1 " htmlFor="commentType">
                           Hold All For Review
                         </label>
                       </div> */}
@@ -1280,7 +1280,7 @@ function NewShortAdd(props) {
                         Audience Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1295,14 +1295,14 @@ function NewShortAdd(props) {
                           checked={audienceType == 1 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="audienceType1"
+                          className="form-check-label mb-1 "
+                          htmlFor="audienceType1"
                         >
                           Kids
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1317,14 +1317,14 @@ function NewShortAdd(props) {
                           checked={audienceType == 2 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="audienceType2"
+                          className="form-check-label mb-1 "
+                          htmlFor="audienceType2"
                         >
                           Adults
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <div style={{ width: "17px" }}>
@@ -1341,8 +1341,8 @@ function NewShortAdd(props) {
                           />
                         </div>
                         <label
-                          class="form-check-label mb-1 "
-                          for="audienceType3"
+                          className="form-check-label mb-1 "
+                          htmlFor="audienceType3"
                         >
                           Both
                         </label>

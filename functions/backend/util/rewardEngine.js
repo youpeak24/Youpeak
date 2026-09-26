@@ -26,6 +26,10 @@
 
 const db = require("./connection");
 const { generateHistoryUniqueId } = require("./generateHistoryUniqueId");
+const { taskLockState, lockMessage } = require("./taskSecurity.service");
+
+// Actions a person can't repeat faster than settings.minSecondsBetweenRewardActions.
+const PACED_KINDS = new Set(["like", "dislike", "comment", "ad"]);
 
 const HISTORY_TYPE = {
   LOGIN_REWARD: 0,
@@ -105,12 +109,14 @@ async function getLimits(user) {
   limits.tierName = "Free";
   limits.tierLevel = 1;
 
+  let capIncludesBoost = false;
   if (user && user.membershipTierId) {
     try {
       const tier = await db.findById("membershipTiers", user.membershipTierId);
       if (tier) {
         limits.maxAdsPerDay = num(tier.dailyAdLimit, limits.maxAdsPerDay);
         limits.dailyEarningCapInCoins = num(tier.dailyEarningCapInCoins, limits.dailyEarningCapInCoins);
+        capIncludesBoost = tier.dailyEarningCapInCoins != null;
         limits.coinMultiplier = num(tier.coinMultiplier, 1) || 1;
 
         // prefer explicit per-tier limits, else the T&C tier table by level
@@ -126,6 +132,19 @@ async function getLimits(user) {
       /* fall back to base limits */
     }
   }
+
+  // V9 "+500 boosted cap" (settings.taskerCapBoost, Platform Config →
+  // Tasker Rewards). Tier caps are stored with the boost already in them
+  // (Free Tasker 1,000 = 500 + 500); the tier-less fallback above
+  // (dailyMaxEarningCapInCoins) is the base cap without it.
+  const boostOn = s.taskerCapBoost?.enabled !== false;
+  const boostCoins = Math.max(0, num(s.taskerCapBoost?.coins, 500));
+  if (capIncludesBoost && !boostOn) {
+    limits.dailyEarningCapInCoins = Math.max(0, limits.dailyEarningCapInCoins - boostCoins);
+  } else if (!capIncludesBoost && boostOn) {
+    limits.dailyEarningCapInCoins += boostCoins;
+  }
+  limits.capBoost = { enabled: boostOn, coins: boostCoins };
   return limits;
 }
 
@@ -183,7 +202,9 @@ async function getCreatorRevenueShare(user) {
   let maxPerVideoINR = num(s.defaultMaxEarningPerVideoInINR, 1000);
 
   const tierId = user && (user.activeCreatorTierId || user.creatorTierId);
-  if (tierId) {
+  // A lapsed 3-month / annual VIP pass falls back to Classic (util/creatorPass.js).
+  const passExpired = user && user.creatorPassExpiresAt && Date.parse(user.creatorPassExpiresAt) <= Date.now();
+  if (tierId && !passExpired) {
     try {
       const tier = await db.findById("membershipTiers", tierId);
       if (tier && tier.tierType === "CREATOR") {
@@ -224,6 +245,28 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
   await ensureDailyReset(user);
   const limits = await getLimits(user);
   const id = user._id || user.id;
+
+  // Anti-fraud gate (util/taskSecurity.service.js): VPN / emulator / rooted
+  // device / second account on one phone / no recent device attestation.
+  const lock = taskLockState(user);
+  if (lock.locked) {
+    return {
+      ok: false, reason: "SECURITY_LOCK", credited: 0, limits, lock,
+      message: lockMessage(lock.reasons),
+      counts: snapshotCounts(user),
+    };
+  }
+
+  // Bot filter: reward actions closer together than a person can manage.
+  const minGapSeconds = num((global.settingJSON || {}).minSecondsBetweenRewardActions, 3);
+  const lastActionAt = Number(user.lastRewardActionAt) || 0;
+  if (PACED_KINDS.has(kind) && minGapSeconds > 0 && lastActionAt && Date.now() - lastActionAt < minGapSeconds * 1000) {
+    return {
+      ok: false, reason: "TOO_FAST", credited: 0, limits,
+      message: "Slow down — rewards are paused for a moment.",
+      counts: snapshotCounts(user),
+    };
+  }
 
   // Fast pre-check — cheap early exit with an accurate message. The REAL
   // atomic gate against a double-tap or a retried request landing twice is
@@ -305,7 +348,7 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
   if (bucketField) incFields[bucketField] = credited;
   if (countField) incFields[countField] = 1;
 
-  const updatedUser = await db.incrementFields("users", id, incFields);
+  const updatedUser = await db.incrementFields("users", id, incFields, { lastRewardActionAt: Date.now() });
 
   if (credited > 0) {
     // Tasker Onboarding Commission (YP-TC): whoever referred this tasker

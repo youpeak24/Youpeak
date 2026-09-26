@@ -27,7 +27,9 @@ function deepMerge(base, override) {
 }
 
 let lastLoadedAt = 0;
-const TTL_MS = Number(process.env.SETTINGS_TTL_MS) || 5 * 60 * 1000;
+// Short enough that an admin config change reaches every warm serverless
+// instance within half a minute; one small doc read per instance per 30 s.
+const TTL_MS = Number(process.env.SETTINGS_TTL_MS) || 30 * 1000;
 
 async function loadSettings(force = false) {
   if (!force && Date.now() - lastLoadedAt < TTL_MS && global.settingJSON) {

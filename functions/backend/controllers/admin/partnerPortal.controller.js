@@ -16,54 +16,119 @@
 "use strict";
 
 const db = require("../../util/connection");
+const net = require("../../util/partnerNetwork.service");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 
 // GET /admin/partnerPortal/dashboard
+// Same partner data the franchise and super admin see (partnerNetwork.service),
+// plus the live referral reward rules so the portal can explain the workflow.
 exports.getDashboard = async (req, res) => {
   try {
     const userId = req.partnerUserId;
     if (!userId) return res.status(403).json({ status: false, message: "Not a Digital Partner portal account." });
 
-    const user = await db.findById("users", userId);
-    if (!user) return res.status(200).json({ status: false, message: "Linked user account not found." });
-
-    const profile = await db.findOne("PartnerProfile", { userId: String(userId) });
-    if (!user.isDigitalPartner || !profile) {
+    const detail = await net.partnerDetail(userId);
+    if (!detail.isDigitalPartner) {
       return res.status(200).json({ status: true, isDigitalPartner: false, message: "Partner profile not found." });
     }
-
-    const referrals = await db.find("referralHistories", { referrerId: String(userId) });
-    const activeReferrals = referrals.filter((r) => r.status !== "FLAGGED_SUSPICIOUS");
-    const stage1Only = activeReferrals.filter((r) => r.stage1Completed && !r.stage2Completed);
-    const bothStages = activeReferrals.filter((r) => r.stage1Completed && r.stage2Completed);
 
     return res.status(200).json({
       status: true,
       message: "Partner dashboard.",
-      isDigitalPartner: true,
-      partnerStatus: user.partnerStatus || "ACTIVE",
-      fullName: user.fullName || "",
-      email: user.email || "",
-      referralCode: user.referralCode || "",
-      wallet: {
-        coinBalance: num(user.coin),
-        adCreditsBalance: num(profile.adCreditsBalance),
-      },
-      referrals: {
-        total: activeReferrals.length,
-        awaitingWatchTimeMilestone: stage1Only.length,
-        completedBothStages: bothStages.length,
-        flagged: referrals.length - activeReferrals.length,
-        totalEarningsInr: num(profile.totalEarnings),
-      },
-      license: {
-        feePaidInr: num(profile.licenseFeePaid),
-        activatedAt: profile.activatedAt || null,
-      },
+      ...detail,
+      rules: net.referralRules(),
     });
   } catch (error) {
+    if (error instanceof net.PartnerNetworkError) {
+      return res.status(200).json({ status: false, message: error.message });
+    }
     console.error("partnerPortal.getDashboard error:", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+// ── Wallet & withdrawals ─────────────────────────────────────────────────────
+// The partner's earnings sit in their normal app wallet, so the portal runs
+// the app's OWN withdrawal handlers (client/withDrawalRequest.controller.js,
+// client/withdraw.controller.js) — same minimums, conversion rate, atomic
+// debit and pending-request rules — with the userId taken from the portal
+// session, never from the request.
+function invoke(handler, req) {
+  return new Promise((resolve, reject) => {
+    const res = {
+      statusCode: 200,
+      status(code) { this.statusCode = code; return this; },
+      json(body) { resolve({ httpStatus: this.statusCode, body }); return this; },
+    };
+    Promise.resolve(handler(req, res)).catch(reject);
+  });
+}
+
+const withdrawalCtl = () => require("../client/withDrawalRequest.controller");
+const withdrawMethodCtl = () => require("../client/withdraw.controller");
+
+// GET /admin/partnerPortal/wallet
+exports.getWallet = async (req, res) => {
+  try {
+    const userId = req.partnerUserId;
+    if (!userId) return res.status(403).json({ status: false, message: "Not a Digital Partner portal account." });
+    const [settings, methods, history] = await Promise.all([
+      invoke(withdrawalCtl().fetchSettingDetails, { query: { userId: String(userId) } }),
+      invoke(withdrawMethodCtl().withdrawList, { query: {} }),
+      invoke(withdrawalCtl().getWithdrawRequests, { query: { userId: String(userId), startDate: "All", endDate: "All", start: 1, limit: 20 } }),
+    ]);
+    if (!settings.body.status) return res.status(200).json({ status: false, message: settings.body.message || "Wallet unavailable." });
+    const s = global.settingJSON || {};
+    return res.status(200).json({
+      status: true,
+      message: "Wallet.",
+      wallet: settings.body.data,
+      firstWithdrawalMinimumInr: num(s.firstWithdrawalMinimumInr, 100),
+      methods: (methods.body.withdrawMethod || []).map((m) => ({
+        _id: String(m._id || m.id),
+        name: m.name,
+        image: m.image || "",
+        details: Array.isArray(m.details) ? m.details : [],
+      })),
+      requests: history.body.status ? history.body.WithDrawRequests || [] : [],
+    });
+  } catch (error) {
+    console.error("partnerPortal.getWallet error:", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+// POST /admin/partnerPortal/wallet/convert  { coin }
+exports.convertCoins = async (req, res) => {
+  try {
+    const userId = req.partnerUserId;
+    if (!userId) return res.status(403).json({ status: false, message: "Not a Digital Partner portal account." });
+    const out = await invoke(withdrawalCtl().coinToAmountConverter, { query: { userId: String(userId), coin: String(req.body?.coin ?? "") } });
+    return res.status(out.httpStatus).json(out.body);
+  } catch (error) {
+    console.error("partnerPortal.convertCoins error:", error);
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+// POST /admin/partnerPortal/wallet/withdraw  { requestAmount, paymentGateway, paymentDetails: ["Field:value"] }
+exports.requestWithdrawal = async (req, res) => {
+  try {
+    const userId = req.partnerUserId;
+    if (!userId) return res.status(403).json({ status: false, message: "Not a Digital Partner portal account." });
+    const b = req.body || {};
+    const out = await invoke(withdrawalCtl().createWithdrawRequest, {
+      body: {
+        userId: String(userId),
+        requestAmount: b.requestAmount,
+        paymentGateway: String(b.paymentGateway || ""),
+        paymentDetails: Array.isArray(b.paymentDetails) ? b.paymentDetails.map((d) => String(d).slice(0, 200)) : [],
+      },
+    });
+    return res.status(out.httpStatus).json(out.body);
+  } catch (error) {
+    console.error("partnerPortal.requestWithdrawal error:", error);
     return res.status(500).json({ status: false, message: error.message });
   }
 };

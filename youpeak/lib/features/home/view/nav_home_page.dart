@@ -7,7 +7,7 @@ import 'package:youpeak/main.dart';
 import 'package:youpeak/features/home/controller/nav_home_controller.dart';
 import 'package:youpeak/features/home/widget/nav_home_widget.dart';
 import 'package:youpeak/features/notifications/view/notification_view.dart';
-import 'package:youpeak/features/rewards/view/earn_reward_view.dart';
+import 'package:youpeak/features/tasker/presentation/tasker_dashboard_view.dart';
 import 'package:youpeak/features/profile/view/profile_view.dart';
 import 'package:youpeak/features/search/view/search_view.dart';
 import 'package:youpeak/features/video/model/video_details_model.dart';
@@ -64,7 +64,9 @@ class _NavHomePageViewState extends State<NavHomePageView> {
               )
             : Image.asset(AppVisuals.wordmark, height: 46, semanticLabel: AppStrings.appName.tr),
         actions: [
-          GestureDetector(
+          // Spec 2.B header actions — each a 44x44 dp target (WCAG 2.1 AA).
+          _HeaderAction(
+            label: "Notifications",
             onTap: () => Get.to(() => const NotificationPageView()),
             child: Stack(
               clipBehavior: Clip.none,
@@ -91,16 +93,19 @@ class _NavHomePageViewState extends State<NavHomePageView> {
               ],
             ),
           ),
-          const SizedBox(width: 18),
-          GestureDetector(
-            onTap: () => Get.to(() => const EarnRewardView()),
-            child: Image.asset(
-              AppIcons.earnRewardIcon,
-              width: 22,
+          _HeaderAction(
+            label: "Tasker dashboard",
+            onTap: () => Get.to(() => const TaskerDashboardView()),
+            child: Obx(
+              () => Icon(
+                Icons.emoji_events_rounded,
+                size: 24,
+                color: isDarkMode.value ? AppColor.white : AppColor.primaryTextIcons,
+              ),
             ),
           ),
-          const SizedBox(width: 18),
-          GestureDetector(
+          _HeaderAction(
+            label: "Your profile",
             onTap: () => Get.to(() => const ProfileView()),
             child: Obx(
               () => PreviewProfileImage(
@@ -111,7 +116,7 @@ class _NavHomePageViewState extends State<NavHomePageView> {
               ),
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 8),
         ],
       ),
       body: Column(
@@ -263,4 +268,23 @@ class _NavHomePageViewState extends State<NavHomePageView> {
       ),
     );
   }
+}
+
+class _HeaderAction extends StatelessWidget {
+  const _HeaderAction({required this.label, required this.onTap, required this.child});
+
+  final String label;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        label: label,
+        child: InkResponse(
+          onTap: onTap,
+          radius: 24,
+          child: SizedBox(width: 44, height: 44, child: Center(child: ExcludeSemantics(child: child))),
+        ),
+      );
 }

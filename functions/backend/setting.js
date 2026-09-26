@@ -36,6 +36,10 @@ module.exports = {
   // Tasker, Digital Partner) — verifies their payout details work before
   // they commit to the normal ₹500 minimum on every withdrawal after.
   firstWithdrawalMinimumInr: 100,
+  // Digital Partner's second and later payouts (their first uses the trial
+  // minimum above). Disbursed weekly on partnerPayoutDay.
+  partnerMinWithdrawalInr: 500,
+  partnerPayoutDay: "Monday",
   zegoAppId: "",
   zegoAppSignIn: "",
   earningPerHour: 2,
@@ -56,6 +60,10 @@ module.exports = {
   dailyMaxEarningCapInCoins: 500,   // free tier: ₹5/day
   minWatchMinutesForEngagementReward: 120, // 2 hours -> 500 coins
   engagementWatchRewardCoins: 500,
+  // V9 "+500 boosted cap": tier dailyEarningCapInCoins values already include
+  // the boost (Free = 500 + 500). Turning it off takes `coins` back off every
+  // tier's cap (util/rewardEngine.js getLimits).
+  taskerCapBoost: { enabled: true, coins: 500 },
   minCoinForCashOut: 100,
   commentingRewardCoins: 5,      // per comment
   likeVideoRewardCoins: 2,       // per like
@@ -143,6 +151,27 @@ module.exports = {
     tierUpgrade:     { creator: 0,  referrer: 10, platform: 90 },
     adRevenue:       { creator: 55, referrer: 0,  platform: 45 }, // creator% overridden by VIP tier
   },
+  // Creator Growth & Video Promotion rate card. Names are the keys existing
+  // campaigns and payment transactions reference — rename with care.
+  promotionPlans: [
+    { name: "Starter Plan", priceINR: 49, impressionsMin: 2000, impressionsMax: 2500, durationDays: 1, isActive: true },
+    { name: "Basic Plan", priceINR: 99, impressionsMin: 3000, impressionsMax: 3500, durationDays: 2, isActive: true },
+    { name: "Pro Starter", priceINR: 199, impressionsMin: 3000, impressionsMax: 5000, durationDays: 2, isActive: true },
+    { name: "Boost Plan", priceINR: 249, impressionsMin: 3000, impressionsMax: 8000, durationDays: 4, isActive: true },
+    { name: "Weekly Mega", priceINR: 1000, impressionsMin: 50000, impressionsMax: 75000, durationDays: 7, isActive: true },
+    { name: "Monthly Pro", priceINR: 3000, impressionsMin: 200000, impressionsMax: 250000, durationDays: 30, isActive: true },
+  ],
+  // In-app ad credit top-ups. `credits` is the total received, bonus included
+  // (100 = 98.34 + 1.66 bonus); bonusPercent is the label shown on the card.
+  adCreditPacks: [
+    { name: "100 Credits", credits: 100, bonusPercent: 2, priceINR: 160, isActive: true },
+    { name: "330 Credits", credits: 330, bonusPercent: 0, priceINR: 520, isActive: true },
+    { name: "660 Credits", credits: 660, bonusPercent: 0, priceINR: 1050, isActive: true },
+    { name: "1320 Credits", credits: 1320, bonusPercent: 0, priceINR: 2150, isActive: true },
+    { name: "3500 Credits", credits: 3500, bonusPercent: 6, priceINR: 5500, isActive: true },
+    { name: "7500 Credits", credits: 7500, bonusPercent: 14, priceINR: 11100, isActive: true },
+  ],
+  adCreditValidityDays: 730,
   // District Partner commission chart V4 (Trichy territory) — video unlocks
   // unchanged; VIP Creator Onboarding adjusted 20%->15%; Tasker Onboarding
   // and Digital Partner are new lines added in V4.
@@ -170,6 +199,63 @@ module.exports = {
   // platform-funded bonus (the Tasker's own payout is never reduced) — same
   // pattern as the paid-tier referral bonus in referral.service.js.
   taskerEarningsReferralPercentage: 20,
+
+  // ── Peak Boost (fan -> creator coin tipping) ──
+  // The 80/20 split itself lives in revenueSplits.peakBoost above; these are
+  // the sheet's limits and preset cards (read through
+  // util/platformConfig.js getPeakBoostConfig()). 100 coins = ₹1.
+  peakBoost: {
+    enabled: true,
+    minCoins: 100,
+    maxCoins: 1000000,
+    presets: [
+      { name: "Starter Boost", coins: 100 },
+      { name: "Mini Boost", coins: 500 },
+      { name: "Super Boost", coins: 2000 },
+      { name: "Mega Boost", coins: 5000 },
+      { name: "Ultra Boost", coins: 10000 },
+    ],
+  },
+
+  // ── Membership activation (Play Store / App Store compliance) ──
+  // The mobile app never takes a membership or license payment itself: it
+  // sends the user to this web portal. The app locks a user out only while
+  // an activation payment is actually owed (see util/accessGate.js).
+  membershipPortalUrl: "https://youpeak.in",
+
+  // ── Watch-time heartbeat ──
+  // The app pings every watchHeartbeatIntervalSeconds while a video really
+  // plays; the server credits at most watchHeartbeatMaxCreditSeconds per ping
+  // and never more than the wall-clock time since the last credited ping
+  // (util/watchLedger.service.js).
+  watchHeartbeatIntervalSeconds: 10,
+  watchHeartbeatMaxCreditSeconds: 15,
+
+  // ── Tasker anti-fraud (util/taskSecurity.service.js) ──
+  // Task rewards (ads/likes/comments/watch time) need a device attestation
+  // from the app no older than taskAttestationTtlHours. The app reports VPN,
+  // proxy, emulator and root signals; the server adds its own IP check and
+  // binds each device to one tasker account.
+  requireDeviceAttestationForTasks: true,
+  taskAttestationTtlHours: 24,
+  blockTasksOnVpn: true,
+  blockTasksOnEmulator: true,
+  blockTasksOnRootedDevice: true,
+  oneTaskerAccountPerDevice: true,
+  // Browsers expose none of the device signals above, so web tasking is off
+  // unless an admin turns it on.
+  allowWebTasking: false,
+  // Reward actions closer together than this are treated as automated.
+  minSecondsBetweenRewardActions: 3,
+
+  // A single withdrawal may not exceed the user's Tasker tier's estimated
+  // monthly income (tier.monthlyIncomeCapInINR, else daily coin cap x 30).
+  // Applies to the in-app Tasker withdrawal (POST client/payout/request), and
+  // only to pure taskers: Digital Partners, Creator VIP holders and anyone
+  // with creator revenue are exempt (their earnings aren't tasker earnings).
+  // NOTE: on the free tier the cap (₹300) is below the standard ₹500
+  // minimum, so a free tasker can only withdraw once until they level up.
+  enforceTierMonthlyWithdrawalCap: true,
   isWatermarkOn: false,
   watermarkIcon: "",
   watermarkType: 2,

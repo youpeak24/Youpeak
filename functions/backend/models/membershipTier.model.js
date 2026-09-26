@@ -15,6 +15,16 @@ const membershipTierSchema = new mongoose.Schema(
     coinMultiplier: { type: Number, default: 1.0 },
     adCreditsGranted: { type: Number, default: 0 },
     membershipPrice: { type: Number, default: 0 },
+    // TASKER: cumulative lifetime watch hours that unlock this level for free
+    watchHoursToUpgrade: { type: Number, default: 0 },
+    // CREATOR VIP pass lengths (util/creatorPass.js). Neither set = legacy
+    // one-time pass priced by membershipPrice.
+    quarterlyPriceINR: { type: Number, default: 0 },
+    annualPriceINR: { type: Number, default: 0 },
+    standardQuarterlyPriceINR: { type: Number, default: 0 }, // after the intro offer; 0 = unchanged
+    standardAnnualPriceINR: { type: Number, default: 0 },
+    introOfferLimit: { type: Number, default: 0 }, // first N creators keep the launch price
+    maxSubscribers: { type: Number, default: null },
     creatorRevenueSharePercentage: { type: Number, default: 70 }, // e.g. 60%, 70%, 80%
     companyRevenueSharePercentage: { type: Number, default: 30 }, // e.g. 40%, 30%, 20%
     minSubscribersRequired: { type: Number, default: 0 }, // min subscribers needed for upgrade qualification

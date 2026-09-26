@@ -59,6 +59,7 @@ const Input = (props) => {
 
       <div style={{ position: "relative" }}>
         <input
+          id={id}
           type={types}
           className={`form-control ${fieldClass || ""}`}
           onChange={onChange}

@@ -1,4 +1,5 @@
 const db = require("../../util/connection");
+const { publishSystemConfigs } = require("../../util/systemConfig.service");
 
 // Get Settings / index
 exports.get = async (req, res) => {
@@ -37,6 +38,7 @@ exports.update = async (req, res) => {
       updated = await db.create("settings", req.body, "default_settings");
     }
     try { await require("../../util/loadSettings").loadSettings(true); } catch (e) { global.settingJSON = updated; }
+    await publishSystemConfigs(); // the app's live config (system_configs/*)
     return res.status(200).json({ status: true, message: "Setting updated successfully", setting: global.settingJSON });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -57,6 +59,7 @@ exports.handleSwitch = async (req, res) => {
     }
     const updated = await db.update("settings", setting._id || setting.id, updateData);
     try { await require("../../util/loadSettings").loadSettings(true); } catch (e) { global.settingJSON = updated; }
+    await publishSystemConfigs(); // the app's live config (system_configs/*)
     return res.status(200).json({ status: true, message: "Setting updated successfully", setting: global.settingJSON });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -118,6 +121,20 @@ exports.retrieveLinks = async (req, res) => {
       privacyPolicyLink: setting?.privacyPolicyLink || "",
       termsOfServiceLink: setting?.termsOfServiceLink || "",
     });
+  } catch (error) {
+    return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+// Rebuild the app's live config docs (system_configs/*) from the current
+// settings + Tasker tiers. Runs automatically after saves and on boot; this
+// is for a manual refresh (e.g. right after deploying).
+exports.publishSystemConfigs = async (req, res) => {
+  try {
+    const { loadSettings } = require("../../util/loadSettings");
+    await loadSettings(true);
+    const result = await publishSystemConfigs();
+    return res.status(200).json({ status: !result.error, message: result.error || "System configs published.", ...result });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }

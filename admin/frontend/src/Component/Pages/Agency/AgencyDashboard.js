@@ -1,156 +1,111 @@
 import React, { useEffect, useState } from "react";
-import Title from "../../extra/Title";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { setToast } from "../../../util/toast";
+import {
+  PageHeader, StatCard, StatusBadge, EmptyRow, RewardFlow, CommissionStatus, COMMISSION_SOURCES, inr, fmtDate,
+} from "../PartnerNetwork/networkUi";
 
+// District Franchise home: its partners, their referrals, its commissions.
 export default function AgencyDashboard() {
-  const [report, setReport] = useState(null);
-  const [agencyInfo, setAgencyInfo] = useState(null);
-  const [commissions, setCommissions] = useState([]);
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAgencyReport();
-    fetchAgencyCommissions();
+    axios
+      .get("admin/franchisePortal/dashboard")
+      .then((res) => {
+        setLoading(false);
+        if (res.data.status) setData(res.data);
+        else setToast("error", res.data.message);
+      })
+      .catch(() => {
+        setLoading(false);
+        setToast("error", "Couldn't load your dashboard.");
+      });
   }, []);
 
-  const fetchAgencyReport = () => {
-    axios
-      .get("admin/agencyReport/getAgencyReport")
-      .then((res) => {
-        if (res.data.status) {
-          setReport(res.data.report);
-          setAgencyInfo(res.data.agency);
-        }
-      })
-      .catch((err) => console.error(err));
-  };
+  if (loading) return <div className="pn-page pn-muted">Loading dashboard…</div>;
+  if (!data) return <div className="pn-page">Dashboard unavailable.</div>;
 
-  const fetchAgencyCommissions = () => {
-    axios
-      .get("admin/commission/getCommissions?limit=10")
-      .then((res) => {
-        setLoading(false);
-        if (res.data.status) {
-          setCommissions(res.data.commissions);
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.error(err);
-      });
-  };
+  const { agency, summary, commissions, recentCommissions, partners, rules } = data;
+  const top = [...partners].sort((a, b) => b.earnings.referralInr - a.earnings.referralInr).slice(0, 5);
 
   return (
-    <div className="mainPage p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <Title name={agencyInfo ? `District Franchise Dashboard - ${agencyInfo.name}` : "Regional District Franchise Dashboard"} />
+    <div className="pn-page">
+      <PageHeader title={agency.name} subtitle={`District Franchise · ${agency.district}, ${agency.state}`}>
+        <button className="btn btn-outline-secondary" onClick={() => navigate("/admin/franchiseReferrals")}>View referrals</button>
+        <button className="btn btn-success" onClick={() => navigate("/admin/franchisePartners")}>Manage Digital Partners</button>
+      </PageHeader>
+
+      <div className="pn-stats">
+        <StatCard tone="accent" label="Digital Partners" value={summary.totalPartners} hint={`${summary.activePartners} active · ${summary.suspendedPartners} suspended`} />
+        <StatCard tone="info" label="Referrals" value={summary.referrals.total} hint={`${summary.referrals.completed} completed · ${summary.referrals.awaitingWatchTime} in progress`} />
+        <StatCard label="Partner earnings" value={inr(summary.referralEarningsInr)} hint={`${inr(summary.pendingEarningsInr)} on hold`} />
+        <StatCard tone="warning" label="Your commission" value={inr(commissions.totalEarned)} hint={`${inr(commissions.paid)} paid · ${inr(commissions.pendingPayout)} due`} />
+        {commissions.awaitingVerification > 0 && (
+          <StatCard tone="danger" label="Awaiting admin verification" value={inr(commissions.awaitingVerification)} hint="Licence fees you recorded" />
+        )}
       </div>
 
-      <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="card text-white bg-primary p-3 shadow-sm border-0">
-            <h6 className="card-title">Regional Downloads</h6>
-            <h3 className="fw-bold">{report ? report.totalDownloads : 0}</h3>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-white bg-success p-3 shadow-sm border-0">
-            <h6 className="card-title">Video Views</h6>
-            <h3 className="fw-bold">{report ? report.totalVideoViews : 0}</h3>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-white bg-warning p-3 shadow-sm border-0">
-            <h6 className="card-title">Ad Impressions</h6>
-            <h3 className="fw-bold">{report ? report.totalAdImpressions : 0}</h3>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-white bg-info p-3 shadow-sm border-0">
-            <h6 className="card-title">Commission Earned</h6>
-            <h3 className="fw-bold">₹ {Number(report?.totalCommissionEarned || 0).toFixed(2)}</h3>
-          </div>
-        </div>
+      <div className="pn-panel">
+        <div className="pn-panel-head"><h6>How referral rewards work</h6></div>
+        <div className="pn-panel-body"><RewardFlow rules={rules} /></div>
       </div>
 
-      {/* District Partner Commission Rates (DOC-20260826-WA0000) */}
-      <div className="card shadow-sm border-0 p-3 mb-4">
-        <h5 className="mb-3">District Partner Commission Rates & Breakdown</h5>
-        <div className="row g-3">
-          <div className="col-md-4">
-            <div className="p-3 border rounded bg-light">
-              <div className="d-flex justify-content-between align-items-center mb-1">
-                <span className="fw-bold text-dark">Video Unlock Revenue</span>
-                <span className="badge bg-primary fs-6">10%</span>
-              </div>
-              <small className="text-secondary d-block mt-2">10% commission per video unlock (Max ₹1,000 cap per unlock transaction).</small>
+      <div className="pn-two">
+          <div className="pn-panel">
+            <div className="pn-panel-head">
+              <h6>Top partners</h6>
+              <button className="btn btn-link p-0" onClick={() => navigate("/admin/franchisePartners")}>All partners</button>
+            </div>
+            <div className="table-responsive">
+              <table className="table align-middle mb-0">
+                <thead>
+                  <tr><th>Partner</th><th>Referrals</th><th>Earned</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  {top.length === 0 ? (
+                    <EmptyRow colSpan={4}>No partners yet — add your first Digital Partner.</EmptyRow>
+                  ) : (
+                    top.map((p) => (
+                      <tr key={p.userId} role="button" onClick={() => navigate(`/admin/partnerDetail?userId=${p.userId}`)}>
+                        <td className="fw-semibold">{p.fullName}</td>
+                        <td>{p.referrals.completed} / {p.referrals.total}</td>
+                        <td>{inr(p.earnings.referralInr)}</td>
+                        <td><StatusBadge status={p.partnerStatus} /></td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="p-3 border rounded bg-light">
-              <div className="d-flex justify-content-between align-items-center mb-1">
-                <span className="fw-bold text-dark">VIP Creator Onboarding</span>
-                <span className="badge bg-success fs-6">20%</span>
-              </div>
-              <small className="text-secondary d-block mt-2">20% commission on all VIP Creator subscription & onboarding fees in your region.</small>
+          <div className="pn-panel">
+            <div className="pn-panel-head"><h6>Recent commissions</h6></div>
+            <div className="table-responsive">
+              <table className="table align-middle mb-0">
+                <thead>
+                  <tr><th>Date</th><th>Source</th><th>Commission</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  {recentCommissions.length === 0 ? (
+                    <EmptyRow colSpan={4}>No commissions yet.</EmptyRow>
+                  ) : (
+                    recentCommissions.map((c) => (
+                      <tr key={c._id}>
+                        <td>{fmtDate(c.createdAt)}</td>
+                        <td>{COMMISSION_SOURCES[c.sourceType] || c.sourceType}</td>
+                        <td className="fw-semibold">{inr(c.commissionAmount)}</td>
+                        <td><CommissionStatus c={c} forFranchise /></td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="p-3 border rounded bg-light">
-              <div className="d-flex justify-content-between align-items-center mb-1">
-                <span className="fw-bold text-dark">Local Business Ads</span>
-                <span className="badge bg-warning text-dark fs-6">30%</span>
-              </div>
-              <small className="text-secondary d-block mt-2">30% commission on local advertiser & business ad placements within your district.</small>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="card shadow-sm border-0 p-3">
-        <h5 className="mb-3">Recent Commission Earnings</h5>
-        <div className="table-responsive">
-          <table className="table table-hover align-middle">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Source Type</th>
-                <th>Gross Revenue</th>
-                <th>Commission %</th>
-                <th>Commission Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-4">Loading commission ledger...</td>
-                </tr>
-              ) : commissions.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-4">No recent commission records.</td>
-                </tr>
-              ) : (
-                commissions.map((item, idx) => (
-                  <tr key={item._id}>
-                    <td>{idx + 1}</td>
-                    <td><span className="badge bg-secondary">{item.sourceType}</span></td>
-                    <td>₹ {item.grossAmount}</td>
-                    <td>{item.commissionRatePercentage}%</td>
-                    <td className="fw-bold text-success">₹ {item.commissionAmount}</td>
-                    <td>
-                      <span className={`badge ${item.payoutStatus === "PAID" ? "bg-success" : "bg-warning"}`}>
-                        {item.payoutStatus}
-                      </span>
-                    </td>
-                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   );

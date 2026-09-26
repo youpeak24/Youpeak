@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.svg";
 import "../../assets/js/custom";
 import Navigator from "../extra/Navigator";
+import { roleHome } from "./PartnerNetwork/networkUi";
 import { warning } from "../../util/Alert";
 import $ from "jquery";
 import { useEffect, useState } from "react";
@@ -11,10 +12,12 @@ import { CLOSE_DIALOGUE } from "../store/dialogue/dialogue.type";
 import { projectName } from "../../util/config";
 import {
   IconAddressBook, IconAward, IconBellDollar, IconBrandYoutube,
-  IconCoin, IconCurrencyDollar, IconEyeQuestion, IconHelpOctagon,
+  IconCoin, IconEyeQuestion, IconHelpOctagon,
   IconHome, IconLogout, IconMovie, IconMusic, IconPremiumRights,
   IconReport, IconSettings, IconUser, IconUserQuestion, IconUserSquareRounded,
-  IconVideo, IconLanguage, IconX,
+  IconVideo, IconX, IconBuildingStore, IconUsersGroup, IconShare3,
+  IconShieldCheck, IconCopy, IconAdjustmentsHorizontal, IconCrown, IconRocket,
+  IconCash, IconShieldLock, IconAd2, IconAffiliate,
 } from "@tabler/icons-react";
 
 const Sidebar = () => {
@@ -50,10 +53,11 @@ const Sidebar = () => {
   const isAgencyAdmin = adminObj?.role === "AGENCY_ADMIN";
   const isDigitalPartnerAdmin = adminObj?.role === "DIGITAL_PARTNER_ADMIN";
 
+  // Each role's home appears once, here — not repeated in its group below.
   const navBarArray = isAgencyAdmin
-    ? [{ name: "District Franchise Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }]
+    ? [{ name: "Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }]
     : isDigitalPartnerAdmin
-    ? [{ name: "Partner Dashboard", path: "/admin/partnerDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }]
+    ? [{ name: "Dashboard", path: "/admin/partnerDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }]
     : [{ name: "Dashboard", path: "/admin/mainDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction }];
 
   const generalArray = [
@@ -66,8 +70,10 @@ const Sidebar = () => {
         {
           heading: "DISTRICT FRANCHISE",
           items: [
-            { name: "District Franchise Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction },
-            { name: "District Franchise Reports", path: "/admin/agencyReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
+            { name: "Digital Partners", path: "/admin/franchisePartners", path2: "/admin/partnerDetail", navIcon: <IconUsersGroup size={15} />, onClick: handleCloseFunction },
+            { name: "Referrals", path: "/admin/franchiseReferrals", navIcon: <IconShare3 size={15} />, onClick: handleCloseFunction },
+            { name: "Franchise Reports", path: "/admin/agencyReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
+            { name: "Partner Reports", path: "/admin/digitalPartnerReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
         },
       ]
@@ -76,7 +82,6 @@ const Sidebar = () => {
         {
           heading: "DIGITAL PARTNER",
           items: [
-            { name: "Partner Dashboard", path: "/admin/partnerDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction },
             { name: "Local Business Ads", path: "/admin/partnerLocalBusinessAds", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
             { name: "My Reports", path: "/admin/digitalPartnerReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
@@ -84,17 +89,11 @@ const Sidebar = () => {
       ]
     : [
         {
-          heading: "FRANCHISE & REGIONAL",
+          heading: "DISTRICT FRANCHISE",
           items: [
-            { name: "Geofenced Franchises", path: "/admin/agency", navIcon: <IconUserSquareRounded size={15} />, onClick: handleCloseFunction },
-            { name: "Franchise Dashboard", path: "/admin/agencyDashboard", navIcon: <IconHome size={15} />, onClick: handleCloseFunction },
+            { name: "District Franchises", path: "/admin/agency", path2: "/admin/agencyDetail", navIcon: <IconBuildingStore size={15} />, onClick: handleCloseFunction },
+            { name: "Digital Partners", path: "/admin/manageDigitalPartner", path2: "/admin/partnerDetail", navIcon: <IconUsersGroup size={15} />, onClick: handleCloseFunction },
             { name: "Franchise Reports", path: "/admin/agencyReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
-          ],
-        },
-        {
-          heading: "DIGITAL PARTNER",
-          items: [
-            { name: "Manage Partners", path: "/admin/manageDigitalPartner", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
             { name: "Partner Reports", path: "/admin/digitalPartnerReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],
         },
@@ -118,18 +117,28 @@ const Sidebar = () => {
           ],
         },
         {
-          heading: "LANGUAGE",
+          heading: "MODERATION",
           items: [
-            { name: "App Language", path: "/admin/appLanguage", navIcon: <IconLanguage size={15} />, onClick: handleCloseFunction },
+            { name: "Content Moderation", path: "/admin/moderationQueue", navIcon: <IconShieldCheck size={15} />, onClick: handleCloseFunction },
+            { name: "Duplicate Screening", path: "/admin/duplicateScreening", navIcon: <IconCopy size={15} />, onClick: handleCloseFunction },
           ],
         },
         {
-          heading: "REPORTS & SUPPORT",
+          heading: "REPORTS",
           items: [
             { name: "Reports", path: "/admin/allreport", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
-            { name: "FAQ", path: "/admin/faqs", navIcon: <IconHelpOctagon size={15} />, onClick: handleCloseFunction },
-            { name: "Contact Us", path: "/admin/contactUs", navIcon: <IconAddressBook size={15} />, onClick: handleCloseFunction },
-            { name: "Grievance Officer", path: "/admin/grievance", navIcon: <IconHelpOctagon size={15} />, onClick: handleCloseFunction },
+          ],
+        },
+        {
+          heading: "PLATFORM CONFIG",
+          items: [
+            { name: "Tasker Tiers & Rewards", path: "/admin/config/tasker", navIcon: <IconAdjustmentsHorizontal size={15} />, onClick: handleCloseFunction },
+            { name: "Creator VIP Passes", path: "/admin/config/creatorPasses", navIcon: <IconCrown size={15} />, onClick: handleCloseFunction },
+            { name: "Partner Program", path: "/admin/config/partnerProgram", navIcon: <IconAffiliate size={15} />, onClick: handleCloseFunction },
+            { name: "Peak Boost & Promotions", path: "/admin/config/boost", navIcon: <IconRocket size={15} />, onClick: handleCloseFunction },
+            { name: "Payout Policy", path: "/admin/config/payouts", navIcon: <IconCash size={15} />, onClick: handleCloseFunction },
+            { name: "Moderation & Anti-Fraud", path: "/admin/config/safety", navIcon: <IconShieldLock size={15} />, onClick: handleCloseFunction },
+            { name: "Ad Credit Packs", path: "/admin/config/adCredits", navIcon: <IconAd2 size={15} />, onClick: handleCloseFunction },
           ],
         },
         {
@@ -137,7 +146,6 @@ const Sidebar = () => {
           items: [
             { name: "Coin Plan", path: "/admin/coinPlanTable", navIcon: <IconCoin size={15} />, onClick: handleCloseFunction },
             { name: "Premium Plan", path: "/admin/premiumPlanTable", navIcon: <IconPremiumRights size={15} />, onClick: handleCloseFunction },
-            { name: "Currency", path: "/admin/allCurrency", navIcon: <IconCurrencyDollar size={15} />, onClick: handleCloseFunction },
             { name: "Monetization Request", path: "/admin/allmonetizationRequest", navIcon: <IconEyeQuestion size={15} />, onClick: handleCloseFunction },
             { name: "Withdraw Request", path: "/admin/withdrawRequest", navIcon: <IconUserQuestion size={15} />, onClick: handleCloseFunction },
             { name: "Order History", path: "/admin/adminEarnings", path2: "/admin/coinplanhistory", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
@@ -163,7 +171,7 @@ const Sidebar = () => {
           {/* ─── Logo / Brand ─── */}
           <div className="sideBarLogo" style={{ flexShrink: 0 }}>
             <Link
-              to="/admin/mainDashboard"
+              to={roleHome()}
               style={{
                 display: "flex",
                 alignItems: "center",

@@ -327,11 +327,14 @@ class _MainHomePageViewState extends State<MainHomePageView> {
         backgroundColor: isDarkMode.value ? AppColor.mainDark : AppColor.white,
         bottomNavigationBar: Obx(
           () => Container(
+            // Android 15+ draws edge-to-edge: grow by the gesture/nav-bar inset
+            // so the items stay above it (spec 2.F safe-area support).
             height: (PlatformInfo.isIOS)
                 ? Get.height / 9.5
                 : (PlatformInfo.isAndroidOrWeb)
-                    ? Get.height / 13.1
+                    ? Get.height / 13.1 + MediaQuery.paddingOf(context).bottom
                     : 0,
+            padding: EdgeInsets.only(bottom: PlatformInfo.isIOS ? 0 : MediaQuery.paddingOf(context).bottom),
             width: Get.width,
             decoration: BoxDecoration(
                 color: isDarkMode.value ? AppColor.mainDark : Colors.white,

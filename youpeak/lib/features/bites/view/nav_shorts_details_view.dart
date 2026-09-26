@@ -23,7 +23,7 @@ import 'package:youpeak/features/bites/view/create_short_view.dart';
 import 'package:youpeak/features/library/api/create_watch_history_api.dart';
 import 'package:youpeak/features/bites/controller/nav_shorts_controller.dart';
 import 'package:youpeak/features/subscriptions/api/subscribe_channel_api.dart';
-import 'package:youpeak/features/monetization/api/video_engagement_reward_api.dart';
+import 'package:youpeak/features/watch_tracking/presentation/watch_heartbeat_tracker.dart';
 import 'package:youpeak/features/channel/view/your_channel_view.dart';
 import 'package:youpeak/features/search/view/search_view.dart';
 import 'package:youpeak/features/video/api/unlock_private_video_api.dart';
@@ -60,6 +60,10 @@ class _NavShortsDetailViewState extends State<NavShortsDetailView> {
 
   ChewieController? chewieController;
   VideoPlayerController? videoPlayerController;
+
+  // Reports genuine viewing to the server's watch-time ledger. Preloaded,
+  // paused pages accumulate nothing.
+  WatchHeartbeatTracker? watchTracker;
 
   RxBool isPrivateContent = false.obs;
 
@@ -130,6 +134,8 @@ class _NavShortsDetailViewState extends State<NavShortsDetailView> {
           showControls: false,
           maxScale: 1,
         );
+        watchTracker?.detach();
+        watchTracker = WatchHeartbeatTracker(videoId: controller.mainShortsVideos[widget.index].id ?? "")..attach(videoPlayerController!);
         if (chewieController != null) {
           isVideoLoading.value = false;
           // If First Time Video Playing...
@@ -156,15 +162,9 @@ class _NavShortsDetailViewState extends State<NavShortsDetailView> {
 
               if (videoPlayerController!.value.position >=
                   videoPlayerController!.value.duration) {
-                AppSettings.showLog(
-                    "Video Engagement Reward Method Calling...");
-                VideoEngagementRewardApi.callApi(
-                    loginUserId: Database.loginUserId ?? "",
-                    videoId: controller.mainShortsVideos[widget.index].id!,
-                    totalWatchTime: videoPlayerController!
-                        .value.duration.inSeconds
-                        .toString());
-
+                // Loop. Watch time comes from watchTracker, which skips the
+                // restart jump (this used to report the short's full length
+                // as watch time on every loop).
                 videoPlayerController?.seekTo(Duration.zero);
                 onPlayVideo();
               }
@@ -192,6 +192,8 @@ class _NavShortsDetailViewState extends State<NavShortsDetailView> {
   void onDisposeVideoPlayer() {
     try {
       onStopVideo();
+      watchTracker?.detach();
+      watchTracker = null;
       videoPlayerController?.dispose();
       chewieController?.dispose();
       chewieController = null;

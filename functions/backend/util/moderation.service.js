@@ -71,6 +71,9 @@ async function screenVideo({ videoId, title = "", description = "", hashTags = [
       flaggedKeywords: r.matched,
       moderationFlaggedAt: new Date().toISOString(),
       moderationFlagSource: transcript ? "transcript+text" : "text",
+      moderationFlagCategories: r.categories,
+      // What the reviewer checks the matched keywords against.
+      moderationTranscript: transcript ? String(transcript).slice(0, 5000) : null,
     });
   }
   return r;

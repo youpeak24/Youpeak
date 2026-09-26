@@ -46,6 +46,10 @@ import 'package:youpeak/core/theme/theme_view.dart';
 import 'package:mobile_device_identifier/mobile_device_identifier.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:youpeak/core/providers/app_provider_container.dart';
+import 'package:youpeak/core/security/security_service.dart';
+import 'package:youpeak/core/system_config/presentation/system_configs_provider.dart';
 
 RxBool isDarkMode = false.obs;
 
@@ -94,7 +98,12 @@ void main() async {
     stripeInit();
   }
 
-  runApp(const MyApp());
+  // Live admin config (Firestore system_configs/*) and the Tasker anti-fraud
+  // checks start with the app, so every screen reads current values.
+  appProviderContainer.read(systemConfigsProvider);
+  appProviderContainer.read(securityServiceProvider);
+
+  runApp(UncontrolledProviderScope(container: appProviderContainer, child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {

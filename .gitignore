@@ -43,3 +43,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Local admin-panel stack (local-dev/start.js) — emulator data
+local-dev/emulator-data/

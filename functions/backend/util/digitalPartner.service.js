@@ -3,28 +3,54 @@ const db = require("./connection");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const { recordAgencyCommission } = require("./revenueCommission.service");
+const { resolveAgency } = require("./geofence.service");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 
 /**
  * Activates (or tops up) a user's Digital Partner license: grants the
- * ad-credits wallet, records the District Partner override commission for
- * whichever Agency covers the buyer's district, and auto-provisions (or
+ * ad-credits wallet, links the partner to their District Franchise, records
+ * the franchise's override commission on the fee, and provisions (or
  * reuses) their DIGITAL_PARTNER_ADMIN web portal login.
  *
- * Shared by the real payment flow (client/payment.controller.js
- * fulfilDigitalPartnerLicense — a genuine Razorpay transaction) and the
- * manual admin-activation path (admin/digitalPartner.controller.js — for
- * partners onboarded before/outside the payment gateway, e.g. paid via
- * bank transfer) so both produce IDENTICAL results instead of two
- * implementations that can drift apart.
+ * Two callers, one implementation so they can't drift apart:
+ *  - client/payment.controller.js fulfilDigitalPartnerLicense — a genuine
+ *    Razorpay payment. No agencyId given → the franchise is resolved from
+ *    the buyer's state/district; the commission is VERIFIED (the gateway
+ *    confirmed the money).
+ *  - util/partnerNetwork.service.js createPartner — a District Franchise
+ *    onboarding a partner from its portal. agencyId is that franchise; the
+ *    fee is whatever the franchise says it collected, so the commission is
+ *    recorded UNVERIFIED and a super admin must verify it before it can be
+ *    paid out (controllers/admin/commission.controller.js).
+ *
+ * @param {object} p
+ * @param {string} p.userId
+ * @param {number} p.amountInr              licence fee (0 = activated without a fee)
+ * @param {string} [p.paymentTransactionId]
+ * @param {string} [p.agencyId]             owning franchise (else resolved by district)
+ * @param {string} [p.portalPassword]       portal password to set (else a temporary one)
+ * @param {string} [p.feeRecordedByAdminId] set when a franchise self-reported the fee
  */
-async function grantDigitalPartnerLicense({ userId, amountInr, paymentTransactionId = null }) {
+async function grantDigitalPartnerLicense({
+  userId,
+  amountInr,
+  paymentTransactionId = null,
+  agencyId = null,
+  portalPassword = null,
+  feeRecordedByAdminId = null,
+}) {
   const amount = num(amountInr);
+  const buyer = await db.findById("users", userId);
+
+  const owningAgencyId =
+    agencyId || (await resolveAgency({ state: buyer?.state || "", district: buyer?.district || "" })) || null;
 
   await db.update("users", userId, {
     isDigitalPartner: true,
     partnerStatus: "ACTIVE",
+    agencyId: owningAgencyId,
+    partnerSince: buyer?.partnerSince && buyer?.isDigitalPartner ? buyer.partnerSince : new Date().toISOString(),
   });
 
   const existing = await db.findOne("PartnerProfile", { userId });
@@ -33,13 +59,14 @@ async function grantDigitalPartnerLicense({ userId, amountInr, paymentTransactio
     const updated = await db.incrementFields(
       "PartnerProfile",
       existing._id || existing.id,
-      { adCreditsBalance: amount, adCreditsGranted: amount },
-      { licenseFeePaid: amount, paymentTransactionId, activatedAt: new Date().toISOString() }
+      { adCreditsBalance: amount, adCreditsGranted: amount, licenseFeePaid: amount },
+      { paymentTransactionId, agencyId: owningAgencyId, activatedAt: new Date().toISOString() }
     );
     adCreditsBalance = updated?.adCreditsBalance ?? (existing.adCreditsBalance || 0) + amount;
   } else {
     await db.create("PartnerProfile", {
       userId,
+      agencyId: owningAgencyId,
       licenseFeePaid: amount,
       paymentTransactionId,
       adCreditsBalance: amount,
@@ -50,53 +77,69 @@ async function grantDigitalPartnerLicense({ userId, amountInr, paymentTransactio
     });
   }
 
-  const buyer = await db.findById("users", userId);
-
-  // District Partner override — 20% of the license fee, per the V4 chart's
-  // "Digital Partner" line, credited to whichever Agency's territory the
-  // buyer's state/district resolves to.
+  // District Franchise override on the licence fee (V4 chart "Digital
+  // Partner" line, districtPartnerRates.digitalPartnerLicense).
+  let commission = null;
   try {
     const rate = num((global.settingJSON || {}).districtPartnerRates?.digitalPartnerLicense, 20);
     if (rate > 0 && amount > 0) {
-      await recordAgencyCommission({
+      commission = await recordAgencyCommission({
+        agencyId: owningAgencyId || undefined,
         sourceType: "DIGITAL_PARTNER_LICENSE",
         grossAmount: amount,
         ratePercentage: rate,
         state: buyer?.state || "",
         district: buyer?.district || "",
         userId,
+        extra: {
+          partnerUserId: String(userId),
+          verificationStatus: feeRecordedByAdminId ? "UNVERIFIED" : "VERIFIED",
+          recordedByAdminId: feeRecordedByAdminId || null,
+          paymentTransactionId,
+        },
       });
     }
-  } catch (e) { /* ignore */ }
+  } catch (e) {
+    console.error("Digital Partner licence commission failed:", e.message);
+  }
 
   let portalCredentials = null;
   try {
-    const existingAdmin = await db.findOne("admins", { partnerUserId: userId });
+    const existingAdmin = await db.findOne("admins", { partnerUserId: String(userId) });
     if (!existingAdmin && buyer?.email) {
-      const tempPassword = crypto.randomBytes(9).toString("hex");
+      const password = portalPassword || crypto.randomBytes(9).toString("hex");
       await db.create("admins", {
-        _id: "admin_partner_" + Date.now(),
+        _id: "admin_partner_" + Date.now() + "_" + crypto.randomBytes(3).toString("hex"),
         name: buyer.fullName || buyer.email,
         email: String(buyer.email).trim().toLowerCase(),
-        password: bcrypt.hashSync(tempPassword, 10),
+        password: bcrypt.hashSync(password, 10),
         role: "DIGITAL_PARTNER_ADMIN",
-        partnerUserId: userId,
-        isDefaultPassword: true,
+        partnerUserId: String(userId),
+        agencyId: owningAgencyId,
+        isActive: true,
+        isDefaultPassword: !portalPassword,
       });
-      portalCredentials = { email: buyer.email, password: tempPassword };
+      portalCredentials = { email: String(buyer.email).trim().toLowerCase(), password };
+    } else if (existingAdmin) {
+      const updates = { agencyId: owningAgencyId, isActive: true };
+      if (portalPassword) {
+        updates.password = bcrypt.hashSync(portalPassword, 10);
+        updates.isDefaultPassword = false;
+      }
+      await db.update("admins", existingAdmin._id || existingAdmin.id, updates);
+      if (portalPassword) portalCredentials = { email: existingAdmin.email, password: portalPassword };
     }
   } catch (e) {
     console.error("Digital Partner portal account creation failed:", e.message);
   }
 
-  return { isDigitalPartner: true, adCreditsBalance, portalCredentials, buyer };
+  return { isDigitalPartner: true, adCreditsBalance, portalCredentials, buyer, agencyId: owningAgencyId, commission };
 }
 
 // Hands a Digital Partner a fresh portal password without touching their
-// license/wallet — for when Super Admin needs to (re)issue login access
-// (lost password, or the partner never picked up their one-time reveal).
+// license/wallet — for when a super admin needs to (re)issue login access.
 async function regeneratePortalPassword(userId) {
-  const admin = await db.findOne("admins", { partnerUserId: userId });
+  const admin = await db.findOne("admins", { partnerUserId: String(userId) });
   if (!admin) return null;
 
   const tempPassword = crypto.randomBytes(9).toString("hex");

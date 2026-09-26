@@ -5,6 +5,7 @@ const MembershipTierController = require("../../controllers/admin/membershipTier
 
 route.post("/store", MembershipTierController.store);
 route.get("/getTiers", MembershipTierController.getTiers);
+route.get("/defaults", MembershipTierController.defaults);
 route.delete("/destroy", MembershipTierController.destroy);
 route.post("/seedDefaults", MembershipTierController.seedDefaults);
 

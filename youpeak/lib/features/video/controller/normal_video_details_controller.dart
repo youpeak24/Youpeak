@@ -9,7 +9,7 @@ import 'package:youpeak/core/ads/google_video_ad.dart';
 import 'package:youpeak/core/storage/database/database.dart';
 import 'package:youpeak/core/storage/database/watch_history_database.dart';
 import 'package:youpeak/features/library/api/create_watch_history_api.dart';
-import 'package:youpeak/features/monetization/api/video_engagement_reward_api.dart';
+import 'package:youpeak/features/watch_tracking/presentation/watch_heartbeat_tracker.dart';
 import 'package:youpeak/features/channel/controller/preview_play_list_controller.dart';
 import 'package:youpeak/features/channel/controller/your_channel_controller.dart';
 import 'package:youpeak/features/video/api/get_related_video_api.dart';
@@ -65,6 +65,9 @@ class NormalVideoDetailsController extends GetxController {
   // Video Engagement Reward...
   bool isVideoSkip = false;
   bool isGetVideoRewardCoin = false;
+
+  // Reports genuine viewing to the server's watch-time ledger every ~10 s.
+  WatchHeartbeatTracker? watchTracker;
   bool _wasPlaying = false;
   bool isHistoryCreated = false;
 
@@ -402,6 +405,9 @@ class NormalVideoDetailsController extends GetxController {
         _calculateAdTimings();
         _initAdSystem();
 
+        watchTracker?.detach();
+        watchTracker = WatchHeartbeatTracker(videoId: videoId)..attach(videoPlayerController!);
+
         chewieController = ChewieController(
           videoPlayerController: videoPlayerController!,
           autoPlay: false,
@@ -445,11 +451,9 @@ class NormalVideoDetailsController extends GetxController {
             if (videoPlayerController!.value.position >= videoPlayerController!.value.duration) {
               AppSettings.showLog("Playing Video Complete...");
 
-              if (isGetVideoRewardCoin == false && isVideoSkip == false) {
-                isGetVideoRewardCoin = true;
-                VideoEngagementRewardApi.callApi(
-                    loginUserId: Database.loginUserId ?? "", videoId: videoId, totalWatchTime: videoPlayerController!.value.duration.inSeconds.toString());
-              }
+              // Watch time is reported continuously by watchTracker (the old
+              // completion call sent the video's length, not time watched).
+              isGetVideoRewardCoin = true;
 
               // onCreateHistory();
               if (AppSettings.isAutoPlayVideo.value) {
@@ -650,6 +654,8 @@ class NormalVideoDetailsController extends GetxController {
   }
 
   void onDisposeVideoPlayer() {
+    watchTracker?.detach();
+    watchTracker = null;
     videoPlayerController?.dispose();
     chewieController?.dispose();
     chewieController = null;
@@ -787,6 +793,8 @@ class NormalVideoDetailsController extends GetxController {
 
   @override
   void onClose() {
+    watchTracker?.detach();
+    watchTracker = null;
     videoPlayerController?.dispose();
     chewieController?.dispose();
     VideoAdServices.dispose();

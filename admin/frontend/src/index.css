@@ -572,8 +572,11 @@ label, .label-form {
   display: block !important;
 }
 
-input, textarea, select,
-.form-control, .form-select, .form-input {
+/* Text-style fields only. Checkboxes/radios are excluded (via :where, so specificity is
+   unchanged) — this block's width:100% / padding / appearance:none turns them into wide
+   empty boxes and wipes Bootstrap's check mark. */
+input:where(:not([type="checkbox"], [type="radio"])), textarea, select,
+.form-control, .form-select, .form-input:where(:not([type="checkbox"], [type="radio"])) {
   background: var(--bg-input) !important;
   border: 1px solid var(--border-strong) !important;
   color: var(--text-primary) !important;
@@ -591,18 +594,54 @@ input::placeholder, textarea::placeholder {
   color: var(--text-tertiary) !important;
 }
 
-input:focus, textarea:focus, select:focus,
+/* appearance:none above removes the native dropdown arrow — draw one back.
+   select.form-control beats the .form-control background shorthand above. */
+select, select.form-control, .form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 12px 12px !important;
+  padding-right: 30px !important;
+}
+
+/* background-color (not the shorthand) so focus/disabled keep the select arrow */
+input:where(:not([type="checkbox"], [type="radio"])):focus, textarea:focus, select:focus,
 .form-control:focus, .form-select:focus {
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.12) !important;
-  background: var(--bg-input) !important;
+  background-color: var(--bg-input) !important;
   outline: none !important;
 }
 
-input:disabled, textarea:disabled, select:disabled {
-  background: var(--gray-100) !important;
+input:where(:not([type="checkbox"], [type="radio"])):disabled, textarea:disabled, select:disabled {
+  background-color: var(--gray-100) !important;
   color: var(--text-tertiary) !important;
   cursor: not-allowed !important;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* Bootstrap .form-check: box and label on one centred row (the legacy custom.css
+   absolute-positioning left the label floating above the box). */
+.form-check {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding-left: 0 !important;
+}
+
+.form-check .form-check-input {
+  position: static !important;
+  float: none !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+}
+
+.form-check .form-check-label {
+  margin-bottom: 0 !important;
 }
 
 option {
@@ -755,9 +794,11 @@ option {
   border-radius: 0 !important;
   padding: 0 !important;
   gap: 2px !important;
+  flex-wrap: wrap !important; /* narrow screens: wrap tabs instead of squeezing them */
 }
 
 .multiButton .MuiToggleButton-root {
+  flex: 0 0 auto !important; /* size each tab to its own label — never shrink below it */
   color: var(--text-secondary) !important;
   border: 1px solid var(--border) !important;
   border-radius: 0 !important;
@@ -876,10 +917,10 @@ option {
   color: var(--accent) !important;
 }
 
-.setting-card input, .setting-card textarea, .setting-card select,
-.withdrawal-box input, .withdrawal-box textarea, .withdrawal-box select,
-.withdrawal-input input {
-  background: var(--bg-input) !important;
+.setting-card input:where(:not([type="checkbox"], [type="radio"])), .setting-card textarea, .setting-card select,
+.withdrawal-box input:where(:not([type="checkbox"], [type="radio"])), .withdrawal-box textarea, .withdrawal-box select,
+.withdrawal-input input:where(:not([type="checkbox"], [type="radio"])) {
+  background-color: var(--bg-input) !important;
   border: 1px solid var(--border-strong) !important;
   border-radius: 0 !important;
 }
@@ -935,9 +976,9 @@ option {
 
 .pagination-select select {
   font-size: 0.75rem !important;
-  padding: 4px 8px !important;
+  padding: 4px 26px 4px 8px !important;
   border: 1px solid var(--border-strong) !important;
-  background: var(--bg-card) !important;
+  background-color: var(--bg-card) !important;
   color: var(--text-primary) !important;
   border-radius: 0 !important;
   width: auto !important;
@@ -1341,3 +1382,123 @@ option {
 .status-dot.inactive { background: var(--gray-400); }
 .status-dot.danger { background: var(--danger); }
 .status-dot.warning { background: var(--warning); }
+/* ══════════════════════════════════════════════════════════════
+   DISTRICT FRANCHISE / DIGITAL PARTNER PAGES (Component/Pages/PartnerNetwork)
+══════════════════════════════════════════════════════════════ */
+.pn-page { padding: 20px 16px; }
+.pn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.pn-title { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin: 0; }
+.pn-subtitle { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+.pn-header-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pn-muted { color: var(--text-secondary) !important; }
+
+.pn-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.pn-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  min-width: 0;
+}
+.pn-stat-label { font-size: 0.72rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+.pn-stat-value { font-size: 1.35rem; font-weight: 600; color: var(--text-primary); margin-top: 4px; overflow-wrap: anywhere; }
+.pn-stat-hint { font-size: 0.72rem; color: var(--text-tertiary); margin-top: 2px; }
+.pn-stat-accent { border-top: 3px solid var(--accent); }
+.pn-stat-warning { border-top: 3px solid var(--warning); }
+.pn-stat-info { border-top: 3px solid var(--info); }
+.pn-stat-danger { border-top: 3px solid var(--danger); }
+
+.pn-panel { background: var(--bg-card); border: 1px solid var(--border); margin-bottom: 16px; }
+.pn-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.pn-panel-head h6 { margin: 0; font-size: 0.85rem; font-weight: 600; }
+.pn-panel-body { padding: 12px 16px; }
+
+.pn-stage {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.pn-stage-done { background: var(--accent-subtle); color: var(--accent-hover); border-color: var(--accent-border); }
+.pn-stage-wait { background: var(--warning-subtle); color: var(--warning); border-color: #fde68a; }
+.pn-stage-bad { background: var(--danger-subtle); color: var(--danger); border-color: var(--danger-muted); }
+.pn-stage-muted { background: var(--gray-100); color: var(--text-secondary); }
+
+.pn-steps { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.78rem; }
+.pn-step { display: inline-flex; align-items: center; gap: 6px; color: var(--text-tertiary); white-space: nowrap; }
+.pn-step small { color: inherit; }
+.pn-step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gray-300); flex-shrink: 0; }
+.pn-step-held { color: var(--warning); }
+.pn-step-held .pn-step-dot { background: var(--warning); }
+.pn-step-paid { color: var(--accent-hover); }
+.pn-step-paid .pn-step-dot { background: var(--accent); }
+
+.pn-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.pn-flow-step { border: 1px solid var(--border); padding: 10px 12px; background: var(--gray-50); }
+.pn-flow-step b { display: block; font-size: 0.8rem; color: var(--text-primary); }
+.pn-flow-step span { font-size: 0.74rem; color: var(--text-secondary); }
+
+.pn-filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pn-filters select, .pn-filters input { width: auto !important; min-width: 160px; }
+
+.pn-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.pn-actions .btn { font-size: 0.74rem; padding: 3px 9px; border-radius: 0; }
+
+.pn-kv { display: grid; grid-template-columns: 160px 1fr; gap: 6px 12px; font-size: 0.8rem; }
+.pn-kv dt { color: var(--text-secondary); font-weight: 400; }
+.pn-kv dd { margin: 0; color: var(--text-primary); overflow-wrap: anywhere; }
+
+.pn-credentials {
+  border: 1px dashed var(--accent);
+  background: var(--accent-subtle);
+  padding: 12px;
+  font-size: 0.82rem;
+}
+.pn-credentials code { color: var(--text-primary); font-size: 0.85rem; }
+
+.pn-modal .modal-content { border-radius: 0; }
+.pn-password { display: flex; gap: 6px; }
+.pn-password input { flex: 1; }
+.pn-password .btn { white-space: nowrap; border-radius: 0; font-size: 0.75rem; }
+
+@media (max-width: 576px) {
+  .pn-kv { grid-template-columns: 1fr; }
+  .pn-filters select, .pn-filters input { width: 100% !important; }
+  .pn-stat-value { font-size: 1.15rem; }
+}
+
+.pn-share { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+.pn-share-qr { border: 1px solid var(--border); padding: 8px; background: #fff; line-height: 0; }
+.pn-share-body { flex: 1; min-width: 240px; }
+.pn-share-code { font-size: 1.4rem; font-weight: 600; letter-spacing: 0.06em; color: var(--text-primary); }
+.pn-share-link { display: flex; gap: 6px; margin-top: 4px; }
+.pn-share-link input { flex: 1; min-width: 0; font-size: 0.75rem !important; }
+.pn-share-link .btn, .pn-share .btn { border-radius: 0; white-space: nowrap; font-size: 0.75rem; }
+.pn-filters .btn { font-size: 0.78rem; border-radius: 0; white-space: nowrap; }
+.pn-header-actions .btn { font-size: 0.78rem; border-radius: 0; padding: 5px 12px; white-space: nowrap; }
+.pn-page code { color: var(--text-primary); background: var(--gray-100); padding: 1px 6px; font-weight: 600; letter-spacing: 0.03em; }
+.pn-page .btn-link { color: var(--accent-hover); text-decoration: none; font-size: 0.8rem; }
+.pn-page .btn-link:hover { text-decoration: underline; }
+.pn-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; margin-bottom: 16px; }
+.pn-two > .pn-panel { margin-bottom: 0; }

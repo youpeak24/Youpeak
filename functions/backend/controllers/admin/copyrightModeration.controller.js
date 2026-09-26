@@ -7,7 +7,9 @@ exports.getFlaggedContent = async (req, res) => {
     const start = parseInt(req.query.start) || 1;
     const limit = parseInt(req.query.limit) || 20;
 
-    const all = await db.find("videos", { isCopyrightFlagged: true }, { sort: { createdAt: -1 } });
+    // ?status=open (default) hides videos already taken down; ?status=all shows them.
+    const flagged = await db.find("videos", { isCopyrightFlagged: true }, { sort: { copyrightFlaggedAt: -1 } });
+    const all = req.query.status === "all" ? flagged : flagged.filter((v) => v.isActive !== false);
     const page = all.slice((start - 1) * limit, (start - 1) * limit + limit);
 
     const enriched = await Promise.all(page.map(async (v) => {
@@ -17,7 +19,7 @@ exports.getFlaggedContent = async (req, res) => {
       ]);
       return {
         ...v,
-        owner: owner ? { _id: owner._id, fullName: owner.fullName, email: owner.email } : null,
+        owner: owner ? { _id: owner._id, fullName: owner.fullName, email: owner.email, isBlock: owner.isBlock === true, copyrightStrikes: owner.copyrightStrikes || 0 } : null,
         matchedVideo: matched ? { _id: matched._id, title: matched.title, userId: matched.userId } : null,
       };
     }));
@@ -29,37 +31,60 @@ exports.getFlaggedContent = async (req, res) => {
   }
 };
 
-// 2. Admin action: override (clear flag, re-monetise) | takedown (permanent) | warn
+// 2. Admin action on a duplicate / copyright flag:
+//    override    — not a copy: clear the flag, earnings resume
+//    muteAudio   — keep the video but silence its audio; an audio-only match
+//                  is resolved by that, so earnings resume — a frame match
+//                  stays flagged and demonetised for a further decision
+//    takedown    — remove the video (copyright strike)
+//    takedownBan — remove the video and block the owner's account
+//    warn        — strike without removal
+const COPYRIGHT_ACTIONS = ["override", "muteAudio", "takedown", "takedownBan", "warn"];
+const STRIKE_ACTIONS = new Set(["takedown", "takedownBan", "warn"]);
+
 exports.actionOnFlaggedContent = async (req, res) => {
   try {
     const { videoId, action, reason } = req.body || {};
-    if (!videoId || !["override", "takedown", "warn"].includes(action)) {
+    if (!videoId || !COPYRIGHT_ACTIONS.includes(action)) {
       return res.status(200).json({ status: false, message: "Invalid action." });
     }
     const video = await db.findById("videos", videoId);
     if (!video) return res.status(200).json({ status: false, message: "Video not found." });
 
     const now = new Date().toISOString();
+    const reviewedBy = req.admin?._id || null;
     let updates;
     if (action === "override") {
-      updates = { isCopyrightFlagged: false, isMonetization: true, copyrightOverriddenAt: now, copyrightReviewedBy: req.admin?._id || null };
-    } else if (action === "takedown") {
-      updates = { isActive: false, isCopyrightFlagged: true, isMonetization: false, takedownReason: reason || "Copyright violation", takedownAt: now, copyrightReviewedBy: req.admin?._id || null };
+      updates = { isCopyrightFlagged: false, isMonetization: true, copyrightOverriddenAt: now, copyrightReviewedBy: reviewedBy };
+    } else if (action === "muteAudio") {
+      const resolved = video.copyrightMatchVia === "audio";
+      updates = {
+        audioMuted: true, audioMutedAt: now, copyrightReviewedBy: reviewedBy,
+        ...(resolved ? { isCopyrightFlagged: false, isMonetization: true } : {}),
+      };
+    } else if (action === "takedown" || action === "takedownBan") {
+      updates = { isActive: false, isCopyrightFlagged: true, isMonetization: false, takedownReason: reason || "Copyright violation", takedownAt: now, copyrightReviewedBy: reviewedBy };
     } else {
       updates = { copyrightWarningIssued: true, copyrightWarningAt: now };
     }
     const updated = await db.update("videos", videoId, updates);
 
+    if (action === "takedownBan" && video.userId) {
+      await db.update("users", String(video.userId), { isBlock: true, blockedReason: `Copyright: ${updates.takedownReason}`, blockedAt: now });
+    }
+
     try {
       const owner = await db.findById("users", video.userId);
       if (owner) {
-        const warnings = (owner.copyrightStrikes || 0) + (action === "takedown" || action === "warn" ? 1 : 0);
+        const warnings = (owner.copyrightStrikes || 0) + (STRIKE_ACTIONS.has(action) ? 1 : 0);
         if (warnings !== (owner.copyrightStrikes || 0)) {
           await db.update("users", owner._id || owner.id, { copyrightStrikes: warnings });
         }
         if (owner.fcmToken) {
           const admin = require("../../util/firebaseAdmin");
           const body = action === "override" ? "Your video's copyright flag was cleared — earnings resumed."
+            : action === "muteAudio" ? "The audio on your video was muted after a copyright review."
+            : action === "takedownBan" ? `Your video was removed and your account suspended for copyright. Reason: ${updates.takedownReason}`
             : action === "takedown" ? `Your video was removed for copyright. Reason: ${updates.takedownReason}`
             : "A copyright warning was issued on your video.";
           admin.messaging().send({ token: owner.fcmToken, notification: { title: "Copyright review", body }, data: { type: "COPYRIGHT_ACTION", videoId: String(videoId), action } }).catch(() => {});

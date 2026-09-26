@@ -56,7 +56,9 @@ const settingJson = require("./setting");
 const { loadSettings, settingsMiddleware } = require("./util/loadSettings");
 global.settingJSON = { ...settingJson };
 global.updateSettingFile = (settingData) => { global.settingJSON = settingData; };
-loadSettings(true).catch(() => {});
+loadSettings(true)
+  .then(() => require("./util/systemConfig.service").publishSystemConfigs())
+  .catch(() => {});
 app.use(settingsMiddleware);
 
 // Initialize Firestore seed data

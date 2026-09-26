@@ -332,7 +332,7 @@ function VideoReport(props) {
                   } else if (col.Header === "VIDEO IMAGE") {
                     return (
                       <div className="d-flex justify-content-center">
-                        <Skeleton variant="square" borderRadius={10} width={50} height={50} />
+                        <Skeleton variant="square" sx={{ borderRadius: "10px" }} width={50} height={50} />
                       </div>
                     );
                   } else if (col.Header === "ACTION") {

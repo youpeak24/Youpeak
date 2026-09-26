@@ -7,6 +7,7 @@ import 'package:youpeak/features/video/view/normal_video_details_view.dart';
 import 'package:youpeak/features/video/view/shorts_video_details_view.dart';
 import 'package:youpeak/core/constants/app_constant.dart';
 import 'package:youpeak/core/utils/utils.dart';
+import 'package:youpeak/core/deep_link/referral_link.dart';
 
 class DeepLinkServices {
   static const String videoKey = "video";
@@ -40,6 +41,9 @@ class DeepLinkServices {
         eventId = linkInfo.queryParams[idKey] ?? "";
         eventType = linkInfo.queryParams[pageRoutesKey] ?? "";
         referralCode = linkInfo.queryParams[referralCodeKey] ?? "";
+        // Digital Partner links: https://youpeak.app/<CODE>
+        referralCode = referralCode.isNotEmpty ? referralCode : (ReferralLink.codeFromPath(linkInfo.pathSegments) ?? "");
+        if (referralCode.isNotEmpty) ReferralLink.remember(referralCode);
         sellerName = linkInfo.queryParams[sellerNameKey] ?? "";
         videoUrl = linkInfo.queryParams[videoUrlKey] ?? "";
         id = linkInfo.queryParams[idKey] ?? "";

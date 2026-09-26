@@ -9,6 +9,10 @@ import 'package:youpeak/core/settings/app_settings.dart';
 
 class GetProfileApi {
   static GetProfileModel? profileModel;
+
+  /// Server's verdict on whether the app must show the web-portal activation
+  /// lock screen: {locked, reason, activationUrl} (util/accessGate.js).
+  static Map<String, dynamic>? accessGate;
   static Future<void> callApi(String loginUserId) async {
     AppSettings.showLog("GetProfile Api Calling... $loginUserId");
 
@@ -25,6 +29,8 @@ class GetProfileApi {
         final jsonResponse = json.decode(response.body);
 
         profileModel = GetProfileModel.fromJson(jsonResponse);
+        final gate = jsonResponse is Map ? (jsonResponse["user"] is Map ? jsonResponse["user"]["accessGate"] : null) : null;
+        accessGate = gate is Map ? Map<String, dynamic>.from(gate) : null;
 
         if (profileModel != null && profileModel?.user != null) {
           final userId = profileModel?.user?.id ?? loginUserId;

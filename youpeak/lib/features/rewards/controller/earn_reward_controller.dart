@@ -1,3 +1,5 @@
+import 'package:youpeak/core/providers/app_provider_container.dart';
+import 'package:youpeak/core/security/security_service.dart';
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -148,6 +150,14 @@ class EarnRewardController extends GetxController {
     AppSettings.showLog("Click To Index => $index");
 
     if (index == completeAdTask && isEnableCurrentAdTask) {
+      // Anti-fraud gate (VPN / emulator / root / second account / bot-like
+      // tapping): the server refuses these rewards anyway, so don't burn an ad.
+      final security = appProviderContainer.read(securityServiceProvider.notifier);
+      if (!security.allowTaskAction()) {
+        final message = appProviderContainer.read(securityServiceProvider).message;
+        CustomToast.show(message.isNotEmpty ? message : "Please wait a moment before the next task.");
+        return;
+      }
       AppSettings.showLog("Show Ad Success");
 
       GoogleRewardAd.showAd(fun: () {

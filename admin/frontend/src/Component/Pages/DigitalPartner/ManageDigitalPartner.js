@@ -1,181 +1,154 @@
-import React, { useEffect, useState } from "react";
-import Title from "../../extra/Title";
-import Button from "../../extra/Button";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { setToast } from "../../../util/toast";
+import { warningForText } from "../../../util/Alert";
+import { PageHeader, StatCard, StatusBadge, EmptyRow, inr, fmtDate } from "../PartnerNetwork/networkUi";
 
+// Super admin: every Digital Partner across all District Franchises.
+// Partners are created by their franchise, never here.
 export default function ManageDigitalPartner() {
+  const navigate = useNavigate();
   const [partners, setPartners] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const [openActivate, setOpenActivate] = useState(false);
-  const [email, setEmail] = useState("");
-  const [licenseFeeInr, setLicenseFeeInr] = useState("");
-  const [activating, setActivating] = useState(false);
-
-  const [credentials, setCredentials] = useState(null); // { email, password } — one-time reveal
-  const [regeneratingFor, setRegeneratingFor] = useState(null);
-
-  const fetchPartners = () => {
-    setLoading(true);
-    axios
-      .get("admin/digitalPartner/list")
-      .then((res) => {
-        setLoading(false);
-        if (res.data.status) setPartners(res.data.partners || []);
-        else setToast("error", res.data.message);
-      })
-      .catch((err) => {
-        setLoading(false);
-        setToast("error", err.response?.data?.message || err.message);
-      });
-  };
+  const [summary, setSummary] = useState(null);
+  const [agencies, setAgencies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [agencyId, setAgencyId] = useState("");
+  const [status, setStatus] = useState("");
+  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
-    fetchPartners();
+    axios
+      .get("admin/agency/getAgencies?start=1&limit=100")
+      .then((res) => res.data.status && setAgencies(res.data.agencies || []))
+      .catch(() => {});
   }, []);
 
-  const resetActivateForm = () => {
-    setEmail("");
-    setLicenseFeeInr("");
-  };
+  useEffect(() => {
+    const t = setTimeout(() => setQuery(search.trim()), 350);
+    return () => clearTimeout(t);
+  }, [search]);
 
-  const handleActivate = (e) => {
-    e.preventDefault();
-    if (!email) {
-      setToast("warning", "Please enter the partner's app account email.");
-      return;
-    }
-    setActivating(true);
+  const load = useCallback(() => {
+    setLoading(true);
     axios
-      .post("admin/digitalPartner/activate", {
-        email: email.trim(),
-        ...(licenseFeeInr !== "" ? { licenseFeeInr: Number(licenseFeeInr) } : {}),
-      })
+      .get(`admin/digitalPartner/list?agencyId=${agencyId}&status=${status}&search=${encodeURIComponent(query)}`)
       .then((res) => {
-        setActivating(false);
+        setLoading(false);
         if (res.data.status) {
-          setToast("success", res.data.message);
-          setOpenActivate(false);
-          resetActivateForm();
-          fetchPartners();
-          if (res.data.portalCredentials) setCredentials(res.data.portalCredentials);
+          setPartners(res.data.partners || []);
+          setSummary(res.data.summary);
         } else {
           setToast("error", res.data.message);
         }
       })
-      .catch((err) => {
-        setActivating(false);
-        setToast("error", err.response?.data?.message || err.message);
+      .catch(() => {
+        setLoading(false);
+        setToast("error", "Couldn't load Digital Partners.");
       });
-  };
+  }, [agencyId, status, query]);
 
-  const handleRegeneratePassword = (userId) => {
-    setRegeneratingFor(userId);
-    axios
-      .post("admin/digitalPartner/regeneratePassword", { userId })
-      .then((res) => {
-        setRegeneratingFor(null);
-        if (res.data.status) {
-          setToast("success", res.data.message);
-          setCredentials(res.data.portalCredentials);
-          fetchPartners();
-        } else {
-          setToast("error", res.data.message);
-        }
-      })
-      .catch((err) => {
-        setRegeneratingFor(null);
-        setToast("error", err.response?.data?.message || err.message);
-      });
-  };
+  useEffect(() => { load(); }, [load]);
 
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(String(text ?? ""));
-      setToast("success", "Copied to clipboard");
-    } catch (e) {
-      setToast("error", "Could not copy");
-    }
+  const changeStatus = (p) => {
+    const next = p.partnerStatus === "SUSPENDED" ? "ACTIVE" : "SUSPENDED";
+    warningForText(next === "SUSPENDED" ? `Suspend ${p.fullName}? Their partner panel login stops working.` : `Activate ${p.fullName} again?`).then((r) => {
+      if (!r.isConfirmed) return;
+      axios
+        .patch(`admin/digitalPartner/status?userId=${p.userId}`, { status: next })
+        .then((res) => {
+          setToast(res.data.status ? "success" : "error", res.data.message);
+          if (res.data.status) load();
+        })
+        .catch(() => setToast("error", "Couldn't change the status."));
+    });
   };
 
   return (
-    <div className="mainPage p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <Title name="Digital Partner Management" />
-        <Button
-          btnName="Activate Digital Partner"
-          newClass="submit-btn"
-          onClick={() => setOpenActivate(true)}
-        />
-      </div>
+    <div className="pn-page">
+      <PageHeader
+        title="Digital Partners"
+        subtitle="All partners across every District Franchise. Partners are added by their franchise from the franchise panel."
+      />
 
-      <div className="card shadow-sm border-0 p-3">
+      {summary && (
+        <div className="pn-stats">
+          <StatCard tone="accent" label="Digital Partners" value={summary.totalPartners} hint={`${summary.activePartners} active · ${summary.suspendedPartners} suspended`} />
+          <StatCard tone="info" label="Referrals" value={summary.referrals.total} hint={`${summary.referrals.completed} completed · ${summary.referrals.flagged} flagged`} />
+          <StatCard label="Partner earnings" value={inr(summary.referralEarningsInr)} hint={`${inr(summary.pendingEarningsInr)} on hold`} />
+          <StatCard tone="warning" label="Licence fees recorded" value={inr(summary.licenseFeesInr)} />
+        </div>
+      )}
+
+      <div className="pn-panel">
+        <div className="pn-panel-head">
+          <h6>Partners</h6>
+          <div className="pn-filters">
+            <input className="form-control" placeholder="Search name, email, code" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search partners" />
+            <select className="form-control" value={agencyId} onChange={(e) => setAgencyId(e.target.value)} aria-label="Filter by franchise">
+              <option value="">All franchises</option>
+              <option value="unassigned">Not linked to a franchise</option>
+              {agencies.map((a) => <option key={a._id} value={a._id}>{a.name} ({a.district})</option>)}
+            </select>
+            <select className="form-control" value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Filter by status">
+              <option value="">All statuses</option>
+              <option value="ACTIVE">Active</option>
+              <option value="SUSPENDED">Suspended</option>
+            </select>
+          </div>
+        </div>
         <div className="table-responsive">
-          <table className="table table-hover align-middle">
+          <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>No.</th>
-                <th>Name / Email</th>
-                <th>State / District</th>
+                <th>Partner</th>
+                <th>District Franchise</th>
+                <th>Referrals</th>
+                <th>Earned</th>
+                <th>Licence fee</th>
+                <th>Since</th>
                 <th>Status</th>
-                <th>License Fee</th>
-                <th>Ad Credits</th>
-                <th>Portal Login</th>
-                <th>Activated On</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan="9" className="text-center py-4">Loading Digital Partners...</td>
-                </tr>
+                <EmptyRow colSpan={8}>Loading partners…</EmptyRow>
               ) : partners.length === 0 ? (
-                <tr>
-                  <td colSpan="9" className="text-center py-4">
-                    No Digital Partners yet. Click "Activate Digital Partner" to onboard one.
-                  </td>
-                </tr>
+                <EmptyRow colSpan={8}>{query || agencyId || status ? "No partner matches your filters." : "No Digital Partners yet. Franchises add them from their panel."}</EmptyRow>
               ) : (
-                partners.map((p, idx) => (
+                partners.map((p) => (
                   <tr key={p.userId}>
-                    <td>{idx + 1}</td>
                     <td>
-                      <div className="fw-bold">{p.fullName || "—"}</div>
-                      <small className="text-muted">{p.email}</small>
+                      <div className="fw-semibold">{p.fullName}</div>
+                      <small className="pn-muted">{p.email} · <code>{p.referralCode}</code></small>
                     </td>
-                    <td>{p.state || "—"} / {p.district || "—"}</td>
                     <td>
-                      <span className={`badge ${p.partnerStatus === "ACTIVE" ? "bg-success" : "bg-secondary"}`}>
-                        {p.partnerStatus}
-                      </span>
-                    </td>
-                    <td>₹ {Number(p.licenseFeePaid || 0).toFixed(0)}</td>
-                    <td>₹ {Number(p.adCreditsBalance || 0).toFixed(0)}</td>
-                    <td>
-                      {p.portalAccountExists ? (
-                        <>
-                          <div>{p.portalEmail}</div>
-                          {p.portalPasswordIsTemporary ? (
-                            <small className="text-warning">Password not set yet</small>
-                          ) : (
-                            <small className="text-success">Password set</small>
-                          )}
-                        </>
+                      {p.agencyName ? (
+                        <button className="btn btn-link p-0 text-start" onClick={() => navigate(`/admin/agencyDetail?agencyId=${p.agencyId}`)}>{p.agencyName}</button>
                       ) : (
-                        <span className="badge bg-danger">No portal account</span>
+                        <span className="pn-stage pn-stage-wait">Not linked</span>
                       )}
                     </td>
-                    <td>{p.activatedAt ? new Date(p.activatedAt).toLocaleDateString() : "—"}</td>
                     <td>
-                      <button
-                        className="btn btn-sm btn-outline-primary"
-                        disabled={regeneratingFor === p.userId}
-                        onClick={() => handleRegeneratePassword(p.userId)}
-                      >
-                        {regeneratingFor === p.userId ? "Generating..." : "Generate Login"}
-                      </button>
+                      <span className="fw-semibold">{p.referrals.completed}</span>
+                      <small className="pn-muted"> completed / {p.referrals.total}</small>
+                    </td>
+                    <td>
+                      {inr(p.earnings.referralInr)}
+                      {p.earnings.pendingInr > 0 && <div><small className="pn-muted">{inr(p.earnings.pendingInr)} on hold</small></div>}
+                    </td>
+                    <td>{inr(p.licenseFeePaid)}</td>
+                    <td>{fmtDate(p.partnerSince)}</td>
+                    <td><StatusBadge status={p.partnerStatus} /></td>
+                    <td>
+                      <div className="pn-actions">
+                        <button className="btn btn-outline-success" onClick={() => navigate(`/admin/partnerDetail?userId=${p.userId}`)}>View</button>
+                        <button className="btn btn-outline-warning" onClick={() => changeStatus(p)}>
+                          {p.partnerStatus === "SUSPENDED" ? "Activate" : "Suspend"}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -184,91 +157,6 @@ export default function ManageDigitalPartner() {
           </table>
         </div>
       </div>
-
-      {openActivate && (
-        <div className="modal show d-block tab-modal-custom" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Activate Digital Partner</h5>
-                <button type="button" className="btn-close" onClick={() => setOpenActivate(false)}></button>
-              </div>
-              <form onSubmit={handleActivate}>
-                <div className="modal-body">
-                  <p className="text-muted small">
-                    The person must already have a Youpeak app account. This grants them the ad-credits
-                    wallet + partner status, records the district commission, and creates their web
-                    portal login (or tops up their credits if they're already a partner).
-                  </p>
-                  <div className="mb-3">
-                    <label className="form-label">App Account Email *</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Exactly as registered in the app"
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">License Fee (INR)</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={licenseFeeInr}
-                      onChange={(e) => setLicenseFeeInr(e.target.value)}
-                      placeholder="Defaults to the configured license fee (₹25,000)"
-                    />
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setOpenActivate(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary" disabled={activating}>
-                    {activating ? "Activating..." : "Activate"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {credentials && (
-        <div className="modal show d-block tab-modal-custom" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Web Portal Login</h5>
-                <button type="button" className="btn-close" onClick={() => setCredentials(null)}></button>
-              </div>
-              <div className="modal-body">
-                <p className="text-muted small">
-                  Share this with the Digital Partner now — this password won't be shown again once
-                  they set their own.
-                </p>
-                <div className="mb-3">
-                  <label className="form-label">Email</label>
-                  <div className="d-flex align-items-center gap-2">
-                    <input type="text" className="form-control" value={credentials.email} readOnly />
-                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => copyToClipboard(credentials.email)}>Copy</button>
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Temporary Password</label>
-                  <div className="d-flex align-items-center gap-2">
-                    <input type="text" className="form-control" value={credentials.password} readOnly />
-                    <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => copyToClipboard(credentials.password)}>Copy</button>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-primary" onClick={() => setCredentials(null)}>Got it, I've saved it</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

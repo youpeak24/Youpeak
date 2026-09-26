@@ -1,3 +1,4 @@
+import 'package:youpeak/features/peak_boost/presentation/peak_boost_button.dart';
 import 'dart:async';
 import 'dart:developer';
 
@@ -2327,6 +2328,15 @@ class VideoDetailsUi extends GetView<NormalVideoDetailsController> {
                             controller.customChanges["comment"],
                           );
                         },
+                      ),
+                      // Fan -> creator coin tipping (80% creator / 20% platform).
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: PeakBoostButton(
+                          videoId: controller.videoId,
+                          creatorName: controller.videoDetailsModel?.detailsOfVideo?.channelName,
+                          isOwnVideo: controller.videoDetailsModel?.detailsOfVideo?.userId == Database.loginUserId,
+                        ),
                       ),
                       NormalVideoDetailsIconUi(
                         title: AppStrings.share.tr,

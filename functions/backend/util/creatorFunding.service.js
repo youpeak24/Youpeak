@@ -48,8 +48,9 @@ async function resolveCampaignSuccess(campaignId) {
   const creator = await db.findById("users", campaign.creatorId);
   if (creator) {
     await db.incrementFields("users", creator._id || creator.id, {
+      // Coins only — converting them adds the withdrawable ₹; crediting
+      // totalEarningAmount as well paid the campaign out twice.
       coin: payoutCoins,
-      totalEarningAmount: payoutInr,
       totalRewardCoin: payoutCoins,
     });
   }

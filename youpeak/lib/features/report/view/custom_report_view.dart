@@ -10,24 +10,48 @@ import 'package:youpeak/core/config/size_config.dart';
 import 'package:youpeak/core/constants/app_string.dart';
 import 'package:youpeak/core/theme/app_style.dart';
 
+/// One choice in the report sheet. [reportType] is the backend's
+/// REPORT_TYPE code (functions/backend/types/constant.js); null means
+/// "block this video", which stays on the device.
+class ReportReason {
+  const ReportReason(this.label, this.reportType, {this.statutory = false});
+
+  final String label;
+  final int? reportType;
+
+  /// A ground listed in IT Rules 2021, Rule 3(1)(b).
+  final bool statutory;
+}
+
 class CustomReportView {
-  static RxInt selectedReport = 0.obs;
-  static List reportTypes = [
-    "NULL",
-    AppStrings.reportVideo.tr,
-    AppStrings.sexualContent.tr,
-    AppStrings.violentOrRepulsiveContent.tr,
-    AppStrings.hatefulOrAbusiveContent.tr,
-    AppStrings.harmfulOrDangerousActs.tr,
-    AppStrings.spamOrMisleading.tr,
-    AppStrings.childAbuse.tr,
-    AppStrings.others.tr,
-  ];
+  /// Index into [reasons]; -1 = nothing chosen.
+  static RxInt selectedReport = (-1).obs;
+
+  // Codes are explicit: this list used to send its own index, one higher
+  // than the backend's code, so every report landed in the wrong category.
+  static List<ReportReason> get reasons => [
+        ReportReason(AppStrings.reportVideo.tr, null),
+        ReportReason(AppStrings.sexualContent.tr, 1),
+        ReportReason(AppStrings.violentOrRepulsiveContent.tr, 2),
+        ReportReason(AppStrings.hatefulOrAbusiveContent.tr, 3),
+        ReportReason(AppStrings.harmfulOrDangerousActs.tr, 4),
+        ReportReason(AppStrings.spamOrMisleading.tr, 5),
+        ReportReason(AppStrings.childAbuse.tr, 6),
+        ReportReason(AppStrings.others.tr, 7),
+        const ReportReason("Anti-national content", 8, statutory: true),
+        const ReportReason("Hate speech", 9, statutory: true),
+        const ReportReason("Defamation", 10, statutory: true),
+        const ReportReason("Threatens India's sovereignty or integrity", 11, statutory: true),
+      ];
+
   static void show(String videoId) {
+    selectedReport.value = -1;
+    final items = reasons;
     Get.bottomSheet(
       backgroundColor: isDarkMode.value ? AppColor.secondDarkMode : AppColor.white,
+      isScrollControlled: true,
       SizedBox(
-        height: 450,
+        height: Get.height * 0.75,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -42,22 +66,35 @@ class CustomReportView {
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (int i = 1; i < reportTypes.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, bottom: 0),
-                          child: Row(
-                            children: [
-                              Radio(
-                                  value: i,
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  activeColor: AppColor.primaryColor,
-                                  groupValue: selectedReport.value,
-                                  onChanged: (value) => selectedReport.value = value!),
-                              Text(reportTypes[i], style: settingsStyle),
-                            ],
+                      for (int i = 0; i < items.length; i++) ...[
+                        if (items[i].statutory && (i == 0 || !items[i - 1].statutory))
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 14, 20, 4),
+                            child: Text(
+                              "IT Rules 2021 — statutory grounds",
+                              style: GoogleFonts.urbanist(fontSize: 13, fontWeight: FontWeight.w800, color: AppColor.greyColor, letterSpacing: 0.3),
+                            ),
+                          ),
+                        InkWell(
+                          onTap: () => selectedReport.value = i,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 44),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 10),
+                                Radio<int>(
+                                    value: i,
+                                    activeColor: AppColor.primaryColor,
+                                    groupValue: selectedReport.value,
+                                    onChanged: (value) => selectedReport.value = value!),
+                                Expanded(child: Text(items[i].label, style: settingsStyle)),
+                              ],
+                            ),
                           ),
                         ),
+                      ],
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -65,9 +102,9 @@ class CustomReportView {
                           GestureDetector(
                             onTap: () => Get.back(),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                               decoration: BoxDecoration(
-                                color: AppColor.lightPink.withOpacity(0.3),
+                                color: AppColor.lightPink.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(25),
                               ),
                               child: Text(
@@ -83,18 +120,19 @@ class CustomReportView {
                           const SizedBox(width: 10),
                           GestureDetector(
                             onTap: () async {
-                              if (videoId != "" && selectedReport.value != 0) {
-                                Get.back();
-                                if (selectedReport.value == 1) {
-                                  CustomToast.show(AppStrings.videoBlockToast.tr);
-                                } else {
-                                  CustomToast.show(AppStrings.reportSending.tr);
-                                  await ReportVideoApi.callApi(Database.loginUserId!, videoId, selectedReport.value);
-                                }
+                              final index = selectedReport.value;
+                              if (videoId == "" || index < 0) return;
+                              Get.back();
+                              final reportType = items[index].reportType;
+                              if (reportType == null) {
+                                CustomToast.show(AppStrings.videoBlockToast.tr);
+                              } else {
+                                CustomToast.show(AppStrings.reportSending.tr);
+                                await ReportVideoApi.callApi(Database.loginUserId!, videoId, reportType);
                               }
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                               decoration: BoxDecoration(
                                 color: AppColor.primaryColor,
                                 borderRadius: BorderRadius.circular(25),
@@ -111,7 +149,7 @@ class CustomReportView {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10 + MediaQuery.paddingOf(Get.context!).bottom),
                     ],
                   ),
                 ),

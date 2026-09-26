@@ -1,15 +1,25 @@
 rules_version = '2';
 
-// YouPeak Firestore is accessed ONLY through the backend API, which uses the
-// Firebase Admin SDK — that bypasses these rules entirely. The Flutter app has
-// no cloud_firestore dependency and never talks to Firestore directly (it only
-// uses firebase_auth + firebase_messaging). So every direct client request is
-// denied: a signed-in user must not be able to read other users, the `admins`
-// collection, revenueLedger, paymentTransactions, etc. with just their ID token.
+// YouPeak Firestore is accessed through the backend API, which uses the
+// Firebase Admin SDK — that bypasses these rules entirely. A signed-in user
+// must not be able to read other users, the `admins` collection,
+// revenueLedger, paymentTransactions, etc. with just their ID token, so every
+// direct client request is denied except the one below.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
       allow read, write: if false;
+    }
+
+    // The app's live configuration (reward values, caps, Peak Boost presets,
+    // payout thresholds), published by the backend from the admin-managed
+    // settings (functions/backend/util/systemConfig.service.js). Public app
+    // config only — no user data, no secrets — and the server enforces from
+    // its own copy, so a read-only listener is safe. Readable before sign-in
+    // because the login and lock screens use it too.
+    match /system_configs/{configId} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

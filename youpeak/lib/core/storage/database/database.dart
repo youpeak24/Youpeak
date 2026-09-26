@@ -179,6 +179,8 @@ class Database {
     if (loginType == 3) {
       FirebaseAuth.instance.signOut();
     }
+    // Ends the per-user API session (core/network/app_session.dart) for every login type.
+    await FirebaseAuth.instance.signOut();
     await localStorage.erase();
     await preferences.clear();
     if (PlatformInfo.isAndroid) {

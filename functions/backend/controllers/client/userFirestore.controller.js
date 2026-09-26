@@ -14,6 +14,35 @@ const cryptr = new Cryptr(process.env.USER_PW_SECRET || "myTotallySecretKey");
 const { generateUniqueId } = require("../../util/generateUniqueId");
 const { generateReferralCode } = require("../../util/generateReferralCode");
 const admin = require("../../util/privateKey");
+const firebaseAdmin = require("../../util/firebaseAdmin");
+const { accessGateFor } = require("../../util/accessGate");
+
+const LOGIN_TYPE_PHONE = 5;
+// Google (2), Apple (3), legacy social (1) and phone (5) sign in with Firebase
+// on the device; the server trusts only what the verified ID token says.
+const FIREBASE_LOGIN_TYPES = new Set([1, 2, 3, LOGIN_TYPE_PHONE]);
+
+async function verifyFirebaseLogin(idToken) {
+  if (typeof idToken !== "string" || !idToken) return null;
+  try {
+    return await firebaseAdmin.auth().verifyIdToken(idToken);
+  } catch (e) {
+    return null;
+  }
+}
+
+// A Firebase custom token whose uid is the YouPeak user id. The app signs in
+// with it, and its ID tokens then authenticate the per-user routes
+// (middleware/appUser.middleware.js). Minted only after this login has been
+// verified (Firebase ID token, or the email+password check).
+async function mintAppSession(userId) {
+  try {
+    return await firebaseAdmin.auth().createCustomToken(String(userId));
+  } catch (e) {
+    console.error("createCustomToken failed:", e.message);
+    return null;
+  }
+}
 
 // ─── helper: generate a referral code that is unique in Firestore ─────────
 async function uniqueReferralCode() {
@@ -78,25 +107,111 @@ function buildUserData(existing, body) {
   };
 }
 
+// ─── Create an email+password (loginType 4) app account server-side ──────
+// Used when a District Franchise onboards a Digital Partner who has no app
+// account yet (util/partnerNetwork.service.js). Produces exactly what the
+// app's own signup below produces — same fields, referral code, uniqueId,
+// login bonus + its history row, and the same cryptr password format the
+// app's loginType-4 login checks — so the person can simply log in to the
+// app with that email and password.
+exports.createEmailPasswordAccount = async ({ fullName, email, password, mobileNumber = "", state = "", district = "" }) => {
+  const bonusCoins = global.settingJSON?.loginRewardCoins ? global.settingJSON.loginRewardCoins : 5000;
+  const referralCode = await uniqueReferralCode();
+  const uniqueId = await generateUniqueId();
+
+  const newUserData = buildUserData(
+    {
+      coin: bonusCoins,
+      loginRewardCoin: bonusCoins,
+      totalRewardCoin: bonusCoins,
+      referralCode,
+      date: new Date().toISOString(),
+      isNewUser: true,
+      isActive: true,
+      isBlock: false,
+    },
+    { fullName, email, password, mobileNumber, loginType: 4 }
+  );
+  newUserData.uniqueId = uniqueId;
+  newUserData.coin = bonusCoins;
+  newUserData.loginRewardCoin = bonusCoins;
+  newUserData.totalRewardCoin = bonusCoins;
+  newUserData.referralCode = referralCode;
+  newUserData.state = state;
+  newUserData.district = district;
+  newUserData.createdAt = new Date().toISOString();
+
+  const createdUser = await db.create("users", newUserData);
+  try {
+    await db.create("histories", {
+      userId: createdUser._id || createdUser.id,
+      coin: bonusCoins,
+      uniqueId: `hist_${Date.now()}`,
+      type: 3,
+      date: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.log("History create note:", e.message);
+  }
+  return createdUser;
+};
+
+// Re-encrypts an app (loginType 4) password in the app's own format.
+exports.encryptAppPassword = (plain) => cryptr.encrypt(plain);
+
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/user/login   →  login OR signup
 // ─────────────────────────────────────────────────────────────────────────────
 exports.store = async (req, res) => {
   try {
-    const { loginType, identity, fcmToken, email, password } = req.body;
+    const { loginType, identity, fcmToken, password } = req.body;
+    let { email } = req.body;
 
     if (!identity || loginType === undefined || !fcmToken) {
       return res.status(200).json({ status: false, message: "Oops ! Invalid details." });
     }
 
+    // SECURITY: a social/phone login used to be accepted on the email in the
+    // body alone, so anyone holding the app key could sign in as any Google
+    // user by knowing their address. The identity now comes only from a
+    // verified Firebase ID token.
+    let body = req.body;
+    let verifiedPhone = null;
+    if (FIREBASE_LOGIN_TYPES.has(loginType)) {
+      const decoded = await verifyFirebaseLogin(req.body.idToken);
+      if (!decoded) {
+        return res.status(200).json({
+          status: false,
+          code: "AUTH_UNVERIFIED",
+          message: "We couldn't verify your sign-in. Please update the app and try again.",
+        });
+      }
+      if (loginType === LOGIN_TYPE_PHONE) {
+        verifiedPhone = decoded.phone_number || null;
+        if (!verifiedPhone) {
+          return res.status(200).json({ status: false, code: "AUTH_UNVERIFIED", message: "Phone number could not be verified." });
+        }
+        email = "";
+        body = { ...req.body, email: "", mobileNumber: verifiedPhone };
+      } else {
+        // Apple can omit the email on repeat sign-ins; the app has always
+        // used "<firebase uid>@appleid.com" for that case.
+        email = decoded.email || (loginType === 3 ? `${decoded.uid}@appleid.com` : "");
+        if (!email) {
+          return res.status(200).json({ status: false, code: "AUTH_UNVERIFIED", message: "Your account has no email address." });
+        }
+        body = { ...req.body, email };
+      }
+    }
+
     let existingUser = null;
 
     if (loginType === 1 || loginType === 2 || loginType === 3) {
-      // Google / Apple / Social
-      if (!email) {
-        return res.status(200).json({ status: false, message: "email must be required." });
-      }
+      // Google / Apple / Social — email from the verified token (above)
       existingUser = await db.findOne("users", { email: email.trim() });
+    } else if (loginType === LOGIN_TYPE_PHONE) {
+      // Firebase phone OTP — matched on the verified number only
+      existingUser = await db.findOne("users", { verifiedPhoneNumber: verifiedPhone });
     } else if (loginType === 4) {
       // Email + Password
       if (!email || !password) {
@@ -124,17 +239,29 @@ exports.store = async (req, res) => {
         return res.status(200).json({ status: false, message: "You are blocked by the admin." });
       }
 
-      const updates = buildUserData(existingUser, req.body);
+      const updates = buildUserData(existingUser, body);
       if (!updates.uniqueId) {
         updates.uniqueId = await generateUniqueId();
       }
+      if (verifiedPhone) {
+        updates.verifiedPhoneNumber = verifiedPhone;
+        updates.mobileNumber = verifiedPhone;
+      }
 
-      const updatedUser = await db.update("users", existingUser._id || existingUser.id, updates);
+      const userId = existingUser._id || existingUser.id;
+      const updatedUser = await db.update("users", userId, updates);
       // Return password decrypted for client compatibility
       const returnUser = { ...updatedUser };
       if (req.body.password) returnUser.password = req.body.password;
 
-      return res.status(200).json({ status: true, message: "User login Successfully.", user: returnUser, signUp: false });
+      return res.status(200).json({
+        status: true,
+        message: "User login Successfully.",
+        user: returnUser,
+        signUp: false,
+        firebaseCustomToken: await mintAppSession(userId),
+        accessGate: accessGateFor(updatedUser || existingUser),
+      });
     } else {
       // ── NEW USER SIGNUP ──
       const bonusCoins = global.settingJSON?.loginRewardCoins ? global.settingJSON.loginRewardCoins : 5000;
@@ -152,7 +279,7 @@ exports.store = async (req, res) => {
           isActive: true,
           isBlock: false,
         },
-        req.body
+        body
       );
       newUserData.uniqueId = uniqueId;
       newUserData.coin = bonusCoins;
@@ -160,6 +287,10 @@ exports.store = async (req, res) => {
       newUserData.totalRewardCoin = bonusCoins;
       newUserData.referralCode = referralCode;
       newUserData.createdAt = new Date().toISOString();
+      if (verifiedPhone) {
+        newUserData.verifiedPhoneNumber = verifiedPhone;
+        newUserData.mobileNumber = verifiedPhone;
+      }
 
       const createdUser = await db.create("users", newUserData);
 
@@ -167,7 +298,14 @@ exports.store = async (req, res) => {
       const returnUser = { ...createdUser };
       if (req.body.password) returnUser.password = req.body.password;
 
-      res.status(200).json({ status: true, message: "User Signup Successfully.", user: returnUser, signUp: true });
+      res.status(200).json({
+        status: true,
+        message: "User Signup Successfully.",
+        user: returnUser,
+        signUp: true,
+        firebaseCustomToken: await mintAppSession(createdUser._id || createdUser.id),
+        accessGate: accessGateFor(createdUser),
+      });
 
       // Side-effect: record bonus coin history
       try {
@@ -330,6 +468,8 @@ exports.getProfile = async (req, res) => {
       ...user,
       paymentStatus: user.paymentStatus || false,
       payment_status: user.paymentStatus || false,
+      // Whether the app must show the web-portal activation lock screen.
+      accessGate: accessGateFor(user),
     };
 
     return res.status(200).json({ status: true, message: "Retrieve profile of the user.", user: userObj });

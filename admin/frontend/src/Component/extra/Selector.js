@@ -14,7 +14,6 @@ export default function Selector(props) {
     labelShow,
     selectData,
     onChange,
-    defaultValue,
     errorMessage,
     selectId,
     disabled,
@@ -36,17 +35,15 @@ export default function Selector(props) {
         </label>
       )}
 
-      <div sx={{ minWidth: 120 }} class="form-group">
-        <div className="form-outline" fullWidth>
-         
+      <div className="form-group" style={{ minWidth: 120 }}>
+        <div className="form-outline">
+          {/* Controlled by selectValue (defaultValue was always ignored by
+              React on a controlled select). id comes from props so the label
+              above is linked to it — it was hardcoded, duplicated per page. */}
           <select
-            id="formControlLg"
+            id={id}
             className=" form-select py-2 text-capitalize"
             value={selectValue ? selectValue : ""}
-            label={label}
-            placeholder={placeholder}
-            defaultValue={defaultValue ? defaultValue :""}
-            MenuProps={{ PaperProps: { sx: { maxHeight: 200 } } }}
             onChange={onChange}
             style={{borderRadius : "5px"}}
             disabled={disabled}

@@ -38,6 +38,11 @@ const payment = require("./payment.route");
 const partner = require("./partner.route");
 const creatorFunding = require("./creatorFunding.route");
 const localBusinessAd = require("./localBusinessAd.route");
+const watch = require("./watch.route");
+const peakBoost = require("./peakBoost.route");
+const tasker = require("./tasker.route");
+const security = require("./security.route");
+const payout = require("./payout.route");
 
 //exports client's route.js
 route.use("/user", user);
@@ -75,5 +80,10 @@ route.use("/payment", payment);
 route.use("/partner", partner);
 route.use("/creatorFunding", creatorFunding);
 route.use("/localBusinessAd", localBusinessAd);
+route.use("/watch", watch);
+route.use("/peakBoost", peakBoost);
+route.use("/tasker", tasker);
+route.use("/security", security);
+route.use("/payout", payout);
 
 module.exports = route;

@@ -89,6 +89,21 @@
                     android:pathPrefix="/share"/>
             </intent-filter>
 
+            <!-- Digital Partner referral links: https://youpeak.app/<8-char code>.
+                 pathAdvancedPattern needs Android 12+; older phones open the
+                 link in the browser, where the web app reads the same code. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="https"
+                    android:host="youpeak.app"
+                    android:pathAdvancedPattern="/[A-Z0-9]{8}"/>
+            </intent-filter>
+
 
             <!-- ✅ OPTIONAL: Custom Scheme -->
             <intent-filter>

@@ -1,173 +1,159 @@
-import React, { useEffect, useState } from "react";
-import Title from "../../extra/Title";
-import Button from "../../extra/Button";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { setToast } from "../../../util/toast";
-import Table from "../../extra/Table";
+import { useNavigate } from "react-router-dom";
 import Pagination from "../../extra/Pagination";
+import { setToast } from "../../../util/toast";
+import { warningForText } from "../../../util/Alert";
+import FranchiseFormModal from "../PartnerNetwork/FranchiseFormModal";
+import { PageHeader, StatusBadge, EmptyRow, inr } from "../PartnerNetwork/networkUi";
 
+// Super admin: create and manage District Franchises.
 export default function AgencyList() {
+  const navigate = useNavigate();
   const [agencies, setAgencies] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(null); // null | "new" | agency
 
-  // Modal State
-  const [openModal, setOpenModal] = useState(false);
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [commissionRatePercentage, setCommissionRatePercentage] = useState(10);
-  const [state, setState] = useState("");
-  const [district, setDistrict] = useState("");
-  const [radiusKm, setRadiusKm] = useState(50);
-
-  const fetchAgencies = (p = page, limit = rowsPerPage) => {
+  const fetchAgencies = useCallback(() => {
     setLoading(true);
     axios
-      .get(`admin/agency/getAgencies?start=${p}&limit=${limit}`)
+      .get(`admin/agency/getAgencies?start=${page}&limit=${rowsPerPage}&search=${encodeURIComponent(query)}`)
       .then((res) => {
         setLoading(false);
         if (res.data.status) {
           setAgencies(res.data.agencies || []);
           setTotal(res.data.total || 0);
+        } else {
+          setToast("error", res.data.message);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
-        console.error(err);
+        setToast("error", "Couldn't load District Franchises.");
       });
-  };
+  }, [page, rowsPerPage, query]);
 
   useEffect(() => {
     fetchAgencies();
-  }, [page, rowsPerPage]);
+  }, [fetchAgencies]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!name || !code || !email || !password) {
-      setToast("warning", "Please fill all required fields!");
-      return;
-    }
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setPage(1);
+      setQuery(search.trim());
+    }, 350);
+    return () => clearTimeout(t);
+  }, [search]);
 
-    axios
-      .post("admin/agency/store", {
-        name,
-        code,
-        email,
-        password,
-        mobileNumber,
-        commissionRatePercentage: Number(commissionRatePercentage) || 10,
-        state,
-        district,
-        radiusKm: Number(radiusKm) || 50,
-      })
-      .then((res) => {
-        if (res.data && res.data.status) {
-          setToast("success", res.data.message || "District Franchise created successfully!");
-          setOpenModal(false);
-          fetchAgencies();
-          resetForm();
-        } else {
-          setToast("error", res.data?.message || "Failed to create District Franchise!");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        const errMsg = err.response?.data?.message || err.message || "Failed to save District Franchise";
-        setToast("error", errMsg);
-      });
+  const toggleStatus = (item) => {
+    const text = item.isActive
+      ? `Deactivate ${item.name}? Their login stops working immediately. Their Digital Partners keep working.`
+      : `Activate ${item.name} again?`;
+    warningForText(text).then((r) => {
+      if (!r.isConfirmed) return;
+      axios
+        .patch(`admin/agency/toggleStatus?agencyId=${item._id}`)
+        .then((res) => {
+          setToast(res.data.status ? "success" : "error", res.data.message);
+          if (res.data.status) fetchAgencies();
+        })
+        .catch(() => setToast("error", "Couldn't change the status."));
+    });
   };
 
-  const resetForm = () => {
-    setName("");
-    setCode("");
-    setEmail("");
-    setPassword("");
-    setMobileNumber("");
-    setCommissionRatePercentage(10);
-    setState("");
-    setDistrict("");
-    setRadiusKm(50);
-  };
-
-  const toggleStatus = (id) => {
-    axios
-      .patch(`admin/agency/toggleStatus?agencyId=${id}`)
-      .then((res) => {
-        if (res.data && res.data.status) {
-          setToast("success", res.data.message);
-          fetchAgencies();
-        }
-      })
-      .catch((err) => console.error(err));
+  const remove = (item) => {
+    warningForText(`Delete ${item.name}? Only possible if it never had partners or commissions.`).then((r) => {
+      if (!r.isConfirmed) return;
+      axios
+        .delete(`admin/agency/delete?agencyId=${item._id}`)
+        .then((res) => {
+          setToast(res.data.status ? "success" : "error", res.data.message);
+          if (res.data.status) fetchAgencies();
+        })
+        .catch(() => setToast("error", "Couldn't delete the franchise."));
+    });
   };
 
   return (
-    <div className="mainPage p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <Title name="Geofenced District Franchise Management" />
-        <Button
-          btnName="Add District Franchise"
-          newClass="btn-theme"
-          onClick={() => setOpenModal(true)}
+    <div className="pn-page">
+      <PageHeader
+        title="District Franchises"
+        subtitle="Create a franchise for a district and give it a login. Each franchise creates and manages its own Digital Partners."
+      >
+        <input
+          className="form-control"
+          style={{ width: 240 }}
+          placeholder="Search name, district, email"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search franchises"
         />
-      </div>
+        <button className="btn btn-success" onClick={() => setModal("new")}>+ Add District Franchise</button>
+      </PageHeader>
 
-      <div className="card shadow-sm border-0 p-3">
+      <div className="pn-panel">
         <div className="table-responsive">
-          <table className="table table-hover align-middle">
+          <table className="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>No.</th>
-                <th>District Franchise Name</th>
-                <th>Code</th>
-                <th>Email</th>
-                <th>State / District</th>
-                <th>Geofence Radius</th>
-                <th>Commission Rate</th>
+                <th>Franchise</th>
+                <th>District</th>
+                <th>Login</th>
+                <th>Digital Partners</th>
+                <th>Referrals</th>
+                <th>Partner earnings</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td colSpan="9" className="text-center py-4">
-                    Loading District Franchises...
-                  </td>
-                </tr>
+                <EmptyRow colSpan={8}>Loading District Franchises…</EmptyRow>
               ) : agencies.length === 0 ? (
-                <tr>
-                  <td colSpan="9" className="text-center py-4">
-                    No District Franchises found.
-                  </td>
-                </tr>
+                <EmptyRow colSpan={8}>{query ? "No franchise matches your search." : "No District Franchises yet. Add the first one."}</EmptyRow>
               ) : (
-                agencies.map((item, index) => (
-                  <tr key={item._id}>
-                    <td>{(page - 1) * rowsPerPage + index + 1}</td>
-                    <td className="fw-bold">{item.name}</td>
-                    <td><span className="badge bg-secondary">{item.code}</span></td>
-                    <td>{item.email}</td>
-                    <td>{item.state} / {item.district}</td>
-                    <td>{item.radiusKm} km</td>
-                    <td>{item.commissionRatePercentage}%</td>
+                agencies.map((a) => (
+                  <tr key={a._id}>
                     <td>
-                      <span className={`badge ${item.isActive ? "bg-success" : "bg-danger"}`}>
-                        {item.isActive ? "Active" : "Inactive"}
-                      </span>
+                      <button className="btn btn-link p-0 fw-semibold text-start" onClick={() => navigate(`/admin/agencyDetail?agencyId=${a._id}`)}>
+                        {a.name}
+                      </button>
+                      <div><small className="pn-muted">{a.code}</small></div>
                     </td>
                     <td>
-                      <button
-                        className={`btn btn-sm ${item.isActive ? "btn-outline-danger" : "btn-outline-success"}`}
-                        onClick={() => toggleStatus(item._id)}
-                      >
-                        {item.isActive ? "Deactivate" : "Activate"}
-                      </button>
+                      {a.district}
+                      <div><small className="pn-muted">{a.state}</small></div>
+                    </td>
+                    <td>
+                      {a.loginEmail}
+                      {a.mobileNumber ? <div><small className="pn-muted">{a.mobileNumber}</small></div> : null}
+                    </td>
+                    <td>
+                      <span className="fw-semibold">{a.activePartners}</span>
+                      <small className="pn-muted"> active / {a.partnerCount}</small>
+                    </td>
+                    <td>
+                      <span className="fw-semibold">{a.completedReferrals}</span>
+                      <small className="pn-muted"> completed / {a.referrals}</small>
+                    </td>
+                    <td>{inr(a.referralEarningsInr)}</td>
+                    <td><StatusBadge status={a.isActive === false ? "INACTIVE" : "ACTIVE"} /></td>
+                    <td>
+                      <div className="pn-actions">
+                        <button className="btn btn-outline-success" onClick={() => navigate(`/admin/agencyDetail?agencyId=${a._id}`)}>View</button>
+                        <button className="btn btn-outline-secondary" onClick={() => setModal(a)}>Edit</button>
+                        <button className={`btn ${a.isActive === false ? "btn-outline-success" : "btn-outline-warning"}`} onClick={() => toggleStatus(a)}>
+                          {a.isActive === false ? "Activate" : "Deactivate"}
+                        </button>
+                        {a.partnerCount === 0 && (
+                          <button className="btn btn-outline-danger" onClick={() => remove(a)}>Delete</button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -175,74 +161,22 @@ export default function AgencyList() {
             </tbody>
           </table>
         </div>
-
         <Pagination
-          type="agency"
+          type="server"
           activePage={page}
           rowsPerPage={rowsPerPage}
           userTotal={total}
           setPage={setPage}
-          handleRowsPerPage={setRowsPerPage}
+          handleRowsPerPage={(n) => { setRowsPerPage(n); setPage(1); }}
         />
       </div>
 
-      {openModal && (
-        <div className="modal show d-block tab-modal-custom" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Create Geofenced District Franchise</h5>
-                <button type="button" className="btn-close" onClick={() => setOpenModal(false)}></button>
-              </div>
-              <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label className="form-label">District Franchise Name *</label>
-                    <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">District Franchise Code *</label>
-                      <input type="text" className="form-control" value={code} onChange={(e) => setCode(e.target.value)} required />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Commission %</label>
-                      <input type="number" className="form-control" value={commissionRatePercentage} onChange={(e) => setCommissionRatePercentage(e.target.value)} />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Email *</label>
-                      <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Password *</label>
-                      <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">State</label>
-                      <input type="text" className="form-control" value={state} onChange={(e) => setState(e.target.value)} />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">District</label>
-                      <input type="text" className="form-control" value={district} onChange={(e) => setDistrict(e.target.value)} />
-                    </div>
-                    <div className="col-md-4 mb-3">
-                      <label className="form-label">Radius (km)</label>
-                      <input type="number" className="form-control" value={radiusKm} onChange={(e) => setRadiusKm(e.target.value)} />
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setOpenModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary">Create District Franchise</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+      {modal && (
+        <FranchiseFormModal
+          agency={modal === "new" ? null : modal}
+          onClose={() => setModal(null)}
+          onSaved={fetchAgencies}
+        />
       )}
     </div>
   );

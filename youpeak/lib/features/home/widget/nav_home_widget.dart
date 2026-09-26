@@ -1,3 +1,4 @@
+import 'package:youpeak/shared/widgets/youpeak_play_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -148,12 +149,7 @@ class AllTabWidget extends StatelessWidget {
                                       Row(
                                         children: [
                                           const SizedBox(width: 10),
-                                          Image.asset(
-                                            AppIcons.boldVideo,
-                                            width: 28,
-                                            color: AppColor.primaryColor
-                                                .withOpacity(0.8),
-                                          ),
+                                          const YoupeakPlayIcon(size: 28),
                                           const SizedBox(width: 12),
                                           Text(AppStrings.shorts.tr,
                                               style: GoogleFonts.urbanist(
@@ -477,12 +473,7 @@ class PopularTabWidget extends StatelessWidget {
                                       Row(
                                         children: [
                                           const SizedBox(width: 10),
-                                          Image.asset(
-                                            AppIcons.boldVideo,
-                                            width: 28,
-                                            color: AppColor.primaryColor
-                                                .withOpacity(0.8),
-                                          ),
+                                          const YoupeakPlayIcon(size: 28),
                                           const SizedBox(width: 12),
                                           Text(AppStrings.shorts.tr,
                                               style: GoogleFonts.urbanist(
@@ -810,12 +801,7 @@ class NewTabWidget extends StatelessWidget {
                                       Row(
                                         children: [
                                           const SizedBox(width: 10),
-                                          Image.asset(
-                                            AppIcons.boldVideo,
-                                            width: 28,
-                                            color: AppColor.primaryColor
-                                                .withOpacity(0.8),
-                                          ),
+                                          const YoupeakPlayIcon(size: 28),
                                           const SizedBox(width: 12),
                                           Text(AppStrings.shorts.tr,
                                               style: GoogleFonts.urbanist(

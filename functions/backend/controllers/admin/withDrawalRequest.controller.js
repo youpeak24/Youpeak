@@ -29,7 +29,12 @@ exports.index = async (req, res) => {
     let matchQuery = {};
 
     if (req.query.type !== "All") {
-      matchQuery.status = parseInt(req.query.type);
+      const type = parseInt(req.query.type);
+      // Requests created before util/mongooseShim.js applied schema defaults
+      // were stored with no `status` at all; the model default is 1 (pending),
+      // so list them as pending instead of leaving them invisible.
+      if (type === 1) matchQuery.$or = [{ status: 1 }, { status: { $exists: false } }];
+      else matchQuery.status = type;
     }
 
     if (req.query.startDate !== "All" && req.query.endDate !== "All") {

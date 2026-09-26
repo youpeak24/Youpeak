@@ -1,9 +1,10 @@
 const MembershipTier = require("../../models/membershipTier.model");
 const User = require("../../models/user.model");
 const db = require("../../util/connection");
-const referralService = require("../../util/referral.service");
+const creatorPass = require("../../util/creatorPass");
 
-// Get available CREATOR tiers with subscriber-qualification flags
+// Get available CREATOR tiers with subscriber-qualification flags and this
+// creator's prices (3-month / annual, intro or standard).
 exports.getAvailableCreatorTiers = async (req, res) => {
   try {
     const userId = req.query.userId || (req.body && req.body.userId);
@@ -12,20 +13,31 @@ exports.getAvailableCreatorTiers = async (req, res) => {
 
     const all = await MembershipTier.find({ tierType: "CREATOR", isActive: true }).sort({ level: 1 });
     const userSubscribers = user.totalSubscribers || 0;
-    const currentTierId = user.activeCreatorTierId ? String(user.activeCreatorTierId) : null;
+    const passActive = creatorPass.isPassActive(user);
+    const currentTierId = passActive ? String(user.activeCreatorTierId) : null;
 
-    const tiers = all.map((tier) => ({
-      ...tier,
-      isEligible: userSubscribers >= (tier.minSubscribersRequired || 0) &&
-        (tier.maxSubscribers == null || userSubscribers <= tier.maxSubscribers),
-      isCurrentTier: currentTierId === String(tier._id || tier.id),
-      userSubscribers,
+    const tiers = await Promise.all(all.map(async (tier) => {
+      const pricing = await creatorPass.pricingFor(tier, String(user._id || user.id));
+      const isCurrentTier = currentTierId === String(tier._id || tier.id);
+      return {
+        ...tier,
+        isEligible: userSubscribers >= (tier.minSubscribersRequired || 0) &&
+          (tier.maxSubscribers == null || userSubscribers <= tier.maxSubscribers),
+        isCurrentTier,
+        passExpiresAt: isCurrentTier ? user.creatorPassExpiresAt || null : null,
+        introPricing: pricing.introPricing,
+        billingOptions: pricing.options,
+        userSubscribers,
+      };
     }));
 
     return res.status(200).json({
       status: true,
       message: "Creator tiers fetched successfully!",
       userSubscribers,
+      activePass: passActive
+        ? { tierId: currentTierId, expiresAt: user.creatorPassExpiresAt || null, billingPeriod: user.creatorPassBillingPeriod || null }
+        : null,
       tiers,
     });
   } catch (error) {
@@ -68,49 +80,52 @@ exports.upgradeCreatorTier = async (req, res) => {
     // /client/payment/verify, which calls fulfilTierUpgrade() and already
     // assigns activeCreatorTierId directly; this endpoint just re-confirms
     // that assignment idempotently once a paid transaction exists.
-    if ((tier.membershipPrice || 0) > 0) {
-      const paidTxn = await db.findOne("paymentTransactions", {
+    //
+    // Timed passes (3-month / annual) re-confirm only while the paid period
+    // is still running — otherwise an expired pass could be revived for free.
+    // Legacy one-time purchases (no billingPeriod) never expire.
+    let passExpiresAt = null;
+    if (creatorPass.isTimedTier(tier) || (tier.membershipPrice || 0) > 0) {
+      const now = Date.now();
+      const paidTxns = await db.find("paymentTransactions", {
         userId: String(user._id || user.id),
         tierId: String(tier._id || tier.id),
         purpose: "tier_upgrade",
         status: "paid",
       });
-      if (!paidTxn) {
+      const isLifetime = (t) => !t.billingPeriod || t.billingPeriod === "lifetime";
+      const live = paidTxns.filter((t) => isLifetime(t) || Date.parse(t.passExpiresAt) > now);
+      if (live.length === 0) {
+        const pricing = await creatorPass.pricingFor(tier, String(user._id || user.id));
         return res.status(200).json({
           status: false,
           message: `${tier.tierName} is a paid pass. Please complete the payment first.`,
           requiresPayment: true,
-          priceInINR: tier.membershipPrice,
+          priceInINR: pricing.options[0]?.priceINR ?? tier.membershipPrice,
+          billingOptions: pricing.options,
         });
       }
+      passExpiresAt = live.some(isLifetime)
+        ? null
+        : live.map((t) => t.passExpiresAt).sort().pop();
     }
 
     const updated = await db.update("users", user._id || user.id, {
       activeCreatorTierId: tier._id || tier.id,
+      creatorPassExpiresAt: passExpiresAt,
       isMonetization: true,
     });
 
-    // YP-TC §1.5: referrer of a paying member gets a % of the pass price.
-    let referralBonus = null;
-    if ((tier.membershipPrice || 0) > 0) {
-      try {
-        const r = await referralService.handlePaidTierReferral({
-          buyerId: String(user._id || user.id),
-          tierPriceInr: tier.membershipPrice,
-          tierName: tier.tierName,
-        });
-        if (r.ok) referralBonus = { coins: r.bonusCoins, percentage: r.percentage };
-      } catch (e) {
-        console.error("paid-tier referral bonus error:", e.message);
-      }
-    }
-
+    // The paid-tier referral bonus (YP-TC §1.5) is paid once per payment, in
+    // payment.controller.js fulfilTierUpgrade — not here. Paying it here too
+    // credited the referrer again on every call to this endpoint.
     return res.status(200).json({
       status: true,
       message: `Upgraded to ${tier.tierName}! Ad revenue share is now ${tier.creatorRevenueSharePercentage}%.`,
       user: updated,
       tier,
-      referralBonus,
+      passExpiresAt,
+      referralBonus: null,
     });
   } catch (error) {
     console.error("Error upgrading creator tier:", error);

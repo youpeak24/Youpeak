@@ -497,7 +497,7 @@ class FirestoreQuery {
     } else if (this.opType === "count" || this.opType === "countDocuments") {
       return await firestoreDb.countDocuments(this.collectionName, this.query);
     } else if (this.opType === "create") {
-      return await firestoreDb.create(this.collectionName, this.extraData);
+      return await firestoreDb.create(this.collectionName, withSchemaDefaults(this.schema, this.extraData));
     } else if (this.opType === "update") {
       return await firestoreDb.update(this.collectionName, this.query, this.extraData);
     } else if (this.opType === "delete") {
@@ -634,6 +634,68 @@ ObjectId.prototype.valueOf = function () { return this._id; };
 ObjectId.prototype.toJSON = function () { return this._id; };
 ObjectId.isValid = (id) => Boolean(id);
 
+// ── Schema defaults on insert ────────────────────────────────────────────────
+// Real Mongoose fills every schema `default` (and [] for array paths) when a
+// document is inserted. This shim never did, so fields the legacy
+// controllers rely on were silently missing in Firestore — e.g. a new
+// WithDrawRequest had no `status` (default 1 = pending), so the admin's
+// pending list (status == 1) never showed it; a new payout method had no
+// `isEnabled`, so the app's withdrawList hid it. Applied to NEW documents
+// only (create/insertMany/new+save/upsert) — existing docs and query results
+// are untouched.
+const plainObject = (v) => v != null && typeof v === "object" && !Array.isArray(v) && Object.getPrototypeOf(v) === Object.prototype;
+
+function isPathDefinition(def) {
+  if (typeof def === "function" || Array.isArray(def)) return true;
+  if (!plainObject(def)) return false;
+  if ("default" in def) return true;
+  // { type: String } is a path; { type: { type: String } } is a nested object with a field named "type".
+  return "type" in def && !plainObject(def.type);
+}
+
+function defaultFor(def) {
+  if (Array.isArray(def)) return [];
+  if (!plainObject(def)) return undefined;
+  if ("default" in def) {
+    let v = typeof def.default === "function" ? def.default() : def.default;
+    if (def.type === Date && (typeof v === "number" || v instanceof Date)) v = new Date(v).toISOString();
+    if (Array.isArray(v)) return v.slice();
+    if (plainObject(v)) return { ...v };
+    return v;
+  }
+  if (Array.isArray(def.type)) return [];
+  return undefined;
+}
+
+function fillDefaults(definition, data) {
+  const out = { ...data };
+  for (const [key, def] of Object.entries(definition || {})) {
+    if (isPathDefinition(def)) {
+      if (out[key] === undefined) {
+        const v = defaultFor(def);
+        if (v !== undefined) out[key] = v;
+      }
+    } else if (plainObject(def)) {
+      // Nested object: fill its defaults (only when it's absent or a plain object).
+      if (out[key] === undefined || plainObject(out[key])) {
+        const nested = fillDefaults(def, out[key] || {});
+        if (Object.keys(nested).length) out[key] = nested;
+      }
+    }
+  }
+  return out;
+}
+
+function withSchemaDefaults(schema, data) {
+  if (!schema || !schema.definition || !data || typeof data !== "object") return data;
+  try {
+    return fillDefaults(schema.definition, data);
+  } catch (e) {
+    console.error("mongooseShim: applying schema defaults failed:", e.message);
+    return data;
+  }
+}
+
 function createFirestoreModel(modelName, schema) {
   const collectionName = firestoreDb.normalizeCollectionName(modelName);
 
@@ -642,7 +704,9 @@ function createFirestoreModel(modelName, schema) {
   }
 
   ModelConstructor.prototype.save = async function () {
-    const created = await firestoreDb.create(collectionName, this);
+    // Defaults only for a brand-new document (no id yet), like Mongoose's insert.
+    const isNew = this._id == null && this.id == null;
+    const created = await firestoreDb.create(collectionName, isNew ? withSchemaDefaults(schema, { ...this }) : this);
     Object.assign(this, created);
     return this;
   };
@@ -684,7 +748,7 @@ function createFirestoreModel(modelName, schema) {
   };
 
   ModelConstructor.create = async function (data) {
-    const created = await firestoreDb.create(collectionName, data);
+    const created = await firestoreDb.create(collectionName, withSchemaDefaults(schema, data));
     return created ? new ModelConstructor(created) : created;
   };
 
@@ -692,7 +756,7 @@ function createFirestoreModel(modelName, schema) {
     if (!Array.isArray(dataArray)) return [];
     const results = [];
     for (const item of dataArray) {
-      const created = await firestoreDb.create(collectionName, item);
+      const created = await firestoreDb.create(collectionName, withSchemaDefaults(schema, item));
       results.push(created ? new ModelConstructor(created) : created);
     }
     return results;
@@ -749,7 +813,7 @@ function createFirestoreModel(modelName, schema) {
       const existing = await firestoreDb.findOne(collectionName, query);
       if (!existing) {
         if (options && options.upsert) {
-          return await firestoreDb.create(collectionName, buildUpdatePayload({}, updateData));
+          return await firestoreDb.create(collectionName, withSchemaDefaults(schema, buildUpdatePayload({}, updateData)));
         }
         return null;
       }

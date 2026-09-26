@@ -76,12 +76,32 @@ exports.login = async (req, res) => {
       return res.status(200).json({ status: false, message: "Invalid email or password." });
     }
     if (admin.isBlock || admin.isActive === false) {
-      return res.status(200).json({ status: false, message: "This admin account is disabled." });
+      const message =
+        admin.role === "AGENCY_ADMIN"
+          ? "This District Franchise is deactivated. Contact the Youpeak admin."
+          : admin.role === "DIGITAL_PARTNER_ADMIN"
+          ? "This Digital Partner account is suspended or removed. Contact your District Franchise."
+          : "This admin account is disabled.";
+      return res.status(200).json({ status: false, message });
     }
 
     const check = verifyPassword(cleanPassword, admin.password);
     if (!check.ok) {
       return res.status(200).json({ status: false, message: "Invalid email or password." });
+    }
+
+    // Franchise / partner logins follow their business entity's status
+    // (admin.middleware.js enforces the same on every later request).
+    if (admin.role === "AGENCY_ADMIN") {
+      const agency = admin.agencyId ? await db.findById("agencies", admin.agencyId) : null;
+      if (!agency || agency.isActive === false) {
+        return res.status(200).json({ status: false, message: "This District Franchise is deactivated. Contact the Youpeak admin." });
+      }
+    } else if (admin.role === "DIGITAL_PARTNER_ADMIN") {
+      const partner = admin.partnerUserId ? await db.findById("users", admin.partnerUserId) : null;
+      if (!partner || !partner.isDigitalPartner || partner.partnerStatus !== "ACTIVE") {
+        return res.status(200).json({ status: false, message: "This Digital Partner account is suspended or removed. Contact your District Franchise." });
+      }
     }
 
     // Transparently upgrade legacy (cryptr / plaintext) passwords to bcrypt.

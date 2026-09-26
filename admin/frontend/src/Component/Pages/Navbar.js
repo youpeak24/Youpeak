@@ -5,6 +5,7 @@ import Logo from "../../assets/images/logo.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getDefaultCurrency } from "../store/currency/currency.action";
 import { projectName } from "../../util/config";
+import { roleHome } from "./PartnerNetwork/networkUi";
 import { IconMenuDeep, IconLogout, IconSettings, IconUserSquareRounded, IconChevronDown } from "@tabler/icons-react";
 import { warning } from "../../util/Alert";
 import { LOGOUT_ADMIN } from "../store/admin/admin.type";
@@ -82,12 +83,13 @@ const Navbar = (props) => {
                 {/* Mobile logo */}
                 <div className="col-7 logo-show-nav">
                   <Link
-                    to="/admin/mainDashboard"
+                    to={roleHome()}
                     style={{
                       display: "flex",
                       alignItems: "center",
                       gap: "8px",
                       textDecoration: "none",
+                      flexShrink: 0,
                     }}
                   >
                     <img src={Logo} alt="" width={24} height={24} />
@@ -97,6 +99,7 @@ const Navbar = (props) => {
                         fontSize: "0.85rem",
                         color: "var(--text-primary)",
                         letterSpacing: "-0.02em",
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {projectName}

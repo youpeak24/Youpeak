@@ -185,6 +185,10 @@ String historyType(num type) {
       {
         return AppStrings.subscribePrivateChannel.tr;
       }
+    case 21: // Peak Boost sent (backend peakBoost.controller.js)
+      {
+        return "Peak Boost";
+      }
     default:
       {
         return "";

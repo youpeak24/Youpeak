@@ -14,6 +14,10 @@ exports.store = async (req, res) => {
     withdraw.name = req?.body?.name;
     withdraw.details = req?.body?.details?.split(",");
     withdraw.image = req?.body?.image;
+    // Set explicitly: the Firestore mongoose shim doesn't apply schema
+    // defaults, so the model's `isEnabled: true` default never reached the
+    // DB and the app's withdrawList (isEnabled === true) hid every new method.
+    withdraw.isEnabled = true;
     await withdraw.save();
 
     return res.status(200).json({
@@ -99,7 +103,8 @@ exports.delete = async (req, res) => {
 //get Withdraw
 exports.get = async (req, res) => {
   try {
-    const withdraw = await Withdraw.find().sort({ createdAt: 1 }).lean();
+    // Missing flag = enabled (see store()), so the admin switch matches the app.
+    const withdraw = (await Withdraw.find().sort({ createdAt: 1 }).lean()).map((m) => ({ ...m, isEnabled: m.isEnabled !== false }));
 
     return res.status(200).json({
       status: true,
@@ -124,7 +129,8 @@ exports.handleSwitch = async (req, res) => {
       return res.status(200).json({ status: false, message: "Withdraw does not found!" });
     }
 
-    withdraw.isEnabled = !withdraw.isEnabled;
+    // A missing flag counts as enabled, so the first toggle disables it.
+    withdraw.isEnabled = withdraw.isEnabled === false;
     await withdraw.save();
 
     return res.status(200).json({ status: true, message: "Success!!", withdraw });

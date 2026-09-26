@@ -842,12 +842,6 @@ textarea::-webkit-scrollbar {
 }
 
 /* dashboard */
-.heading-dashboard {
-  /* font-weight: 800 !important; */
-  margin-bottom: 8px;
-  color: var(--black--);
-}
-
 .dashBoxData h5 {
   color: #8381cd;
   margin: 0px !important;

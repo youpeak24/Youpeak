@@ -48,6 +48,12 @@ exports.REPORT_TYPE = {
   SPAM_OR_MISLEADING: 5,
   CHILD_ABUSE: 6,
   OTHERS: 7,
+  // IT Rules 2021 statutory grounds (Rule 3(1)(b)), offered in the app's
+  // report sheet alongside the general reasons above.
+  ANTI_NATIONAL: 8,
+  HATE_SPEECH: 9,
+  DEFAMATION: 10,
+  SOVEREIGNTY_VIOLATION: 11,
 };
 
 exports.WITHDRAWAL_STATUS = {

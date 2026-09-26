@@ -1,242 +1,189 @@
-import React, { useEffect, useState } from "react";
-import Title from "../../extra/Title";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { setToast } from "../../../util/toast";
+import {
+  PageHeader, StatCard, StatusBadge, EmptyRow, COMMISSION_SOURCES, getAdminRole, inr,
+} from "../PartnerNetwork/networkUi";
 
 const SOURCE_LABELS = {
-  AD_IMPRESSION: "Ad Impressions",
-  DOWNLOAD: "App Downloads",
-  COIN_PURCHASE: "Coin Purchases",
-  PREMIUM_SUBSCRIPTION: "Premium Subscriptions",
-  VIDEO_UNLOCK: "Video Unlocks",
-  VIP_CREATOR_ONBOARDING: "VIP Creator Onboarding",
-  LOCAL_BUSINESS_ADS: "Local Business Ads",
-  TASKER_ONBOARDING: "Tasker Onboarding",
-  DIGITAL_PARTNER_LICENSE: "Digital Partner License",
-  PAID_CHANNEL: "Paid Channel (legacy)",
+  ...COMMISSION_SOURCES,
+  AD_IMPRESSION: "Ad impressions",
+  DOWNLOAD: "App downloads",
+  COIN_PURCHASE: "Coin purchases",
+  PREMIUM_SUBSCRIPTION: "Premium subscriptions",
+  PAID_CHANNEL: "Paid channel (legacy)",
 };
 
+// Super admin: platform-wide or per-franchise. Franchise login: its own district only.
 export default function AgencyReports() {
-  const [report, setReport] = useState(null);
+  const isSuper = getAdminRole() === "SUPER_ADMIN";
   const [agencies, setAgencies] = useState([]);
-  const [selectedAgency, setSelectedAgency] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({ agencyId: "", startDate: "", endDate: "" });
+  const [applied, setApplied] = useState(filters);
+  const [report, setReport] = useState(null);
+  const [agency, setAgency] = useState(null);
   const [partners, setPartners] = useState([]);
-  const [loadingPartners, setLoadingPartners] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAgencies();
-    fetchReport();
-    fetchDigitalPartners();
-  }, []);
-
-  const fetchAgencies = () => {
+    if (!isSuper) return;
     axios
-      .get("admin/agency/getAgencies?limit=100")
-      .then((res) => {
-        if (res.data.status) setAgencies(res.data.agencies);
-      })
-      .catch((err) => console.error(err));
-  };
+      .get("admin/agency/getAgencies?start=1&limit=100")
+      .then((res) => res.data.status && setAgencies(res.data.agencies || []))
+      .catch(() => {});
+  }, [isSuper]);
 
-  const fetchReport = () => {
+  const load = useCallback(() => {
     setLoading(true);
-    let url = `admin/agencyReport/getAgencyReport?agencyId=${selectedAgency}`;
-    if (startDate) url += `&startDate=${startDate}`;
-    if (endDate) url += `&endDate=${endDate}`;
-
-    axios
-      .get(url)
-      .then((res) => {
+    const q = new URLSearchParams();
+    if (isSuper && applied.agencyId) q.set("agencyId", applied.agencyId);
+    if (applied.startDate) q.set("startDate", applied.startDate);
+    if (applied.endDate) q.set("endDate", applied.endDate);
+    Promise.all([
+      axios.get(`admin/agencyReport/getAgencyReport?${q.toString()}`),
+      axios.get(`admin/agencyReport/getDigitalPartners?${isSuper && applied.agencyId ? `agencyId=${applied.agencyId}` : ""}`),
+    ])
+      .then(([r, p]) => {
         setLoading(false);
-        if (res.data.status) setReport(res.data.report);
+        if (r.data.status) {
+          setReport(r.data.report);
+          setAgency(r.data.agency);
+        } else {
+          setToast("error", r.data.message);
+        }
+        if (p.data.status) setPartners(p.data.partners || []);
       })
-      .catch((err) => {
+      .catch(() => {
         setLoading(false);
-        console.error(err);
+        setToast("error", "Couldn't generate the report.");
       });
-  };
+  }, [applied, isSuper]);
 
-  const fetchDigitalPartners = () => {
-    setLoadingPartners(true);
-    let url = "admin/agencyReport/getDigitalPartners";
-    if (selectedAgency) url += `?agencyId=${selectedAgency}`;
+  useEffect(() => { load(); }, [load]);
 
-    axios
-      .get(url)
-      .then((res) => {
-        setLoadingPartners(false);
-        if (res.data.status) setPartners(res.data.partners || []);
-      })
-      .catch((err) => {
-        setLoadingPartners(false);
-        console.error(err);
-      });
-  };
-
-  const handleFilter = (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    fetchReport();
-    fetchDigitalPartners();
+    if (filters.startDate && filters.endDate && filters.startDate > filters.endDate) {
+      return setToast("error", "Start date must be before the end date.");
+    }
+    setApplied(filters);
   };
+
+  const set = (k) => (e) => setFilters((f) => ({ ...f, [k]: e.target.value }));
+  const sources = report ? Object.entries(report.commissionBySource || {}) : [];
+  const period = applied.startDate || applied.endDate ? `${applied.startDate || "start"} → ${applied.endDate || "today"}` : "All time";
 
   return (
-    <div className="mainPage p-4">
-      <Title name="District Franchise & Regional Performance Reports" />
+    <div className="pn-page">
+      <PageHeader
+        title="Franchise Reports"
+        subtitle={report?.scope === "PLATFORM" ? `Whole platform · ${period}` : `${agency ? `${agency.name} · ${agency.district}` : "Your franchise"} · ${period}`}
+      />
 
-      <div className="card shadow-sm border-0 p-3 mb-4">
-        <form onSubmit={handleFilter} className="row g-3 align-items-end">
-          <div className="col-md-4">
-            <label className="form-label">Filter by District Franchise</label>
-            <select className="form-select" value={selectedAgency} onChange={(e) => setSelectedAgency(e.target.value)}>
-              <option value="">All District Franchises / Platform Global</option>
-              {agencies.map((agency) => (
-                <option key={agency._id} value={agency._id}>
-                  {agency.name} ({agency.district || agency.state})
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-md-3">
-            <label className="form-label">Start Date</label>
-            <input type="date" className="form-control" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-          </div>
-          <div className="col-md-3">
-            <label className="form-label">End Date</label>
-            <input type="date" className="form-control" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-          </div>
-          <div className="col-md-2">
-            <button type="submit" className="btn btn-primary w-100">Generate Report</button>
-          </div>
-        </form>
-      </div>
-
-      <div className="card shadow-sm border-0 p-4">
-        {loading ? (
-          <div className="text-center py-5">Generating Report...</div>
-        ) : !report ? (
-          <div className="text-center py-5">No report data available.</div>
-        ) : (
-          <div className="row g-4">
-            <div className="col-md-4">
-              <div className="p-3 border rounded">
-                <h6 className="text-muted">Total Registered Users</h6>
-                <h4>{report.totalUsers}</h4>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="p-3 border rounded">
-                <h6 className="text-muted">App Downloads</h6>
-                <h4>{report.totalDownloads}</h4>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="p-3 border rounded">
-                <h6 className="text-muted">Regional Video Views</h6>
-                <h4>{report.totalVideoViews}</h4>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="p-3 border rounded">
-                <h6 className="text-muted">Ad Impressions</h6>
-                <h4>{report.totalAdImpressions}</h4>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="p-3 border rounded">
-                <h6 className="text-muted">Gross Platform Revenue</h6>
-                <h4 className="text-primary">₹ {Number(report?.totalGrossRevenue || 0).toFixed(2)}</h4>
-              </div>
-            </div>
-            <div className="col-md-4">
-              <div className="p-3 border rounded">
-                <h6 className="text-muted">Commission Share</h6>
-                <h4 className="text-success">₹ {Number(report?.totalCommissionEarned || 0).toFixed(2)}</h4>
-              </div>
-            </div>
-
-            {Object.keys(report.commissionBySource || {}).length > 0 && (
-              <div className="col-12">
-                <h6 className="text-muted mt-2 mb-3">Revenue Stream Breakdown</h6>
-                <div className="table-responsive">
-                  <table className="table table-hover align-middle">
-                    <thead>
-                      <tr>
-                        <th>Revenue Stream</th>
-                        <th>Transactions</th>
-                        <th>Gross Amount</th>
-                        <th>Your Commission</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(report.commissionBySource).map(([key, v]) => (
-                        <tr key={key}>
-                          <td>{SOURCE_LABELS[key] || key}</td>
-                          <td>{v.count}</td>
-                          <td>₹ {Number(v.grossAmount).toFixed(2)}</td>
-                          <td className="text-success">₹ {Number(v.commissionAmount).toFixed(2)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-          </div>
+      <form className="pn-panel pn-panel-body pn-filters mb-3" onSubmit={submit}>
+        {isSuper && (
+          <select className="form-control" value={filters.agencyId} onChange={set("agencyId")} aria-label="District Franchise">
+            <option value="">Whole platform</option>
+            {agencies.map((a) => <option key={a._id} value={a._id}>{a.name} ({a.district})</option>)}
+          </select>
         )}
-      </div>
+        <label className="mb-0 d-flex align-items-center gap-2">
+          <span className="pn-muted" style={{ whiteSpace: "nowrap" }}>From</span>
+          <input type="date" className="form-control" value={filters.startDate} onChange={set("startDate")} />
+        </label>
+        <label className="mb-0 d-flex align-items-center gap-2">
+          <span className="pn-muted" style={{ whiteSpace: "nowrap" }}>To</span>
+          <input type="date" className="form-control" value={filters.endDate} onChange={set("endDate")} />
+        </label>
+        <button type="submit" className="btn btn-success" style={{ borderRadius: 0 }}>Generate report</button>
+      </form>
 
-      <div className="card shadow-sm border-0 p-4 mt-4">
-        <h6 className="text-muted mb-3">Digital Partners in This Territory</h6>
-        <div className="table-responsive">
-          <table className="table table-hover align-middle">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Name / Email</th>
-                <th>District</th>
-                <th>Status</th>
-                <th>License Fee</th>
-                <th>Ad Credits</th>
-                <th>Their Referrals</th>
-                <th>Activated On</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loadingPartners ? (
-                <tr>
-                  <td colSpan="8" className="text-center py-4">Loading Digital Partners...</td>
-                </tr>
-              ) : partners.length === 0 ? (
-                <tr>
-                  <td colSpan="8" className="text-center py-4">No Digital Partners activated in this territory yet.</td>
-                </tr>
-              ) : (
-                partners.map((p, idx) => (
-                  <tr key={p.userId}>
-                    <td>{idx + 1}</td>
-                    <td>
-                      <div className="fw-bold">{p.fullName || "—"}</div>
-                      <small className="text-muted">{p.email}</small>
-                    </td>
-                    <td>{p.district || "—"}</td>
-                    <td>
-                      <span className={`badge ${p.partnerStatus === "ACTIVE" ? "bg-success" : "bg-secondary"}`}>
-                        {p.partnerStatus}
-                      </span>
-                    </td>
-                    <td>₹ {Number(p.licenseFeePaid || 0).toFixed(0)}</td>
-                    <td>₹ {Number(p.adCreditsBalance || 0).toFixed(0)}</td>
-                    <td>{p.totalReferrals || 0}</td>
-                    <td>{p.activatedAt ? new Date(p.activatedAt).toLocaleDateString() : "—"}</td>
+      {loading ? (
+        <div className="pn-muted">Generating report…</div>
+      ) : !report ? (
+        <div className="pn-muted">No report data.</div>
+      ) : (
+        <>
+          <div className="pn-stats">
+            <StatCard tone="info" label={report.scope === "PLATFORM" ? "New users" : "Users in district"} value={report.totalUsers} hint={report.scope === "PLATFORM" ? "Registered in this period" : "By profile district"} />
+            <StatCard tone="accent" label="Digital Partners" value={report.totalDigitalPartners} hint={report.activeDigitalPartners != null ? `${report.activeDigitalPartners} active` : undefined} />
+            {report.scope === "FRANCHISE" && (
+              <>
+                <StatCard label="Referrals" value={report.totalReferrals} hint={`${report.completedReferrals} completed · ${report.lifetimeReferrals} all time`} />
+                <StatCard label="Referral rewards paid" value={inr(report.referralRewardsPaidInr)} />
+              </>
+            )}
+            {report.scope === "PLATFORM" && (
+              <>
+                <StatCard label="App downloads" value={report.totalDownloads} />
+                <StatCard label="Video views" value={report.totalVideoViews} hint="All time" />
+                <StatCard label="Ad impressions" value={report.totalAdImpressions} hint="All time" />
+              </>
+            )}
+            <StatCard tone="warning" label="Franchise commission" value={inr(report.totalCommissionEarned)} hint={`on ${inr(report.totalGrossRevenue)} revenue`} />
+          </div>
+
+          <div className="pn-panel">
+            <div className="pn-panel-head"><h6>Commission by source</h6></div>
+            <div className="table-responsive">
+              <table className="table align-middle mb-0">
+                <thead><tr><th>Source</th><th>Transactions</th><th>Gross revenue</th><th>Commission</th></tr></thead>
+                <tbody>
+                  {sources.length === 0 ? (
+                    <EmptyRow colSpan={4}>No commissions in this period.</EmptyRow>
+                  ) : (
+                    sources.map(([key, v]) => (
+                      <tr key={key}>
+                        <td>{SOURCE_LABELS[key] || key}</td>
+                        <td>{v.count}</td>
+                        <td>{inr(v.grossAmount)}</td>
+                        <td className="fw-semibold">{inr(v.commissionAmount)}</td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="pn-panel">
+            <div className="pn-panel-head"><h6>Digital Partners ({partners.length})</h6></div>
+            <div className="table-responsive">
+              <table className="table align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Partner</th>
+                    {isSuper && <th>Franchise</th>}
+                    <th>Referrals</th>
+                    <th>Earned</th>
+                    <th>Licence fee</th>
+                    <th>Status</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                </thead>
+                <tbody>
+                  {partners.length === 0 ? (
+                    <EmptyRow colSpan={isSuper ? 6 : 5}>No Digital Partners.</EmptyRow>
+                  ) : (
+                    partners.map((p) => (
+                      <tr key={p.userId}>
+                        <td>
+                          <div className="fw-semibold">{p.fullName}</div>
+                          <small className="pn-muted">{p.email}</small>
+                        </td>
+                        {isSuper && <td>{p.agencyName || <span className="pn-muted">Not linked</span>}</td>}
+                        <td>{p.referrals.completed} / {p.referrals.total}</td>
+                        <td>{inr(p.earnings.referralInr)}</td>
+                        <td>{inr(p.licenseFeePaid)}</td>
+                        <td><StatusBadge status={p.partnerStatus} /></td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

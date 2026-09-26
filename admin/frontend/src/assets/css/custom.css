@@ -324,9 +324,9 @@ input::-webkit-inner-spin-button {
   font-weight: 500;
 }
 
-/* tost */
-.Toastify__toast-body div {
-  text-transform: capitalize !important;
+/* tost — capitalise only the first letter; `capitalize` Title-Cased Every Word of full-sentence messages */
+.Toastify__toast-body div::first-letter {
+  text-transform: uppercase;
 }
 
 /* tost */
@@ -522,20 +522,6 @@ thead {
 .page-btn svg {
   width: 16px;
   height: 18px;
-}
-
-.active {
-  height: 45px;
-  width: 45px;
-  /* padding: 10px 17px; */
-  border-radius: 8px;
-  color: #cfcfcf;
-  border: none;
-  /* margin-top: 15px; */
-}
-
-.active svg path {
-  color: white;
 }
 
 .active-btn {
@@ -1055,7 +1041,6 @@ body.modal-open {
 .multiButton button {
   border-radius: 4px;
   min-width: 87px;
-  width: 100%;
   font-weight: 400 !important;
   /* margin: 2px; */
   padding: 7px 20px;

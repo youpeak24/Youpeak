@@ -90,10 +90,9 @@ async function creditCoins(userId, coins, bucketField, meta) {
   if (!userId || coins <= 0) return 0;
   const u = await db.findById("users", userId);
   if (!u || u.isBlock) return 0;
-  const deltas = {
-    coin: coins,
-    totalEarningAmount: coins * coinToInrRate(),
-  };
+  // Coins only — the user's coin → ₹ conversion is what adds withdrawable
+  // totalEarningAmount; crediting both paid the same share out twice.
+  const deltas = { coin: coins };
   if (bucketField) deltas[bucketField] = coins;
   await db.incrementFields("users", u._id || u.id, deltas);
   try {

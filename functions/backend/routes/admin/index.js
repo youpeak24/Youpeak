@@ -46,6 +46,7 @@ const creatorFunding = require("./creatorFunding.route");
 const localBusinessAd = require("./localBusinessAd.route");
 const partnerPortal = require("./partnerPortal.route");
 const digitalPartner = require("./digitalPartner.route");
+const franchisePortal = require("./franchisePortal.route");
 
 //exports admin's route.js
 route.use("/admin", admin);
@@ -87,6 +88,8 @@ route.use("/creatorFunding", AdminMiddleware, CheckScope, creatorFunding);
 route.use("/localBusinessAd", AdminMiddleware, CheckScope, localBusinessAd);
 route.use("/partnerPortal", AdminMiddleware, CheckScope, partnerPortal);
 route.use("/digitalPartner", AdminMiddleware, CheckScope, digitalPartner);
+route.use("/franchisePortal", AdminMiddleware, CheckScope, franchisePortal);
+route.use("/platformConfig", AdminMiddleware, CheckScope, require("./platformConfig.route"));
 route.use("/", admin);
 
 module.exports = route;

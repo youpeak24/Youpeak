@@ -207,7 +207,7 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
       coin: freeTierBonusCoins,
       referralRewardCoin: freeTierBonusCoins,
       totalRewardCoin: freeTierBonusCoins,
-      totalEarningAmount: freeTierBonusCoins * 0.01,
+      // Coins only (see releaseHeldReferrals) — converting them adds the withdrawable ₹.
     });
     await db.create("histories", {
       userId: referrerId,
@@ -298,7 +298,11 @@ async function releaseHeldReferrals() {
         "users",
         rec.referrerId,
         "pendingReferralCoin",
-        { coin: 1, referralRewardCoin: 1, totalRewardCoin: 1, totalEarningAmount: 0.01 },
+        // Coins only, like every other reward (rewardEngine.js): the user's
+        // coin → ₹ conversion (client/withDrawalRequest.controller.js) is what
+        // adds withdrawable totalEarningAmount. Crediting ₹ here as well let
+        // the same referral reward be withdrawn twice.
+        { coin: 1, referralRewardCoin: 1, totalRewardCoin: 1 },
         coins
       );
       if (!moveResult.ok || moveResult.moved <= 0) continue;
@@ -342,7 +346,7 @@ async function handlePaidTierReferral({ buyerId, tierPriceInr, tierName = "" }) 
     coin: bonusCoins,
     referralRewardCoin: bonusCoins,
     totalRewardCoin: bonusCoins,
-    totalEarningAmount: bonusCoins * 0.01,
+    // Coins only (see releaseHeldReferrals) — converting them adds the withdrawable ₹.
   });
   await db.create("histories", {
     userId: referrerId,

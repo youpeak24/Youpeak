@@ -30,6 +30,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'package:youpeak/features/live/widget/device_orientation.dart';
 import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/features/auth/phone/presentation/phone_login_view.dart';
 
 class LetsYouInView extends StatefulWidget {
   const LetsYouInView({super.key});
@@ -99,6 +100,13 @@ class _LetsYouInViewState extends State<LetsYouInView> {
                       const SizedBox(width: 8),
                       Image.asset(AppVisuals.wave, width: 40, height: 40),
                     ],
+                  ),
+                  SizedBox(height: Get.height / 35),
+                  // Primary sign-in: Firebase Phone OTP.
+                  ButtonItemUi(
+                    title: "Continue with phone",
+                    icon: const Icon(Icons.phone_iphone_rounded, color: AppColor.primaryColor, size: 26),
+                    callback: () => Get.to(() => const PhoneLoginView()),
                   ),
                   SizedBox(height: Get.height / 35),
                   ButtonItemUi(

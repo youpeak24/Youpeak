@@ -1,3 +1,4 @@
+import 'package:youpeak/core/deep_link/referral_link.dart';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -131,8 +132,15 @@ class AppSettings {
     if (BranchIoServices.userId != loginUserId) {
       // Branch fills referralCode on the phone app; a youpeak.app/share link
       // (the web app's referral link) fills DeepLinkServices.referralCode.
-      final referralCode = BranchIoServices.referralCode.isNotEmpty ? BranchIoServices.referralCode : DeepLinkServices.referralCode;
+      // A youpeak.app/<CODE> link opened before install/sign-up is kept in
+      // ReferralLink until now.
+      final referralCode = BranchIoServices.referralCode.isNotEmpty
+          ? BranchIoServices.referralCode
+          : DeepLinkServices.referralCode.isNotEmpty
+              ? DeepLinkServices.referralCode
+              : (ReferralLink.pending ?? "");
       ReferralCodeApplyApi.callApi(loginUserId: loginUserId, referralCode: referralCode);
+      ReferralLink.clear();
     }
   }
 }

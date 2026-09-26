@@ -16,6 +16,18 @@ const Login = (props) => {
     isAuth && navigate("/admin");
   }, [isAuth]);
 
+  // Set by util/AxiosInterceptor.js when a franchise/partner account was
+  // disabled mid-session.
+  useEffect(() => {
+    try {
+      const reason = sessionStorage.getItem("logoutReason");
+      if (reason) {
+        sessionStorage.removeItem("logoutReason");
+        setToast("error", reason);
+      }
+    } catch (e) { /* ignore */ }
+  }, []);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

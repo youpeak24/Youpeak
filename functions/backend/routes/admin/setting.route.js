@@ -12,6 +12,9 @@ const settingController = require("../../controllers/admin/setting.controller");
 //update Setting
 route.patch("/update", AdminMiddleware, checkAccessWithSecretKey(), settingController.update);
 
+// Republish the app's live config (Firestore system_configs/*)
+route.post("/publishSystemConfigs", AdminMiddleware, checkAccessWithSecretKey(), settingController.publishSystemConfigs);
+
 //get setting data
 route.get("/", checkAccessWithSecretKey(), settingController.index);
 

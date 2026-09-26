@@ -30,6 +30,9 @@ import 'package:quick_actions/quick_actions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:youpeak/core/platform/device_identity.dart';
 import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/core/network/app_session.dart';
+import 'package:youpeak/core/utils/custom_toast.dart';
+import 'package:youpeak/features/access_gate/presentation/activation_lock_view.dart';
 
 class SplashScreenView extends StatefulWidget {
   const SplashScreenView({super.key});
@@ -68,6 +71,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
       }
 
       await Future.wait([
+        AppSession.ready(),
         AdminSettingsApi.callApi().timeout(const Duration(seconds: 4), onTimeout: () => null),
         if (Database.loginUserId != null)
           GetProfileApi.callApi(Database.loginUserId!).timeout(const Duration(seconds: 4), onTimeout: () => null),
@@ -147,6 +151,18 @@ class _SplashScreenViewState extends State<SplashScreenView> {
               Get.offAll(() => const LoginView());
             } else if (GetProfileApi.profileModel!.user!.isBlock == true) {
               Get.dialog(const BlockedUserDialog(), barrierDismissible: false);
+            } else if (!AppSession.isEstablished) {
+              // Logged in before the per-user API session existed (or it was
+              // cleared): one fresh sign-in gives earning, boosts and
+              // withdrawals a verified session.
+              CustomToast.show("Please sign in again to keep earning.");
+              Database.logOut();
+            } else if (GetProfileApi.accessGate?["locked"] == true) {
+              final gate = GetProfileApi.accessGate!;
+              Get.offAll(() => ActivationLockView(
+                    activationUrl: (gate["activationUrl"] as String?) ?? "https://youpeak.in",
+                    reason: gate["reason"] as String?,
+                  ));
             } else {
               Get.offAll(() => const MainHomePageView());
             }

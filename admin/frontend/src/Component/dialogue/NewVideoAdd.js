@@ -985,7 +985,7 @@ function NewVideoAdd(props) {
                         Schedule Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1000,14 +1000,14 @@ function NewVideoAdd(props) {
                           checked={scheduleType == 1 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="scheduleType"
+                          className="form-check-label mb-1 "
+                          htmlFor="scheduleType"
                         >
                           Schedule
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1022,8 +1022,8 @@ function NewVideoAdd(props) {
                           checked={scheduleType == 2 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="scheduleType"
+                          className="form-check-label mb-1 "
+                          htmlFor="scheduleType"
                         >
                           Not Schedule
                         </label>
@@ -1068,7 +1068,7 @@ function NewVideoAdd(props) {
                         Visibility Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1082,7 +1082,7 @@ function NewVideoAdd(props) {
                           }}
                           checked={visibilityType == 1 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="normalVideo">
+                        <label className="form-check-label mb-1 " htmlFor="normalVideo">
                           Public
                         </label>
                       </div>
@@ -1101,7 +1101,7 @@ function NewVideoAdd(props) {
                           }}
                           checked={visibilityType == 2 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="shortVideo">
+                        <label className="form-check-label mb-1 " htmlFor="shortVideo">
                           Private
                         </label>
                       </div>
@@ -1120,7 +1120,7 @@ function NewVideoAdd(props) {
                           }}
                           checked={visibilityType == 3 ? true : false}
                         />
-                        <label class="form-check-label mb-1 " for="shortVideo">
+                        <label className="form-check-label mb-1 " htmlFor="shortVideo">
                           Unlisted
                         </label>
                       </div>
@@ -1141,7 +1141,7 @@ function NewVideoAdd(props) {
                         Comment Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1156,14 +1156,14 @@ function NewVideoAdd(props) {
                           checked={commentType == 1 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="commentType1"
+                          className="form-check-label mb-1 "
+                          htmlFor="commentType1"
                         >
                           Allow All
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1178,14 +1178,14 @@ function NewVideoAdd(props) {
                           checked={commentType == 2 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="commentType2"
+                          className="form-check-label mb-1 "
+                          htmlFor="commentType2"
                         >
                           Disable
                         </label>
                       </div>
                       {/* <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <div style={{ width: "17px" }}>
@@ -1202,14 +1202,14 @@ function NewVideoAdd(props) {
                           />
                         </div>
                         <label
-                          class="form-check-label mb-1 "
-                          for="commentType3"
+                          className="form-check-label mb-1 "
+                          htmlFor="commentType3"
                         >
                           Hold Potentially InApproPrivate For Review
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1224,8 +1224,8 @@ function NewVideoAdd(props) {
                           checked={commentType == 4 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="commentType4"
+                          className="form-check-label mb-1 "
+                          htmlFor="commentType4"
                         >
                           Hold All For Review
                         </label>
@@ -1247,7 +1247,7 @@ function NewVideoAdd(props) {
                         Audience Type :
                       </label>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1262,14 +1262,14 @@ function NewVideoAdd(props) {
                           checked={audienceType == 1 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="audienceType1"
+                          className="form-check-label mb-1 "
+                          htmlFor="audienceType1"
                         >
                           Kids
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <input
@@ -1284,14 +1284,14 @@ function NewVideoAdd(props) {
                           checked={audienceType == 2 ? true : false}
                         />
                         <label
-                          class="form-check-label mb-1 "
-                          for="audienceType2"
+                          className="form-check-label mb-1 "
+                          htmlFor="audienceType2"
                         >
                           Adults
                         </label>
                       </div>
                       <div
-                        class=" justify-content-start d-flex align-items-center mr-3 pr-2"
+                        className=" justify-content-start d-flex align-items-center mr-3 pr-2"
                         style={{ marginTop: "3px" }}
                       >
                         <div style={{ width: "17px" }}>
@@ -1308,8 +1308,8 @@ function NewVideoAdd(props) {
                           />
                         </div>
                         <label
-                          class="form-check-label mb-1 "
-                          for="audienceType3"
+                          className="form-check-label mb-1 "
+                          htmlFor="audienceType3"
                         >
                           Both
                         </label>

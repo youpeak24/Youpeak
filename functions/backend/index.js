@@ -69,7 +69,9 @@ const fs = require("fs");
 const settingJson = require("./setting");
 const { loadSettings, settingsMiddleware } = require("./util/loadSettings");
 global.settingJSON = { ...settingJson };
-loadSettings(true).catch(() => {}); // warm it on boot
+loadSettings(true)
+  .then(() => require("./util/systemConfig.service").publishSystemConfigs())
+  .catch(() => {}); // warm it on boot
 global.updateSettingFile = (settingData) => { global.settingJSON = settingData; };
 
 // keep global.settingJSON fresh (respects SETTINGS_TTL_MS) before each request

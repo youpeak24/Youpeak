@@ -7,15 +7,14 @@ import 'package:youpeak/shared/widgets/loader_ui.dart';
 import 'package:youpeak/core/storage/database/database.dart';
 import 'package:youpeak/main.dart';
 import 'package:youpeak/features/profile/api/get_profile_api.dart';
-import 'package:youpeak/core/payment/razorpay/razorpay_service.dart';
 import 'package:youpeak/features/tiers/api/tasker_tier_api.dart';
 import 'package:youpeak/core/theme/app_color.dart';
 import 'package:youpeak/core/assets/app_icons.dart';
 import 'package:youpeak/core/assets/app_visuals.dart';
 import 'package:youpeak/shared/widgets/app_artwork.dart';
-import 'package:youpeak/core/payment/payment_api.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 import 'package:youpeak/core/constants/app_string.dart';
+import 'package:youpeak/core/membership/membership_portal.dart';
 
 // Tasker Starter Pass — any Tasker can buy any paid tier directly (a paid
 // instant-skip alongside the free, watch-hour-based progression), so unlike
@@ -32,18 +31,11 @@ class _TaskerTierViewState extends State<TaskerTierView> {
   List<Map<String, dynamic>> tiers = [];
   int totalWatchMinutes = 0;
   String? purchasingTierId;
-  final RazorPayService _razorPayService = RazorPayService();
 
   @override
   void initState() {
     super.initState();
     loadTiers();
-  }
-
-  @override
-  void dispose() {
-    _razorPayService.dispose();
-    super.dispose();
   }
 
   Future<void> loadTiers() async {
@@ -59,48 +51,16 @@ class _TaskerTierViewState extends State<TaskerTierView> {
     });
   }
 
+  // Store compliance: passes are bought on the web portal (youpeak.in, via
+  // Razorpay / PhonePe there), never inside the app. The new tier shows up
+  // here once the payment is confirmed; pull to refresh or reopen.
   Future<void> onUpgrade(Map<String, dynamic> tier) async {
     final tierId = (tier["_id"] ?? tier["id"])?.toString();
     if (tierId == null || purchasingTierId != null) return;
     setState(() => purchasingTierId = tierId);
-
-    final order = await PaymentApi.createOrder(purpose: "tier_upgrade", tierId: tierId);
+    await MembershipPortal.open(plan: tierId);
     if (!mounted) return;
     setState(() => purchasingTierId = null);
-
-    if (order["status"] != true || order["checkout"] == null) {
-      CustomToast.show(order["message"]?.toString() ?? AppStrings.someThingWentWrong.tr);
-      return;
-    }
-
-    final checkout = Map<String, dynamic>.from(order["checkout"]);
-    _razorPayService.openCheckout(
-      checkout: checkout,
-      appName: AppStrings.appName.tr,
-      email: GetProfileApi.profileModel?.user?.email,
-      contact: GetProfileApi.profileModel?.user?.mobileNumber,
-      onSuccess: (response) async {
-        if (!mounted) return;
-        Get.dialog(const LoaderUi(), barrierDismissible: false);
-        final verify = await PaymentApi.verify(
-          orderId: response.orderId ?? "",
-          paymentId: response.paymentId ?? "",
-          signature: response.signature ?? "",
-        );
-        if (Get.isDialogOpen == true) Get.back();
-        if (verify["status"] == true) {
-          await GetProfileApi.callApi(Database.loginUserId ?? "");
-          CustomToast.celebrate(AppStrings.tierUpgradeSuccess.tr, AppVisuals.partyPopper);
-          await loadTiers();
-        } else {
-          CustomToast.show(verify["message"]?.toString() ?? AppStrings.someThingWentWrong.tr);
-        }
-      },
-      onError: (message) {
-        if (!mounted) return;
-        CustomToast.show(message);
-      },
-    );
   }
 
   BoxDecoration cardDecoration({bool highlighted = false}) => BoxDecoration(

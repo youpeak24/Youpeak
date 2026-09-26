@@ -22,7 +22,7 @@ import 'package:youpeak/features/live/widget/device_orientation.dart';
 import 'package:youpeak/features/library/api/create_watch_history_api.dart';
 import 'package:youpeak/features/bites/view/nav_shorts_details_view.dart';
 import 'package:youpeak/features/subscriptions/api/subscribe_channel_api.dart';
-import 'package:youpeak/features/monetization/api/video_engagement_reward_api.dart';
+import 'package:youpeak/features/watch_tracking/presentation/watch_heartbeat_tracker.dart';
 import 'package:youpeak/features/channel/view/your_channel_view.dart';
 import 'package:youpeak/features/search/view/search_view.dart';
 import 'package:youpeak/features/video/api/unlock_private_video_api.dart';
@@ -62,6 +62,10 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
   RxBool isPrivateContent = false.obs;
 
   VideoPlayerController? videoPlayerController;
+
+  // Reports genuine viewing (loops, mute and background excluded) to the
+  // server's watch-time ledger.
+  WatchHeartbeatTracker? watchTracker;
 
   RxBool isVideoDetailsLoading = true.obs;
   RxBool isVideoLoading = true.obs;
@@ -150,6 +154,8 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
           showControlsOnInitialize: false,
           showControls: false,
         );
+        watchTracker?.detach();
+        watchTracker = WatchHeartbeatTracker(videoId: widget.videoId)..attach(videoPlayerController!);
         if (chewieController != null && (videoPlayerController?.value.isInitialized ?? false)) {
           isVideoLoading.value = false;
           if (isPrivateContent.value == false) onPlayVideo();
@@ -166,8 +172,9 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
             AppSettings.showLog("Video Engagement Duration => ${videoPlayerController!.value.position} -- ${videoPlayerController!.value.duration}");
 
             if (videoPlayerController!.value.position >= videoPlayerController!.value.duration) {
-              AppSettings.showLog("Video Engagement Reward Method Calling...");
-              VideoEngagementRewardApi.callApi(loginUserId: Database.loginUserId ?? "", videoId: widget.videoId, totalWatchTime: videoPlayerController!.value.duration.inSeconds.toString());
+              // Loop. Watch time comes from watchTracker, which skips the
+              // restart jump (this used to report the short's full length as
+              // watch time on every loop).
               videoPlayerController?.seekTo(Duration.zero);
               onPlayVideo();
             }
@@ -466,6 +473,8 @@ class _ShortsVideoDetailsViewState extends State<ShortsVideoDetailsView> {
 
   void onClose() {
     try {
+      watchTracker?.detach();
+      watchTracker = null;
       videoPlayerController?.dispose();
       chewieController?.dispose();
       chewieController = null;

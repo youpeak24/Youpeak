@@ -1,7 +1,8 @@
 /**
  * Payment flow (gateway-agnostic; Razorpay built-in).
  *
- *   POST /client/payment/createOrder   { userId, purpose, tierId?, coinPlanId?, premiumPlanId? }
+ *   POST /client/payment/createOrder   { userId, purpose, tierId?, billingPeriod?, coinPlanId?, premiumPlanId? }
+ *        billingPeriod ("quarterly" | "annual") picks the Creator VIP Pass length; default annual
  *        -> creates a gateway order + a `created` PaymentTransaction
  *   POST /client/payment/verify        { userId, orderId, paymentId, signature }
  *        -> verifies the client callback, marks paid, fulfils
@@ -21,12 +22,13 @@ const { recordAgencyCommission } = require("../../util/revenueCommission.service
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 const creatorFunding = require("../../util/creatorFunding.service");
 const { grantDigitalPartnerLicense } = require("../../util/digitalPartner.service");
-const { PROMOTION_PLANS } = require("./videoPromotion.controller");
+const { findPromotionPlan } = require("../../util/platformConfig");
+const creatorPass = require("../../util/creatorPass");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
 
 // Resolve how much a given purpose costs, and stash target ids on the txn.
-async function resolveAmount({ purpose, userId, tierId, coinPlanId, premiumPlanId, campaignId, videoId, planName, amountInr: requestedAmountInr }) {
+async function resolveAmount({ purpose, user, userId, tierId, billingPeriod, coinPlanId, premiumPlanId, campaignId, videoId, planName, amountInr: requestedAmountInr }) {
   const s = global.settingJSON || {};
   if (purpose === "joining_fee") {
     const amt = num(s.joiningFeeINR, 0);
@@ -37,6 +39,10 @@ async function resolveAmount({ purpose, userId, tierId, coinPlanId, premiumPlanI
     if (!tierId) return { error: "tierId is required." };
     const tier = await db.findById("membershipTiers", tierId);
     if (!tier || tier.isActive === false) return { error: "Invalid tier." };
+    // Creator VIP passes: subscriber gate + 3-month / annual / intro pricing.
+    // The gate matters here, not just at upgradeTier: fulfilTierUpgrade
+    // assigns the pass on payment, and higher passes cost less.
+    if (tier.tierType === "CREATOR") return creatorPass.resolveCheckout({ tier, user, billingPeriod });
     if (num(tier.membershipPrice, 0) <= 0) return { error: "This tier is free — no payment needed." };
     return { amountInr: num(tier.membershipPrice), tier };
   }
@@ -71,13 +77,16 @@ async function resolveAmount({ purpose, userId, tierId, coinPlanId, premiumPlanI
   }
   if (purpose === "video_promotion") {
     if (!videoId || !planName) return { error: "videoId and planName are required." };
-    const plan = PROMOTION_PLANS[planName];
-    if (!plan) return { error: "Invalid plan name selected." };
+    const plan = findPromotionPlan(planName);
+    if (!plan || plan.isActive === false) return { error: "Invalid plan name selected." };
     const video = await db.findById("videos", videoId);
     if (!video) return { error: "Video not found." };
     const videoOwnerId = video.userId ? (video.userId._id || video.userId.id || video.userId).toString() : "";
     if (videoOwnerId !== String(userId)) return { error: "You can only promote your own videos." };
-    return { amountInr: num(plan.priceINR), plan };
+    // Snapshot the terms bought, so a later rate-card edit can't change an
+    // order that's already been paid for.
+    const { name, priceINR, durationDays, impressionsMin, impressionsMax } = plan;
+    return { amountInr: num(priceINR), plan, txnExtra: { promotionPlan: { name, priceINR, durationDays, impressionsMin, impressionsMax } } };
   }
   return { error: "Unknown purpose." };
 }
@@ -94,7 +103,7 @@ exports.createOrder = async (req, res) => {
     if (user.isBlock) return res.status(200).json({ status: false, message: "You are blocked by the admin." });
 
     const resolved = await resolveAmount({
-      purpose, userId, tierId: b.tierId, coinPlanId: b.coinPlanId, premiumPlanId: b.premiumPlanId,
+      purpose, user, userId, tierId: b.tierId, billingPeriod: b.billingPeriod, coinPlanId: b.coinPlanId, premiumPlanId: b.premiumPlanId,
       campaignId: b.campaignId, videoId: b.videoId, planName: b.planName, amountInr: b.amountInr,
     });
     if (resolved.error) return res.status(200).json({ status: false, message: resolved.error });
@@ -126,6 +135,7 @@ exports.createOrder = async (req, res) => {
       campaignId: b.campaignId || null,
       videoId: b.videoId || null,
       planName: b.planName || null,
+      ...(resolved.txnExtra || {}),
       status: "created",
       fulfilled: false,
       meta: { email: user.email || "", mobileNumber: user.mobileNumber || "" },
@@ -365,7 +375,8 @@ async function fulfilCampaignBacking(txn) {
 // of a campaign that reached active status some other way (e.g. a manually
 // recorded offline payment) and still needs its dates set.
 async function fulfilVideoPromotion(txn) {
-  const plan = PROMOTION_PLANS[txn.planName];
+  // Orders placed before the rate card moved to settings carry no snapshot.
+  const plan = txn.promotionPlan || findPromotionPlan(txn.planName);
   if (!plan) return { error: "Invalid plan on transaction." };
 
   const video = await db.findById("videos", txn.videoId);
@@ -381,6 +392,8 @@ async function fulfilVideoPromotion(txn) {
     planName: txn.planName,
     planPriceINR: plan.priceINR,
     planDurationDays: plan.durationDays,
+    impressionsTargetMin: plan.impressionsMin ?? null,
+    impressionsTargetMax: plan.impressionsMax ?? null,
     paymentGatewayRef: txn._id || txn.id,
     status: "active",
     approvedByAdmin: false,
@@ -403,7 +416,17 @@ async function fulfilTierUpgrade(txn) {
   const tier = await db.findById("membershipTiers", txn.tierId);
   if (!tier) return { error: "tier missing" };
   const field = tier.tierType === "CREATOR" ? "activeCreatorTierId" : "membershipTierId";
-  await db.update("users", txn.userId, { [field]: tier._id || tier.id, isMonetization: true });
+  const passFields = {};
+  if (tier.tierType === "CREATOR") {
+    // Timed VIP pass: 3 months or a year, renewals stack on the current
+    // expiry. Legacy one-time passes (billingPeriod "lifetime" or none) never expire.
+    const buyer = await db.findById("users", txn.userId);
+    const expiresAt = creatorPass.nextExpiry(buyer, tier, txn.billingPeriod);
+    passFields.creatorPassExpiresAt = expiresAt;
+    passFields.creatorPassBillingPeriod = txn.billingPeriod || "lifetime";
+    if (expiresAt) await db.update("paymentTransactions", txn._id || txn.id, { passExpiresAt: expiresAt });
+  }
+  await db.update("users", txn.userId, { [field]: tier._id || tier.id, isMonetization: true, ...passFields });
 
   let referralBonus = null;
   try {
@@ -438,7 +461,7 @@ async function fulfilTierUpgrade(txn) {
     }
   } catch (e) { /* ignore */ }
 
-  return { tier: tier.tierName, tierType: tier.tierType, referralBonus };
+  return { tier: tier.tierName, tierType: tier.tierType, referralBonus, passExpiresAt: passFields.creatorPassExpiresAt || null };
 }
 
 async function fulfilCoinPlan(txn) {

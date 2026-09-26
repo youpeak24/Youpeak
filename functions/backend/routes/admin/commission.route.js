@@ -5,5 +5,6 @@ const CommissionController = require("../../controllers/admin/commission.control
 
 route.get("/getCommissions", CommissionController.getCommissions);
 route.post("/updatePayoutStatus", CommissionController.updatePayoutStatus);
+route.patch("/verify", CommissionController.verify);
 
 module.exports = route;

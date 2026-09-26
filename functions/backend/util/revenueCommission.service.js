@@ -13,6 +13,7 @@ const { resolveAgency } = require("./geofence.service");
  * @param {number} [p.capInr]          optional cap on the commission amount
  * @param {string} [p.state] @param {string} [p.district]
  * @param {string} [p.userId]
+ * @param {object} [p.extra]          extra ledger fields (e.g. verificationStatus, partnerUserId)
  * @returns {Promise<object|null>} the created commission doc, or null
  */
 const recordAgencyCommission = async ({
@@ -24,6 +25,7 @@ const recordAgencyCommission = async ({
   state = "",
   district = "",
   userId = null,
+  extra = {},
 } = {}) => {
   try {
     const gross = Number(grossAmount);
@@ -58,6 +60,7 @@ const recordAgencyCommission = async ({
       district: district || agency.district || "",
       userId,
       payoutStatus: "PENDING",
+      ...extra,
       createdAt: new Date().toISOString(),
     });
   } catch (error) {

@@ -334,18 +334,13 @@ const Dashboard = (props) => {
   return (
     <>
       <div className="dashboard " style={{marginTop: "0px" }}>
-        <div className="dashboardHeader primeHeader !mb-0 !p-0">
-          <h4 className="heading-dashboard fw-semibold d-block">
-            Welcome Admin !
-          </h4>
+        <div className="px-2">
           <NewTitle
             dayAnalyticsShow={true}
-            titleShow={true}
             setEndDate={setEndDate}
             setStartDate={setStartDate}
             startDate={startDate}
             endDate={endDate}
-            name={`Dashboard`}
           />
         </div>
         <div className="dashBoardMain px-2 mt-4">

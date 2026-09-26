@@ -69,54 +69,59 @@ const TASKER_TIERS = [
   },
 ];
 
-// Updated 2026-09-11 to the founder's VIP Pass rate card (pasted twice,
-// verbatim, treated as the current source of truth — supersedes the older
-// numbers from the "VIP pricing doc"). Sub-thresholds and price now fall as
-// subscriber count rises; splits climb 60/40 -> 70/30 -> 80/20 in a clean
-// +10 step per tier. Platinum's split (90/10) continues that same arithmetic
-// step since the rate card didn't state one — confirm with the founder, but
-// it's the only value consistent with the other three.
+// Updated 2026-09-26 to the introductory launch offer table (chosen over the
+// 2026-09-11 founder table, which it replaces): passes are sold for 3 months
+// or a year (util/creatorPass.js) and expire. Starter's launch prices are for
+// the first 1,000 creators, who keep them on renewal; after that the annual
+// pass is ₹9,999. membershipPrice mirrors the annual price for app builds
+// that don't send a billing period (they buy the annual pass).
 // maxEarningPerVideoInINR is not in the rate card; carried over unchanged.
 const CREATOR_TIERS = [
   {
     _id: "tier_creator_classic",
     tierType: "CREATOR", level: 1, tierName: "Classic Pass",
-    membershipPrice: 0, minSubscribersRequired: 0, maxSubscribers: null,
+    membershipPrice: 0, quarterlyPriceINR: 0, annualPriceINR: 0,
+    minSubscribersRequired: 0, maxSubscribers: null,
     creatorRevenueSharePercentage: 50, companyRevenueSharePercentage: 50,
     maxEarningPerVideoInINR: 1000, isDefault: true, isActive: true,
-    description: "Free — before any VIP Pass, 50/50 ad revenue split.",
+    description: "Free — every creator starts here, 50/50 ad revenue split.",
   },
   {
     _id: "tier_creator_starter_vip",
     tierType: "CREATOR", level: 2, tierName: "Starter VIP Pass",
-    membershipPrice: 2999, minSubscribersRequired: 0, maxSubscribers: 1000,
+    membershipPrice: 4999, quarterlyPriceINR: 1499, annualPriceINR: 4999,
+    standardQuarterlyPriceINR: 0, standardAnnualPriceINR: 9999, introOfferLimit: 1000,
+    minSubscribersRequired: 0, maxSubscribers: 5000,
     creatorRevenueSharePercentage: 60, companyRevenueSharePercentage: 40,
     maxEarningPerVideoInINR: 2000, isDefault: false, isActive: true,
-    description: "< 1,000 subscribers — 60/40 split.",
+    description: "< 5,000 subscribers — 60/40 split. Launch offer ₹1,499 / 3 months or ₹4,999 / year for the first 1,000 creators (₹9,999 / year after).",
   },
   {
     _id: "tier_creator_silver_vip",
     tierType: "CREATOR", level: 3, tierName: "Silver VIP Pass",
-    membershipPrice: 1999, minSubscribersRequired: 1000, maxSubscribers: 10000,
-    creatorRevenueSharePercentage: 70, companyRevenueSharePercentage: 30,
+    membershipPrice: 2999, quarterlyPriceINR: 899, annualPriceINR: 2999,
+    minSubscribersRequired: 5000, maxSubscribers: 25000,
+    creatorRevenueSharePercentage: 65, companyRevenueSharePercentage: 35,
     maxEarningPerVideoInINR: 5000, isDefault: false, isActive: true,
-    description: "1,000–10,000 subscribers — 70/30 split.",
+    description: "5,000–25,000 subscribers — 65/35 split. ₹899 / 3 months or ₹2,999 / year.",
   },
   {
     _id: "tier_creator_gold_vip",
     tierType: "CREATOR", level: 4, tierName: "Gold VIP Pass",
-    membershipPrice: 1499, minSubscribersRequired: 10000, maxSubscribers: 100000,
-    creatorRevenueSharePercentage: 80, companyRevenueSharePercentage: 20,
+    membershipPrice: 1499, quarterlyPriceINR: 449, annualPriceINR: 1499,
+    minSubscribersRequired: 25000, maxSubscribers: 100000,
+    creatorRevenueSharePercentage: 75, companyRevenueSharePercentage: 25,
     maxEarningPerVideoInINR: 10000, isDefault: false, isActive: true,
-    description: "10,000–100,000 subscribers — 80/20 split.",
+    description: "25,000–100,000 subscribers — 75/25 split. ₹449 / 3 months or ₹1,499 / year.",
   },
   {
     _id: "tier_creator_platinum_vip",
     tierType: "CREATOR", level: 5, tierName: "Platinum VIP Pass",
-    membershipPrice: 999, minSubscribersRequired: 100000, maxSubscribers: null,
-    creatorRevenueSharePercentage: 90, companyRevenueSharePercentage: 10,
+    membershipPrice: 0, quarterlyPriceINR: 0, annualPriceINR: 0,
+    minSubscribersRequired: 100000, maxSubscribers: null,
+    creatorRevenueSharePercentage: 80, companyRevenueSharePercentage: 20,
     maxEarningPerVideoInINR: 25000, isDefault: false, isActive: true,
-    description: "> 100,000 subscribers — 90/10 split (inferred; confirm).",
+    description: "> 100,000 subscribers — free, 80/20 split.",
   },
 ];
 

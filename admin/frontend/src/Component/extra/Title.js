@@ -68,11 +68,14 @@ const Title = (props) => {
     >
       {/* Left: title + tabs */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-        {titleShow && name && (
+        {/* A name with no tabs is the page heading — it used to render only
+            with titleShow, which left pages like Referral Management and
+            Membership Tiers with no heading at all. Tab pages keep hiding it. */}
+        {name && (titleShow || (titleShow === undefined && !labelData?.length)) && (
           <h4
-            className="mb-0 text-capitalize text-nowrap"
+            className="mb-0"
             style={{
-              fontSize: "0.9rem",
+              fontSize: labelData?.length ? "0.9rem" : "1.05rem",
               fontWeight: 600,
               color: "var(--text-primary)",
               letterSpacing: "-0.01em",

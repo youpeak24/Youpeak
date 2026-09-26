@@ -247,7 +247,7 @@ const DeclinedRequest = (props) => {
                 } else if (col.Header === "USERNAME") {
                   return (
                     <div className="d-flex align-items-center">
-                      <Skeleton variant="square" borderRadius={10} width={50} height={50} />
+                      <Skeleton variant="square" sx={{ borderRadius: "10px" }} width={50} height={50} />
                       <div className="ms-3" style={{ flex: 1 }}>
                         <Skeleton variant="text" width="100px" height={20} />
                         <Skeleton variant="text" width="80px" height={15} />

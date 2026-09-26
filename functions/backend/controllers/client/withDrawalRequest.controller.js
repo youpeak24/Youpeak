@@ -224,7 +224,9 @@ exports.createWithdrawRequest = async (req, res) => {
     // them — an earlier version of this ignored the admin setting entirely.
     const isFirstWithdrawal = !priorAcceptedRequest;
     const firstMinThreshold = Number(settingJSON?.firstWithdrawalMinimumInr) > 0 ? Number(settingJSON.firstWithdrawalMinimumInr) : 100;
-    const normalMinThreshold = Number(settingJSON?.minWithdrawalRequestedAmount) > 0 ? Number(settingJSON.minWithdrawalRequestedAmount) : 500;
+    // Digital Partners have their own minimum for payouts after the first.
+    const normalMinKey = user.isDigitalPartner ? "partnerMinWithdrawalInr" : "minWithdrawalRequestedAmount";
+    const normalMinThreshold = Number(settingJSON?.[normalMinKey]) > 0 ? Number(settingJSON[normalMinKey]) : 500;
     const minThreshold = isFirstWithdrawal ? firstMinThreshold : normalMinThreshold;
     if (amount < minThreshold) {
       const coinsPerInr = Number(settingJSON?.coinsPerInr) || 100;

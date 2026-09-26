@@ -610,7 +610,7 @@ function AppSetting(props) {
                 <div className="row">
                   <div className="col-12 withdrawal-input duration-short border-0 mt-0">
                     <div className="custom-input number undefined h-100">
-                      <label class="form-label" htmlFor="privateKey">
+                      <label className="form-label" htmlFor="privateKey">
                         Private Key JSON (firebase private key for
                         notification)
                       </label>

@@ -3,7 +3,9 @@ const Withdraw = require("../../models/withdraw.model");
 //get withdraw method added by admin
 exports.withdrawList = async (req, res) => {
   try {
-    const withdrawMethod = await Withdraw.find({ isEnabled: true }).sort({ createdAt: -1 }).lean();
+    // A method stored without the flag is enabled (the model default, which
+    // the Firestore shim never wrote) — only an explicit false hides it.
+    const withdrawMethod = (await Withdraw.find({}).sort({ createdAt: -1 }).lean()).filter((m) => m.isEnabled !== false);
 
     return res.status(200).json({
       status: true,

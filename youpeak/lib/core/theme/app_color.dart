@@ -11,6 +11,12 @@ abstract class AppColor {
   static const Color primaryTextIcons = Color(0xFF1C1C1E); // Primary Text & Icons (Dark Charcoal)
   static const Color notificationAccent = Color(0xFFD32F2F); // Notification Accent (Crimson Red)
   static const Color searchContainerBg = Color(0xFFF0F4F1); // Search Bar Container BG
+  static const Color darkSurface = Color(0xFF0F172A); // Dark Surface / Modal BG (Peak Boost sheet, player overlay)
+  static const Color darkCard = Color(0xFF1E293B); // Card background (dark state)
+  static const Color darkCardBorder = Color(0xFF475569); // Card border (dark state)
+  static const Color darkCardSelected = Color(0xFF312E81); // Selected card (dark state)
+  static const Color coinGold = Color(0xFFFACC15); // Coin accent
+  static const LinearGradient peakBoostGradient = LinearGradient(colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)]);
 
   static const Color white = Colors.white;
   static const Color black = Colors.black; 
