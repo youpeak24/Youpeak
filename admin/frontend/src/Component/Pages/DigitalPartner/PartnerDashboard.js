@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { setToast } from "../../../util/toast";
-import {
-  PageHeader, StatCard, StatusBadge, EmptyRow, ReferralTable, RewardFlow, inr, fmtDate, fmtDateTime,
-} from "../PartnerNetwork/networkUi";
+import { PageHeader, StatCard, StatusBadge, RewardFlow, inr, fmtDate } from "../PartnerNetwork/networkUi";
 import ReferralShareCard from "../PartnerNetwork/ReferralShareCard";
-import PartnerWallet from "../PartnerNetwork/PartnerWallet";
+import { NotActivePartner } from "./PartnerPortalPages";
 
-const LEDGER_TYPES = {
-  5.1: "Stage 1 / direct referral bonus",
-  10: "Stage 2 / paid-pass bonus",
-  13: "Tasker earnings commission",
-};
-
-// Digital Partner's own panel: referral code, referrals and earnings.
+// Digital Partner's own panel: referral code and headline numbers. Referrals,
+// reward history and the wallet have their own sidebar pages (PartnerPortalPages).
 export default function PartnerDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const load = () => {
+  useEffect(() => {
     axios
       .get("admin/partnerPortal/dashboard")
       .then((res) => {
@@ -30,18 +23,10 @@ export default function PartnerDashboard() {
         setLoading(false);
         setToast("error", "Couldn't load your dashboard.");
       });
-  };
-
-  useEffect(load, []);
+  }, []);
 
   if (loading) return <div className="pn-page pn-muted">Loading dashboard…</div>;
-  if (!data || data.isDigitalPartner === false || !data.partner) {
-    return (
-      <div className="pn-page">
-        <div className="alert alert-warning">This login isn't linked to an active Digital Partner. Contact your District Franchise.</div>
-      </div>
-    );
-  }
+  if (!data || data.isDigitalPartner === false || !data.partner) return <NotActivePartner />;
 
   const p = data.partner;
   const r = p.referrals;
@@ -66,41 +51,9 @@ export default function PartnerDashboard() {
         <StatCard label="Ad credits" value={inr(p.adCreditsBalance)} hint={p.licenseFeePaid ? `Licence ${inr(p.licenseFeePaid)}` : undefined} />
       </div>
 
-      <PartnerWallet onChanged={load} />
-
       <div className="pn-panel">
         <div className="pn-panel-head"><h6>How you earn</h6></div>
         <div className="pn-panel-body"><RewardFlow rules={data.rules} /></div>
-      </div>
-
-      <div className="pn-panel">
-        <div className="pn-panel-head">
-          <h6>Your referrals ({data.referralTotal})</h6>
-          {data.referralTotal > data.referrals.length && <small className="pn-muted">Showing the latest {data.referrals.length}</small>}
-        </div>
-        <ReferralTable referrals={data.referrals} showPartner={false} emptyText="No referrals yet — share your code to get started." />
-      </div>
-
-      <div className="pn-panel">
-        <div className="pn-panel-head"><h6>Reward history</h6></div>
-        <div className="table-responsive" style={{ maxHeight: 360 }}>
-          <table className="table align-middle mb-0">
-            <thead><tr><th>Date</th><th>Reward</th><th>Amount</th></tr></thead>
-            <tbody>
-              {data.rewardLedger.length === 0 ? (
-                <EmptyRow colSpan={3}>No rewards paid yet.</EmptyRow>
-              ) : (
-                data.rewardLedger.map((h) => (
-                  <tr key={h._id}>
-                    <td>{fmtDateTime(h.date)}</td>
-                    <td>{h.note || LEDGER_TYPES[h.type] || "Referral reward"}</td>
-                    <td className="fw-semibold">{inr(h.inr)}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
       </div>
       <small className="pn-muted">Partner since {fmtDate(p.partnerSince)}</small>
     </div>

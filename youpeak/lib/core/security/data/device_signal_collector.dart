@@ -4,10 +4,10 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:youpeak/core/platform/device_identity.dart';
 import 'package:youpeak/core/platform/platform_info.dart';
+import 'package:youpeak/core/security/data/root_detector.dart';
 import 'package:youpeak/core/security/domain/security_signals.dart';
 import 'package:youpeak/core/settings/app_settings.dart';
 
@@ -15,7 +15,10 @@ import 'package:youpeak/core/settings/app_settings.dart';
 /// only where the platform genuinely can't tell (the server re-checks the
 /// network side), and never throws.
 class DeviceSignalCollector {
+  DeviceSignalCollector({RootDetector? rootDetector}) : _root = rootDetector ?? RootDetector();
+
   static const _network = MethodChannel("youpeak/network_security");
+  final RootDetector _root;
 
   Future<DeviceSecuritySnapshot> collect() async {
     final platform = kIsWeb ? "web" : (PlatformInfo.isIOS ? "ios" : "android");
@@ -61,7 +64,9 @@ class DeviceSignalCollector {
   Future<bool> _isRooted() async {
     if (kIsWeb) return false;
     try {
-      return await FlutterJailbreakDetection.jailbroken;
+      if (PlatformInfo.isIOS) return _root.isJailbrokenIos();
+      if (PlatformInfo.isAndroid) return _root.isRootedAndroid(buildTags: (await DeviceInfoPlugin().androidInfo).tags);
+      return false;
     } catch (e) {
       AppSettings.showLog("root/jailbreak check failed => $e");
       return false;

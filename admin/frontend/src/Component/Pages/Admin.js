@@ -34,6 +34,7 @@ import TierManagement from "./MembershipTier/TierManagement";
 import FraudManagement from "./Fraud/FraudManagement";
 import ReferralManagement from "./Referral/ReferralManagement";
 import PartnerDashboard from "./DigitalPartner/PartnerDashboard";
+import { PartnerReferrals, PartnerRewardHistory, PartnerWalletPage } from "./DigitalPartner/PartnerPortalPages";
 import PartnerLocalBusinessAds from "./DigitalPartner/PartnerLocalBusinessAds";
 import ManageDigitalPartner from "./DigitalPartner/ManageDigitalPartner";
 import DigitalPartnerReports from "./DigitalPartner/DigitalPartnerReports";
@@ -70,6 +71,9 @@ const ROLE_PAGES = {
   ],
   DIGITAL_PARTNER_ADMIN: [
     "/admin/partnerDashboard",
+    "/admin/partnerReferrals",
+    "/admin/partnerRewards",
+    "/admin/partnerWallet",
     "/admin/partnerLocalBusinessAds",
     "/admin/digitalPartnerReports",
     "/admin/profile",
@@ -113,6 +117,9 @@ const Admin = (props) => {
               <Route path="/franchiseReferrals" element={<FranchiseReferrals />} />
               <Route path="/partnerDetail" element={<PartnerDetail />} />
               <Route path="/partnerDashboard" element={<PartnerDashboard />} />
+              <Route path="/partnerReferrals" element={<PartnerReferrals />} />
+              <Route path="/partnerRewards" element={<PartnerRewardHistory />} />
+              <Route path="/partnerWallet" element={<PartnerWalletPage />} />
               <Route path="/partnerLocalBusinessAds" element={<PartnerLocalBusinessAds />} />
               <Route path="/manageDigitalPartner" element={<ManageDigitalPartner />} />
               <Route path="/digitalPartnerReports" element={<DigitalPartnerReports />} />

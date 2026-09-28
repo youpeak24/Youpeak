@@ -107,9 +107,10 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
                     _ThresholdCard(isFirst: isFirst, minInr: minInr, standardMinInr: policy.standardMinInr, capInr: capInr, rate: rate),
                     const SizedBox(height: 16),
                     if (d.payout.hasPendingRequest)
-                      _Notice(icon: Icons.hourglass_top_rounded, text: "You already have a withdrawal waiting for approval. You can request another once it's processed.")
+                      const _Notice(icon: Icons.hourglass_top_rounded, text: "You already have a withdrawal waiting for approval. You can request another once it's processed.")
                     else ...[
                       TextFormField(
+                        cursorColor: AppColor.primaryColor,
                         controller: _amount,
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(7)],
@@ -140,6 +141,7 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
                       const SizedBox(height: 16),
                       if (_method == PayoutMethod.upi)
                         TextFormField(
+                          cursorColor: AppColor.primaryColor,
                           controller: _upi,
                           keyboardType: TextInputType.emailAddress,
                           autocorrect: false,
@@ -148,6 +150,7 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
                         )
                       else ...[
                         TextFormField(
+                          cursorColor: AppColor.primaryColor,
                           controller: _holder,
                           textCapitalization: TextCapitalization.words,
                           decoration: _decoration("Account holder name"),
@@ -155,6 +158,7 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
                         ),
                         const SizedBox(height: 12),
                         TextFormField(
+                          cursorColor: AppColor.primaryColor,
                           controller: _account,
                           keyboardType: TextInputType.number,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(18)],
@@ -163,6 +167,7 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
                         ),
                         const SizedBox(height: 12),
                         TextFormField(
+                          cursorColor: AppColor.primaryColor,
                           controller: _ifsc,
                           textCapitalization: TextCapitalization.characters,
                           inputFormatters: [LengthLimitingTextInputFormatter(11)],
@@ -201,6 +206,7 @@ class _WithdrawalModalState extends ConsumerState<WithdrawalModal> {
 
   InputDecoration _decoration(String label, {String? hint, String? prefix}) => InputDecoration(
         labelText: label,
+        floatingLabelStyle: const TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.w600),
         hintText: hint,
         prefixText: prefix,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -230,8 +236,10 @@ class _ThresholdCard extends StatelessWidget {
           Row(children: [
             const Icon(Icons.verified_user_rounded, color: AppColor.primaryColor, size: 20),
             const SizedBox(width: 8),
-            Text(isFirst ? "First withdrawal — Trust Hook" : "Standard withdrawal",
-                style: GoogleFonts.urbanist(fontSize: 15, fontWeight: FontWeight.w800, color: AppColor.darkForestAccent)),
+            Flexible(
+              child: Text(isFirst ? "First withdrawal — Trust Hook" : "Standard withdrawal",
+                  style: GoogleFonts.urbanist(fontSize: 15, fontWeight: FontWeight.w800, color: AppColor.darkForestAccent)),
+            ),
           ]),
           const SizedBox(height: 6),
           Text("Minimum ${MoneyFormat.inr(minInr, whole: true)} (${MoneyFormat.coins(minInr * rate)} coins).", style: style),

@@ -17,7 +17,7 @@ import {
   IconReport, IconSettings, IconUser, IconUserQuestion, IconUserSquareRounded,
   IconVideo, IconX, IconBuildingStore, IconUsersGroup, IconShare3,
   IconShieldCheck, IconCopy, IconAdjustmentsHorizontal, IconCrown, IconRocket,
-  IconCash, IconShieldLock, IconAd2, IconAffiliate,
+  IconCash, IconShieldLock, IconAd2, IconAffiliate, IconHistory, IconWallet,
 } from "@tabler/icons-react";
 
 const Sidebar = () => {
@@ -82,6 +82,9 @@ const Sidebar = () => {
         {
           heading: "DIGITAL PARTNER",
           items: [
+            { name: "Your Referrals", path: "/admin/partnerReferrals", navIcon: <IconShare3 size={15} />, onClick: handleCloseFunction },
+            { name: "Reward History", path: "/admin/partnerRewards", navIcon: <IconHistory size={15} />, onClick: handleCloseFunction },
+            { name: "Wallet", path: "/admin/partnerWallet", navIcon: <IconWallet size={15} />, onClick: handleCloseFunction },
             { name: "Local Business Ads", path: "/admin/partnerLocalBusinessAds", navIcon: <IconBellDollar size={15} />, onClick: handleCloseFunction },
             { name: "My Reports", path: "/admin/digitalPartnerReports", navIcon: <IconReport size={15} />, onClick: handleCloseFunction },
           ],

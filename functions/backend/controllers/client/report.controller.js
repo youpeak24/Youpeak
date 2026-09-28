@@ -7,18 +7,25 @@
 
 const db = require("../../util/connection");
 const moderation = require("../../util/moderation.service");
+const { REPORT_TYPE } = require("../../types/constant");
 
 exports.reportToVideo = async (req, res) => {
   try {
     const userId = req.query.userId || req.body.userId;
     const videoId = req.query.videoId || req.body.videoId;
-    const reportType = req.query.reportType || req.body.reportType;
+    // The app sends this as a query-string value ("3"); stored as a string it
+    // never matched the admin panel's numeric REPORT_TYPE labels.
+    const reportType = Number(req.query.reportType || req.body.reportType);
 
     if (!userId || !videoId || !reportType) {
       return res.status(200).json({
         status: false,
         message: "Invalid request. userId, videoId and reportType are required.",
       });
+    }
+
+    if (!Object.values(REPORT_TYPE).includes(reportType)) {
+      return res.status(200).json({ status: false, message: "Invalid report type." });
     }
 
     const user = await db.findById("users", userId);

@@ -164,6 +164,7 @@ class _PhoneLoginViewState extends ConsumerState<PhoneLoginView> {
                       SizedBox(
                         width: 84,
                         child: TextField(
+                          cursorColor: AppColor.primaryColor,
                           controller: _countryCode,
                           keyboardType: TextInputType.number,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(3)],
@@ -173,6 +174,7 @@ class _PhoneLoginViewState extends ConsumerState<PhoneLoginView> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
+                          cursorColor: AppColor.primaryColor,
                           controller: _phone,
                           autofocus: true,
                           keyboardType: TextInputType.phone,
@@ -186,6 +188,7 @@ class _PhoneLoginViewState extends ConsumerState<PhoneLoginView> {
                   )
                 else
                   TextField(
+                    cursorColor: AppColor.primaryColor,
                     controller: _code,
                     autofocus: true,
                     keyboardType: TextInputType.number,
@@ -232,6 +235,7 @@ class _PhoneLoginViewState extends ConsumerState<PhoneLoginView> {
 
   InputDecoration _decoration(String label, {String? prefix}) => InputDecoration(
         labelText: label,
+        floatingLabelStyle: const TextStyle(color: AppColor.primaryColor, fontWeight: FontWeight.w600),
         prefixText: prefix,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColor.primaryColor, width: 1.6)),

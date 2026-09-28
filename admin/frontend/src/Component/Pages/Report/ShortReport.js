@@ -31,6 +31,21 @@ import ShowMoreText from "../../extra/ShowMoreText";
 import { useTableParams } from "../../../util/useTableParams";
 import { Skeleton } from "@mui/material";
 
+// Matches functions/backend/types/constant.js REPORT_TYPE (8–11: IT Rules 2021 grounds).
+const REPORT_TYPE_LABELS = {
+  1: "Sexual",
+  2: "Violent or Repulsive",
+  3: "Hateful or Abusive",
+  4: "Harmful or Dangerous",
+  5: "Spam or Misleading",
+  6: "Child abuse",
+  7: "Others",
+  8: "Anti-national",
+  9: "Hate speech",
+  10: "Defamation",
+  11: "Sovereignty violation",
+};
+
 function ShortReport(props) {
   const { videoReport, totalVideoReport, videoType } = useSelector(
     (state) => state.report
@@ -151,27 +166,7 @@ function ShortReport(props) {
       body: "reportType",
       Cell: ({ row }) => (
         <>
-          {row?.reportType === 1 && (
-            <span className="text-capitalize">Sexual</span>
-          )}
-          {row?.reportType === 2 && (
-            <span className="text-capitalize">Violent or Replusive</span>
-          )}
-          {row?.reportType === 3 && (
-            <span className="text-capitalize">Hateful or Abusive</span>
-          )}
-          {row?.reportType === 4 && (
-            <span className="text-capitalize">Harmful or Dangerous</span>
-          )}
-          {row?.reportType === 5 && (
-            <span className="text-capitalize">Spam or Misleading</span>
-          )}
-          {row?.reportType === 6 && (
-            <span className="text-capitalize">Child abuse</span>
-          )}
-          {row?.reportType === 7 && (
-            <span className="text-capitalize">Others</span>
-          )}
+          <span className="text-capitalize">{REPORT_TYPE_LABELS[Number(row?.reportType)] || "—"}</span>
         </>
       ),
     },

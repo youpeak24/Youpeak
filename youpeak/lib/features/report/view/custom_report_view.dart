@@ -56,7 +56,10 @@ class CustomReportView {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-            Container(height: 3, width: SizeConfig.blockSizeHorizontal * 12, decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: AppColor.grey_300)),
+            Container(
+                height: 3,
+                width: SizeConfig.blockSizeHorizontal * 12,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(60), color: AppColor.grey_300)),
             const SizedBox(height: 10),
             Text("${AppStrings.report.tr}-${AppStrings.block.tr}", style: GoogleFonts.urbanist(fontSize: 18, fontWeight: FontWeight.w900)),
             Divider(indent: 25, endIndent: 25, color: AppColor.grey_200),
@@ -64,93 +67,95 @@ class CustomReportView {
               () => Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (int i = 0; i < items.length; i++) ...[
-                        if (items[i].statutory && (i == 0 || !items[i - 1].statutory))
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 14, 20, 4),
-                            child: Text(
-                              "IT Rules 2021 — statutory grounds",
-                              style: GoogleFonts.urbanist(fontSize: 13, fontWeight: FontWeight.w800, color: AppColor.greyColor, letterSpacing: 0.3),
-                            ),
-                          ),
-                        InkWell(
-                          onTap: () => selectedReport.value = i,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 44),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 10),
-                                Radio<int>(
-                                    value: i,
-                                    activeColor: AppColor.primaryColor,
-                                    groupValue: selectedReport.value,
-                                    onChanged: (value) => selectedReport.value = value!),
-                                Expanded(child: Text(items[i].label, style: settingsStyle)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () => Get.back(),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: AppColor.lightPink.withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
+                  child: RadioGroup<int>(
+                    groupValue: selectedReport.value,
+                    onChanged: (value) {
+                      if (value != null) selectedReport.value = value;
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < items.length; i++) ...[
+                          if (items[i].statutory && (i == 0 || !items[i - 1].statutory))
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 14, 20, 4),
                               child: Text(
-                                AppStrings.cancel.tr,
-                                style: GoogleFonts.urbanist(
-                                  color: AppColor.primaryColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                "IT Rules 2021 — statutory grounds",
+                                style: GoogleFonts.urbanist(fontSize: 13, fontWeight: FontWeight.w800, color: AppColor.greyColor, letterSpacing: 0.3),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          GestureDetector(
-                            onTap: () async {
-                              final index = selectedReport.value;
-                              if (videoId == "" || index < 0) return;
-                              Get.back();
-                              final reportType = items[index].reportType;
-                              if (reportType == null) {
-                                CustomToast.show(AppStrings.videoBlockToast.tr);
-                              } else {
-                                CustomToast.show(AppStrings.reportSending.tr);
-                                await ReportVideoApi.callApi(Database.loginUserId!, videoId, reportType);
-                              }
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: AppColor.primaryColor,
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: Text(
-                                AppStrings.report.tr,
-                                style: GoogleFonts.urbanist(
-                                  color: AppColor.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          InkWell(
+                            onTap: () => selectedReport.value = i,
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 44),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 10),
+                                  Radio<int>(value: i, activeColor: AppColor.primaryColor),
+                                  Expanded(child: Text(items[i].label, style: settingsStyle)),
+                                ],
                               ),
                             ),
                           ),
                         ],
-                      ),
-                      SizedBox(height: 10 + MediaQuery.paddingOf(Get.context!).bottom),
-                    ],
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Get.back(),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: AppColor.lightPink.withValues(alpha: 0.3),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: Text(
+                                  AppStrings.cancel.tr,
+                                  style: GoogleFonts.urbanist(
+                                    color: AppColor.primaryColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: () async {
+                                final index = selectedReport.value;
+                                if (videoId == "" || index < 0) return;
+                                Get.back();
+                                final reportType = items[index].reportType;
+                                if (reportType == null) {
+                                  CustomToast.show(AppStrings.videoBlockToast.tr);
+                                } else {
+                                  CustomToast.show(AppStrings.reportSending.tr);
+                                  await ReportVideoApi.callApi(Database.loginUserId!, videoId, reportType);
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: AppColor.primaryColor,
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: Text(
+                                  AppStrings.report.tr,
+                                  style: GoogleFonts.urbanist(
+                                    color: AppColor.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10 + MediaQuery.paddingOf(Get.context!).bottom),
+                      ],
+                    ),
                   ),
                 ),
               ),
