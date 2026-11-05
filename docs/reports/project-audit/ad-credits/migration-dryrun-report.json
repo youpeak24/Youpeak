@@ -1,0 +1,16 @@
+{
+  "executedAt": "2026-10-13T18:26:28.348Z",
+  "isDryRun": true,
+  "summary": {
+    "usersWithAdCredits": 0,
+    "totalTaskerCredits": 0,
+    "partnersWithAdCredits": 0,
+    "totalPartnerCredits": 0,
+    "overlapAccountsDetected": 0,
+    "proposedLotsCount": 0,
+    "proposedCreditsTotal": 0
+  },
+  "findings": [],
+  "proposedLots": [],
+  "overlapAnalysis": []
+}

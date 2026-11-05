@@ -1,0 +1,968 @@
+const firestoreDb = require("./firestoreDb.service");
+const { matchesQuery } = require("./queryMatcher");
+
+// ── Mongo-style update operators, applied in JS (Firestore shim has no atomic ops) ──
+// Supports $set, $inc, $mul, $push, $addToSet, $pull, $unset, and bare fields.
+function buildUpdatePayload(existing, updateData) {
+  existing = existing || {};
+  const out = {};
+
+  // bare top-level fields (no leading $)
+  for (const k of Object.keys(updateData || {})) {
+    if (!k.startsWith("$")) out[k] = updateData[k];
+  }
+  if (updateData && updateData.$set) Object.assign(out, updateData.$set);
+
+  if (updateData && updateData.$inc) {
+    for (const [k, v] of Object.entries(updateData.$inc)) {
+      out[k] = (Number(existing[k]) || 0) + Number(v || 0);
+    }
+  }
+  if (updateData && updateData.$mul) {
+    for (const [k, v] of Object.entries(updateData.$mul)) {
+      out[k] = (Number(existing[k]) || 0) * Number(v || 0);
+    }
+  }
+  if (updateData && updateData.$push) {
+    for (const [k, v] of Object.entries(updateData.$push)) {
+      const arr = Array.isArray(existing[k]) ? existing[k].slice() : [];
+      if (v && typeof v === "object" && Array.isArray(v.$each)) arr.push(...v.$each);
+      else arr.push(v);
+      out[k] = arr;
+    }
+  }
+  if (updateData && updateData.$addToSet) {
+    for (const [k, v] of Object.entries(updateData.$addToSet)) {
+      const arr = Array.isArray(existing[k]) ? existing[k].slice() : [];
+      const items = v && typeof v === "object" && Array.isArray(v.$each) ? v.$each : [v];
+      for (const it of items) {
+        if (!arr.some((x) => JSON.stringify(x) === JSON.stringify(it))) arr.push(it);
+      }
+      out[k] = arr;
+    }
+  }
+  if (updateData && updateData.$pull) {
+    for (const [k, v] of Object.entries(updateData.$pull)) {
+      const arr = Array.isArray(existing[k]) ? existing[k] : [];
+      // `{ $in: [...] }` and other conditions remove every matching element
+      // (comparing the condition object itself as JSON removed nothing).
+      const isCond = v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).length > 0 && Object.keys(v).every((kk) => kk.startsWith("$"));
+      out[k] = isCond
+        ? arr.filter((x) => !matchesQuery({ el: x }, { el: v }))
+        : arr.filter((x) => JSON.stringify(x) !== JSON.stringify(v) && !(x != null && v != null && typeof x !== "object" && String(x) === String(v && v._id != null ? v._id : v)));
+    }
+  }
+  if (updateData && updateData.$unset) {
+    for (const k of Object.keys(updateData.$unset)) out[k] = null;
+  }
+  return out;
+}
+
+// $inc resolved here (above) reads `existing[k]` in JS and writes the plain
+// sum back — two concurrent updateOne/findOneAndUpdate calls with the same
+// $inc can both read the same starting value before either write lands,
+// and the second write simply overwrites the first with an identically
+// stale computed result (a real, exploitable double-spend/double-credit on
+// every coin balance, creator earnings field, etc. touched via $inc — not
+// just a theoretical race). The CRUD methods below route $inc through
+// firestoreDb.incrementFields() instead, which uses Firestore's own
+// FieldValue.increment (a field-level atomic mutation, no client-side
+// read-modify-write) — see firestoreDb.service.js for the full reasoning.
+//
+// $mul has no atomic Firestore equivalent and (as of this writing) isn't
+// used anywhere in this codebase, so it's left on the plain read-then-write
+// path above rather than adding transactional machinery nothing exercises.
+function extractIncDeltas(updateData) {
+  if (!updateData || !updateData.$inc) return null;
+  const deltas = {};
+  for (const [k, v] of Object.entries(updateData.$inc)) {
+    const n = Number(v);
+    if (n) deltas[k] = n;
+  }
+  return Object.keys(deltas).length ? deltas : null;
+}
+
+function withoutInc(updateData) {
+  if (!updateData || !updateData.$inc) return updateData;
+  const { $inc, ...rest } = updateData;
+  return rest;
+}
+
+// Best-effort in-memory aggregation pipeline. Supports the stages the YouPeak
+// feed/report controllers actually use: $match (equality + $ne/$gte/$lte/$in),
+// $sort, $skip, $limit, $count, $facet, $group (basic), $project (basic),
+// $addFields; $lookup / $unwind are skipped (populate is done in the controller).
+// Loose equality: strict first, then compare stringified forms so an ObjectId
+// instance / string / number match the way Mongo would.
+function looseEq(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  return String(a) === String(b);
+}
+
+function matchStage(rows, cond) {
+  return rows.filter((item) => {
+    for (const [k, v] of Object.entries(cond || {})) {
+      if (k === "$or") { if (!v.some((c) => matchStage([item], c).length)) return false; continue; }
+      if (k === "$and") { if (!v.every((c) => matchStage([item], c).length)) return false; continue; }
+      const val = item[k];
+      if (v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).some((kk) => kk.startsWith("$"))) {
+        for (const [op, t] of Object.entries(v)) {
+          if (op === "$ne" && looseEq(val, t)) return false;
+          if (op === "$eq" && !looseEq(val, t)) return false;
+          if (op === "$gte" && !(val >= t)) return false;
+          if (op === "$gt" && !(val > t)) return false;
+          if (op === "$lte" && !(val <= t)) return false;
+          if (op === "$lt" && !(val < t)) return false;
+          if (op === "$in" && !(Array.isArray(t) && t.some((x) => looseEq(x, val)))) return false;
+          if (op === "$nin" && Array.isArray(t) && t.some((x) => looseEq(x, val))) return false;
+          if (op === "$exists" && (t ? val === undefined : val !== undefined)) return false;
+          if (op === "$regex") {
+            try {
+              const re = t instanceof RegExp ? t : new RegExp(t, v.$options || "");
+              if (!re.test(val == null ? "" : String(val))) return false;
+            } catch (e) { /* bad regex -> no match */ return false; }
+          }
+        }
+      } else if (v === null ? val != null : !looseEq(val, v)) {
+        // Mongo: `{ field: null }` matches null AND a missing field.
+        return false;
+      }
+    }
+    return true;
+  });
+}
+
+function getPath(doc, path) {
+  if (doc == null) return undefined;
+  if (path.indexOf(".") === -1) return doc[path];
+  return path.split(".").reduce((o, seg) => {
+    if (o == null) return undefined;
+    // Mongo: "arr.field" over an array of objects -> array of field values.
+    if (Array.isArray(o)) return o.map((el) => (el == null ? undefined : el[seg]));
+    return o[seg];
+  }, doc);
+}
+
+// Evaluate a Mongo aggregation expression against a document (+ $$ vars scope).
+// Unknown operators return null rather than leaking the literal {$op:...} object.
+function evalExpr(expr, doc, vars) {
+  if (expr == null) return expr;
+  if (typeof expr === "string") {
+    if (expr.startsWith("$$")) {
+      const name = expr.slice(2);
+      if (name === "ROOT") return doc;
+      if (name === "NOW") return new Date();
+      return vars ? getPath(vars, name) : undefined;
+    }
+    if (expr.startsWith("$")) return getPath(doc, expr.slice(1));
+    return expr;
+  }
+  if (Array.isArray(expr)) return expr.map((e) => evalExpr(e, doc, vars));
+  if (typeof expr !== "object") return expr;
+  if (expr instanceof Date) return expr;
+  if (expr instanceof ObjectId) return String(expr);
+
+  const keys = Object.keys(expr);
+  const opKey = keys.find((k) => k.startsWith("$"));
+  if (!opKey) {
+    // plain object literal — evaluate each value
+    const o = {};
+    for (const [k, v] of Object.entries(expr)) o[k] = evalExpr(v, doc, vars);
+    return o;
+  }
+  const a = expr[opKey];
+  const E = (x) => evalExpr(x, doc, vars);
+  // Dates are stored as ISO strings in Firestore: date math ($subtract with
+  // $NOW for "3 hours ago") must read them as times, not as 0 (which made
+  // every feed say "56 years ago").
+  const num = (x) => {
+    const v = E(x);
+    if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T/.test(v)) { const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+    if (v && typeof v === "object" && typeof v.toDate === "function") return v.toDate().getTime();
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  const arr = (x) => { const v = E(x); return Array.isArray(v) ? v : []; };
+  switch (opKey) {
+    case "$literal": return a;
+    case "$ifNull": { for (let i = 0; i < a.length - 1; i++) { const v = E(a[i]); if (v !== undefined && v !== null) return v; } return E(a[a.length - 1]); }
+    case "$arrayElemAt": { const l = arr(a[0]); const i = num(a[1]); return i < 0 ? l[l.length + i] : l[i]; }
+    case "$first": return arr(a)[0];
+    case "$last": { const l = arr(a); return l[l.length - 1]; }
+    case "$size": return arr(a).length;
+    case "$isArray": return Array.isArray(E(a));
+    case "$concat": return a.map((x) => { const v = E(x); return v == null ? "" : String(v); }).join("");
+    case "$toString": { const v = E(a); return v == null ? "" : String(v); }
+    case "$toInt": case "$toLong": return Math.trunc(num(a));
+    case "$toDouble": case "$toDecimal": return num(a);
+    case "$toBool": return Boolean(E(a));
+    case "$toDate": { const v = E(a); const d = v instanceof Date ? v : new Date(v); return isNaN(d) ? null : d; }
+    case "$year": { const d = new Date(E(a)); return isNaN(d) ? null : d.getFullYear(); }
+    case "$floor": return Math.floor(num(a));
+    case "$ceil": return Math.ceil(num(a));
+    case "$round": case "$trunc": return Math.trunc(num(a));
+    case "$abs": return Math.abs(num(a));
+    case "$add": return (Array.isArray(a) ? a : [a]).reduce((s, x) => s + num(x), 0);
+    case "$multiply": return (Array.isArray(a) ? a : [a]).reduce((s, x) => s * num(x), 1);
+    case "$subtract": return num(a[0]) - num(a[1]);
+    case "$divide": { const d = num(a[1]); return d === 0 ? null : num(a[0]) / d; }
+    case "$mod": { const d = num(a[1]); return d === 0 ? null : num(a[0]) % d; }
+    case "$eq": return looseEq(E(a[0]), E(a[1]));
+    case "$ne": return !looseEq(E(a[0]), E(a[1]));
+    case "$gt": return num(a[0]) > num(a[1]);
+    case "$gte": return num(a[0]) >= num(a[1]);
+    case "$lt": return num(a[0]) < num(a[1]);
+    case "$lte": return num(a[0]) <= num(a[1]);
+    case "$and": return a.every((x) => Boolean(E(x)));
+    case "$or": return a.some((x) => Boolean(E(x)));
+    case "$not": return !E(Array.isArray(a) ? a[0] : a);
+    case "$in": { const l = E(a[1]); return Array.isArray(l) && l.some((x) => looseEq(x, E(a[0]))); }
+    case "$cond": {
+      const c = Array.isArray(a) ? { if: a[0], then: a[1], else: a[2] } : a;
+      return E(c.if) ? E(c.then) : E(c.else);
+    }
+    case "$switch": {
+      for (const b of a.branches || []) if (E(b.case)) return E(b.then);
+      return a.default !== undefined ? E(a.default) : null;
+    }
+    case "$let": {
+      const scope = { ...(vars || {}) };
+      for (const [k, v] of Object.entries(a.vars || {})) scope[k] = evalExpr(v, doc, vars);
+      return evalExpr(a.in, doc, scope);
+    }
+    case "$map": {
+      const input = arr(a.input); const as = a.as || "this";
+      return input.map((el) => evalExpr(a.in, doc, { ...(vars || {}), [as]: el }));
+    }
+    case "$filter": {
+      const input = arr(a.input); const as = a.as || "this";
+      return input.filter((el) => Boolean(evalExpr(a.cond, doc, { ...(vars || {}), [as]: el })));
+    }
+    case "$mergeObjects": return Object.assign({}, ...(Array.isArray(a) ? a : [a]).map((x) => E(x) || {}));
+    case "$dateDiff": case "$timeDiff": case "$dateToString": return null;
+    default: return null;
+  }
+}
+
+function applyLookup(results, stage, foreign, vars = null) {
+  const { from, localField, foreignField, as, pipeline: sub, let: letSpec } = stage.$lookup;
+  const key = firestoreDb.normalizeCollectionName(from);
+  const frows = foreign[key] || foreign[from] || [];
+  return results.map((r) => {
+    // Equality join when localField/foreignField are given; the `let` +
+    // `pipeline` form (correlated sub-query, $vars in $expr) runs the
+    // sub-pipeline over the whole foreign set with this row's variables.
+    // (That form crashed here — e.g. every comments list with a comment.)
+    let matches = frows;
+    if (localField && foreignField) {
+      const lv = getPath(r, localField);
+      matches = frows.filter((fr) => {
+        const fv = getPath(fr, foreignField);
+        return Array.isArray(lv) ? lv.some((x) => looseEq(x, fv)) : looseEq(lv, fv);
+      });
+    }
+    let rowVars = vars;
+    if (letSpec && typeof letSpec === "object") {
+      rowVars = { ...(vars || {}) };
+      for (const [name, expr] of Object.entries(letSpec)) rowVars[name] = evalExpr(expr, r, vars);
+    }
+    if (Array.isArray(sub) && sub.length) matches = runPipeline(matches, sub, foreign, rowVars);
+    return { ...r, [as]: matches };
+  });
+}
+
+function applyUnwind(results, stage) {
+  const spec = stage.$unwind;
+  const path = (typeof spec === "string" ? spec : spec.path).replace(/^\$/, "");
+  const keepEmpty = typeof spec === "object" && spec.preserveNullAndEmptyArrays;
+  const out = [];
+  for (const r of results) {
+    const v = getPath(r, path);
+    if (Array.isArray(v)) {
+      if (v.length) { for (const el of v) out.push({ ...r, [path]: el }); }
+      else if (keepEmpty) out.push({ ...r, [path]: null });
+    } else if (v !== undefined && v !== null) {
+      out.push(r);
+    } else if (keepEmpty) {
+      out.push({ ...r, [path]: null });
+    }
+  }
+  return out;
+}
+
+function runPipeline(rows, pipeline, foreign = {}, vars = null) {
+  let results = Array.isArray(rows) ? rows.slice() : [];
+  for (const stage of pipeline || []) {
+    if (stage.$match) {
+      const { $expr, ...rest } = stage.$match;
+      if ($expr !== undefined) results = results.filter((r) => Boolean(evalExpr($expr, r, vars)));
+      results = matchStage(results, rest);
+    }
+    else if (stage.$sort) {
+      const keys = Object.keys(stage.$sort);
+      results.sort((a, b) => {
+        for (const k of keys) {
+          const dir = stage.$sort[k] === -1 ? -1 : 1;
+          const av = a[k], bv = b[k];
+          if (av === bv) continue;
+          if (av === undefined) return 1;
+          if (bv === undefined) return -1;
+          return (av > bv ? 1 : -1) * dir;
+        }
+        return 0;
+      });
+    } else if (stage.$skip) results = results.slice(stage.$skip);
+    else if (stage.$limit) results = results.slice(0, stage.$limit);
+    else if (stage.$count) results = [{ [stage.$count]: results.length }];
+    else if (stage.$facet) {
+      const out = {};
+      for (const [name, sub] of Object.entries(stage.$facet)) out[name] = runPipeline(results, sub, foreign, vars);
+      results = [out];
+    } else if (stage.$lookup) {
+      results = applyLookup(results, stage, foreign, vars);
+    } else if (stage.$unwind) {
+      results = applyUnwind(results, stage);
+    } else if (stage.$addFields || stage.$set) {
+      const add = stage.$addFields || stage.$set;
+      results = results.map((r) => ({ ...r, ...resolveComputed(add, r) }));
+    } else if (stage.$project) {
+      const p = stage.$project;
+      const plainIncl = Object.entries(p).filter(([, v]) => v === 1 || v === true).map(([k]) => k);
+      // A field set to an expression / "$ref" is also an inclusion in Mongo.
+      const computedKeys = Object.entries(p)
+        .filter(([, v]) => v !== 0 && v !== false && v !== 1 && v !== true)
+        .map(([k]) => k);
+      const excl = Object.entries(p).filter(([, v]) => v === 0 || v === false).map(([k]) => k);
+      const isInclusion = plainIncl.length > 0 || computedKeys.length > 0;
+      results = results.map((r) => {
+        if (isInclusion) {
+          const o = {};
+          for (const k of plainIncl) if (getPath(r, k) !== undefined) o[k] = getPath(r, k);
+          if (p._id !== 0 && p._id !== false) o._id = r._id;
+          return { ...o, ...resolveComputed(p, r) };
+        }
+        const o = { ...r };
+        for (const k of excl) delete o[k];
+        return o;
+      });
+    } else if (stage.$group) {
+      results = groupStage(results, stage.$group);
+    }
+  }
+  return results;
+}
+
+// Turn a $project / $addFields spec into concrete fields for one doc.
+function resolveComputed(spec, doc) {
+  const out = {};
+  for (const [k, v] of Object.entries(spec)) {
+    if (v === 1 || v === 0 || v === true || v === false) continue; // projection flag
+    if (typeof v === "string") { out[k] = v.startsWith("$") ? evalExpr(v, doc) : v; continue; }
+    if (v && typeof v === "object") { out[k] = evalExpr(v, doc); continue; }
+    out[k] = v;
+  }
+  return out;
+}
+
+// Collect the collections referenced by every $lookup (including inside $facet).
+function collectLookupNames(pipeline, set) {
+  for (const stage of pipeline || []) {
+    if (stage && stage.$lookup && stage.$lookup.from) set.add(stage.$lookup.from);
+    if (stage && stage.$facet) for (const sub of Object.values(stage.$facet)) collectLookupNames(sub, set);
+    if (stage && stage.$lookup && Array.isArray(stage.$lookup.pipeline)) collectLookupNames(stage.$lookup.pipeline, set);
+  }
+  return set;
+}
+
+function groupStage(rows, spec) {
+  const idExpr = spec._id;
+  const keyOf = (r) => {
+    if (idExpr === null) return "__all__";
+    if (typeof idExpr === "string" && idExpr.startsWith("$")) return r[idExpr.slice(1)];
+    return JSON.stringify(idExpr);
+  };
+  const groups = new Map();
+  for (const r of rows) {
+    const k = keyOf(r);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(r);
+  }
+  const out = [];
+  for (const [k, items] of groups) {
+    const doc = { _id: k === "__all__" ? null : k };
+    for (const [field, acc] of Object.entries(spec)) {
+      if (field === "_id") continue;
+      const [op, arg] = Object.entries(acc)[0];
+      const pick = (r) => (typeof arg === "string" && arg.startsWith("$") ? r[arg.slice(1)] : arg);
+      if (op === "$sum") doc[field] = items.reduce((s, r) => s + (Number(pick(r)) || (arg === 1 ? 1 : 0)), 0);
+      else if (op === "$count") doc[field] = items.length;
+      else if (op === "$avg") doc[field] = items.reduce((s, r) => s + (Number(pick(r)) || 0), 0) / (items.length || 1);
+      else if (op === "$max") doc[field] = Math.max(...items.map((r) => Number(pick(r)) || 0));
+      else if (op === "$min") doc[field] = Math.min(...items.map((r) => Number(pick(r)) || 0));
+      else if (op === "$first") doc[field] = pick(items[0]);
+      else if (op === "$last") doc[field] = pick(items[items.length - 1]);
+      else if (op === "$push") doc[field] = items.map(pick);
+      else if (op === "$addToSet") doc[field] = Array.from(new Set(items.map(pick)));
+    }
+    out.push(doc);
+  }
+  return out;
+}
+
+// Evaluate operator conditions in a query against a doc (e.g. { coin: { $gte: 100 } }).
+// Returns false if any guard fails — used so updateOne won't run when the doc
+// no longer satisfies a precondition (e.g. insufficient balance).
+function matchesQueryGuards(doc, query) {
+  if (!doc || !query || typeof query !== "object") return true;
+  for (const [key, cond] of Object.entries(query)) {
+    if (key.startsWith("$")) continue;
+    if (cond && typeof cond === "object" && !Array.isArray(cond)) {
+      const v = doc[key];
+      for (const [op, target] of Object.entries(cond)) {
+        if (op === "$gte" && !(Number(v) >= Number(target))) return false;
+        if (op === "$gt" && !(Number(v) > Number(target))) return false;
+        if (op === "$lte" && !(Number(v) <= Number(target))) return false;
+        if (op === "$lt" && !(Number(v) < Number(target))) return false;
+        if (op === "$ne" && !(v !== target)) return false;
+        if (op === "$in" && !(Array.isArray(target) && target.includes(v))) return false;
+        if (op === "$nin" && Array.isArray(target) && target.includes(v)) return false;
+      }
+    }
+  }
+  return true;
+}
+
+class FirestoreQuery {
+  constructor(collectionName, opType, query = {}, extraData = null, schema = null, ModelCtor = null) {
+    this.collectionName = collectionName;
+    this.opType = opType;
+    this.query = query;
+    this.extraData = extraData;
+    this.options = { sort: null, limit: null, skip: 0 };
+    this.schema = schema || null;
+    this.ModelCtor = ModelCtor || null;
+    this._populate = [];
+  }
+
+  sort(sortObj) {
+    if (typeof sortObj === "string") {
+      const parts = sortObj.trim().split(/\s+/);
+      const sortMap = {};
+      parts.forEach(p => {
+        if (p.startsWith("-")) sortMap[p.substring(1)] = -1;
+        else if (p.startsWith("+")) sortMap[p.substring(1)] = 1;
+        else if (p) sortMap[p] = 1;
+      });
+      this.options.sort = sortMap;
+    } else {
+      this.options.sort = sortObj;
+    }
+    return this;
+  }
+
+  limit(limitNum) {
+    this.options.limit = Number(limitNum);
+    return this;
+  }
+
+  skip(skipNum) {
+    this.options.skip = Number(skipNum);
+    return this;
+  }
+
+  // select() stays a no-op: too many existing call sites use it purely as
+  // documentation while still reading fields outside the selected list
+  // elsewhere in the same function — since it was always a no-op, those
+  // fields were always present. Making it real risks breaking all of them.
+  // populate() below is different: what it attaches (a resolved
+  // sub-document under the ref field) never existed before, so making it
+  // real can't break anything that used to read more off it.
+  select() { return this; }
+
+  // Real Mongoose: .populate("path", "select fields") or .populate({path, select}).
+  // Resolved against the field's `ref` from the Schema passed in at model
+  // creation (see createFirestoreModel / mongooseShim.model below) — the
+  // exact same string used to register that target model, so it normalises
+  // to the same Firestore collection the target model itself reads/writes.
+  populate(pathOrSpec, select) {
+    if (pathOrSpec && typeof pathOrSpec === "object") {
+      this._populate.push({ path: pathOrSpec.path, select: pathOrSpec.select });
+    } else if (pathOrSpec) {
+      this._populate.push({ path: pathOrSpec, select });
+    }
+    return this;
+  }
+  lean() { return this; }
+  exec() { return this.execute(); }
+
+  // Query.distinct(field) → resolves to a de-duplicated array of that field.
+  async distinct(field) {
+    const rows = await firestoreDb.find(this.collectionName, this.query, this.options);
+    const set = new Set();
+    for (const r of rows) {
+      const v = r && r[field];
+      if (v !== undefined && v !== null) set.add(typeof v === "object" ? JSON.stringify(v) : v);
+    }
+    return Array.from(set);
+  }
+
+  // Query.countDocuments() chained after a find()
+  async countDocuments() {
+    const rows = await firestoreDb.find(this.collectionName, this.query, this.options);
+    return rows.length;
+  }
+
+  then(resolve, reject) {
+    return this.execute().then(resolve, reject);
+  }
+  catch(reject) {
+    return this.execute().catch(reject);
+  }
+
+  async execute() {
+    let result;
+    if (this.opType === "find") {
+      result = await firestoreDb.find(this.collectionName, this.query, this.options);
+    } else if (this.opType === "findOne") {
+      result = await firestoreDb.findOne(this.collectionName, this.query);
+    } else if (this.opType === "findById") {
+      result = await firestoreDb.findById(this.collectionName, this.query);
+    } else if (this.opType === "count" || this.opType === "countDocuments") {
+      return await firestoreDb.countDocuments(this.collectionName, this.query);
+    } else if (this.opType === "create") {
+      return await firestoreDb.create(this.collectionName, withSchemaDefaults(this.schema, this.extraData));
+    } else if (this.opType === "update") {
+      return await firestoreDb.update(this.collectionName, this.query, this.extraData);
+    } else if (this.opType === "delete") {
+      return await firestoreDb.delete(this.collectionName, this.query);
+    } else {
+      return null;
+    }
+
+    // Real Mongoose returns Document instances from find/findOne/findById —
+    // callers can mutate fields and call .save() on them. This shim used to
+    // hand back plain data objects instead, so every "load it, mutate a
+    // field, call .save()" pattern in the codebase threw
+    // "X.save is not a function" — a real, live crash (confirmed: editing a
+    // sound/category/FAQ/ad-reward/withdraw-method/premium-plan, toggling
+    // advertise/withdraw settings, fraud user block/restrict, and comment
+    // like/dislike/reply all hit this). Wrapping results in the model's own
+    // constructor restores real .save() via the prototype chain, and is
+    // otherwise behaviourally identical to a plain object (JSON.stringify,
+    // property access, spread, Object.keys all work the same) — nothing
+    // that currently reads plain fields off a query result can break.
+    if (this.ModelCtor && result) {
+      if (Array.isArray(result)) result = result.map((row) => (row ? new this.ModelCtor(row) : row));
+      else result = new this.ModelCtor(result);
+    }
+
+    if (result && this._populate.length && this.schema) {
+      const rows = Array.isArray(result) ? result : [result];
+      if (rows.length) await applyPopulate(rows, this._populate, this.schema);
+    }
+    return result;
+  }
+}
+
+// findByIdAndUpdate/findOneAndUpdate resolve a single document like a plain
+// async function, but at least one call site in this codebase chains
+// .populate(...).lean() onto them before awaiting (real Mongoose supports
+// this). A bare `async function` returns a native Promise, which has no
+// .populate — that chain would throw. This wraps an async factory in a
+// thenable that records .populate() calls made before the await and applies
+// them once the factory resolves; awaiting it directly (no chaining) works
+// exactly like before.
+function makeChainable(promiseFactory, schema, ModelCtor) {
+  const specs = [];
+  const self = {
+    populate(pathOrSpec, select) {
+      if (pathOrSpec && typeof pathOrSpec === "object") specs.push({ path: pathOrSpec.path, select: pathOrSpec.select });
+      else if (pathOrSpec) specs.push({ path: pathOrSpec, select });
+      return self;
+    },
+    select() { return self; },
+    lean() { return self; },
+    then(resolve, reject) {
+      return promiseFactory()
+        .then(async (result) => {
+          if (ModelCtor && result) result = new ModelCtor(result);
+          if (result && specs.length && schema) {
+            const rows = Array.isArray(result) ? result : [result];
+            if (rows.length) await applyPopulate(rows, specs, schema);
+          }
+          return result;
+        })
+        .then(resolve, reject);
+    },
+    catch(reject) {
+      return self.then(undefined, reject);
+    },
+  };
+  return self;
+}
+
+// Resolve a schema field's `{ref: "ModelName"}` (possibly inside an array
+// entry, e.g. `[{type: ObjectId, ref: "Video"}]`) and replace the raw id(s)
+// on each row with the fetched document(s). ref is passed straight through
+// to firestoreDb.findById(), which normalises it the same way the target
+// model's own collectionName was normalised at creation — both sides derive
+// from the identical registered model name, so they always agree.
+async function applyPopulate(rows, specs, schema) {
+  for (const spec of specs) {
+    const path = spec && spec.path;
+    if (!path) continue;
+    let fieldDef = schema.definition ? schema.definition[path] : null;
+    if (Array.isArray(fieldDef)) fieldDef = fieldDef[0];
+    const ref = fieldDef && fieldDef.ref;
+    if (!ref) continue; // no ref info — leave the raw id(s) alone rather than guess
+
+    const ids = new Set();
+    for (const row of rows) {
+      const v = row[path];
+      if (Array.isArray(v)) v.forEach((x) => { if (x != null && x !== "") ids.add(String(x)); });
+      else if (v != null && v !== "") ids.add(String(v));
+    }
+    if (!ids.size) continue;
+
+    const idList = [...ids];
+    const fetched = await Promise.all(idList.map((id) => firestoreDb.findById(ref, id).catch(() => null)));
+    const byId = {};
+    idList.forEach((id, i) => { byId[id] = fetched[i]; });
+
+    const selectFields = spec.select ? String(spec.select).trim().split(/\s+/).filter(Boolean) : null;
+    const project = (doc) => {
+      if (!doc || !selectFields) return doc || null;
+      const out = { _id: doc._id, id: doc.id };
+      for (const f of selectFields) if (!f.startsWith("-")) out[f] = doc[f];
+      return out;
+    };
+
+    for (const row of rows) {
+      const v = row[path];
+      if (Array.isArray(v)) {
+        row[path] = v.map((x) => project(byId[String(x)])).filter(Boolean);
+      } else if (v != null && v !== "") {
+        row[path] = project(byId[String(v)]) || null;
+      }
+    }
+  }
+}
+
+// Firestore uses string document ids. This coerces anything Mongoose code
+// throws at `new mongoose.Types.ObjectId(x)` / `mongoose.Types.ObjectId(x)`
+// into that string. When called with `new`, JS ignores a primitive return, so
+// the instance carries toString/valueOf/toJSON that all yield the id string.
+function ObjectId(val) {
+  let s;
+  if (val && typeof val === "object") s = String(val._id || val.id || val.toString?.() || "");
+  else s = val != null && val !== "" ? String(val) : "";
+  if (this instanceof ObjectId) {
+    this._id = s;
+    return this;
+  }
+  return s;
+}
+ObjectId.prototype.toString = function () { return this._id; };
+ObjectId.prototype.valueOf = function () { return this._id; };
+ObjectId.prototype.toJSON = function () { return this._id; };
+ObjectId.isValid = (id) => Boolean(id);
+
+// ── Schema defaults on insert ────────────────────────────────────────────────
+// Real Mongoose fills every schema `default` (and [] for array paths) when a
+// document is inserted. This shim never did, so fields the legacy
+// controllers rely on were silently missing in Firestore — e.g. a new
+// WithDrawRequest had no `status` (default 1 = pending), so the admin's
+// pending list (status == 1) never showed it; a new payout method had no
+// `isEnabled`, so the app's withdrawList hid it. Applied to NEW documents
+// only (create/insertMany/new+save/upsert) — existing docs and query results
+// are untouched.
+const plainObject = (v) => v != null && typeof v === "object" && !Array.isArray(v) && Object.getPrototypeOf(v) === Object.prototype;
+
+function isPathDefinition(def) {
+  if (typeof def === "function" || Array.isArray(def)) return true;
+  if (!plainObject(def)) return false;
+  if ("default" in def) return true;
+  // { type: String } is a path; { type: { type: String } } is a nested object with a field named "type".
+  return "type" in def && !plainObject(def.type);
+}
+
+function defaultFor(def) {
+  if (Array.isArray(def)) return [];
+  if (!plainObject(def)) return undefined;
+  if ("default" in def) {
+    let v = typeof def.default === "function" ? def.default() : def.default;
+    if (def.type === Date && (typeof v === "number" || v instanceof Date)) v = new Date(v).toISOString();
+    if (Array.isArray(v)) return v.slice();
+    if (plainObject(v)) return { ...v };
+    return v;
+  }
+  if (Array.isArray(def.type)) return [];
+  return undefined;
+}
+
+function fillDefaults(definition, data) {
+  const out = { ...data };
+  for (const [key, def] of Object.entries(definition || {})) {
+    if (isPathDefinition(def)) {
+      if (out[key] === undefined) {
+        const v = defaultFor(def);
+        if (v !== undefined) out[key] = v;
+      }
+    } else if (plainObject(def)) {
+      // Nested object: fill its defaults (only when it's absent or a plain object).
+      if (out[key] === undefined || plainObject(out[key])) {
+        const nested = fillDefaults(def, out[key] || {});
+        if (Object.keys(nested).length) out[key] = nested;
+      }
+    }
+  }
+  return out;
+}
+
+function withSchemaDefaults(schema, data) {
+  if (!schema || !schema.definition || !data || typeof data !== "object") return data;
+  try {
+    return fillDefaults(schema.definition, data);
+  } catch (e) {
+    console.error("mongooseShim: applying schema defaults failed:", e.message);
+    return data;
+  }
+}
+
+// Top-level schema fields declared as arrays (`videoId: [{ type: ... }]`).
+function schemaArrayFields(schema) {
+  const def = schema && schema.definition;
+  if (!def || typeof def !== "object") return [];
+  return Object.keys(def).filter((k) => Array.isArray(def[k]) || (def[k] && Array.isArray(def[k].type)));
+}
+
+// A bulk delete/update with no effective condition (e.g. `{ userId: undefined }`
+// from a missing parameter) would touch the whole collection: refuse it.
+function assertHasConditions(query, op) {
+  const has = query && typeof query === "object" && Object.keys(query).some((k) => query[k] !== undefined);
+  if (!has) throw new Error(`${op} refused: empty filter would affect every document`);
+}
+
+function createFirestoreModel(modelName, schema) {
+  const collectionName = firestoreDb.normalizeCollectionName(modelName);
+  firestoreDb.registerArrayFields(collectionName, schemaArrayFields(schema));
+
+  function ModelConstructor(data = {}) {
+    Object.assign(this, data);
+  }
+
+  ModelConstructor.prototype.save = async function () {
+    // Defaults only for a brand-new document (no id yet), like Mongoose's insert.
+    const isNew = this._id == null && this.id == null;
+    const created = await firestoreDb.create(collectionName, isNew ? withSchemaDefaults(schema, { ...this }) : this);
+    Object.assign(this, created);
+    return this;
+  };
+
+  // Same gap as .save() above, found via the same audit: several admin
+  // controllers call instance.deleteOne() (not the static
+  // Model.deleteOne(query)) on a document returned by findById/findOne —
+  // e.g. adRewardCoin/contact/dailyRewardCoin/FAQ/premiumPlan/withdraw
+  // delete handlers, and OTP cleanup. With no prototype method, every one
+  // of those threw "X.deleteOne is not a function" on every call.
+  ModelConstructor.prototype.deleteOne = async function () {
+    await firestoreDb.delete(collectionName, this._id || this.id);
+    return this;
+  };
+  ModelConstructor.prototype.remove = ModelConstructor.prototype.deleteOne;
+
+  ModelConstructor.modelName = modelName;
+  ModelConstructor.collectionName = collectionName;
+  ModelConstructor.schema = schema || null;
+
+  ModelConstructor.find = function (query = {}) {
+    return new FirestoreQuery(collectionName, "find", query, null, schema, ModelConstructor);
+  };
+
+  ModelConstructor.findOne = function (query = {}) {
+    return new FirestoreQuery(collectionName, "findOne", query, null, schema, ModelConstructor);
+  };
+
+  ModelConstructor.findById = function (id) {
+    return new FirestoreQuery(collectionName, "findById", id, null, schema, ModelConstructor);
+  };
+
+  ModelConstructor.countDocuments = function (query = {}) {
+    return new FirestoreQuery(collectionName, "countDocuments", query, null, schema);
+  };
+
+  ModelConstructor.count = function (query = {}) {
+    return new FirestoreQuery(collectionName, "count", query, null, schema);
+  };
+
+  ModelConstructor.create = async function (data) {
+    const created = await firestoreDb.create(collectionName, withSchemaDefaults(schema, data));
+    return created ? new ModelConstructor(created) : created;
+  };
+
+  ModelConstructor.insertMany = async function (dataArray) {
+    if (!Array.isArray(dataArray)) return [];
+    const results = [];
+    for (const item of dataArray) {
+      const created = await firestoreDb.create(collectionName, withSchemaDefaults(schema, item));
+      results.push(created ? new ModelConstructor(created) : created);
+    }
+    return results;
+  };
+
+  // Apply one resolved update to a document — $inc deltas (if any) go
+  // through the atomic incrementFields() path; everything else through the
+  // existing plain update() path. Shared by all four CRUD methods below.
+  async function applyUpdate(docId, existing, updateData) {
+    const incDeltas = extractIncDeltas(updateData);
+    if (incDeltas) {
+      return await firestoreDb.incrementFields(collectionName, docId, incDeltas, buildUpdatePayload(existing, withoutInc(updateData)));
+    }
+    return await firestoreDb.update(collectionName, docId, buildUpdatePayload(existing, updateData));
+  }
+
+  ModelConstructor.updateOne = async function (query = {}, updateData = {}) {
+    // findOne evaluates the WHOLE filter (equality on every field and every
+    // operator). Fetching by id alone and only checking operator guards let
+    // `updateOne({ _id, userId: me })` modify a document owned by someone else.
+    const existing = await firestoreDb.findOne(collectionName, query);
+
+    if (!existing) return { matchedCount: 0, modifiedCount: 0, acknowledged: true };
+    if (!matchesQueryGuards(existing, query)) {
+      return { matchedCount: 1, modifiedCount: 0, acknowledged: true };
+    }
+
+    await applyUpdate(existing._id || existing.id, existing, updateData);
+    return { matchedCount: 1, modifiedCount: 1, acknowledged: true };
+  };
+
+  ModelConstructor.updateMany = async function (query = {}, updateData = {}) {
+    assertHasConditions(query, "updateMany");
+    const items = await firestoreDb.find(collectionName, query);
+    let modified = 0;
+    for (const item of items) {
+      if (!matchesQueryGuards(item, query)) continue;
+      await applyUpdate(item._id || item.id, item, updateData);
+      modified++;
+    }
+    return { matchedCount: items.length, modifiedCount: modified, acknowledged: true };
+  };
+
+  ModelConstructor.findByIdAndUpdate = function (id, updateData = {}, options = {}) {
+    return makeChainable(async () => {
+      const existing = await firestoreDb.findById(collectionName, id);
+      if (!existing) return null;
+      const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
+      return options && options.new === false ? existing : updated;
+    }, schema, ModelConstructor);
+  };
+
+  ModelConstructor.findOneAndUpdate = function (query = {}, updateData = {}, options = {}) {
+    return makeChainable(async () => {
+      const existing = await firestoreDb.findOne(collectionName, query);
+      if (!existing) {
+        if (options && options.upsert) {
+          return await firestoreDb.create(collectionName, withSchemaDefaults(schema, buildUpdatePayload({}, updateData)));
+        }
+        return null;
+      }
+      if (!matchesQueryGuards(existing, query)) return existing;
+      const updated = await applyUpdate(existing._id || existing.id, existing, updateData);
+      return options && options.new === false ? existing : updated;
+    }, schema, ModelConstructor);
+  };
+
+  ModelConstructor.findByIdAndDelete = async function (id) {
+    const existing = await firestoreDb.findById(collectionName, id);
+    await firestoreDb.delete(collectionName, id);
+    return existing;
+  };
+
+  ModelConstructor.findOneAndDelete = async function (query) {
+    const existing = await firestoreDb.findOne(collectionName, query);
+    if (existing) {
+      await firestoreDb.delete(collectionName, existing._id || existing.id);
+    }
+    return existing;
+  };
+
+  ModelConstructor.deleteOne = async function (query) {
+    const existing = await firestoreDb.findOne(collectionName, query);
+    if (existing) {
+      await firestoreDb.delete(collectionName, existing._id || existing.id);
+    }
+    return { deletedCount: existing ? 1 : 0 };
+  };
+
+  ModelConstructor.deleteMany = async function (query) {
+    assertHasConditions(query, "deleteMany");
+    const items = await firestoreDb.find(collectionName, query);
+    for (const item of items) {
+      await firestoreDb.delete(collectionName, item._id || item.id);
+    }
+    return { deletedCount: items.length };
+  };
+
+  ModelConstructor.aggregate = async function (pipeline = []) {
+    const seed = await firestoreDb.find(collectionName, {});
+    // Pre-load every collection referenced by a $lookup so runPipeline (sync)
+    // can resolve joins in memory.
+    const names = collectLookupNames(pipeline, new Set());
+    const foreign = {};
+    await Promise.all(
+      [...names].map(async (name) => {
+        const key = firestoreDb.normalizeCollectionName(name);
+        try { foreign[key] = await firestoreDb.find(key, {}); }
+        catch (e) { foreign[key] = []; }
+      })
+    );
+    return runPipeline(seed, pipeline, foreign);
+  };
+
+  ModelConstructor.distinct = async function (field, query = {}) {
+    const items = await firestoreDb.find(collectionName, query);
+    const set = new Set(items.map(i => i[field]).filter(Boolean));
+    return Array.from(set);
+  };
+
+  ModelConstructor.exists = async function (query = {}) {
+    const count = await firestoreDb.countDocuments(collectionName, query);
+    return count > 0;
+  };
+
+  return ModelConstructor;
+}
+
+class Schema {
+  constructor(definition, options) {
+    this.definition = definition;
+    this.options = options;
+  }
+  index() { return this; }
+  pre() { return this; }
+  post() { return this; }
+  virtual() { return { get() {}, set() {} }; }
+}
+
+Schema.Types = {
+  ObjectId: ObjectId,
+  String: String,
+  Number: Number,
+  Boolean: Boolean,
+  Date: Date,
+  Array: Array,
+  Mixed: Object
+};
+
+const mongooseShim = {
+  Schema,
+  Types: { ObjectId },
+  model: function (name, schema) {
+    return createFirestoreModel(name, schema);
+  },
+  connect: async () => {},
+  connection: { readyState: 1, on() {} }
+};
+
+module.exports = mongooseShim;

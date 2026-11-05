@@ -1,0 +1,97 @@
+{
+  "50-peak-boost-sheet": {
+    "390": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "VIP\nPremium Exclusive Videos",
+        "YouPeak",
+        "Notifications",
+        "Tasker dashboard",
+        "Your profile",
+        "Search videos...",
+        "All",
+        "Popular",
+        "New",
+        "Live",
+        "PREMIUM\nE2E upload ok",
+        "PREMIUM\nE2E upload retry",
+        "PREMIUM\nE2E upload cors",
+        "00:05",
+        "E2E upload ok\nE2E Channel One - 0 views  - Just now",
+        "E2E upload retry\nE2E Channel One - 0 views  - Just now",
+        "Bites",
+        "View All",
+        "Local test Bite B (portrait 9:16)\n0 views",
+        "Fast Mobile Dev Hacks You Need to Know! 🚀\n0 views",
+        "Epic Sunset Live Stream Recap 🌅✨\n0 views",
+        "E2E upload cors\nE2E Channel One - 0 views  - Just now",
+        "09:56",
+        "Welcome to YouPeak — Next Gen Creator Platform\nSuper Admin (Master) - 0 views  - Just now",
+        "10:53",
+        "Top 10 High Energy Tech Trends in 2026\nTech Pulse Labs (Channel Creator) - 0 views  - Just now",
+        "Home",
+        "Subscription",
+        "Library"
+      ]
+    },
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Dialog",
+        "Peak Boost",
+        "Coin balance 330\n330",
+        "Support E2E Channel One with coins",
+        "Starter Boost, 100 coins, ₹1.00",
+        "Mini Boost, 500 coins, ₹5.00",
+        "Super Boost, 2,000 coins, ₹20.00",
+        "Mega Boost, 5,000 coins, ₹50.00",
+        "Ultra Boost, 10,000 coins, ₹100.00",
+        "Custom Boost",
+        "Boosts can't be refunded.",
+        "Insufficient Balance • Get Coins"
+      ]
+    },
+    "1366": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Dialog",
+        "Peak Boost",
+        "Coin balance 330\n330",
+        "Support E2E Channel One with coins",
+        "Starter Boost, 100 coins, ₹1.00",
+        "Mini Boost, 500 coins, ₹5.00",
+        "Super Boost, 2,000 coins, ₹20.00",
+        "Mega Boost, 5,000 coins, ₹50.00",
+        "Ultra Boost, 10,000 coins, ₹100.00",
+        "Custom Boost",
+        "Boosts can't be refunded.",
+        "Insufficient Balance • Get Coins"
+      ]
+    },
+    "1920": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Dialog",
+        "Peak Boost",
+        "Coin balance 330\n330",
+        "Support E2E Channel One with coins",
+        "Starter Boost, 100 coins, ₹1.00",
+        "Mini Boost, 500 coins, ₹5.00",
+        "Super Boost, 2,000 coins, ₹20.00",
+        "Mega Boost, 5,000 coins, ₹50.00",
+        "Ultra Boost, 10,000 coins, ₹100.00",
+        "Custom Boost",
+        "Boosts can't be refunded.",
+        "Insufficient Balance • Get Coins"
+      ]
+    }
+  },
+  "peakBoostText": {
+    "hasFeeText": false,
+    "hasNoRefund": true
+  }
+}

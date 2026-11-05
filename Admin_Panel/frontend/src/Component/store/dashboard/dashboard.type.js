@@ -1,0 +1,14 @@
+
+export const GET_DASHBOARD_USER = "GET_DASHBOARD_USER";
+// get dashboard user
+
+export const GET_DASHBOARD_HOST = "GET_DASHBOARD_HOST";
+// get dashboard host
+
+export const GET_DASHBOARD_HOST_FETCH="GET_DASHBOARD_HOST_FETCH"
+export const GET_REVENUE_CHART = "GET_REVENUE_CHART";
+export const GET__USER_CHART = "GET__USER_CHART";
+export const GET_DASHBOARD_COUNT = "GET_DASHBOARD_COUNT";
+export const GET_DASHBOARD_ACTIVE_CHART = "GET_DASHBOARD_ACTIVE_CHART";
+
+

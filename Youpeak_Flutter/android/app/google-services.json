@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "554624718564",
+    "project_id": "youpeak-9ff65",
+    "storage_bucket": "youpeak-9ff65.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:554624718564:android:9bd5d288681ec33ba8fef1",
+        "android_client_info": {
+          "package_name": "com.YouPeak.Live1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "554624718564-17ahte8obd60u09d7lu4jed49k76q2f5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.YouPeak.Live1",
+            "certificate_hash": "cbd2da1f0afbfe85384968a41e5cba4cabcca155"
+          }
+        },
+        {
+          "client_id": "554624718564-6uc4mts36hfj9t4kdh5tgh6k6rshb7rt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.YouPeak.Live1",
+            "certificate_hash": "36e05d07096a1e4b444691e01f9ae043f2cfca06"
+          }
+        },
+        {
+          "client_id": "554624718564-t75571qjjumnon4au238pecuru4kcmqm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-zboFukcDVSCNThxp6ejEDRXCR_j-ijE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "554624718564-t75571qjjumnon4au238pecuru4kcmqm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "554624718564-6rhs8n3frlfcav58831pmmilo6jqh6hf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.live.metube"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

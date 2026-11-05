@@ -1,0 +1,4868 @@
+[
+  {
+    "filename": "0.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "62e464b24cff6415f263d5875cc5c6dc438ad7a562416fc85d4051ceead61c1a"
+  },
+  {
+    "filename": "1.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ffd9c395231e3dc9d48e2ca465bc9d42de47c2db3f7b60ab4d8598178108eb88"
+  },
+  {
+    "filename": "2.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "76114cd761a950a98096f3357b7f1d85036d074040830fee4cd4f9736b44a1ba"
+  },
+  {
+    "filename": "3.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e30604899b1dd3a91538a3eb1c47e3d6d3000bec14c91c35ba817a1a08409252"
+  },
+  {
+    "filename": "4.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c4bf7cde3a22e9fe8d3263000983c5246b58e54b9edc1c8408a19180924ba5eb"
+  },
+  {
+    "filename": "5.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b393440f54c87fee5627d5517ba27b477a7edf6f822c2a8daf2ba742ff8b67cc"
+  },
+  {
+    "filename": "9.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "76114cd761a950a98096f3357b7f1d85036d074040830fee4cd4f9736b44a1ba"
+  },
+  {
+    "filename": "Backward10s.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f345515f4673d75048d3b16e837134fd7dfe81a80e393cc97530a6f1e95754da"
+  },
+  {
+    "filename": "Bold3User.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "2cff629aea4388d9fd97afeca8d26f072036e7edd884f10ac3a1288252240476"
+  },
+  {
+    "filename": "Calendar.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e30604899b1dd3a91538a3eb1c47e3d6d3000bec14c91c35ba817a1a08409252"
+  },
+  {
+    "filename": "Chat.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f7813585aba93595d53f44fdb3b55bff4be58165ea51f97fb4a7d94a43a887c8"
+  },
+  {
+    "filename": "Collapse.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8f0f2a5cdc9efbbba2cf1124440468fe0b9901ebd391fc16d37332dd223370f2"
+  },
+  {
+    "filename": "Expand.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f0a2457cfd8e096b59b9e86546f33883e2f24a3026149c243fb8b079574bc9e0"
+  },
+  {
+    "filename": "Forward10s.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "23a1626102d4d3a13e2795c496e7e1c2500313ef9e045c11f6315cfa295b7645"
+  },
+  {
+    "filename": "Internet.jpg",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "d2f4fba9353b8e1f13f5b80f89c1c7f4348aaf44963b23384f425c34c29f25d2"
+  },
+  {
+    "filename": "Internet.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "acb88b4dd1cae8fdc51adba39aa88ab9e5664c6f95f7ee8541c096eb408868e6"
+  },
+  {
+    "filename": "Network_Issue.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "640d1b25fc5489fee6e55c0a92389d17e0ece5f8bf4d6a48a5492037de70c297"
+  },
+  {
+    "filename": "Next.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "789e8e56186b5297619970d91b3e23bde37d65108b838782f26e6222145c0053"
+  },
+  {
+    "filename": "Paper.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "62e464b24cff6415f263d5875cc5c6dc438ad7a562416fc85d4051ceead61c1a"
+  },
+  {
+    "filename": "Previous.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "20767ded462e310875a5edfe88b0473b43197b9ea8fbf1800fe34b67cd638a1d"
+  },
+  {
+    "filename": "Subtitle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "5cb32af1555670a91e2027edb25683f24956b40abc08302635161079bd23143e"
+  },
+  {
+    "filename": "TimeCircle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "df3e1f6c28e5c2403255fdcd3a030a8dbb138a0dda1d338a7ecd076164413585"
+  },
+  {
+    "filename": "Timer.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a13716aef4d133a0afa8519fac3daff18659b2e2c32b71c8282ee789a4424ebf"
+  },
+  {
+    "filename": "Video.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c3ff1d771b3eec0e57c4fc062e24624671bf910145fe9c3bfa18e0a25f08791f"
+  },
+  {
+    "filename": "Wallet.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "622b463ce3748f74a7fd0725d72a1763ac3f6e5e27e2d039eb4eb55ef4c91b2f"
+  },
+  {
+    "filename": "accept.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb8e25fcd530c4c0c135e27050f680d5ef49ec90d3c82e551bd979c09b8c5cd1"
+  },
+  {
+    "filename": "activity.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "42fffb3847fc1b39a6bd58b778dc086bba056542ab46051cac83f35c82fce6e1"
+  },
+  {
+    "filename": "ad_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9e362fc525a4b51e580e6ace858f578e5db22e709681e8d7b47801fee2f9966a"
+  },
+  {
+    "filename": "ad_round.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9e362fc525a4b51e580e6ace858f578e5db22e709681e8d7b47801fee2f9966a"
+  },
+  {
+    "filename": "add.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "51dbb84dabb5c4db50739888e878081cbd40028312eadfa87a9d22d31624de9e"
+  },
+  {
+    "filename": "ads_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "37c3cfa1d38bacc00da7b8655f3c1db38e231f88611615453636a542a60ea5fe"
+  },
+  {
+    "filename": "appLogo.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "1a575b5bd261d700fb3228e8238bc353fdaceffee6b1174cb97c53fdb6a715c9"
+  },
+  {
+    "filename": "app_logo.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "1a575b5bd261d700fb3228e8238bc353fdaceffee6b1174cb97c53fdb6a715c9"
+  },
+  {
+    "filename": "app_logo_icon.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "1a575b5bd261d700fb3228e8238bc353fdaceffee6b1174cb97c53fdb6a715c9"
+  },
+  {
+    "filename": "apple_logo.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "7a536885b1bbd0e632aaaee4e87043f77e778dd45474e0e6febcabd39304d1e4"
+  },
+  {
+    "filename": "arrowRightCircle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bc995d187d9ebbf18d147eedf967ba6adccbdf9205b07077ab743f2c2b8eb712"
+  },
+  {
+    "filename": "arrow_back.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "569d35e9e130ac1fc293f680fd984e8d99fe2f3112f75e44307e4cac29a81bb4"
+  },
+  {
+    "filename": "arrow_double_right.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a83d918a3e7307f695e9cd510e08bd856115ceffe1e6e429071b697a6c4e3cbd"
+  },
+  {
+    "filename": "arrow_down.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "02407b4dafa70072a40281951b7e96df9157ba09890c739b0c057bfe5d1badd0"
+  },
+  {
+    "filename": "arrow_right.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9cb0078cb5994988fe239a75c95aa6be2f49b4c60151b6bb9541694a90d2d4f0"
+  },
+  {
+    "filename": "audio.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c30856e32b8228aca3947c5bd3f750bc3e30dec843993a6a4c864a6cf3da2944"
+  },
+  {
+    "filename": "beauty.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "587393db1206a334703754d54558c6a1e429e4bd4440e7ba725a68a8eab9bc5e"
+  },
+  {
+    "filename": "boarding_1.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8cb21d650ad9a0e02ed845659c62b0ffbea8dc5c3b3250e6d37486c0969fa1b5"
+  },
+  {
+    "filename": "boarding_2.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a7e39119732055c8d3c7d3efa55adce58b9684a7dd9e313dbbad697a26737f6b"
+  },
+  {
+    "filename": "boarding_3.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b2341dada18d2b3d77b75d77497a48eb43f0b8ab6c93a3f7515c5de86678acb4"
+  },
+  {
+    "filename": "boldArrowDown.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "02407b4dafa70072a40281951b7e96df9157ba09890c739b0c057bfe5d1badd0"
+  },
+  {
+    "filename": "boldBookmark.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "74d823c6327317d0264e80e609a096da72d8dbb2c62c3536d202b7dda1fe7e0a"
+  },
+  {
+    "filename": "boldDocument.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "393062e178658ad9452a9b42804ca9d0a63296a0ac7ce45360e79055dabfa0d4"
+  },
+  {
+    "filename": "boldFilter.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "39280eb8637503407c0066f1ebaa3c382fb058c3c7a91d718e22b79d19ff3f96"
+  },
+  {
+    "filename": "boldHome.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "3b05d7fba0617340a7d3eba2da445e406f9164e2dc311c29cde81619befe8fd9"
+  },
+  {
+    "filename": "boldPlay.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f98460551637776ad1ee6679ca7e9b2416a272cd114797cb55aaeb1ed44760ce"
+  },
+  {
+    "filename": "boldShare.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "336318f5cb4eaeb99d6017f0c5bbee74a71f6aaefb1e8638f8e5d663e12e274b"
+  },
+  {
+    "filename": "boldSpeed.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "61cf9fdb984128b160eb136b2a2f9b90b754bcbf1cdcdb54ce505c723eb2baf2"
+  },
+  {
+    "filename": "boldVideo.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "05c63fbc768baa9204f41880f313f736e275d6aa93047f152d2f0b474cf51522"
+  },
+  {
+    "filename": "bookmark.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "82ea22e0257b3b9c65dc2c7239de4141926c69b6e7d516fb7087ce5070fdb533"
+  },
+  {
+    "filename": "camera.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7ee89f86c18b8a3d2f68cc5c86a006d0c4cfbd3fda8a778d4af565495457712e"
+  },
+  {
+    "filename": "caption.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "5cb32af1555670a91e2027edb25683f24956b40abc08302635161079bd23143e"
+  },
+  {
+    "filename": "cardImage.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c50cd6e7f7d91334b200b5502f5262377a2b3d8d407b946b6db197ebf8660348"
+  },
+  {
+    "filename": "cash_free_icon.webp",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "73ac1b78e3dc8952d8b02fa3d61da154389ac8cdde295e3aee9250c07bea2524"
+  },
+  {
+    "filename": "clear_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7e8f6ea454b4b225764edcf34591028e84c2309bbf1aed3a5d79fd071b94e63b"
+  },
+  {
+    "filename": "closeSquare.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "fd4f6874a86429dbd2d75287c554719f2f438bbf1e1299b7081818e7097ab1ca"
+  },
+  {
+    "filename": "close_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "fd4f6874a86429dbd2d75287c554719f2f438bbf1e1299b7081818e7097ab1ca"
+  },
+  {
+    "filename": "coin.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb44ad234596eb74468cadd44bf90c90f24277af18bb5e32b4747df5c59f96b4"
+  },
+  {
+    "filename": "coin_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb44ad234596eb74468cadd44bf90c90f24277af18bb5e32b4747df5c59f96b4"
+  },
+  {
+    "filename": "coin_icon_grey.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb44ad234596eb74468cadd44bf90c90f24277af18bb5e32b4747df5c59f96b4"
+  },
+  {
+    "filename": "coin_pack_1.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9c131ffe1533f87a2d15e6ed85ffd276bf6ff1e2ec1c833b46555d26314c3c44"
+  },
+  {
+    "filename": "coin_pack_2.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "134e884f20a6058ed20c248e08c52132dada783c233e0427763cdbd0630b2920"
+  },
+  {
+    "filename": "coin_pack_3.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "93e76d7f9a9b81cd938cdf5bac1020bc311053f67b75f4a448d30da2a4461007"
+  },
+  {
+    "filename": "coin_pack_4.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "668ca7d690746dcb77b0fcb8bc1c86eb64f822421bf65480fba415cb0001842f"
+  },
+  {
+    "filename": "coin_pack_5.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "db0bb882ef6a5ae76f72b9e2507f919804234918caacc377be820519e33439ae"
+  },
+  {
+    "filename": "coin_pack_6.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "21ef1ca117b54b9e5903affceab04a2c5ed5d572ac23bd475e940ecd1ee43e86"
+  },
+  {
+    "filename": "comment.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f7813585aba93595d53f44fdb3b55bff4be58165ea51f97fb4a7d94a43a887c8"
+  },
+  {
+    "filename": "comment_1.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "6b9cd1fe394ddb846021da68c91ee50bf9dbb8840b1241f524a321b62f70fbdf"
+  },
+  {
+    "filename": "congratulation_icon.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "2864afabad0019bf20fe3eabc0a644337379cb03818879c77ef67d5e3243a53e"
+  },
+  {
+    "filename": "content_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "47cfca79f29cc057ce3ebe13f267837a35a00950f65a60d34f9a5dbbb0812986"
+  },
+  {
+    "filename": "convert_coin_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a288ff27cf7418e84a9d0f3f74cfc5e013afb99ee1ccd363e86f2332d9b299c8"
+  },
+  {
+    "filename": "convert_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "744a4b1792aee3f27ca5fb6c5d4e9d837cb26e3af3b5acbf94e83148e0af8b37"
+  },
+  {
+    "filename": "copy_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "41efa72f7ce2d1c6687c75c8ea27cd24b078be72578630c4d87c3e9bb006fdc2"
+  },
+  {
+    "filename": "daily_gift_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9332a819ef17c20f9f798fc16bbc1f4296841118ffa07b765df20c2c14c72c65"
+  },
+  {
+    "filename": "dangerSquare.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7340e5b66fe40314938cb8767506428e6d7d7ee195b67ddf7452007f866972fa"
+  },
+  {
+    "filename": "darkForgetPasswordLogo.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "cea2c88b27ed3350a3b5ccefb4965a444565340c658a8a99b234b52e191f607e"
+  },
+  {
+    "filename": "darkNewPasswordLogo.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "86b0dc01cd967a15f4ceeb0b6bec2975105b1319866ba8e1e9eb967c5a9215d2"
+  },
+  {
+    "filename": "dark_mode.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7655c96e08b1202748443d04d7515c52d752c0ae7dff5be8d9e12f93bb6c919a"
+  },
+  {
+    "filename": "date_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e30604899b1dd3a91538a3eb1c47e3d6d3000bec14c91c35ba817a1a08409252"
+  },
+  {
+    "filename": "default_channel_banner.png",
+    "category": "Background/composition",
+    "status": "newly generated",
+    "master_dimensions": [
+      1983,
+      793
+    ],
+    "alpha_range": null,
+    "sha256": "5f3b14b3e9873d65f96c50b445139c204cfaafec767ede41176640432ae66214"
+  },
+  {
+    "filename": "delete_account.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "332a2846b3156df6fa5b777bf812023e71195adf10d4771f49e429eb2fbe6ea3"
+  },
+  {
+    "filename": "dialog_account_blocked.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a53c45773cad19577a152a51d5fc2dc13afb39e97b4818fa8ddb5bfc5385ceed"
+  },
+  {
+    "filename": "dialog_delete_account.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "329a5d3a5bd2e93391286ce5bb956b768259ccf0c5543209675b53d1dea46b3e"
+  },
+  {
+    "filename": "dialog_exit.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ea628b9ce44c9fd6143caa7e3c44efc9f06b10ca00398b78531431ea962cd2b8"
+  },
+  {
+    "filename": "dialog_logout.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "3f20a2bfaf0d9c9f95af1eadabf08aa9c2bf8a82796f7948d9b22bf2f37ab818"
+  },
+  {
+    "filename": "dialog_payment_failed.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "35659dbcb327f92cc3ee9c879ff5e096392f227846827cf9f6136566587196a9"
+  },
+  {
+    "filename": "dialog_private_content.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e8248e74314a88ccd83d1239303656927751d3d5e3642ae043eae5a0a37db8de"
+  },
+  {
+    "filename": "dialog_subscribed_success.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "cc34a8ce8fb59757836defd0c82e606843695933a140b29aedf60b56aa17a39b"
+  },
+  {
+    "filename": "dialog_update.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "d19a91c8b9ef6ef75863c2abded17e255ee914efcfc97eb851e8cc218f8fed8d"
+  },
+  {
+    "filename": "dislike_bold.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7a3e88da9df5ad209ebd6c8217e884252da72baf12eb20c6ad1a74893d9524a7"
+  },
+  {
+    "filename": "dislike_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c64433d478c7c173025b8fd557358de600c22c47083c9608cf9e5f0933ae4621"
+  },
+  {
+    "filename": "document.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "62e464b24cff6415f263d5875cc5c6dc438ad7a562416fc85d4051ceead61c1a"
+  },
+  {
+    "filename": "done.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb8e25fcd530c4c0c135e27050f680d5ef49ec90d3c82e551bd979c09b8c5cd1"
+  },
+  {
+    "filename": "down_arrow_bold.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a9d1d84640f48c8a187acceef454317c3c4a2a05e5a56edcc1abdd5cb8909f6c"
+  },
+  {
+    "filename": "download.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "499837b5e32fac7799818d774ef4dde015ef4b3c9e3469efc40c2c17264f4b10"
+  },
+  {
+    "filename": "download_1.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "499837b5e32fac7799818d774ef4dde015ef4b3c9e3469efc40c2c17264f4b10"
+  },
+  {
+    "filename": "download_bold.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "499837b5e32fac7799818d774ef4dde015ef4b3c9e3469efc40c2c17264f4b10"
+  },
+  {
+    "filename": "earn_reward.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "08a05f3a0f0870610d6aff020124e4ff81042e6f1aa4606c7571de73106a9bd5"
+  },
+  {
+    "filename": "earn_reward_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9332a819ef17c20f9f798fc16bbc1f4296841118ffa07b765df20c2c14c72c65"
+  },
+  {
+    "filename": "edit.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e4ca63af4f2394129c4d7c3a839cc7dd14f63f6772b7fc40d4f67623e0c2a5ee"
+  },
+  {
+    "filename": "editButton.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e4ca63af4f2394129c4d7c3a839cc7dd14f63f6772b7fc40d4f67623e0c2a5ee"
+  },
+  {
+    "filename": "effects.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8351cfeb1b28c04c05e8cdfb38ba2e9d69aa71869c3728a2971bf8a4b61b9192"
+  },
+  {
+    "filename": "email.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1f351139d57d20f477d89d0635311d9cb8bbf0c691ccd008f800df000333c588"
+  },
+  {
+    "filename": "empty_comments.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f7ea530afe8c8b40e4665dfe5713ba4b45aecaaeabaefeef5d591f48dc080669"
+  },
+  {
+    "filename": "empty_downloads.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f1226b60a41aa867d4871a157f4ba9dc8ccf47e1b4b3d49bedf53a07945bfc24"
+  },
+  {
+    "filename": "empty_history.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7ca4b2c29d3701e90d044d04bffda4b37fb1a02840894d53c9d512a278602152"
+  },
+  {
+    "filename": "empty_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7cfe7ada0c0d82bd9986329c31f1094554473c7c0abf201c55d3e41daf8f5ccb"
+  },
+  {
+    "filename": "empty_notifications.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9f874691f375be8c4fe6d8884076cbf68d6c39df3a76217ccbc04c3ecc8848f5"
+  },
+  {
+    "filename": "empty_playlist.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "265bfd4667af0508ae5b0fba7c89fc4497ea0dc1957508885b644c462013c7b0"
+  },
+  {
+    "filename": "empty_search.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "776ed09d8b8fc3df2993b6649d356303dabea67a5c12e4c0649989251c3d0643"
+  },
+  {
+    "filename": "empty_subscriptions.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b474b22ad24ed35b19d1bf150689ebad1f4af46d14246a7528597fb24a889caa"
+  },
+  {
+    "filename": "empty_videos.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9c2bc327847a0aac07290696c6c39132ac2515106a19bf9f1e1b1255f80fcf4d"
+  },
+  {
+    "filename": "engagement_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ccbc84639795f8681601d8944fd639ef1f082e2ccdb9da16b614aaa1e77432d8"
+  },
+  {
+    "filename": "facebook.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "48d20bfc196c91b1fdca5d2660c3e89e59690982ce4609c8e35709f32c0a23a0"
+  },
+  {
+    "filename": "facebookLogo.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "91f2394448d373253640c65d9845161868506993c7153bff86298ad73a7884d5"
+  },
+  {
+    "filename": "filter.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "39280eb8637503407c0066f1ebaa3c382fb058c3c7a91d718e22b79d19ff3f96"
+  },
+  {
+    "filename": "fingerPrint.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "fe30ad534324492231009c566f14d399fd1aada52e05ac9b8c0f5366cffeeb79"
+  },
+  {
+    "filename": "flag.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a77d6dc92eb40a6765e2c5f727552e55f4ef190f215bf97257c12e01edcf1757"
+  },
+  {
+    "filename": "flage.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a77d6dc92eb40a6765e2c5f727552e55f4ef190f215bf97257c12e01edcf1757"
+  },
+  {
+    "filename": "flages.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a77d6dc92eb40a6765e2c5f727552e55f4ef190f215bf97257c12e01edcf1757"
+  },
+  {
+    "filename": "flash.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "2b72e0c000d4936b27ecd3d85c7b6d39f9a0f2d750eafb545e815b9c8f5fa4ab"
+  },
+  {
+    "filename": "flip.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b9139d3fd2cd49ad4916e27a5d998f10d6567a697c41c08891ce7b1f3ff7c9c2"
+  },
+  {
+    "filename": "flutter_wave_icon.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "b7c96a93719b8308067f7d8a383a719a6adf07866b7da0e187a7153c16357a42"
+  },
+  {
+    "filename": "flutter_wave_logo.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "63de5b4814468cb7967045d0f6adb9f0d9897c77669c49690911434b723af411"
+  },
+  {
+    "filename": "forgetPasswordLogo.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "888acfb84b9830f267fdbff2c2213e68fc7f8e6ff3ad0e95a9e040597ac7ce19"
+  },
+  {
+    "filename": "free.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "3fe6517ce72a996f1489d6ca01adca87a3cf3e03cf3bf34e767ddd0bfa3b228a"
+  },
+  {
+    "filename": "gallery.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e615617ce707171f16690b844da1fc1aea68e733372d2847a195ac07d00ecdc6"
+  },
+  {
+    "filename": "gift_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9332a819ef17c20f9f798fc16bbc1f4296841118ffa07b765df20c2c14c72c65"
+  },
+  {
+    "filename": "gift_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "244a462f0ff11d06ca97a51f357af80e725b6249764e11bcef1febd6eb660659"
+  },
+  {
+    "filename": "go_live.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "31a25780381fd99fe342fc0f6fe502bd525e3cdcafb96bc71d630439127c5fa1"
+  },
+  {
+    "filename": "google_logo.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "97d3a956520e672a8df73703d5c69cdfa26d81a2321a39427c2083ca6911734a"
+  },
+  {
+    "filename": "green_tick.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb8e25fcd530c4c0c135e27050f680d5ef49ec90d3c82e551bd979c09b8c5cd1"
+  },
+  {
+    "filename": "heartEffects.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "587393db1206a334703754d54558c6a1e429e4bd4440e7ba725a68a8eab9bc5e"
+  },
+  {
+    "filename": "hero_create_channel.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1b274ae40317302055d5c4eaeeabab31cc2033c13ee5d24b4b9cd4165a2c0cba"
+  },
+  {
+    "filename": "hero_creator_vip.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "2d4ba2168eeeaf174fea17ec28da88d49887b65b7233c13ce660423d33c33df1"
+  },
+  {
+    "filename": "hero_go_live.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1cdeb86e23af7b0139a1a4fbd047c7665fd4680faa89d1767d1954f6a89a83c1"
+  },
+  {
+    "filename": "hero_grievance.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "da5817e2000801558e862fe7612b69d0b3388018983d600bc29a48d6f46faf20"
+  },
+  {
+    "filename": "hero_help_center.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "3b7de201d4508a89e3e8a421e78ee749ceaa8e14ddaa9de090a8c94c2bdd9145"
+  },
+  {
+    "filename": "hero_premium.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "6471506186304bc680ffe11b6392c885bd2ee3595c998ba66f9bea732f7c7aaa"
+  },
+  {
+    "filename": "hero_promote_video.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e74e03806f07c41262c0c131b6a8442520ec89f6f8579e7f145f0c3dd753fb3f"
+  },
+  {
+    "filename": "hero_starter_pass.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1a847190d2e491fa9d4be88b8c0fece1cf59b754cb432386ea4890459a837756"
+  },
+  {
+    "filename": "hide.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "520a322c7ad409ad3fe0d790f33a6ccb08fbc7008e208eaaba4852b25553b4f4"
+  },
+  {
+    "filename": "history_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "df3e1f6c28e5c2403255fdcd3a030a8dbb138a0dda1d338a7ecd076164413585"
+  },
+  {
+    "filename": "home.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b1472cfa1f3390a88e773416133577b26ed30203e7133f0608d36282ce6c05f5"
+  },
+  {
+    "filename": "ic_delete_video.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7e8f6ea454b4b225764edcf34591028e84c2309bbf1aed3a5d79fd071b94e63b"
+  },
+  {
+    "filename": "ic_edit_video.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e4ca63af4f2394129c4d7c3a839cc7dd14f63f6772b7fc40d4f67623e0c2a5ee"
+  },
+  {
+    "filename": "ic_launcher_foreground.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "2eef04ead0433bae6a791a407d5c570c2008ea829aad488767be75224bf79a39"
+  },
+  {
+    "filename": "ic_notification.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "01d99d24a00d261e3e60892fd552b3e4abf45d47d15667c4fb8f2db6f9aad203"
+  },
+  {
+    "filename": "ic_paypal_logo.webp",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "43008c7789b5b41fbb8496a95333895c33adb07d1b5f298f199808d4ce6f6a6a"
+  },
+  {
+    "filename": "incognito.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "062e03092627e94909b6c5645375a757b82df586fa5d3f9f9ee404527fd5b0db"
+  },
+  {
+    "filename": "infoSquare.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "711294858776ed80ac39a3b89f8eeb0f4605ad5ff5428c2d55a4303573e3a2c2"
+  },
+  {
+    "filename": "instagram.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "2ba7a5ac7f85493e819ec235edfeee772dbe327d8770d920799c99a4210794bd"
+  },
+  {
+    "filename": "king.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "41af704a240fcc635bed510574966325a1ede7898313dad6fe62f34b22b93c31"
+  },
+  {
+    "filename": "king_round.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "92bfed08b52d9458eee8b125ccfa65719acf5f8548c8110b0a4be63e3fbf85cb"
+  },
+  {
+    "filename": "language.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "984a744612b0d768c1d23fa61076573d60825fe7228f397f086112c0d50c06bc"
+  },
+  {
+    "filename": "library.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "747cdc20a061c14b1f0b844ebaa2f1e39b7a0137c83a1f0cef4351ba92d982e1"
+  },
+  {
+    "filename": "like.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a653db22814eace913ad46d7e69bbc408fee6a1813f7406fa193d4c0df1efd71"
+  },
+  {
+    "filename": "like_bold.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b5974e33089d9a704d546b3157bf204cafe39ad480cd227f2296d993059db0ab"
+  },
+  {
+    "filename": "live_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "256a1cf1fefa3d742bc52831c26d68da18f7faa0ebf8504a12c77c56d1344cdc"
+  },
+  {
+    "filename": "live_chat.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f7813585aba93595d53f44fdb3b55bff4be58165ea51f97fb4a7d94a43a887c8"
+  },
+  {
+    "filename": "location.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b393440f54c87fee5627d5517ba27b477a7edf6f822c2a8daf2ba742ff8b67cc"
+  },
+  {
+    "filename": "lock.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "0bc310eb3a3dfaf0a01b7ac18b72a7f51d242652b9ab36a48616b7c608c30744"
+  },
+  {
+    "filename": "lock2.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "0bc310eb3a3dfaf0a01b7ac18b72a7f51d242652b9ab36a48616b7c608c30744"
+  },
+  {
+    "filename": "login_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "48290539932c05774d723eb06bf76b54547371ca79af492f65fca8d436acf527"
+  },
+  {
+    "filename": "logo.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "d9502f09539d639b2baf3762571a8aab719cb57740782d23ef9155d08fd7d171"
+  },
+  {
+    "filename": "logout.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "5bef6810ca636762881ba1610de84592285df768d9f3a0a9edcfe7cbe5bb27db"
+  },
+  {
+    "filename": "mic.json",
+    "category": "Motion asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "cd31dca19ac99cbec156848ae8c411371df4ae9b4aff8457e746fe23875ac42a"
+  },
+  {
+    "filename": "monetization.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "99308c801c2c8d4ab99c7c8307c6900d8a629d7eea7b1401ffd6eed3af7dcde9"
+  },
+  {
+    "filename": "monetization_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "5a04c48a14e76bd3668a28347ca2cddb43070e536387f745fabf81f182846f1e"
+  },
+  {
+    "filename": "monetization_withdraw.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "aa2e39ff6293388059110ef76264d97403adb3cad8c7ec681f114b623e3c5040"
+  },
+  {
+    "filename": "moreCircle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "92f6040b86a8253376e085c33581b168f44250b1e013f5eea6187a194d76dc38"
+  },
+  {
+    "filename": "moreSquare.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "d6cc8102d28e9c6ff3e2b9f94aece43a7e4f8f32689be8f980f99ac2af95dc68"
+  },
+  {
+    "filename": "moreThreeCircle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "92f6040b86a8253376e085c33581b168f44250b1e013f5eea6187a194d76dc38"
+  },
+  {
+    "filename": "music.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "189c4097534b6a3646f75c7efd3b50a9fb988ae113baa1ac70e8569be52fb863"
+  },
+  {
+    "filename": "newPasswordLogo.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1e3ba7dd19f850aad230a615052bb10de078f38dff8d0e878b659d017d073b0a"
+  },
+  {
+    "filename": "new_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "2fc5680abe0d3d4e029965d9dd276dd035cddcb81c60559fd90adc93195afc7c"
+  },
+  {
+    "filename": "noFound.png",
+    "category": "Illustration / badge / reaction",
+    "status": "newly generated",
+    "master_dimensions": [
+      1254,
+      1254
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "74dd8f30cf20c0a3e5a7f1ca13f40b5223f09c1894d8a333bf0558348592d50f"
+  },
+  {
+    "filename": "notif_announcement.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "67277555c6095829de274b148fa5ba940f9a3481a97eeb613147866b6e4f9e62"
+  },
+  {
+    "filename": "notif_bell.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7c491791ab58dc72f0b3a5b94bf55a81159e0ddd23635cd07023a899bc05a023"
+  },
+  {
+    "filename": "notif_live_now.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a0458912ae7e1df7064ba5569c0ca8c189e7f3dc616ca13fe63628769224a05b"
+  },
+  {
+    "filename": "notif_new_comment.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7d6a1138e9fe66c88983472dd9829c7d037cf7debb7ed555bf815267764b29b5"
+  },
+  {
+    "filename": "notif_new_like.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f56be0410b29a74170f51d331c2a3c2b850632c8012eb97adb9670f9fd3b65cb"
+  },
+  {
+    "filename": "notif_new_subscriber.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "99c12770d2337f8ecab3f7634a3cbcc24770bb9bb491417bd0914a276958ea0c"
+  },
+  {
+    "filename": "notif_payment_success.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "78a31cf24107d076667d4e3b9001dd9dd767e0beb5ef7812db403a503c07a6ec"
+  },
+  {
+    "filename": "notif_reminder.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a2f2094196a30c37f6e665d4ceceb9f6a2de0f479881cfdfa785ec58ec497afa"
+  },
+  {
+    "filename": "notif_security.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ac9e8031ec6ef566f5605d2c1ed0cc2c42605827746595b6bc9cf8c9a7ab991d"
+  },
+  {
+    "filename": "notif_update.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1c0034e6c32f54f3a803889cbf81d4b474f2b4521a84315d5d0a8cf9781b73d0"
+  },
+  {
+    "filename": "notif_warning.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "faab8f74ad9d9bbfd1ac9fcb2850157d9a95196ff2c93ffb2190adbbfb1bedd9"
+  },
+  {
+    "filename": "notif_withdrawal_sent.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "0c833ea33f09319e54488e86f6d1700a6a63e7a659c2225782d74b032944ab9f"
+  },
+  {
+    "filename": "notification.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b0c3787e33e8ec484fec88e9959d5b266e17da0960d241dfe9643f442acfe1fe"
+  },
+  {
+    "filename": "noty_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b0c3787e33e8ec484fec88e9959d5b266e17da0960d241dfe9643f442acfe1fe"
+  },
+  {
+    "filename": "paid.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "93b18cdf48aa19d6b248db3a5679374a446574356b61e3701948fe08cc0b547d"
+  },
+  {
+    "filename": "paid_video_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9adad992fcb015ca42e8204a5f2e91d0c917bd814841ad9e8c3a89c57328fa1b"
+  },
+  {
+    "filename": "partner_digital_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bc9d2862d7da3904d520ae606f0cf2c779507e90a431dd246b1ee423d005fe90"
+  },
+  {
+    "filename": "partner_district_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9406393badcb0744ec6dca9f77105f867c1b6a48ec9d4348926e18a9e76b4574"
+  },
+  {
+    "filename": "password.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "0bc310eb3a3dfaf0a01b7ac18b72a7f51d242652b9ab36a48616b7c608c30744"
+  },
+  {
+    "filename": "pause.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "099edbadeb3a88c5d8212b0255176d1cc39887f554b4a61ee9ce84f7aedb3816"
+  },
+  {
+    "filename": "paypal.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "d5f7804b389f589ccaf8f183a83e545e3825a550f82697639b2fcca74b0ceb68"
+  },
+  {
+    "filename": "paystack_image.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "f817adccb434b56d6092784924498d130d40af27996c65cd90c8a5f9a4495ca6"
+  },
+  {
+    "filename": "play.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "dae2ad9c65615441937f8e0f638825314f6b946a7b020cec5c0af99cb8ff1a1e"
+  },
+  {
+    "filename": "play_feature_graphic.png",
+    "category": "Background/composition",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7248}}\")",
+    "sha256": "cd4cba53c8eca7b8f64754d364cd4784cf8c0b27779d94a4aa263eb10ffbbe45"
+  },
+  {
+    "filename": "play_video.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "dae2ad9c65615441937f8e0f638825314f6b946a7b020cec5c0af99cb8ff1a1e"
+  },
+  {
+    "filename": "plus.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "51dbb84dabb5c4db50739888e878081cbd40028312eadfa87a9d22d31624de9e"
+  },
+  {
+    "filename": "premium_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "9d17d7a4db380b975c94d58099dc5f945ce8a29e6136890d1616d594b754bddf"
+  },
+  {
+    "filename": "premium_download.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "499837b5e32fac7799818d774ef4dde015ef4b3c9e3469efc40c2c17264f4b10"
+  },
+  {
+    "filename": "premium_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7245}}\")",
+    "sha256": "457ccca12757aeb9985b4aaa0455d1c0a62d64fd3bc5b53e9cd407aab6f35719"
+  },
+  {
+    "filename": "profile.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "87ec72c8b34e821be8264ce2d484941316510d62cc20e092dfb8d35fdb2d6603"
+  },
+  {
+    "filename": "profileDoneLogo1.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7242}}\")",
+    "sha256": "b2990839af49eeace46499df61abed519c419cadbdc0fc355a6546adb7a2a6ce"
+  },
+  {
+    "filename": "profileLogo.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "87ec72c8b34e821be8264ce2d484941316510d62cc20e092dfb8d35fdb2d6603"
+  },
+  {
+    "filename": "profile_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7241}}\")",
+    "sha256": "1ee9026a7926ab024595234363900f2a910fdf1f26917483593aa8d7c7a5f22d"
+  },
+  {
+    "filename": "promo_megaphone.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7239}}\")",
+    "sha256": "acb52f16cbad41f17e4a612dd2bf502a692315f18f71c6403dbcedd4787222cf"
+  },
+  {
+    "filename": "promote_video.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8b624c54c666072a66a4604642dad0fd221d60b57cd38b5c0b8518e33525d1b4"
+  },
+  {
+    "filename": "puse.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "099edbadeb3a88c5d8212b0255176d1cc39887f554b4a61ee9ce84f7aedb3816"
+  },
+  {
+    "filename": "razorPay.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "52df77c1db688c204516f5d794f4f0d549c5c77efa2582fef862723cec14eb90"
+  },
+  {
+    "filename": "react_100.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7237}}\")",
+    "sha256": "d16c9b354285e8fbb94b1f51097f7383e9c70d403cdd1aeb6a1ec4d1fd3ce5c1"
+  },
+  {
+    "filename": "react_angry.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7235}}\")",
+    "sha256": "6edc503e21d0388c8e751172dd374e8f2213a3f67065b60340873232997a8115"
+  },
+  {
+    "filename": "react_clap.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7234}}\")",
+    "sha256": "3e7abc133e1a33863d142c8a3bde33282e6a36ec3916fc2e5d3d313470d51d85"
+  },
+  {
+    "filename": "react_coin_eyes.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7232}}\")",
+    "sha256": "b9c4ff29112d1065c746a51a3f116d015e06106269a0472684f87aa6b3717fd1"
+  },
+  {
+    "filename": "react_cool.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7228}}\")",
+    "sha256": "2e107f9ad4b2048d154e017e678d4feb292d30e5c3700e6aaebb5f914af80f86"
+  },
+  {
+    "filename": "react_crown_face.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7227}}\")",
+    "sha256": "7ad660de91b052aeb95298597d789181e5af8323e81f6b6a90bf27916558cc95"
+  },
+  {
+    "filename": "react_eyes.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7225}}\")",
+    "sha256": "cb9a359835ef0aa75b25d0f0e5791fdce605641c9a1a79231b81dc2527af2ed3"
+  },
+  {
+    "filename": "react_facepalm.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052750,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7224}}\")",
+    "sha256": "6edabe374f542c816babc904e8b2f2478496952be2747d8f083e640c183c8ed4"
+  },
+  {
+    "filename": "react_fire.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7221}}\")",
+    "sha256": "91afb4e4d18da5b7d75e36b2c81e747f05db367e598219af48938bfa5663c460"
+  },
+  {
+    "filename": "react_green_heart.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7219}}\")",
+    "sha256": "1b9bb183dc0b11846e1e1ba9ccd30aa37dfeca4fed8f6131869ace19aa6f5438"
+  },
+  {
+    "filename": "react_heart_eyes.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7217}}\")",
+    "sha256": "e542f96f302006a6918814804e19cf7a344070025c6edd847a9b547110d47f62"
+  },
+  {
+    "filename": "react_hug.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7216}}\")",
+    "sha256": "da331437c005abd8133b66006b9c4b18c299d60c23a6e8ef889a1b5484bea7b9"
+  },
+  {
+    "filename": "react_laugh.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7213}}\")",
+    "sha256": "7634a652e385c5c750df894a29a1cb73ecc260549144dec8b2cccd8bc4fb9e89"
+  },
+  {
+    "filename": "react_like.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7211}}\")",
+    "sha256": "20ad440c2e82e1771180127546a7a8de992358f4953c05d03cb21713aaaba8c9"
+  },
+  {
+    "filename": "react_love.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7209}}\")",
+    "sha256": "c353b959b93fb278f7b9f01fd96bd7a49ad9ad14856c1fcc528eed48af085078"
+  },
+  {
+    "filename": "react_mind_blown.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7207}}\")",
+    "sha256": "c3589f95a8aebb3f554221f72a4db0c035a31e91aa36316bcf90647b5ab1381f"
+  },
+  {
+    "filename": "react_muscle.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7204}}\")",
+    "sha256": "823b8848ca813f63031435dcec464e114e051d4fd0624a0d18bd8c2688b10a8a"
+  },
+  {
+    "filename": "react_namaste.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7203}}\")",
+    "sha256": "50c382634d279fe598d53ad29bc541068b60daf3ec7fd3d55a3a1f0f853f6da0"
+  },
+  {
+    "filename": "react_ok.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7202}}\")",
+    "sha256": "a0ce56dabed0d60a4ce23fef88a15465684078f6041215598eb2bb114f897fb1"
+  },
+  {
+    "filename": "react_party.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7200}}\")",
+    "sha256": "490f1f61f33def8d81ebe0e3643f7a7e51ea61b1fe8ae57e7d5d12d80bae28b1"
+  },
+  {
+    "filename": "react_peak.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7198}}\")",
+    "sha256": "96483fe89fe7c7eb1ebb97ccd13f5a39e7bb1fd7ff8f3cc1758e185df88e05be"
+  },
+  {
+    "filename": "react_popcorn.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7197}}\")",
+    "sha256": "94360184c7cc022d7da80cca049e1478038d6c42cd4f13a3939b760991f233ac"
+  },
+  {
+    "filename": "react_rocket.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7195}}\")",
+    "sha256": "726d8259bb7bc4e267681d7a648b4b22f053c6e9da1bbf5748e0390db0a2c42f"
+  },
+  {
+    "filename": "react_rofl.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7192}}\")",
+    "sha256": "88d9d0e48362d1d5b99111a4d6cd1246de4d0fee310693a0f1f411a58e01c5da"
+  },
+  {
+    "filename": "react_sad.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7190}}\")",
+    "sha256": "0b2540a4066c9f45014dd39694e65dc14e7654dd699091d32a41d57bcd0d7384"
+  },
+  {
+    "filename": "react_skull.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7188}}\")",
+    "sha256": "7f0e97df836895bfae249585a995d937d98e8f24d4b03a9f965e62d3908c4e18"
+  },
+  {
+    "filename": "react_star_struck.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7186}}\")",
+    "sha256": "402b9669260892cc6bb3432fa8ce4b73e42dfc509a664cea5c7ec948b12c5a7e"
+  },
+  {
+    "filename": "react_thinking.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7184}}\")",
+    "sha256": "46801853eb51ce32bde3976e707cf28fa10b7af6db53f48f1e77a7014475aff1"
+  },
+  {
+    "filename": "react_wink.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7179}}\")",
+    "sha256": "6e381c15c3b7039dd692a43a6a18ff0d762006e3d2e079b1fab599b4acf03a3f"
+  },
+  {
+    "filename": "react_wow.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7178}}\")",
+    "sha256": "e5fdd655ccabb6fe3c070ae85064b3941ab1995ecc721b62b138cd53bc46acc0"
+  },
+  {
+    "filename": "recording.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "772abfed25425f1b48874c2a6bec1d31132dd0649e40cd89340df54cd792941e"
+  },
+  {
+    "filename": "referral_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "4ecebff1929d703ff2a5e4af6094d23bd7d6661da52dabdf7c895cde77810395"
+  },
+  {
+    "filename": "referral_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7176}}\")",
+    "sha256": "11362005a1230bc76c969a81cf1ebb5ded8c1fd968e53761b28fa82ad371a643"
+  },
+  {
+    "filename": "referral_share_banner.png",
+    "category": "Background/composition",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7174}}\")",
+    "sha256": "150f207becb700223b044a9b164c08f9e7f77848897cca93597d74954c2a705e"
+  },
+  {
+    "filename": "remove.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "7e8f6ea454b4b225764edcf34591028e84c2309bbf1aed3a5d79fd071b94e63b"
+  },
+  {
+    "filename": "reply.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "5102bc845ab5047440e03a3da892962e284c339fc9bb8be6b5ebf2b870c60bf6"
+  },
+  {
+    "filename": "report.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "a77d6dc92eb40a6765e2c5f727552e55f4ef190f215bf97257c12e01edcf1757"
+  },
+  {
+    "filename": "save_done_1.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7171}}\")",
+    "sha256": "dd482390654301c2a5a15171bc386b30e86f125052983066851f5c38976a41a5"
+  },
+  {
+    "filename": "save_done_2.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052750,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7169}}\")",
+    "sha256": "7373efcad75831f4191cbf33c785e83d1d726ae84821c1423c724406160b999c"
+  },
+  {
+    "filename": "scan.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f53b7c1068ad5b98d4e9d8465a2a053a58e4d7463c4836544d4c0cc3888bc1ce"
+  },
+  {
+    "filename": "search.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "d4eafe1f29a05bc5228c6a5711de5f3dc43d61e049c40312c31af75ceffd4758"
+  },
+  {
+    "filename": "send.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "810f34315e32f585aaada39360530b59450f6434f50f163f421809042792c864"
+  },
+  {
+    "filename": "set_thumbnail.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e615617ce707171f16690b844da1fc1aea68e733372d2847a195ac07d00ecdc6"
+  },
+  {
+    "filename": "setting.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "1b9f4904e9c1196af2f07a672460f51229c226b61b8e5a25929c799e9894c268"
+  },
+  {
+    "filename": "shade_image.png",
+    "category": "Background/composition",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052748,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7166}}\")",
+    "sha256": "194a75c94932895d5b04ff9fc34b77442f5aff264f76fee1dd00e6dbabc607e9"
+  },
+  {
+    "filename": "share_card_bg.png",
+    "category": "Background/composition",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052748,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7164}}\")",
+    "sha256": "c5bd2a487bc8ae6487441f9ac384b22e829a4d0f9d9296d91bc5e4cfde84fd3b"
+  },
+  {
+    "filename": "share_icon.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "e30b28d5575405a5736a4eb27a7dd0224787a9033e5993c5dc6a9b549563396a"
+  },
+  {
+    "filename": "shieldDone.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8212575b528eb1b0935a375a668883e79883c2ac5258a7f19b557dc185f5bd8a"
+  },
+  {
+    "filename": "show.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ffd9c395231e3dc9d48e2ca465bc9d42de47c2db3f7b60ab4d8598178108eb88"
+  },
+  {
+    "filename": "shuffle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "22ad17a5c1cc4fb570c292c3e53fa97df1717369a4989d00fdfa4fc6dd55af24"
+  },
+  {
+    "filename": "sound.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "189c4097534b6a3646f75c7efd3b50a9fb988ae113baa1ac70e8569be52fb863"
+  },
+  {
+    "filename": "speed.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8f2c86fa0b7d2dcb33729921f5dad69fec12a7f46f7f0688214aa709ca39bf60"
+  },
+  {
+    "filename": "splash_image.png",
+    "category": "Background/composition",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7162}}\")",
+    "sha256": "f2d89a8fd1409c063daaaedcf57dd470181f25da95722acc6a69d4794bd61bb7"
+  },
+  {
+    "filename": "splash_logo.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "ee66588f320f7f02636f2eb49e58b7e5859fd8e7bfd6814e700fb78d846ee8a4"
+  },
+  {
+    "filename": "square.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ce093ea34f25946edd83b16ee82d9344f780ac217ca81dbbf1354c635d6d4836"
+  },
+  {
+    "filename": "sticker_calendar_check.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052748,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7160}}\")",
+    "sha256": "916b93c35fae714544a37b01646a545bc0b6c8d1d95bdf14823c6efa113f68d0"
+  },
+  {
+    "filename": "sticker_confetti.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7159}}\")",
+    "sha256": "a66f985e0f2f04adc98ff9253430e1926fa30f877ee7756e29f77c172cec2b81"
+  },
+  {
+    "filename": "sticker_download_done.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7157}}\")",
+    "sha256": "66376ddd4636f441189fa744beb1ed9b3172d45e7790492a1d7564225aefe941"
+  },
+  {
+    "filename": "sticker_gift_heart.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7153}}\")",
+    "sha256": "0dfb991f67869f42e160f301faa9317d367ae3bb1aefbdfccbaaca43029424ae"
+  },
+  {
+    "filename": "sticker_medal.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7152}}\")",
+    "sha256": "1f1b8189bdf2040065ff3a500f38193c2876499c569c905cfbd98c596c61fb4f"
+  },
+  {
+    "filename": "sticker_money_bag.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7151}}\")",
+    "sha256": "977d5e728358461977503a2c914cd12092666504be2c6039d469e3aa29d90f9c"
+  },
+  {
+    "filename": "sticker_party_popper.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7149}}\")",
+    "sha256": "f279b99f537bdfe737a72b8766af5f2bd87075678e4c64d4d82e8b59a80d5bea"
+  },
+  {
+    "filename": "sticker_sparkles.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7143}}\")",
+    "sha256": "a9914f358e669497f96a3583d556c1dbbc8ef6a56ab58d22f3a5738b60a6ff1e"
+  },
+  {
+    "filename": "sticker_streak_flame.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7142}}\")",
+    "sha256": "672c320a55c5f2fd166c5ff59f3b42c657e846b668c1a78ba69452804c7a7bde"
+  },
+  {
+    "filename": "sticker_target.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052748,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7140}}\")",
+    "sha256": "0a7bad1d508b985d5fd0e7fa979ef1b1ed0b70f7fa5099c34739894973301958"
+  },
+  {
+    "filename": "sticker_upload_done.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7139}}\")",
+    "sha256": "66376ddd4636f441189fa744beb1ed9b3172d45e7790492a1d7564225aefe941"
+  },
+  {
+    "filename": "sticker_wave.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7137}}\")",
+    "sha256": "d09b9074bc52eb96a7f6472c5a03df98c7ad3e7a655558c815726c8f29c55f0e"
+  },
+  {
+    "filename": "store_screenshot_bg.png",
+    "category": "Background/composition",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7135}}\")",
+    "sha256": "338df2752d3831cf76e0ac85bb137b395be0ce4bd98180d27683ced01dd9d050"
+  },
+  {
+    "filename": "stripe.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "7387affeb505aba817bade501969c64fe6dca463c5892e65a0292c309ff45819"
+  },
+  {
+    "filename": "subscription_plan.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b183b7ece2d7c1d2c54f08e1680933fb81cd0ff33c7130238b311097bf31a9f9"
+  },
+  {
+    "filename": "swap.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "fb95a53223baeea3c681333474762553773be84587ddcb3e8468d2e8a267f29f"
+  },
+  {
+    "filename": "swape.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "b874a39b36ff240bdc3d08d4bbb17b8f3eaafebc0fb0ada79bd2c6b527ed3838"
+  },
+  {
+    "filename": "text_send.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "810f34315e32f585aaada39360530b59450f6434f50f163f421809042792c864"
+  },
+  {
+    "filename": "tick.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb8e25fcd530c4c0c135e27050f680d5ef49ec90d3c82e551bd979c09b8c5cd1"
+  },
+  {
+    "filename": "tier_classic_pass.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7133}}\")",
+    "sha256": "6208762769f8f93c14bb39bf37df653fd0620265d8a4716bc90cae2b00faadee"
+  },
+  {
+    "filename": "tier_gold_vip.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7129}}\")",
+    "sha256": "086af775dcd48be13267c617bc08a626c32bdf59ce96998f81f6fd889c515d01"
+  },
+  {
+    "filename": "tier_platinum_vip.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7127}}\")",
+    "sha256": "dd15ef8a79a159ddcf3e0a9c7e8ec8f37663b53dd3a5a8ad6e98a594ad3f7103"
+  },
+  {
+    "filename": "tier_silver_vip.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7125}}\")",
+    "sha256": "7ce0bea22c37e315b96cadbdfa2c4c93374b77f9a3fac8fbbdd0a668abfe3657"
+  },
+  {
+    "filename": "tier_starter_vip.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7123}}\")",
+    "sha256": "4c9c650f2f4b5a3356bb8439c3ed7aada968bc8d72359aeb6f8c53b1bcd80d9a"
+  },
+  {
+    "filename": "tier_tasker_free.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7122}}\")",
+    "sha256": "35653b5131232c1a931500e5734c264c418ab3cb441853379404c5261009bc6a"
+  },
+  {
+    "filename": "tier_tasker_l1.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7120}}\")",
+    "sha256": "962b2d8d5e928b1ae6a09ce3e0aca2d60797ef00e56207469556f0c43c27eb00"
+  },
+  {
+    "filename": "tier_tasker_l2.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7119}}\")",
+    "sha256": "df8069068b4f8c2aab072e47937bdd827de491810549f42360f3b258d609ab87"
+  },
+  {
+    "filename": "tier_tasker_l3.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7115}}\")",
+    "sha256": "2ff0404dad36fcefe1e9c4e2016de974997d553c4da8272b3b8bf3ef5ba56104"
+  },
+  {
+    "filename": "tier_tasker_l4.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7110}}\")",
+    "sha256": "6be14ecf189ab311aad59c24ea3d1ada7e777e4f49a89957bdb888f448df12ea"
+  },
+  {
+    "filename": "timeCirclePink.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "df3e1f6c28e5c2403255fdcd3a030a8dbb138a0dda1d338a7ecd076164413585"
+  },
+  {
+    "filename": "top_creator_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c7370566ccac8483b5bcab630b6945b2fdb9f1b0c949d5ee5c0c34cd08dfed15"
+  },
+  {
+    "filename": "translate.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "984a744612b0d768c1d23fa61076573d60825fe7228f397f086112c0d50c06bc"
+  },
+  {
+    "filename": "trending.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8b624c54c666072a66a4604642dad0fd221d60b57cd38b5c0b8518e33525d1b4"
+  },
+  {
+    "filename": "tv.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f51b5b46c7074a740972751acad84590b4b46c754027805be1929ac3f72567a5"
+  },
+  {
+    "filename": "twitter.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "c7af92dfdf4060ec8c00afb12c1e5a6b215cfb97466a4f22839ca19f21ac2040"
+  },
+  {
+    "filename": "up_arrow_bold.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c375d815bec3e3ab69e5a82e156094dffead1a463a667d7bf0776e9b9264b6c9"
+  },
+  {
+    "filename": "upload.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "c8b37c07426d1857c006b6223a6f8db84401e5e3a808f1f346c74bb2d3131ec2"
+  },
+  {
+    "filename": "userProfile.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7107}}\")",
+    "sha256": "e4a7a052bc6cf7f5072d45ce767a3547201553a29b77619846c5e1ffeb5d2e4b"
+  },
+  {
+    "filename": "verified_badge.png",
+    "category": "Illustration / badge / reaction",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      512,
+      512
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "103158f1be67c8b7b844a28d9b880f9602349156bc7a04a4695745903dd2eef7"
+  },
+  {
+    "filename": "videoBlack.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "f11e9f0786a2777f3b606215133f01b324224ad9a2fa8efe5a326a34db15ab91"
+  },
+  {
+    "filename": "videoCircle.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "433d4823f6f53a668843f83a1a7bc39de3899b272fcf9e55f1f9207c7bfe07d8"
+  },
+  {
+    "filename": "videoDownload.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "499837b5e32fac7799818d774ef4dde015ef4b3c9e3469efc40c2c17264f4b10"
+  },
+  {
+    "filename": "video_charges.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      768,
+      768
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "93b18cdf48aa19d6b248db3a5679374a446574356b61e3701948fe08cc0b547d"
+  },
+  {
+    "filename": "video_placeholder.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7102}}\")",
+    "sha256": "22d2f53d2c7cbb7d64b61e55db601591067d3da85b0c176ae2218051edfade74"
+  },
+  {
+    "filename": "visibility.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "ffd9c395231e3dc9d48e2ca465bc9d42de47c2db3f7b60ab4d8598178108eb88"
+  },
+  {
+    "filename": "wallet_3d.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7100}}\")",
+    "sha256": "f03e4c93530bb0179c62e5b4e7b56762a0ae36e5a14deb30d03a9dafd2f043bc"
+  },
+  {
+    "filename": "wallet_image.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7098}}\")",
+    "sha256": "8e9d8443a9d683d9bf7b0efeb0defc42e1fa7e84262231eeb50ca241beaf9d04"
+  },
+  {
+    "filename": "watch.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "8f2c86fa0b7d2dcb33729921f5dad69fec12a7f46f7f0688214aa709ca39bf60"
+  },
+  {
+    "filename": "watch_later.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "82ea22e0257b3b9c65dc2c7239de4141926c69b6e7d516fb7087ce5070fdb533"
+  },
+  {
+    "filename": "whatsApp.png",
+    "category": "Official third-party asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "670c114fe0397b66ab1b4682e2de48cc09089b4cecaf62eac96e2b946e53e84e"
+  },
+  {
+    "filename": "white_tik.png",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG",
+    "master_dimensions": [
+      640,
+      640
+    ],
+    "alpha_range": [
+      0,
+      255
+    ],
+    "sha256": "bb8e25fcd530c4c0c135e27050f680d5ef49ec90d3c82e551bd979c09b8c5cd1"
+  },
+  {
+    "filename": "withdraw_bank.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7096}}\")",
+    "sha256": "dddcc59629826b05329eb97e0597fcd69c34c65850577fb35c58c052be342a8d"
+  },
+  {
+    "filename": "withdrawal_done.png",
+    "category": "Illustration / badge / reaction",
+    "status": "generation pending or failed \u2014 original retained",
+    "error": "image generation failed: http 429 Too Many Requests: Some(\"{\\\"error\\\":{\\\"type\\\":\\\"usage_limit_reached\\\",\\\"message\\\":\\\"The usage limit has been reached\\\",\\\"plan_type\\\":\\\"plus\\\",\\\"resets_at\\\":1792052749,\\\"eligible_promo\\\":null,\\\"limit_window_minutes\\\":1440,\\\"resets_in_seconds\\\":7094}}\")",
+    "sha256": "10d474c5d82ffc9ad1f3b82a1f64a374f0c29db8ed60e7a72635b8739d54d518"
+  },
+  {
+    "filename": "youpeak_wordmark.png",
+    "category": "Brand/system asset",
+    "status": "preserved existing",
+    "error": null,
+    "sha256": "34ddb9ae1593836937631aae149a0ec1f1f92d661fc76ba3469120411b9ba485"
+  },
+  {
+    "filename": "extra_create.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "51dbb84dabb5c4db50739888e878081cbd40028312eadfa87a9d22d31624de9e"
+  },
+  {
+    "filename": "extra_privacy_policy.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "d73ef44bbfacba1cc8b0a3615d8a2866b938d5a4eabd125735d4e43692c9cdb3"
+  },
+  {
+    "filename": "extra_tasker.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "db5a302918fe6c9111a96022788f242f332998341cae2e836c064a1343c8c3c8"
+  },
+  {
+    "filename": "extra_referral_history.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "dd1089b9d4b4b0d030fe5f07745c53fc0f863b85463fa991b6e5009cade1f1b4"
+  },
+  {
+    "filename": "extra_payment_history.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "84de2d7e728b78995fb04f0b21e57cf1be3ac496b38b99e97288acc39d714b8e"
+  },
+  {
+    "filename": "extra_ad_credits.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "cd00d5ad060108531ff42b924d4f54f724269a143aa16b1e6807923ef2558faf"
+  },
+  {
+    "filename": "extra_volume_high.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "770698dc39582229c5248ba6dd8e7c8f6348609f56c40fa3f17595864c3b0ffd"
+  },
+  {
+    "filename": "extra_campaign_analytics.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "ccbc84639795f8681601d8944fd639ef1f082e2ccdb9da16b614aaa1e77432d8"
+  },
+  {
+    "filename": "extra_volume_low.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "45b6b8427c5a03d20c08c8f99cec11b2716aa32fa5db795e411930a2915ce4ac"
+  },
+  {
+    "filename": "extra_mute.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "8655491b2c82efb9c08675d39b9eaffaa55a91813182db305dc9cf880c58585d"
+  },
+  {
+    "filename": "extra_stop.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "34921805621d47f0ade1cc999116647754b59c59f897bcfb1c26850b7950de01"
+  },
+  {
+    "filename": "extra_retry.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "192571c8c2f888dc6872384a70cc1f8ecb72bbb21cfb5e9e7d7d8d0eaae3758c"
+  },
+  {
+    "filename": "extra_external_link.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "fe49832863650b3bc5fd9d1d77a69a2d1dfb650f14ac59e9ad5885dc1aed368d"
+  },
+  {
+    "filename": "extra_copy_link.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e0c200bd0cceb709c8fb6d6ca3055f238f7034c3ed3042b0a2bfd23a5c5569a9"
+  },
+  {
+    "filename": "extra_phone_sign_in.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "d904c54f430588b5593127a2df71528a2bd67ccc61b788b3d569804deded55b4"
+  },
+  {
+    "filename": "extra_qr_code.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "dc4d5ff6235e63d546fc39566f6749e82b75bfde03ccb4fc41ceb0fd2bd8600a"
+  },
+  {
+    "filename": "extra_withdraw_to_bank.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "4053aa0e1f02062cf631315143c0cbb304cf5875a94ef9b4fbe0d89758b82014"
+  },
+  {
+    "filename": "extra_device_security.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "513fcb8edd51b8e3222bc2da9001c4fe28549f69c2cbce7a013afab3b956cc3a"
+  },
+  {
+    "filename": "extra_vpn_restriction.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7f04960a48fbe93e68a6742131c306e668b966aaf7c150a6baaa92cb30db539f"
+  },
+  {
+    "filename": "extra_legal_support.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f2c66ea3649ef82ad53c550a76710b64ed72bde6cb229991b5217dc646795d28"
+  },
+  {
+    "filename": "extra_pending.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "110fef2b7c0d3a43bfb7feddb42eb3b2b79b9710df30111260e6229fb6dfc98f"
+  },
+  {
+    "filename": "extra_access_restricted.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7f04960a48fbe93e68a6742131c306e668b966aaf7c150a6baaa92cb30db539f"
+  },
+  {
+    "filename": "extra_support_contact.png",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7bf2948b461d2758bb163a68f75e7792ea4c4e71ba23e830187954b175fda4c0"
+  },
+  {
+    "filename": "internet.png",
+    "category": "Case-sensitive declared alias",
+    "status": "derived from newly generated master",
+    "sha256": "984a744612b0d768c1d23fa61076573d60825fe7228f397f086112c0d50c06bc"
+  },
+  {
+    "filename": "colorFilter.png",
+    "category": "New file for declared path",
+    "status": "derived from newly generated master",
+    "sha256": "39280eb8637503407c0066f1ebaa3c382fb058c3c7a91d718e22b79d19ff3f96"
+  },
+  {
+    "filename": "ArrowDown1.png",
+    "category": "New file for declared path",
+    "status": "derived from newly generated master",
+    "sha256": "02407b4dafa70072a40281951b7e96df9157ba09890c739b0c057bfe5d1badd0"
+  },
+  {
+    "filename": "card.png",
+    "category": "New file for declared path",
+    "status": "new vector-derived PNG",
+    "sha256": "3d8e0841b3fb3478b250cdd2cfa1f3a5f436a5edaf53093b729b84ef57db14a3"
+  },
+  {
+    "filename": "account_balance_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "9492ccd3ab267975593debf7580ed59e26baf73b0ae79446e4f8f07aa207437e"
+  },
+  {
+    "filename": "account_balance_wallet_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "5847bf6cb52ee8b9ce0c11139b0308e14b5626ca60443709b6d5218f96f0d50a"
+  },
+  {
+    "filename": "add.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "51dbb84dabb5c4db50739888e878081cbd40028312eadfa87a9d22d31624de9e"
+  },
+  {
+    "filename": "add_circle_outline.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "de132eaf2874373c6471da2dee7727cb383a441453decfe3c74f449373ade7ab"
+  },
+  {
+    "filename": "add_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "51dbb84dabb5c4db50739888e878081cbd40028312eadfa87a9d22d31624de9e"
+  },
+  {
+    "filename": "arrow_back.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "569d35e9e130ac1fc293f680fd984e8d99fe2f3112f75e44307e4cac29a81bb4"
+  },
+  {
+    "filename": "arrow_back_ios_new.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "69d203212a185363fd31035b0bb304c53162b42eba22f313f7902da19cda465d"
+  },
+  {
+    "filename": "arrow_back_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "569d35e9e130ac1fc293f680fd984e8d99fe2f3112f75e44307e4cac29a81bb4"
+  },
+  {
+    "filename": "arrow_drop_down.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e663d1da4a072fde0a1517ad255fd786b2a9653193ddbb0a0bb27a0ea736c68d"
+  },
+  {
+    "filename": "arrow_forward_ios_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "cc253b7220957c7e5860f0d94b744d43a0d4939f5ab65711e90d63b42272996e"
+  },
+  {
+    "filename": "arrow_forward_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "dc91f1a63f7d853e780d9305be92e286347d1b6c4f2937bf0f66fdfd05ce0ef5"
+  },
+  {
+    "filename": "auto_awesome.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "71c6f3ed788ac9418172aefc317c30805ff14316994179e4ffcde73838da9607"
+  },
+  {
+    "filename": "build_circle_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "b1835d852c426c4b16f1bbab2185743a43e94d0c54e7dbefd56b07893b7f6ebb"
+  },
+  {
+    "filename": "calculate_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e8fd014b379e67ef0661dfc518abccd4ccd8df9386cb2d6c5775dc6866edb4e2"
+  },
+  {
+    "filename": "calendar_today_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "d12ee05749ec841cd7facb83e287fd6fd45562b7a242366d5682307517411561"
+  },
+  {
+    "filename": "campaign_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f195b6d1628c5fdf55adf247d452bf865056a79de1ac62e25c79df0709c210d0"
+  },
+  {
+    "filename": "chat_bubble_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "6b9cd1fe394ddb846021da68c91ee50bf9dbb8840b1241f524a321b62f70fbdf"
+  },
+  {
+    "filename": "check.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "bb8e25fcd530c4c0c135e27050f680d5ef49ec90d3c82e551bd979c09b8c5cd1"
+  },
+  {
+    "filename": "check_circle.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "b6ea4de7ce993835af1f501de4730123fb4afe8859fda0236a8581fda2cd1f9b"
+  },
+  {
+    "filename": "check_circle_outline.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "1dfc74d6c657bf4333ba00a918bc6671fc4ee793418fe146dcccc7e7f6b2229d"
+  },
+  {
+    "filename": "check_circle_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "b6ea4de7ce993835af1f501de4730123fb4afe8859fda0236a8581fda2cd1f9b"
+  },
+  {
+    "filename": "chevron_right.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "9cb0078cb5994988fe239a75c95aa6be2f49b4c60151b6bb9541694a90d2d4f0"
+  },
+  {
+    "filename": "chevron_right_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "9cb0078cb5994988fe239a75c95aa6be2f49b4c60151b6bb9541694a90d2d4f0"
+  },
+  {
+    "filename": "circle.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "33db3af285c70b9514fdfc2579361f46b512f685a2c87270bbc7e45819c84ecb"
+  },
+  {
+    "filename": "close.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "fd4f6874a86429dbd2d75287c554719f2f438bbf1e1299b7081818e7097ab1ca"
+  },
+  {
+    "filename": "close_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "fd4f6874a86429dbd2d75287c554719f2f438bbf1e1299b7081818e7097ab1ca"
+  },
+  {
+    "filename": "cloud_off_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "356bfd2f92963f4f18e6079fc19db228236fc5f002b4eb56376e8a8ede8d14ea"
+  },
+  {
+    "filename": "delete_outline_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7e8f6ea454b4b225764edcf34591028e84c2309bbf1aed3a5d79fd071b94e63b"
+  },
+  {
+    "filename": "delete_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7e8f6ea454b4b225764edcf34591028e84c2309bbf1aed3a5d79fd071b94e63b"
+  },
+  {
+    "filename": "done.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "bab384b9ff7548378ba16335caf4f8e8a06b021ec092948caba2ae219b18e67e"
+  },
+  {
+    "filename": "done_all_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "c3e53a5513fa25ad2196630d0b959312a336e1d090aa26faa80cd3d85fcba590"
+  },
+  {
+    "filename": "download_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "499837b5e32fac7799818d774ef4dde015ef4b3c9e3469efc40c2c17264f4b10"
+  },
+  {
+    "filename": "edit.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7b7caafacbd212b96e18093eebb7758378403de4355d5a5fdcac37fd076e84d2"
+  },
+  {
+    "filename": "edit_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e4ca63af4f2394129c4d7c3a839cc7dd14f63f6772b7fc40d4f67623e0c2a5ee"
+  },
+  {
+    "filename": "edit_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7b7caafacbd212b96e18093eebb7758378403de4355d5a5fdcac37fd076e84d2"
+  },
+  {
+    "filename": "email_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "1f351139d57d20f477d89d0635311d9cb8bbf0c691ccd008f800df000333c588"
+  },
+  {
+    "filename": "emoji_events_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "008bc7b6f493333ab9a4f58dd0682bba62d49c583dc41cbd2481acffde223632"
+  },
+  {
+    "filename": "emoji_events_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "39fc3a9e329c90c325204bd1881f2c2a4055f079e82717169e71920c708c464e"
+  },
+  {
+    "filename": "error_outline_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f84c1dd062f975304d52eb236ebf9391d5575d3627bd8595b3e3e7a7f393e83a"
+  },
+  {
+    "filename": "female.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "c6f91ceda738466ad79fb24f92fae3ae58eea509e4b10969baf7339cbd8520c5"
+  },
+  {
+    "filename": "forward_10_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "23a1626102d4d3a13e2795c496e7e1c2500313ef9e045c11f6315cfa295b7645"
+  },
+  {
+    "filename": "front_hand_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "7a344eeb6758f5e3d260b873640f107bc63f41ef0e1c69e95c6be12b2ffb2468"
+  },
+  {
+    "filename": "fullscreen_exit_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "8f0f2a5cdc9efbbba2cf1124440468fe0b9901ebd391fc16d37332dd223370f2"
+  },
+  {
+    "filename": "fullscreen_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f0a2457cfd8e096b59b9e86546f33883e2f24a3026149c243fb8b079574bc9e0"
+  },
+  {
+    "filename": "gavel_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "ffea0f2e0daedb236e2962ce667f87230662081e124a595e6b2b4de943815378"
+  },
+  {
+    "filename": "gpp_bad_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "6105085436b61db20d6b36ad2deae826e184acb01e6aabef36dbcc5316407d38"
+  },
+  {
+    "filename": "home_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "ca0d24838636fd71dea8562bdb04cd9e0fc8bbc0175c352b0d301ca42814e7cd"
+  },
+  {
+    "filename": "hourglass_disabled.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f8c5cbe85764ca58dcd47fc0a23c91508d94c10dbf7c8f8086401be6f9d4f1a2"
+  },
+  {
+    "filename": "hourglass_top_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "43622a6dfd17f84ee162d0420ef688827d0899699dc988ac4f6a334ec16517cc"
+  },
+  {
+    "filename": "image.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "209bc0794e1806882c4a6a65aa88e6a9293eac2c28fbe8983bd48ebddf3b346b"
+  },
+  {
+    "filename": "info_outline.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "add388b6e4aba8958defe6d5c1f508dec82000d02d665de5ca9cac3a9ece1ba9"
+  },
+  {
+    "filename": "info_outline_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "add388b6e4aba8958defe6d5c1f508dec82000d02d665de5ca9cac3a9ece1ba9"
+  },
+  {
+    "filename": "link.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e0c200bd0cceb709c8fb6d6ca3055f238f7034c3ed3042b0a2bfd23a5c5569a9"
+  },
+  {
+    "filename": "location_on_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "b393440f54c87fee5627d5517ba27b477a7edf6f822c2a8daf2ba742ff8b67cc"
+  },
+  {
+    "filename": "lock_outline_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "0bc310eb3a3dfaf0a01b7ac18b72a7f51d242652b9ab36a48616b7c608c30744"
+  },
+  {
+    "filename": "lock_person_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "221f612912dc44d57d5e4ec55f85b0da5b2c6b12b9f0893719355641cb1a4575"
+  },
+  {
+    "filename": "lock_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "259b3c7116145762590c94e76e7c9e1a4068f52afbdb8fdda898f82918408545"
+  },
+  {
+    "filename": "male.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "0acc17eb44ece368f1c6e2412fd1e4851e99793c8fcfa6e805023c7eef3556c6"
+  },
+  {
+    "filename": "monetization_on_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "c41716ff30414e0a6cbb1b31669afd358a4a2e48ce4fc48a06dde4a12effdcf7"
+  },
+  {
+    "filename": "more_vert.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "5c84405176ae41f50db63794cda67dec5c6307e44303839c85a6688c4fc63503"
+  },
+  {
+    "filename": "more_vert_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "5c84405176ae41f50db63794cda67dec5c6307e44303839c85a6688c4fc63503"
+  },
+  {
+    "filename": "nightlight_round.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "789c84126a56ba2fd9943e68023281f22ae2a7516ca8358b66c3f3174d8f04d6"
+  },
+  {
+    "filename": "notifications_none_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "716b30f7b3e7ce76d38c193bdabb6e2fcadb5b4cf618de3bf03832f0b224ef17"
+  },
+  {
+    "filename": "ondemand_video_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f15be755e1aae582cb49b8a25073e1a4430f4aa28d9c455f569b9b7c403d7763"
+  },
+  {
+    "filename": "open_in_new_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "fe49832863650b3bc5fd9d1d77a69a2d1dfb650f14ac59e9ad5885dc1aed368d"
+  },
+  {
+    "filename": "outlined_flag_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "4089a785e6c8b2008494f2c1a5c56bce4fd2b9954d31aa1afd44cc556bc88c94"
+  },
+  {
+    "filename": "pause_circle_filled_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "2caa83dd6001dff5fdf19cb50a627a52ed26ff85b2c153bdc3ae7c73ab20ac95"
+  },
+  {
+    "filename": "pause_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "099edbadeb3a88c5d8212b0255176d1cc39887f554b4a61ee9ce84f7aedb3816"
+  },
+  {
+    "filename": "phone_iphone_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "ea5faa867622618a41104fa73bab476c8c9b098f3efa998266b2f9bcccd83a69"
+  },
+  {
+    "filename": "phone_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e94e04c94806164556614ddcd1d3b7c7487ffb9bd95c1d07543a703aea63769a"
+  },
+  {
+    "filename": "phonelink_lock_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "536685aa5de07f8008fadfbab6fd26205bbc1a29a7f296b2ed5247ee365e9f05"
+  },
+  {
+    "filename": "play_arrow_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "dae2ad9c65615441937f8e0f638825314f6b946a7b020cec5c0af99cb8ff1a1e"
+  },
+  {
+    "filename": "play_circle_fill.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "4acaf178f8dcb89c0e70010683e826870a35f9d3e67fff51421a5832d122f6b9"
+  },
+  {
+    "filename": "play_circle_fill_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "4acaf178f8dcb89c0e70010683e826870a35f9d3e67fff51421a5832d122f6b9"
+  },
+  {
+    "filename": "play_circle_outline.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "8c8438f387d8f79d5bbc4229408b0f743c7cb01d7a1e1a875263dd46b9962ae2"
+  },
+  {
+    "filename": "play_circle_outline_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "8c8438f387d8f79d5bbc4229408b0f743c7cb01d7a1e1a875263dd46b9962ae2"
+  },
+  {
+    "filename": "public.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "affb88ec9ac4d4755d6e979b8ecbaef606a9e847452dafee0b32c1f7b5252734"
+  },
+  {
+    "filename": "qr_code_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "30ada4b9a8b3f9b73aadb2ccdec9e62896bcc0121521c8cbe2e7878d1cb10db5"
+  },
+  {
+    "filename": "radio_button_unchecked_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "e2dcbce4386aa913ab7c22f3545e79a94e890a4b022588628c9c1e09629b9249"
+  },
+  {
+    "filename": "receipt_long_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "84de2d7e728b78995fb04f0b21e57cf1be3ac496b38b99e97288acc39d714b8e"
+  },
+  {
+    "filename": "refresh.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "192571c8c2f888dc6872384a70cc1f8ecb72bbb21cfb5e9e7d7d8d0eaae3758c"
+  },
+  {
+    "filename": "refresh_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "192571c8c2f888dc6872384a70cc1f8ecb72bbb21cfb5e9e7d7d8d0eaae3758c"
+  },
+  {
+    "filename": "remove_circle_outline.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f0cc85bdf2618b291a7777fd262b0a37248f081835b6b5d029956acde9046327"
+  },
+  {
+    "filename": "replay_10_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f345515f4673d75048d3b16e837134fd7dfe81a80e393cc97530a6f1e95754da"
+  },
+  {
+    "filename": "replay_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "91c5facf25a153d9b5dd0e114dca8739d1be569107cdad76dea56d896738c679"
+  },
+  {
+    "filename": "rocket_launch_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f0b7e935e2a89856ffaa527bcbc54ea87ac94c32496d03965bcff0881244777d"
+  },
+  {
+    "filename": "schedule_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "0767b66ffce913df99e9c2d8ef506120b78e1c1182e92216133e2a5e19c987bf"
+  },
+  {
+    "filename": "search.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "d4eafe1f29a05bc5228c6a5711de5f3dc43d61e049c40312c31af75ceffd4758"
+  },
+  {
+    "filename": "search_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "d4eafe1f29a05bc5228c6a5711de5f3dc43d61e049c40312c31af75ceffd4758"
+  },
+  {
+    "filename": "send_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "810f34315e32f585aaada39360530b59450f6434f50f163f421809042792c864"
+  },
+  {
+    "filename": "skip_next_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "789e8e56186b5297619970d91b3e23bde37d65108b838782f26e6222145c0053"
+  },
+  {
+    "filename": "speed_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "61cf9fdb984128b160eb136b2a2f9b90b754bcbf1cdcdb54ce505c723eb2baf2"
+  },
+  {
+    "filename": "stop.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "34921805621d47f0ade1cc999116647754b59c59f897bcfb1c26850b7950de01"
+  },
+  {
+    "filename": "thumb_up_alt_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "b5974e33089d9a704d546b3157bf204cafe39ad480cd227f2296d993059db0ab"
+  },
+  {
+    "filename": "timer_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "a13716aef4d133a0afa8519fac3daff18659b2e2c32b71c8282ee789a4424ebf"
+  },
+  {
+    "filename": "timer_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "331fbad4236bbb3ca67048b4d68ceb279048531a8e9274d22af7dbe6a833d9aa"
+  },
+  {
+    "filename": "verified.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "ae3a21ef29f22641a340ba7bfa24317d01170fc06f384aee9d5e5dfde123cd6a"
+  },
+  {
+    "filename": "verified_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "22fdf1e4f76948751afcab3402ebdd72490317fca9f0013ab71b17f1bea1ade1"
+  },
+  {
+    "filename": "verified_user_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "af083c19d2a85941300ba09d41bb003ff08e1b2ecf79caf5580a4c2bf52bfc3c"
+  },
+  {
+    "filename": "video_file.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "af649f5b11e6012d14f50ea1c5dc50a0398af48af2d58e846eafc06b1606b9f4"
+  },
+  {
+    "filename": "videocam_off_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "475f90c102e76f924a65f78a7cc7594515620b7151c4f981706152069201c237"
+  },
+  {
+    "filename": "visibility.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "f9d31b113eece27f73bf2a0105bb03071c15a576bfed7c804ce0a37c63fcfc59"
+  },
+  {
+    "filename": "visibility_outlined.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "ffd9c395231e3dc9d48e2ca465bc9d42de47c2db3f7b60ab4d8598178108eb88"
+  },
+  {
+    "filename": "volume_down_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "45b6b8427c5a03d20c08c8f99cec11b2716aa32fa5db795e411930a2915ce4ac"
+  },
+  {
+    "filename": "volume_off_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "8655491b2c82efb9c08675d39b9eaffaa55a91813182db305dc9cf880c58585d"
+  },
+  {
+    "filename": "volume_up_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "770698dc39582229c5248ba6dd8e7c8f6348609f56c40fa3f17595864c3b0ffd"
+  },
+  {
+    "filename": "vpn_lock_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "5e8bb8dd858c52f35e6ef2604bce0537a8f898eda4dff6948eb3adfd839b5e13"
+  },
+  {
+    "filename": "warning_amber_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "52cfaee53b5d3003cb9a6170dbee1cb8e7d8a53105f6042f8339f461c93c615b"
+  },
+  {
+    "filename": "wifi_off_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "b57e042706840c5a2eb4ffb8eab39196eebf499c26a88a1b2e3eb0b3898e4af1"
+  },
+  {
+    "filename": "workspace_premium_rounded.png",
+    "category": "Built-in UI control",
+    "status": "new vector-derived PNG",
+    "sha256": "c7300be789643a71ab51c763afc1f15c53b49b5675d7c5ba85168240667b064e"
+  },
+  {
+    "filename": "notif_announcement.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "67277555c6095829de274b148fa5ba940f9a3481a97eeb613147866b6e4f9e62"
+  },
+  {
+    "filename": "notif_bell.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "7c491791ab58dc72f0b3a5b94bf55a81159e0ddd23635cd07023a899bc05a023"
+  },
+  {
+    "filename": "notif_live_now.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "a0458912ae7e1df7064ba5569c0ca8c189e7f3dc616ca13fe63628769224a05b"
+  },
+  {
+    "filename": "notif_new_comment.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "7d6a1138e9fe66c88983472dd9829c7d037cf7debb7ed555bf815267764b29b5"
+  },
+  {
+    "filename": "notif_new_like.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "f56be0410b29a74170f51d331c2a3c2b850632c8012eb97adb9670f9fd3b65cb"
+  },
+  {
+    "filename": "notif_new_subscriber.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "99c12770d2337f8ecab3f7634a3cbcc24770bb9bb491417bd0914a276958ea0c"
+  },
+  {
+    "filename": "notif_payment_success.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "78a31cf24107d076667d4e3b9001dd9dd767e0beb5ef7812db403a503c07a6ec"
+  },
+  {
+    "filename": "notif_reminder.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "a2f2094196a30c37f6e665d4ceceb9f6a2de0f479881cfdfa785ec58ec497afa"
+  },
+  {
+    "filename": "notif_security.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "ac9e8031ec6ef566f5605d2c1ed0cc2c42605827746595b6bc9cf8c9a7ab991d"
+  },
+  {
+    "filename": "notif_update.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "1c0034e6c32f54f3a803889cbf81d4b474f2b4521a84315d5d0a8cf9781b73d0"
+  },
+  {
+    "filename": "notif_warning.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "faab8f74ad9d9bbfd1ac9fcb2850157d9a95196ff2c93ffb2190adbbfb1bedd9"
+  },
+  {
+    "filename": "notif_withdrawal_sent.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "0c833ea33f09319e54488e86f6d1700a6a63e7a659c2225782d74b032944ab9f"
+  },
+  {
+    "filename": "verified_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "103158f1be67c8b7b844a28d9b880f9602349156bc7a04a4695745903dd2eef7"
+  },
+  {
+    "filename": "premium_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "9d17d7a4db380b975c94d58099dc5f945ce8a29e6136890d1616d594b754bddf"
+  },
+  {
+    "filename": "paid_video_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "9adad992fcb015ca42e8204a5f2e91d0c917bd814841ad9e8c3a89c57328fa1b"
+  },
+  {
+    "filename": "live_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "256a1cf1fefa3d742bc52831c26d68da18f7faa0ebf8504a12c77c56d1344cdc"
+  },
+  {
+    "filename": "new_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "2fc5680abe0d3d4e029965d9dd276dd035cddcb81c60559fd90adc93195afc7c"
+  },
+  {
+    "filename": "top_creator_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "c7370566ccac8483b5bcab630b6945b2fdb9f1b0c949d5ee5c0c34cd08dfed15"
+  },
+  {
+    "filename": "partner_district_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "9406393badcb0744ec6dca9f77105f867c1b6a48ec9d4348926e18a9e76b4574"
+  },
+  {
+    "filename": "partner_digital_badge.png",
+    "category": "Small status variant",
+    "status": "new vector-derived PNG",
+    "sha256": "bc9d2862d7da3904d520ae606f0cf2c779507e90a431dd246b1ee423d005fe90"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "base": "https://api.youpeak.app",
+  "checkedAt": "2026-10-12T10:43:58.156Z",
+  "checks": [
+    {
+      "name": "API liveness",
+      "httpStatus": 200,
+      "code": null,
+      "pass": true
+    },
+    {
+      "name": "Settings accepted client key",
+      "httpStatus": 200,
+      "code": null,
+      "pass": true
+    },
+    {
+      "name": "Promotion catalogue",
+      "httpStatus": 200,
+      "code": null,
+      "pass": true
+    },
+    {
+      "name": "Channel validation",
+      "httpStatus": 200,
+      "code": "CHANNEL_ID_REQUIRED",
+      "pass": true
+    },
+    {
+      "name": "Profile requires session",
+      "httpStatus": 401,
+      "code": "AUTH_REQUIRED",
+      "pass": true
+    },
+    {
+      "name": "Bad client key is refused",
+      "httpStatus": 401,
+      "code": null,
+      "pass": true
+    }
+  ]
+}

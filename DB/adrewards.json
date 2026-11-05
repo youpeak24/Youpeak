@@ -1,0 +1,70 @@
+[{
+  "_id": {
+    "$oid": "66e1892b96e39d4394003f0a"
+  },
+  "adLabel": "AD1",
+  "adDisplayInterval": 120,
+  "coinEarnedFromAd": 10,
+  "createdAt": {
+    "$date": "2024-09-11T12:12:27.514Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-18T10:06:17.087Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e271093e5c7d75b3171673"
+  },
+  "adLabel": "AD2",
+  "adDisplayInterval": 240,
+  "coinEarnedFromAd": 20,
+  "createdAt": {
+    "$date": "2024-09-12T04:41:45.137Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-18T10:05:47.482Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e2711c137244f6c2910828"
+  },
+  "adLabel": "AD3",
+  "adDisplayInterval": 360,
+  "coinEarnedFromAd": 30,
+  "createdAt": {
+    "$date": "2024-09-12T04:42:04.184Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-18T10:06:23.035Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e27139137244f6c2910842"
+  },
+  "adLabel": "AD4",
+  "adDisplayInterval": 5000,
+  "coinEarnedFromAd": 40,
+  "createdAt": {
+    "$date": "2024-09-12T04:42:33.276Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-18T10:07:23.405Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e27147137244f6c2910847"
+  },
+  "adLabel": "AD5",
+  "adDisplayInterval": 600,
+  "coinEarnedFromAd": 50,
+  "createdAt": {
+    "$date": "2024-09-12T04:42:47.379Z"
+  },
+  "updatedAt": {
+    "$date": "2024-09-18T10:06:38.961Z"
+  }
+}]

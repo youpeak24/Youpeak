@@ -1,0 +1,48 @@
+1.8 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_core
+1.8 console.debug: Initializing Firebase firebase_core
+1.8 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_firestore
+1.8 console.debug: Initializing Firebase firebase_firestore
+1.8 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_auth
+1.8 console.debug: Initializing Firebase firebase_auth
+1.8 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_messaging
+1.8 console.debug: Initializing Firebase firebase_messaging
+20.9 --- click Continue with Google
+21.3 NEW TARGET other null/omnibox_popup_aim.html
+21.3 NEW TARGET other null/
+21.5 NEW TARGET other 
+21.5 RES 200 GET https://youpeak-9ff65.firebaseapp.com/__/auth/iframe?… <!DOCTYPE html>
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="iframe.js"></script>
+<script type="text/javascript" nonce="firebase-auth-helper">
+fireauth.iframe.A
+21.7 RES 200 GET https://youpeak-9ff65.firebaseapp.com/__/auth/iframe.js /*! @license Firebase v3.7.5
+    Build: 3.7.5-rc.1
+    Terms: https://firebase.google.com/terms/ */
+var firebase = null; (function() { var aa=function(a){var b=0;return function(){return b<a.length?{done:!1,value:a[b++]}:{done:!0}}},l=function(a){var b=typeof Symbol!="undefined"&&Symbol.iterator&&a[
+21.9 RES 200 OPTIONS https://identitytoolkit.googleapis.com/v1/projects?… 
+22.0 NEW TARGET page https://youpeak-9ff65.firebaseapp.com/__/auth/handler?…
+22.2 RES 200 OPTIONS https://www.googleapis.com/identitytoolkit/v3/relyingparty/getProjectConfig?… 
+22.2 console.log: GOOGLE_SIGNIN_DEBUG: web popup FAILED => unauthorized-domain This domain is not authorized for OAuth operations for your Firebase project. Edit the list of authorized domains from the Firebase console.
+22.2 RES 200 GET https://identitytoolkit.googleapis.com/v1/projects?… {
+  "projectId": "554624718564",
+  "authorizedDomains": [
+    "localhost",
+    "youpeak-9ff65.firebaseapp.com",
+    "youpeak-9ff65.web.app"
+  ]
+}
+
+22.5 console.warn: Info: The current domain is not authorized for OAuth operations. This will prevent signInWithPopup, signInWithRedirect, linkWithPopup and linkWithRedirect from working. Add your domain (youpeak-web.vercel.app) to the OAuth redirect domains list in the Firebase console -> Authentication -> Settings -
+22.5 RES 200 GET https://www.googleapis.com/identitytoolkit/v3/relyingparty/getProjectConfig?… {
+  "projectId": "554624718564",
+  "authorizedDomains": [
+    "localhost",
+    "youpeak-9ff65.firebaseapp.com",
+    "youpeak-9ff65.web.app"
+  ]
+}
+
+popup shot failed Attempted to use detached Frame 'A9CCFDE1F512D8B806A4F2692F3F8FAF'.

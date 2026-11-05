@@ -1,0 +1,632 @@
+
+> youpeak-platform@1.0.0 test:emulator
+> npx -y firebase-tools@13 emulators:exec --config tests/emulator/firebase.json --only firestore,auth --project demo-youpeak-audit "node tests/emulator/run.cjs"
+
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode tests/emulator/run.cjs[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 01-phase1.cjs
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [33m401[0m 19.629 ms - 85[0m
+PASS 01-phase1:SEC-01 withdrawal with only the shared key is refused (401)
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [33m403[0m 48.680 ms - 94[0m
+PASS 01-phase1:SEC-02 withdrawal naming another user is refused (403 USER_MISMATCH)
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [32m200[0m 144.620 ms - 476[0m
+PASS 01-phase1:SEC-03 owner's own withdrawal request still works
+[0mDELETE /client/user/deleteUserAccount?userId=p1_victim [33m403[0m 30.305 ms - 94[0m
+PASS 01-phase1:SEC-04 deleteUserAccount for another user is refused; account stays active
+[0mGET /client/withdrawalRequest/coinToAmountConverter?userId=p1_victim&coin=100 [33m401[0m 20.691 ms - 85[0m
+PASS 01-phase1:SEC-05 coinToAmountConverter with only the key is refused
+[0mPOST /client/user/setPassword?userId=p1_pw [32m200[0m 21.494 ms - 65[0m
+PASS 01-phase1:SEC-06 setPassword by ?userId (old takeover) is refused
+[0mPOST /client/user/setPassword [32m200[0m 37.570 ms - 76[0m
+PASS 01-phase1:SEC-07 setPassword by email without a verified OTP is refused
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+    at new Resend (E:\Legendary One\youpeak\source\functions\node_modules\resend\dist\index.js:543:15)
+    at exports.store (E:\Legendary One\youpeak\source\functions\backend\controllers\client\otp.controller.js:218:20)
+[0mPOST /client/otp/create [31m500[0m 44.997 ms - 95[0m
+[0mPOST /client/otp/verify [32m200[0m 67.945 ms - 54[0m
+[0mPOST /client/user/setPassword [32m200[0m 163.461 ms - 54[0m
+[0mPOST /client/user/setPassword [32m200[0m 36.477 ms - 76[0m
+PASS 01-phase1:SEC-08 verified OTP allows one reset; the grant is consumed
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+    at new Resend (E:\Legendary One\youpeak\source\functions\node_modules\resend\dist\index.js:543:15)
+    at exports.store (E:\Legendary One\youpeak\source\functions\backend\controllers\client\otp.controller.js:218:20)
+[0mPOST /client/otp/create [31m500[0m 39.122 ms - 95[0m
+[0mPOST /client/otp/verify [32m200[0m 43.713 ms - 48[0m
+[0mPOST /client/otp/verify [32m200[0m 43.501 ms - 48[0m
+[0mPOST /client/otp/verify [32m200[0m 44.942 ms - 48[0m
+[0mPOST /client/otp/verify [32m200[0m 41.630 ms - 48[0m
+[0mPOST /client/otp/verify [32m200[0m 40.382 ms - 79[0m
+[0mPOST /client/otp/verify [32m200[0m 36.019 ms - 49[0m
+PASS 01-phase1:SEC-09 5 wrong OTP guesses lock the code (correct code then fails)
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+    at new Resend (E:\Legendary One\youpeak\source\functions\node_modules\resend\dist\index.js:543:15)
+    at exports.store (E:\Legendary One\youpeak\source\functions\backend\controllers\client\otp.controller.js:218:20)
+[0mPOST /client/otp/create [31m500[0m 50.307 ms - 95[0m
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+    at new Resend (E:\Legendary One\youpeak\source\functions\node_modules\resend\dist\index.js:543:15)
+    at exports.store (E:\Legendary One\youpeak\source\functions\backend\controllers\client\otp.controller.js:218:20)
+[0mPOST /client/otp/create [31m500[0m 34.847 ms - 95[0m
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+    at new Resend (E:\Legendary One\youpeak\source\functions\node_modules\resend\dist\index.js:543:15)
+    at exports.store (E:\Legendary One\youpeak\source\functions\backend\controllers\client\otp.controller.js:218:20)
+[0mPOST /client/otp/create [31m500[0m 47.528 ms - 95[0m
+Error: Missing API key. Pass it to the constructor `new Resend("re_123")`
+    at new Resend (E:\Legendary One\youpeak\source\functions\node_modules\resend\dist\index.js:543:15)
+    at exports.store (E:\Legendary One\youpeak\source\functions\backend\controllers\client\otp.controller.js:218:20)
+[0mPOST /client/otp/create [31m500[0m 36.432 ms - 95[0m
+[0mPOST /client/otp/create [32m200[0m 50.486 ms - 98[0m
+PASS 01-phase1:SEC-10 6th OTP request within an hour is refused
+[0mGET /client/partner/dashboard?userId=p1_partnerA [33m401[0m 20.246 ms - 85[0m
+[0mGET /client/partner/dashboard?userId=p1_partnerA [33m403[0m 35.579 ms - 94[0m
+PASS 01-phase1:SEC-11 partner dashboard for another partner does not return portal credentials
+[0mGET /client/partner/dashboard [32m200[0m 206.344 ms - 734[0m
+PASS 01-phase1:REQ-DP-API-02 partner's own dashboard: real earnings, pending and watch progress
+PASS 01-phase1:FIN-01 two concurrent approvals against a ₹100 balance (legacy unreserved requests): exactly one paid
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [32m200[0m 59.371 ms - 125[0m
+[0mPOST /client/payout/request [32m200[0m 27.869 ms - 125[0m
+PASS 01-phase1:FRAUD-01 suspended partner cannot withdraw (legacy route and /payout/request)
+[0mPOST /client/payout/request [32m200[0m 34.719 ms - 114[0m
+PASS 01-phase1:FRAUD-02 fraud-restricted user cannot withdraw
+PASS 01-phase1:FRAUD-03 held referral rewards stay frozen while the referrer is suspended, then release
+[0mPATCH /client/user/validateAndApplyReferralCode [32m200[0m 178.924 ms - 140[0m
+PASS 01-phase1:FRAUD-04 VPN signup on a partner's code suspends the partner (no permanent block)
+PASS 01-phase1:REQ-PP-05 Stage 2 deadline is 7 days from the referred user's registration
+[0mPATCH /client/user/validateAndApplyReferralCode [32m200[0m 283.158 ms - 226[0m
+[0mPATCH /client/user/validateAndApplyReferralCode [32m200[0m 180.656 ms - 140[0m
+[0mPATCH /client/user/validateAndApplyReferralCode [32m200[0m 182.411 ms - 140[0m
+[0mPATCH /client/user/validateAndApplyReferralCode [32m200[0m 182.431 ms - 140[0m
+PASS 01-phase1:FRAUD-05 3 flagged referrals suspend a Digital Partner (2 do not)
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 641.735 ms - 190[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 3068.711 ms - 190[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 3238.097 ms - 190[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 3266.390 ms - 190[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 3277.622 ms - 193[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 6303.994 ms - 193[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8395.995 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8423.789 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8423.285 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8422.084 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8436.891 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8467.507 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8511.918 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8514.575 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8512.167 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8515.318 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8543.356 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8542.445 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8538.231 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8539.005 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8551.156 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8552.684 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8546.147 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8551.004 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8567.980 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8572.738 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8574.184 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8578.038 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8594.838 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8589.149 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8587.129 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8586.498 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8589.772 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8632.686 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8636.621 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8635.298 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8631.991 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8643.406 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8649.480 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8652.446 ms - 50[0m
+Error rewarding ad watch: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/userTaskReward/adWatch [31m500[0m 8076.359 ms - 50[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 6075.684 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 93.133 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 87.986 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 117.065 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 126.112 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 145.047 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 112.844 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 133.005 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 112.931 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 51.423 ms - 254[0m
+PASS 01-phase1:FIN-02 40 concurrent ad rewards never pass 20 ads/day; ledger = balance; follow-ups stop at exactly 20
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 338.921 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 347.293 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 339.172 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 341.121 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 340.868 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 366.000 ms - 192[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 359.203 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 365.373 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 363.796 ms - 268[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 360.048 ms - 268[0m
+PASS 01-phase1:FIN-03 daily coin cap holds under concurrency (990/1000 + 10 parallel ads = 1000)
+[0mPOST /client/userTaskReward/like [32m200[0m 2790.023 ms - 184[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 2872.198 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 2876.799 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 2887.611 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 2890.726 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 3023.517 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 3140.663 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 3334.790 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 3520.553 ms - 258[0m
+[0mPOST /client/userTaskReward/like [32m200[0m 3711.910 ms - 258[0m
+PASS 01-phase1:FIN-04 pacing rule holds under concurrency (credited likes never closer than 3 s)
+PASS 01-phase1:FIN-05 per-video reward dedupe holds under concurrency (5 parallel -> 1)
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 58.688 ms - 128[0m
+PASS 01-phase1:REQ-ACC-04 unpaid joining fee blocks coin earning on the server
+[0mGET /client/video/getVideos?userId=p1_viewer [32m200[0m 74.968 ms - 5044[0m
+PASS 01-phase1:MOD-01 getVideos hides a video held for review
+
+=== 02-phase2.cjs
+[0mGET /client/video/getVideos [32m200[0m 12.755 ms - 579[0m
+PASS 02-phase2:VIS-01 F-13: anonymous getVideos returns only public/approved videos
+[0mGET /client/video/getVideos?userId=p2_viewer [32m200[0m 80.759 ms - 5696[0m
+PASS 02-phase2:VIS-02 F-12: authenticated getVideos hides held/flagged/private/inactive
+[0mGET /client/video/getVideoList [32m200[0m 50.949 ms - 4816[0m
+PASS 02-phase2:VIS-03 F-12: getVideoList hides held/flagged videos
+[0mGET /client/video/detailsOfVideo?userId=p2_viewer&videoId=p2_vid_held&videoType=1 [32m200[0m 73.291 ms - 50[0m
+PASS 02-phase2:VIS-04 F-12: detailsOfVideo returns false for a held video (non-owner)
+[0mGET /client/video/detailsOfVideo?userId=p2_viewer&videoId=p2_vid_flagged&videoType=1 [32m200[0m 72.968 ms - 50[0m
+PASS 02-phase2:VIS-05 F-12: detailsOfVideo returns false for a copyright-flagged video
+[0mPOST /client/user/login [32m200[0m 197.193 ms - 1384[0m
+PASS 02-phase2:PW-01 F-19: signup response does not expose password or passwordHash
+PASS 02-phase2:PW-02 F-19: stored credential is bcrypt (not cryptr ciphertext)
+[0mPOST /client/user/login [32m200[0m 158.235 ms - 1382[0m
+PASS 02-phase2:PW-03 F-19: login with bcrypt-hashed password succeeds without exposing credential
+[0mPOST /client/user/login [32m200[0m 131.939 ms - 59[0m
+PASS 02-phase2:PW-04 F-19: login with wrong password is refused
+[0mGET /client/user/profile?userId=p2_viewer [32m200[0m 53.324 ms - 680[0m
+PASS 02-phase2:PW-05 F-19: getProfile response does not expose password or passwordHash
+[0mPOST /client/user/setPassword [32m200[0m 158.454 ms - 54[0m
+PASS 02-phase2:PW-06 F-19: setPassword writes a bcrypt hash and clears legacy field
+[0mPOST /client/user/login [32m200[0m 137.678 ms - 59[0m
+[0mPOST /client/user/login [32m200[0m 253.582 ms - 1556[0m
+[0mPOST /client/user/login [32m200[0m 161.614 ms - 1556[0m
+PASS 02-phase2:PW-07 F-19: legacy cryptr user logs in once, is migrated to bcrypt, legacy field cleared
+[0mPATCH /client/user/updateProfile?userId=p2_legacy2 [32m200[0m 66.524 ms - 579[0m
+PASS 02-phase2:PW-08 F-19: a profile update never wipes an unmigrated legacy password
+PASS 02-phase2:PW-09 F-19: admin user list and profile never include credentials
+PASS 02-phase2:PW-10 F-19: admin password reset stores bcrypt, never plain text
+
+=== 03-privacy-auth.cjs
+[0mGET /client/video/getVideos [32m200[0m 40.914 ms - 1305[0m
+[0mGET /client/video/getVideos [32m200[0m 130.272 ms - 7679[0m
+PASS 03-privacy-auth:VIS-10 anonymous and signed-in getVideos list only the public video of the 8 states
+[0mPOST /client/video/searchShorts [32m200[0m 92.377 ms - 381[0m
+PASS 03-privacy-auth:VIS-11 searchShorts returns public shorts only (it used to search PRIVATE shorts)
+[0mPOST /client/video/searchChannelVideoShortsByUser?type=videos&searchString=p3search [32m200[0m 146.654 ms - 716[0m
+[0mPOST /client/video/searchChannelVideoShortsByUser?type=shorts&searchString=p3search [32m200[0m 79.592 ms - 418[0m
+PASS 03-privacy-auth:VIS-12 searchChannelVideoShortsByUser (videos and shorts) never returns private/held/flagged
+[0mGET /client/video/getAllLikeThis?videoId=p3_pub [32m200[0m 162.590 ms - 389[0m
+PASS 03-privacy-auth:VIS-13 getAllLikeThis (related) never returns private/held/flagged/inactive
+[0mGET /client/user/videosOfChannel?channelId=p3_creator [32m200[0m 69.412 ms - 1158[0m
+[0mGET /client/user/videosOfChannel?channelId=p3_creator&userId=p3_creator [32m200[0m 29.535 ms - 1158[0m
+[0mGET /client/user/videosOfChannel?channelId=p3_creator [32m200[0m 69.071 ms - 5869[0m
+PASS 03-privacy-auth:VIS-14 channel page: others see public only; the verified owner sees own private/held
+[0mGET /client/video/detailsOfVideo?videoId=p3_held&videoType=1 [32m200[0m 82.380 ms - 50[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_held&videoType=1&userId=p3_creator [32m200[0m 18.629 ms - 52[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_held&videoType=1 [32m200[0m 92.842 ms - 550[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_private&videoType=1 [32m200[0m 142.120 ms - 50[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_private&videoType=1&userId=p3_creator [32m200[0m 19.043 ms - 52[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_private&videoType=1 [32m200[0m 80.843 ms - 559[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_flagged&videoType=1 [32m200[0m 83.100 ms - 50[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_flagged&videoType=1&userId=p3_creator [32m200[0m 18.202 ms - 52[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_flagged&videoType=1 [32m200[0m 81.988 ms - 559[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_unlisted&videoType=1 [32m200[0m 72.954 ms - 562[0m
+PASS 03-privacy-auth:VIS-15 detailsOfVideo: owner opens own held/private video; others and anonymous cannot
+[0mGET /client/user/playListsOfChannel?channelId=p3_creator [32m200[0m 51.247 ms - 224[0m
+[0mGET /client/user/playListsOfChannel?channelId=p3_creator [32m200[0m 51.127 ms - 370[0m
+[0mGET /client/user/getPlayListVideos?playListId=p3_pl_pub [32m200[0m 67.087 ms - 424[0m
+[0mGET /client/user/getPlayListVideos?playListId=p3_pl_priv [32m200[0m 48.974 ms - 48[0m
+PASS 03-privacy-auth:VIS-16 private playlist hidden from others; playlist videos now load and are filtered
+[0mGET /client/userWiseSubscription/videoOfSubscribedChannel?type=all [32m200[0m 99.608 ms - 126[0m
+PASS 03-privacy-auth:VIS-17 subscription feed shows the channel's public videos only
+[0mGET /client/notification/getNotificationList?userId=p3_viewer [33m401[0m 3.719 ms - 85[0m
+[0mGET /client/notification/getNotificationList?userId=p3_viewer [33m403[0m 34.304 ms - 94[0m
+[0mGET /client/watchHistory/getWatchHistory?userId=p3_viewer&startDate=All&endDate=All [33m401[0m 18.530 ms - 85[0m
+[0mGET /client/watchHistory/getWatchHistory?userId=p3_viewer&startDate=All&endDate=All [33m403[0m 33.248 ms - 94[0m
+[0mGET /client/premiumPlan/planHistoryOfUser?userId=p3_viewer [33m401[0m 18.367 ms - 85[0m
+[0mGET /client/premiumPlan/planHistoryOfUser?userId=p3_viewer [33m403[0m 18.175 ms - 94[0m
+[0mGET /client/user/profile?userId=p3_viewer [33m401[0m 18.169 ms - 85[0m
+[0mGET /client/user/profile?userId=p3_viewer [33m403[0m 32.965 ms - 94[0m
+[0mPOST /client/payment/createOrder [33m401[0m 14.350 ms - 85[0m
+[0mPOST /client/payment/createOrder [33m403[0m 33.599 ms - 94[0m
+[0mPOST /client/playList/newPlayList [33m401[0m 17.215 ms - 85[0m
+[0mPOST /client/playList/newPlayList [33m403[0m 32.422 ms - 94[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [33m401[0m 18.898 ms - 85[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [33m403[0m 33.220 ms - 94[0m
+PASS 03-privacy-auth:AUTH-01 owner routes refuse a key-only call and a mismatched token
+[0mGET /client/video/getAllLikeThis?videoId=p3_pub&userId=p3_viewer [32m200[0m 17.994 ms - 65[0m
+[0mGET /client/video/getAllLikeThis?videoId=p3_pub [32m200[0m 112.458 ms - 389[0m
+PASS 03-privacy-auth:AUTH-02 browse routes drop a caller-chosen userId when there is no token
+[0mGET /client/video/getVideos?userId=p3_creator [33m403[0m 26.452 ms - 94[0m
+PASS 03-privacy-auth:AUTH-03 browse route with a token for someone else is refused (403)
+[0mGET /client/video/getVideos [32m200[0m 80.170 ms - 7679[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_locked&videoType=1 [32m200[0m 96.487 ms - 532[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_locked&videoType=1 [32m200[0m 97.715 ms - 556[0m
+PASS 03-privacy-auth:PAY-01 locked video URL is withheld from non-buyers in feeds and details
+[0mPOST /client/video/unlockPrivateVideo?videoId=p3_locked [32m200[0m 2823.662 ms - 192[0m
+[0mPOST /client/video/unlockPrivateVideo?videoId=p3_locked [32m200[0m 2995.192 ms - 116[0m
+[0mPOST /client/video/unlockPrivateVideo?videoId=p3_locked [32m200[0m 3070.530 ms - 116[0m
+[0mPOST /client/video/unlockPrivateVideo?videoId=p3_locked [32m200[0m 3643.742 ms - 116[0m
+[0mPOST /client/video/unlockPrivateVideo?videoId=p3_locked [32m200[0m 3647.785 ms - 116[0m
+[0mGET /client/video/detailsOfVideo?videoId=p3_locked&videoType=1 [32m200[0m 53.475 ms - 556[0m
+PASS 03-privacy-auth:PAY-02 unlock: 5 parallel taps charge once, return the URL, then details carry it
+[0mPOST /client/video/unlockPrivateVideo?videoId=p3_locked_held [32m200[0m 50.544 ms - 53[0m
+PASS 03-privacy-auth:PAY-03 a held or private video cannot be bought
+
+=== 04-peakboost.cjs
+[0mPOST /client/peakBoost [32m200[0m 170.366 ms - 174[0m
+[0mPOST /client/peakBoost [32m200[0m 193.738 ms - 174[0m
+[0mPOST /client/peakBoost [32m200[0m 193.469 ms - 176[0m
+[0mPOST /client/peakBoost [32m200[0m 162.687 ms - 179[0m
+[0mPOST /client/peakBoost [32m200[0m 179.111 ms - 182[0m
+[0mPOST /client/peakBoost [32m200[0m 178.593 ms - 189[0m
+PASS 04-peakboost:PB-01 amounts 100 / 101 / 500 / 2,000 / 10,000 / 1,000,000: debit = creator + platform, 80/20 by the implemented rounding
+[0mPOST /client/peakBoost [32m200[0m 40.571 ms - 125[0m
+[0mPOST /client/peakBoost [32m200[0m 22.197 ms - 125[0m
+[0mPOST /client/peakBoost [32m200[0m 33.631 ms - 125[0m
+[0mPOST /client/peakBoost [32m200[0m 33.292 ms - 125[0m
+[0mPOST /client/peakBoost [32m200[0m 33.133 ms - 125[0m
+[0mPOST /client/peakBoost [32m200[0m 33.250 ms - 125[0m
+[0mPOST /client/peakBoost [32m200[0m 22.332 ms - 125[0m
+PASS 04-peakboost:PB-02 invalid amounts are refused with no state change (99, max+1, 0, -100, 150.5, '200', null)
+[0mPOST /client/peakBoost [32m200[0m 192.306 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 143.448 ms - 172[0m
+PASS 04-peakboost:PB-03 insufficient funds refused; exact balance succeeds and leaves 0
+[0mPOST /client/peakBoost [32m200[0m 164.262 ms - 173[0m
+[0mPOST /client/peakBoost [32m200[0m 49.189 ms - 173[0m
+[0mPOST /client/peakBoost [33m409[0m 49.606 ms - 117[0m
+PASS 04-peakboost:PB-04 same requestId replayed returns the first result and charges once; different payload -> 409
+[0mPOST /client/peakBoost [32m200[0m 2261.805 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 2953.185 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3097.201 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3100.874 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3347.342 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3381.559 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3540.300 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3544.869 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3690.188 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3753.510 ms - 171[0m
+PASS 04-peakboost:PB-05 rapid double tap (10 parallel, one requestId) charges once
+[0mPOST /client/peakBoost [32m200[0m 2285.879 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 2879.826 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 2972.475 ms - 171[0m
+[0mPOST /client/peakBoost [32m200[0m 3112.415 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 3207.818 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 3365.028 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 3427.624 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 3570.933 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 3635.997 ms - 94[0m
+[0mPOST /client/peakBoost [32m200[0m 3642.803 ms - 94[0m
+PASS 04-peakboost:PB-06 concurrent different boosts never overdraw: 10 x 300 against 1,000 -> exactly 3
+[0mPOST /client/peakBoost [32m200[0m 64.058 ms - 80[0m
+[0mPOST /client/peakBoost [32m200[0m 63.295 ms - 70[0m
+[0mPOST /client/peakBoost [32m200[0m 64.904 ms - 102[0m
+[0mPOST /client/peakBoost [32m200[0m 65.873 ms - 70[0m
+PASS 04-peakboost:PB-07 self-boost, missing video, blocked creator and private video are refused with no debit
+[0mPOST /client/peakBoost [33m403[0m 33.277 ms - 80[0m
+PASS 04-peakboost:PB-08 blocked viewer is refused before any write
+peakBoost error: Error: 6 ALREADY_EXISTS: entity already exists: EntityRef{partitionRef=dev~demo-youpeak-audit, path=/histories/pb_p4_fail_p4req000033xx_sent}
+    at callErrorFromStatus (E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\call.js:32:19)
+    at Object.onReceiveStatus (E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\client.js:193:76)
+    at Object.onReceiveStatus (E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\client-interceptors.js:367:141)
+    at Object.onReceiveStatus (E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\client-interceptors.js:327:181)
+    at E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\resolving-call.js:135:78
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+for call at
+    at ServiceClientImpl.makeUnaryRequest (E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\client.js:161:32)
+    at ServiceClientImpl.<anonymous> (E:\Legendary One\youpeak\source\functions\node_modules\@grpc\grpc-js\build\src\make-client.js:105:19)
+    at E:\Legendary One\youpeak\source\functions\node_modules\@google-cloud\firestore\build\src\v1\firestore_client.js:242:33
+    at E:\Legendary One\youpeak\source\functions\node_modules\google-gax\build\src\normalCalls\timeout.js:44:16
+    at repeat (E:\Legendary One\youpeak\source\functions\node_modules\google-gax\build\src\normalCalls\retries.js:82:25)
+    at E:\Legendary One\youpeak\source\functions\node_modules\google-gax\build\src\normalCalls\retries.js:125:13
+    at OngoingCallPromise.call (E:\Legendary One\youpeak\source\functions\node_modules\google-gax\build\src\call.js:67:27)
+    at NormalApiCaller.call (E:\Legendary One\youpeak\source\functions\node_modules\google-gax\build\src\normalCalls\normalApiCaller.js:34:19)
+    at E:\Legendary One\youpeak\source\functions\node_modules\google-gax\build\src\createApiCall.js:112:30
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  code: 6,
+  details: 'entity already exists: EntityRef{partitionRef=dev~demo-youpeak-audit, path=/histories/pb_p4_fail_p4req000033xx_sent}',
+  metadata: Metadata {
+    internalRepr: Map(1) { 'content-type' => [Array] },
+    opaqueData: Map(0) {},
+    options: {}
+  },
+  note: 'Exception occurred in retry method that was not classified as transient'
+}
+[0mPOST /client/peakBoost [31m500[0m 166.109 ms - 50[0m
+PASS 04-peakboost:PB-09 a failure inside the transaction leaves nothing behind (no debit, no credit, no boost row)
+
+=== 05-payments.cjs
+[0mPOST /payment/webhook/razorpay [32m200[0m 220.008 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 52.283 ms - 46[0m
+PASS 05-payments:PF-01 duplicate webhook: coins credited once, COMPLETED, one ledger row with the platform share
+[0mPOST /payment/webhook/razorpay [32m200[0m 2208.845 ms - 46[0m
+[0mPOST /client/payment/verify [32m200[0m 2664.103 ms - 134[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 2671.018 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 2829.245 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 2902.584 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 3250.779 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 30.258 ms - 46[0m
+PASS 05-payments:PF-02 5 simultaneous webhooks + the client callback: exactly one credit
+[0mPOST /payment/webhook/razorpay [32m200[0m 18.301 ms - 54[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 68.715 ms - 54[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 50.153 ms - 54[0m
+PASS 05-payments:PF-03 amount or currency mismatch -> VALIDATION_FAILED, nothing granted, later correct event doesn't auto-fulfil
+payment webhook rejected: bad_signature
+[0mPOST /payment/webhook/razorpay [33m400[0m 18.064 ms - 42[0m
+[0mPOST /client/payment/verify [32m200[0m 48.443 ms - 67[0m
+[0mPOST /payment/webhook/razorpay [31m503[0m 18.297 ms - 74[0m
+PASS 05-payments:PF-04 invalid signature (webhook 400; callback doesn't mark someone's order failed); unknown order 503
+[0mPOST /payment/webhook/razorpay [32m200[0m 16.876 ms - 15[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 189.515 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 20.593 ms - 15[0m
+PASS 05-payments:PF-05 failed/cancelled and out-of-order events: failure event changes nothing; capture after it fulfils
+fulfilment failed for p5_txn_7 (tier_upgrade): 6 ALREADY_EXISTS: entity already exists: EntityRef{partitionRef=dev~demo-youpeak-audit, path=/histories/p5_txn_7_referral}
+[0mPOST /payment/webhook/razorpay [31m500[0m 268.246 ms - 61[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 300.227 ms - 46[0m
+PASS 05-payments:PF-06 an effect fails mid-fulfilment -> REQUIRES_RECONCILIATION (500 to gateway); retry finishes only the missing effects
+[0mPOST /payment/webhook/razorpay [31m503[0m 66.496 ms - 49[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 172.405 ms - 46[0m
+PASS 05-payments:PF-07 crash after claim: live PROCESSING lease -> 503; expired lease is reclaimed and completed
+[0mPOST /payment/webhook/razorpay [32m200[0m 67.126 ms - 46[0m
+PASS 05-payments:PF-08 a pre-state-machine order already fulfilled (fulfilled:true) is never re-run
+[0mPOST /payment/webhook/razorpay [32m200[0m 291.544 ms - 46[0m
+PASS 05-payments:PF-09 F-26/F-15: Tasker pass grants its Ad Credits; a Free-tier referrer gets no 10% bonus
+[0mPOST /client/payment/createOrder [32m200[0m 78.998 ms - 73[0m
+[0mPOST /client/payment/createOrder [32m200[0m 64.289 ms - 73[0m
+PASS 05-payments:PF-10 F-14: checkout refuses a Tasker pass at or below the current level
+[0mPOST /payment/webhook/razorpay [32m200[0m 302.679 ms - 46[0m
+[0mPOST /payment/webhook/razorpay [32m200[0m 156.926 ms - 46[0m
+PASS 05-payments:PF-11 Digital Partner licence delivered twice: credits 25,000 once, one franchise commission
+PASS 05-payments:PF-12 admin reconcile: dry run lists stuck orders; retry completes them idempotently
+
+=== 06-withdrawals.cjs
+[0mPOST /client/payout/request [32m200[0m 49.820 ms - 156[0m
+[0mPOST /client/payout/request [32m200[0m 100.248 ms - 212[0m
+PASS 06-withdrawals:WD-01 first payout: ₹99 refused, exactly ₹100 reserved (available 100 → 0, reserved 0 → 100)
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [32m200[0m 4198.793 ms - 468[0m
+[0mPOST /client/payout/request [32m200[0m 4775.654 ms - 104[0m
+[0mPOST /client/payout/request [32m200[0m 4905.385 ms - 104[0m
+[0mPOST /client/payout/request [32m200[0m 5389.229 ms - 104[0m
+Withdraw Error: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [31m500[0m 8110.927 ms - 50[0m
+Withdraw Error: Error: GCP_TIMEOUT
+    at Timeout.<anonymous> (E:\Legendary One\youpeak\source\functions\backend\util\firestoreDb.service.js:160:39)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7)
+[0mPOST /client/withdrawalRequest/createWithdrawRequest [31m500[0m 8111.317 ms - 50[0m
+PASS 06-withdrawals:WD-02 6 simultaneous requests (both routes) → exactly one pending, balance reserved once
+PASS 06-withdrawals:WD-03 approval consumes the reservation once (concurrent double approval → one), lock released, next request allowed
+[0mPOST /client/payout/request [32m200[0m 29.675 ms - 135[0m
+[0mPOST /client/payout/request [32m200[0m 98.248 ms - 213[0m
+PASS 06-withdrawals:WD-04 after a paid payout the ₹500 standard minimum applies
+[0mPOST /client/payout/request [32m200[0m 131.013 ms - 212[0m
+PASS 06-withdrawals:WD-05 decline releases exactly once; racing decline + approve → one winner; money conserved
+[0mPOST /client/payout/request [32m200[0m 123.313 ms - 215[0m
+PASS 06-withdrawals:WD-06 coin shortfall converted inside the reservation (₹50 + 10,000 coins → ₹100 request)
+[0mPOST /client/payout/request [32m200[0m 145.107 ms - 106[0m
+PASS 06-withdrawals:WD-07 insufficient coins + ₹: refused with nothing reserved or converted
+[0mPOST /client/payout/request [32m200[0m 113.873 ms - 212[0m
+PASS 06-withdrawals:WD-08 fraud hold after the request blocks approval; reservation stays until declined
+[0mPATCH /admin/withDrawalRequest/acceptWithdrawalRequest?requestId=x [33m401[0m 20.216 ms - 59[0m
+PASS 06-withdrawals:WD-09 approval is admin-only: the app key cannot reach the admin route
+
+=== 07-rewards.cjs
+PASS 07-rewards:RW-01 business day is Asia/Kolkata whatever the host timezone (18:29:59Z = same day, 18:30Z = next)
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 2831.310 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 2950.131 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 3105.714 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 5498.573 ms - 194[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 5955.691 ms - 195[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 6502.255 ms - 195[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 6631.094 ms - 195[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 6940.936 ms - 195[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 7024.892 ms - 195[0m
+[0mPOST /client/userTaskReward/adWatch [32m200[0m 7423.008 ms - 196[0m
+PASS 07-rewards:RW-02 first requests after midnight (stale counters at yesterday's cap): no credited count is lost to a stale reset
+PASS 07-rewards:RW-03 120-minute bonus under 3 parallel reports: paid once and capped by the day's room (800/1000 → +200)
+PASS 07-rewards:RW-04 like → unlike → re-like: net one like; double unlike reverses once
+PASS 07-rewards:RW-05 reversal never drives the balance negative (coins already spent → shortfall reported)
+PASS 07-rewards:RW-06 lifetime watch minutes survive the daily reset and a free level-up (2999 + 1 → L1 at 3000)
+PASS 07-rewards:RW-07 +500 cap boost (capacity) and the 500-coin watch reward are separate values
+
+=== 08-media.cjs
+[0mPOST /client/video/createVideo [33m403[0m 44.485 ms - 94[0m
+[0mPOST /client/video/createVideo [33m403[0m 42.769 ms - 120[0m
+req.body.channelId:  undefined
+[0mPOST /client/video/createVideo [32m200[0m 131.656 ms - 1370[0m
+PASS 08-media:MED-01 publishing needs the caller's own grant: other user's upload 403, no grant 403, own grant OK
+channelSubscribedByUsers: []
+[0mPOST /client/video/createVideo [33m403[0m 40.138 ms - 91[0m
+[0mPOST /client/video/createVideo [33m403[0m 49.917 ms - 108[0m
+PASS 08-media:MED-02 the same upload can't be published twice; an expired grant is refused
+PASS 08-media:MED-03 failed-publish cleanup deletes only the caller's own unpublished upload (F-28)
+req.body.channelId:  undefined
+[0mPOST /client/video/createVideo [32m200[0m 128.708 ms - 1370[0m
+channelSubscribedByUsers: []
+[0mGET /client/video/getVideos [32m200[0m 56.384 ms - 21311[0m
+PASS 08-media:MED-05 publish without channelId no longer crashes after responding (process survives, video kept)
+PASS 08-media:MED-04 grant records owner, provider and ref; bound to the video after publish
+PASS 08-media:MED-06 media audit dry run lists expired unused uploads and external-URL videos without changing anything
+
+=== 09-requirements.cjs
+[0mPOST /client/report/reportToVideo [32m200[0m 93.591 ms - 282[0m
+[0mPOST /client/report/reportToVideo [32m200[0m 79.278 ms - 282[0m
+[0mPOST /client/report/reportToVideo [32m200[0m 93.249 ms - 282[0m
+[0mPOST /client/report/reportToVideo [32m200[0m 95.631 ms - 282[0m
+[0mPOST /client/report/reportToVideo [32m200[0m 127.823 ms - 281[0m
+[0mPOST /client/report/reportToVideo [32m200[0m 79.324 ms - 66[0m
+[0mGET /client/video/getVideos [32m200[0m 36.946 ms - 4190[0m
+PASS 09-requirements:REQ-0111 5 reports from 5 users within 24 h hold the video and it leaves the public feed
+[0mPATCH /client/user/validateAndApplyReferralCode [32m200[0m 227.724 ms - 226[0m
+PASS 09-requirements:REQ-0040 a Free Tasker referrer gets the flat 250 coins per registered referral
+[0mPOST /payment/webhook/razorpay [32m200[0m 95.855 ms - 46[0m
+PASS 09-requirements:REQ-0088 verified joining-fee payment sets paymentStatus / payment_status (signed webhook, once)
+PASS 09-requirements:REQ-0035 a dislike earns 2 coins once per video
+
+RESULT 101/101 passed (9 suites)
+[32m[1m+ [22m[39m Script exited successfully (code 0)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+exit=0

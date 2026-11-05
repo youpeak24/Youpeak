@@ -1,0 +1,904 @@
+Analyzing youpeak...
+
+warning - lib\core\localization\localizations_delegate.dart:23:8 - Unused import: 'package:youpeak/core/utils/utils.dart'. Try removing the import directive. - unused_import
+warning - lib\core\payment\in_app_purchase\in_app_purchase_helper.dart:13:8 - Unused import: 'package:in_app_purchase_android/src/billing_client_wrappers/billing_client_wrapper.dart'. Try removing the import directive. - unused_import
+warning - lib\core\storage\database\database.dart:13:8 - Unused import: 'package:youpeak/core/constants/app_constant.dart'. Try removing the import directive. - unused_import
+warning - lib\features\auth\service\google_login.dart:4:8 - Unused import: 'package:youpeak/core/settings/app_settings.dart'. Try removing the import directive. - unused_import
+warning - lib\features\auth\view\fill_profile_view.dart:25:8 - Unused import: 'package:youpeak/core/storage/database/database.dart'. Try removing the import directive. - unused_import
+warning - lib\features\auth\view\fill_profile_view.dart:27:8 - Unused import: 'package:youpeak/core/settings/admin_settings_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\auth\view\fill_profile_view.dart:452:40 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\auth\view\lets_you_in_view.dart:15:8 - Unused import: 'package:youpeak/core/settings/admin_settings_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\auth\view\login_view.dart:16:8 - Unused import: 'package:youpeak/core/settings/admin_settings_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\bites\controller\nav_shorts_controller.dart:61:38 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\bites\view\nav_shorts_details_view.dart:45:8 - Unused import: 'package:youpeak/shared/widgets/subscribe_premium_channel_bottom_sheet.dart'. Try removing the import directive. - unused_import
+warning - lib\features\bites\view\preview_shorts_video.dart:39:8 - Unused import: 'package:youpeak/shared/widgets/subscribe_premium_channel_bottom_sheet.dart'. Try removing the import directive. - unused_import
+warning - lib\features\channel\controller\get_play_list_controller.dart:58:35 - The '!' will have no effect because the receiver can't be null. Try removing the '!' operator. - unnecessary_non_null_assertion
+warning - lib\features\channel\controller\your_channel_controller.dart:181:35 - The '!' will have no effect because the receiver can't be null. Try removing the '!' operator. - unnecessary_non_null_assertion
+warning - lib\features\channel\view\channel_about_tab_view.dart:21:17 - The value of the local variable 'media' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\features\channel\view\channel_home_tab_view.dart:109:67 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:110:65 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:111:70 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:112:68 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:113:69 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:114:69 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:117:65 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:118:70 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:119:66 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:123:69 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:124:73 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_home_tab_view.dart:125:71 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\channel\view\channel_video_tab_view.dart:21:8 - Unused import: 'package:youpeak/core/assets/app_icons.dart'. Try removing the import directive. - unused_import
+warning - lib\features\channel\view\channel_video_tab_view.dart:26:8 - Unused import: 'package:youpeak/core/utils/utils.dart'. Try removing the import directive. - unused_import
+warning - lib\features\channel\view\create_channel_screen.dart:2:8 - Unused import: 'dart:developer'. Try removing the import directive. - unused_import
+warning - lib\features\channel\view\preview_playlist_view.dart:192:57 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\coins\controller\buy_coin_controller.dart:2:8 - Unused import: 'package:youpeak/core/utils/custom_toast.dart'. Try removing the import directive. - unused_import
+warning - lib\features\coins\controller\buy_coin_controller.dart:5:8 - Unused import: 'package:youpeak/features/coins/api/purchase_coin_plan_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\coins\controller\buy_coin_controller.dart:7:8 - Unused import: 'package:youpeak/features/coins/model/purchase_coin_plan_model.dart'. Try removing the import directive. - unused_import
+warning - lib\features\coins\controller\buy_coin_controller.dart:9:8 - Unused import: 'package:youpeak/core/constants/app_string.dart'. Try removing the import directive. - unused_import
+warning - lib\features\coins\view\buy_coin_view.dart:3:8 - Unused import: 'dart:io'. Try removing the import directive. - unused_import
+warning - lib\features\coins\view\buy_coin_view.dart:7:8 - Unused import: 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart'. Try removing the import directive. - unused_import
+warning - lib\features\coins\view\convert_coin_view.dart:22:11 - The value of the local variable 'controller' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\features\coins\widget\convert_coin_shimmer_ui.dart:3:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+warning - lib\features\comments\controller\reply_controller.dart:34:56 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\comments\widget\comment_shimmer_ui.dart:3:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+warning - lib\features\edit_video\view\edit_video_view.dart:7:8 - Unused import: 'package:youpeak/core/storage/database/database.dart'. Try removing the import directive. - unused_import
+warning - lib\features\edit_video\view\edit_video_view.dart:10:8 - Unused import: 'package:youpeak/features/channel/model/get_channel_video_model.dart'. Try removing the import directive. - unused_import
+warning - lib\features\edit_video\view\edit_video_view.dart:11:8 - Unused import: 'package:youpeak/features/video/model/video_details_model.dart'. Try removing the import directive. - unused_import
+warning - lib\features\edit_video\view\edit_video_view.dart:15:8 - Unused import: 'package:youpeak/core/settings/app_settings.dart'. Try removing the import directive. - unused_import
+warning - lib\features\home\controller\nav_home_controller.dart:310:52 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:310:82 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:311:62 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:311:104 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:347:61 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:347:98 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:348:63 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\controller\nav_home_controller.dart:348:106 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\features\home\model\fetch_new_video_model.dart:5:8 - Unused import: 'package:meta/meta.dart'. Try removing the import directive. - unused_import
+warning - lib\features\library\view\download_view.dart:15:8 - Unused import: 'package:youpeak/features/library/view/preview_normal_video.dart'. Try removing the import directive. - unused_import
+warning - lib\features\main\view\main_home_view.dart:44:8 - Unused import: 'package:youpeak/features/video/view/normal_video_details_view.dart'. Try removing the import directive. - unused_import
+warning - lib\features\main\view\main_home_view.dart:45:8 - Unused import: 'package:youpeak/features/video/view/shorts_video_details_view.dart'. Try removing the import directive. - unused_import
+warning - lib\features\main\view\main_home_view.dart:46:8 - Unused import: 'package:youpeak/core/services/branch_io_services.dart'. Try removing the import directive. - unused_import
+warning - lib\features\main\view\main_home_view.dart:79:26 - The value of the field '_homeVideoController' isn't used. Try removing the field, or using it. - unused_field
+warning - lib\features\main\view\main_home_view.dart:80:8 - The value of the field '_isVideoInitialized' isn't used. Try removing the field, or using it. - unused_field
+warning - lib\features\main\view\main_home_view.dart:82:8 - The value of the field '_adsPreloaded' isn't used. Try removing the field, or using it. - unused_field
+warning - lib\features\playlist\api\play_list_get_with_search_api.dart:3:8 - Unused import: 'package:youpeak/features/playlist/model/fetch_normal_video_model.dart'. Try removing the import directive. - unused_import
+warning - lib\features\playlist\view\create_playlist_view.dart:12:8 - Unused import: 'package:youpeak/shared/widgets/small_video_widget.dart'. Try removing the import directive. - unused_import
+warning - lib\features\playlist\view\create_playlist_view.dart:17:8 - Unused import: 'package:youpeak/features/video/view/normal_video_details_view.dart'. Try removing the import directive. - unused_import
+warning - lib\features\premium\view\premium_plan_purchase_history_view.dart:76:82 - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '['. - invalid_null_aware_operator
+warning - lib\features\premium\view\premium_plan_purchase_history_view.dart:76:136 - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '['. - invalid_null_aware_operator
+warning - lib\features\premium\view\premium_plan_purchase_history_view.dart:90:95 - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '['. - invalid_null_aware_operator
+warning - lib\features\premium\view\premium_plan_purchase_history_view.dart:96:123 - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '['. - invalid_null_aware_operator
+warning - lib\features\premium\view\premium_plan_purchase_history_view.dart:106:99 - The receiver can't be null, so the null-aware operator '?[' is unnecessary. Try replacing the operator '?[' with '['. - invalid_null_aware_operator
+warning - lib\features\premium\view\purchase_plan_view.dart:7:8 - Unused import: 'package:youpeak/core/settings/admin_settings_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\profile\controller\profile_controller.dart:7:8 - Unused import: 'package:youpeak/features/monetization/api/monetization_request_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\profile\view\profile_view.dart:43:8 - Unused import: 'package:youpeak/core/theme/theme_services.dart'. Try removing the import directive. - unused_import
+warning - lib\features\rewards\widget\earn_reward_shimmer_ui.dart:3:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+warning - lib\features\search\api\search_api.dart:3:8 - Unused import: 'package:flutterwave_standard/utils.dart'. Try removing the import directive. - unused_import
+warning - lib\features\search\view\search_view.dart:349:11 - The value of the local variable 'controller' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\features\upload\controller\upload_video_controller.dart:13:8 - Unused import: 'package:youpeak/core/file_upload/convert_video_api.dart'. Try removing the import directive. - unused_import
+warning - lib\features\wallet\controller\my_wallet_controller.dart:55:25 - The '!' will have no effect because the receiver can't be null. Try removing the '!' operator. - unnecessary_non_null_assertion
+warning - lib\features\wallet\controller\my_wallet_controller.dart:57:17 - The receiver can't be null, so the null-aware operator '?.' is unnecessary. Try replacing the operator '?.' with '.'. - invalid_null_aware_operator
+warning - lib\features\wallet\controller\my_wallet_controller.dart:57:43 - The '!' will have no effect because the receiver can't be null. Try removing the '!' operator. - unnecessary_non_null_assertion
+warning - lib\features\wallet\view\my_wallet_view.dart:100:87 - The left operand can't be null, so the right operand is never executed. Try removing the operator and the right operand. - dead_null_aware_expression
+warning - lib\main.dart:12:8 - Unused import: 'package:firebase_messaging/firebase_messaging.dart'. Try removing the import directive. - unused_import
+warning - lib\main.dart:51:8 - Unused import: 'package:mobile_device_identifier/mobile_device_identifier.dart'. Try removing the import directive. - unused_import
+warning - lib\main.dart:386:17 - The value of the local variable 'mediaQuery' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib\shared\dialogs\app_exit_dialog.dart:1:8 - Unused import: 'dart:io'. Try removing the import directive. - unused_import
+warning - lib\shared\shimmer\container_shimmer_ui.dart:3:8 - Unused import: 'package:get/get.dart'. Try removing the import directive. - unused_import
+   info - lib\core\ads\google_reward_ad.dart:2:8 - The import of 'package:flutter/material.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/foundation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\core\deep_link\config\easy_deep_link_manager.dart:3:8 - The import of 'package:flutter/material.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/foundation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\core\deep_link\services\deep_link_services.dart:64:11 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:10:8 - The import of 'package:cross_file/cross_file.dart' is unnecessary because all of the used elements are also provided by the import of 'package:share_plus/share_plus.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:10:8 - The imported package 'cross_file' isn't a dependency of the importing package. Try adding a dependency for 'cross_file' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:16:18 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:30:17 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:30:23 - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:33:17 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:33:23 - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:37:15 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:37:21 - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:43:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:54:15 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:54:21 - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:59:13 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:59:19 - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:62:13 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:62:19 - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\pure_flutter_share_service.dart:83:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:10:8 - The import of 'package:cross_file/cross_file.dart' is unnecessary because all of the used elements are also provided by the import of 'package:share_plus/share_plus.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:10:8 - The imported package 'cross_file' isn't a dependency of the importing package. Try adding a dependency for 'cross_file' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:23:18 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:33:15 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:33:21 - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:63:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:97:9 - Parameter 'key' could be a super parameter. Trying converting 'key' to a super parameter. - use_super_parameters
+   info - lib\core\deep_link\share_manager\share_card_generator.dart:127:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\share_manager.dart:59:11 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\deep_link\share_manager\share_manager.dart:59:17 - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\localization\localization_service.dart:92:47 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\core\localization\localization_service.dart:95:35 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\core\localization\localization_service.dart:101:39 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\core\localization\localization_service.dart:192:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\localization\localization_service.dart:194:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\localization\localization_service.dart:199:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\localization\localization_service.dart:224:11 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\localization\localization_service.dart:249:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\localization\localization_service.dart:252:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\localization\localization_service.dart:257:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\notification\local_notification_services.dart:4:8 - The import of 'package:flutter/material.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/foundation.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\core\notification\local_notification_storage.dart:16:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\notification\local_notification_storage.dart:28:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\notification\local_notification_storage.dart:37:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\core\settings\admin_settings_model.dart:11:41 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:15:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:15:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\core\settings\admin_settings_model.dart:16:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:17:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:18:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:19:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:159:43 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:188:47 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:204:41 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:205:33 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:231:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:231:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\core\settings\admin_settings_model.dart:232:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:233:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:235:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:236:36 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:237:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:238:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:239:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:240:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:241:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:242:33 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:243:33 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:244:44 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:245:42 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:246:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:247:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:248:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:249:44 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:250:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:251:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:252:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:253:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:254:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:255:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:256:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:257:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:258:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:259:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:261:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:262:33 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:263:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:264:33 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:265:37 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:266:36 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:267:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:268:35 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:269:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:270:40 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:271:42 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:272:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:273:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:274:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:275:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:276:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:277:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:279:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:280:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:282:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:305:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:305:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\core\settings\admin_settings_model.dart:306:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:307:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:308:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:309:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:310:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:356:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:356:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\core\settings\admin_settings_model.dart:357:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:358:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:359:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:360:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:361:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:362:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:363:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:364:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:365:43 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:366:36 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:367:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:378:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:382:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:382:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\core\settings\admin_settings_model.dart:383:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:384:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:408:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\core\settings\admin_settings_model.dart:408:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\core\settings\admin_settings_model.dart:409:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:410:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:411:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:412:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\settings\admin_settings_model.dart:413:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\core\theme\app_style.dart:83:26 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\theme\app_style.dart:158:26 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\utils\custom_range_picker.dart:14:75 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\utils\custom_range_picker.dart:19:36 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\utils\custom_toast.dart:11:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\core\utils\utils.dart:4:49 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\api\sign_up_send_otp_api.dart:18:51 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\auth\service\google_login.dart:18:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:21:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:24:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:29:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:33:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:34:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:48:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:52:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\service\google_login.dart:54:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\view\fill_profile_view.dart:363:71 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\auth\view\fill_profile_view.dart:372:89 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\auth\view\fill_profile_view.dart:387:90 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\auth\view\lets_you_in_view.dart:48:12 - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\auth\view\lets_you_in_view.dart:92:30 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\features\auth\view\lets_you_in_view.dart:228:80 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - lib\features\auth\view\lets_you_in_view.dart:291:41 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\auth\view\login_view.dart:395:53 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - lib\features\auth\view\sign_up_view.dart:97:12 - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\auth\view\sign_up_view.dart:355:55 - Use interpolation to compose strings and values. Try using string interpolation to build the composite string. - prefer_interpolation_to_compose_strings
+   info - lib\features\bites\controller\create_short_controller.dart:86:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\bites\model\get_shorts_video_model.dart:14:21 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\bites\model\get_shorts_video_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\bites\model\get_shorts_video_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\bites\model\get_shorts_video_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:23:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:24:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:119:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\bites\model\get_shorts_video_model.dart:119:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\bites\model\get_shorts_video_model.dart:120:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:121:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:122:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:123:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:124:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:125:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:126:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:127:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:128:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:129:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:130:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:131:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:132:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:133:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:134:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:135:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:136:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:137:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:138:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:139:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:140:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:141:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:142:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:143:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:144:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:145:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\model\get_shorts_video_model.dart:146:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\bites\view\create_short_view.dart:44:7 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\create_short_view.dart:120:51 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\nav_shorts_details_view.dart:594:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\bites\view\nav_shorts_details_view.dart:612:36 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\bites\view\nav_shorts_details_view.dart:736:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\nav_shorts_details_view.dart:751:61 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\nav_shorts_details_view.dart:1203:35 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\nav_shorts_details_view.dart:1232:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\nav_shorts_view.dart:58:7 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\preview_shorts_video.dart:517:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\bites\view\preview_shorts_video.dart:536:36 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\bites\view\preview_shorts_video.dart:669:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\bites\view\preview_shorts_view.dart:51:7 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\api\get_channel_video_api.dart:25:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\api\get_channel_video_api.dart:25:25 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\channel\controller\get_play_list_controller.dart:74:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\controller\your_channel_controller.dart:280:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\controller\your_channel_controller.dart:328:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\channel\controller\your_channel_controller.dart:363:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\channel\controller\your_channel_controller.dart:377:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\controller\your_channel_controller.dart:397:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\channel\controller\your_channel_controller.dart:417:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\channel\model\channel_home_model.dart:41:31 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\channel\model\channel_home_model.dart:47:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\channel\model\channel_home_model.dart:47:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\channel\model\channel_home_model.dart:48:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:49:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:50:36 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:51:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:52:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:53:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:54:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:55:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:56:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:57:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:58:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:59:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:121:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\channel\model\channel_home_model.dart:121:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\channel\model\channel_home_model.dart:122:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:123:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:124:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:125:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:126:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:127:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:128:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:129:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:130:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:131:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:132:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:133:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:134:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:135:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:136:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\channel_home_model.dart:137:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:14:38 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\channel\model\get_channel_video_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\channel\model\get_channel_video_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\channel\model\get_channel_video_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:23:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:24:41 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:83:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\channel\model\get_channel_video_model.dart:83:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\channel\model\get_channel_video_model.dart:84:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:85:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:86:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:87:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:88:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:89:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:90:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:91:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:92:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:93:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:94:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:95:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:96:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:97:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\model\get_channel_video_model.dart:98:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\channel\view\channel_about_tab_view.dart:90:74 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_about_tab_view.dart:107:74 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_about_tab_view.dart:133:74 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_playlist_tab_view.dart:97:79 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_playlist_tab_view.dart:133:98 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_playlist_tab_view.dart:133:132 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_playlist_tab_view.dart:141:98 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_playlist_tab_view.dart:141:132 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_video_tab_view.dart:2:8 - The import of 'dart:ui' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\features\channel\view\channel_video_tab_view.dart:173:129 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\channel_video_tab_view.dart:173:163 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\get_playList_page.dart:1:1 - The file name 'get_playList_page.dart' isn't a lower_case_with_underscores identifier. Try changing the name to follow the lower_case_with_underscores style. - file_names
+   info - lib\features\channel\view\get_playList_page.dart:116:81 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\get_playList_page.dart:152:100 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\get_playList_page.dart:152:134 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\get_playList_page.dart:160:100 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\get_playList_page.dart:160:134 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\preview_playlist_view.dart:114:25 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\view\preview_playlist_view.dart:116:25 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\view\preview_playlist_view.dart:196:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\preview_playlist_view.dart:197:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\channel\view\your_channel_view.dart:233:63 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\channel\view\your_channel_view.dart:235:92 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\channel\view\your_channel_view.dart:239:63 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\coins\controller\convert_coin_controller.dart:96:37 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\coins\view\buy_coin_history_view.dart:108:26 - Unnecessary instance of 'Container'. Try removing the 'Container' (but not its children) from the widget tree. - avoid_unnecessary_containers
+   info - lib\features\coins\view\buy_coin_view.dart:89:47 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\coins\view\buy_coin_view.dart:90:47 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\coins\view\buy_coin_view.dart:144:100 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\coins\view\coin_history_view.dart:99:26 - Unnecessary instance of 'Container'. Try removing the 'Container' (but not its children) from the widget tree. - avoid_unnecessary_containers
+   info - lib\features\coins\view\convert_coin_view.dart:496:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\coins\widget\buy_coin_widget.dart:47:13 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\features\coins\widget\buy_coin_widget.dart:49:35 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\features\coins\widget\coin_payment_view.dart:273:15 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\coins\widget\coin_payment_view.dart:274:15 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\edit_video\view\edit_video_view.dart:107:142 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\help_center\view\help_center_view.dart:108:47 - 'ExpansionTileController' is deprecated and shouldn't be used. Use ExpansibleController instead. This feature was deprecated after v3.31.0-0.1.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\home\controller\nav_home_controller.dart:327:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\home\controller\nav_home_controller.dart:362:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\home\model\fetch_all_video_model.dart:11:35 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:15:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:15:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_all_video_model.dart:16:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:17:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:35:21 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:41:21 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:47:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:47:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_all_video_model.dart:48:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:49:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:51:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:52:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:126:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:126:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_all_video_model.dart:127:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:128:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:129:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:130:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:131:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:132:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:133:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:134:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:135:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:136:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:137:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:138:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:139:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:140:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:141:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:142:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:143:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:144:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:145:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:146:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:240:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_all_video_model.dart:240:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_all_video_model.dart:241:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:242:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:243:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:244:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:245:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:246:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:247:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:248:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:249:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:250:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:251:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:252:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:253:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:254:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:255:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:256:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:257:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:258:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:259:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:260:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:261:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:262:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:263:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:264:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:265:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:266:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_all_video_model.dart:267:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_new_video_model.dart:5:8 - The imported package 'meta' isn't a dependency of the importing package. Try adding a dependency for 'meta' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+   info - lib\features\home\model\fetch_popular_video_model.dart:11:35 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:15:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:15:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_popular_video_model.dart:16:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:17:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:35:21 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:41:21 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:47:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:47:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_popular_video_model.dart:48:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:49:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:51:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:52:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:126:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:126:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_popular_video_model.dart:127:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:128:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:129:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:130:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:131:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:132:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:133:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:134:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:135:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:136:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:137:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:138:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:139:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:140:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:141:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:142:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:143:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:144:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:145:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:146:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:240:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_popular_video_model.dart:240:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_popular_video_model.dart:241:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:242:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:243:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:244:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:245:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:246:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:247:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:248:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:249:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:250:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:251:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:252:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:253:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:254:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:255:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:256:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:257:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:258:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:259:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:260:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:261:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:262:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:263:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:264:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:265:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:266:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_popular_video_model.dart:267:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:14:19 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_public_live_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_public_live_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_public_live_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:58:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\home\model\fetch_public_live_model.dart:58:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\home\model\fetch_public_live_model.dart:59:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:60:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:61:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:62:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:63:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:64:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:65:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:66:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:67:29 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\home\model\fetch_public_live_model.dart:68:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\api\create_watch_history_api.dart:22:58 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\library\controller\nav_library_controller.dart:186:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\library\model\watch_later_model.dart:14:34 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\library\model\watch_later_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\library\model\watch_later_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\library\model\watch_later_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:23:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:24:37 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:80:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\library\model\watch_later_model.dart:80:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\library\model\watch_later_model.dart:81:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:82:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:83:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:84:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:85:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:86:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:87:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:88:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:89:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:90:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:91:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:92:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:93:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\model\watch_later_model.dart:94:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\library\view\download_view.dart:128:9 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\download_view.dart:276:82 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\download_view.dart:276:116 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\download_view.dart:282:98 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\download_view.dart:282:132 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\history_view.dart:175:80 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\history_view.dart:175:114 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\nav_library_page.dart:40:7 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\preview_normal_video.dart:137:7 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\watch_later_view.dart:199:73 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\library\view\watch_later_view.dart:201:73 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\library\view\watch_later_view.dart:225:99 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\watch_later_view.dart:225:133 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\your_video_page.dart:215:90 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\view\your_video_page.dart:215:124 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\widget\delete_video_bottom_sheet.dart:39:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\library\widget\delete_video_bottom_sheet.dart:74:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\go_live_view.dart:55:11 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:26:8 - The imported package 'wakelock_plus' isn't a dependency of the importing package. Try adding a dependency for 'wakelock_plus' in the 'pubspec.yaml' file. - depend_on_referenced_packages
+   info - lib\features\live\view\live_view.dart:47:36 - Don't put any logic in 'createState'. Try moving the logic out of 'createState'. - no_logic_in_create_state
+   info - lib\features\live\view\live_view.dart:217:12 - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:248:68 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:283:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:432:90 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:467:76 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:535:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\live\view\live_view.dart:671:30 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\main\view\main_home_view.dart:80:8 - The private field _isVideoInitialized could be 'final'. Try making the field 'final'. - prefer_final_fields
+   info - lib\features\main\view\main_home_view.dart:82:8 - The private field _adsPreloaded could be 'final'. Try making the field 'final'. - prefer_final_fields
+   info - lib\features\main\view\main_home_view.dart:180:12 - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\main\view\main_home_view.dart:409:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\monetization_view.dart:72:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\monetization\view\monetization_view.dart:152:102 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\monetization_view.dart:167:106 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\monetization_view.dart:173:102 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\monetization_view.dart:188:106 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\monetization_view.dart:233:148 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\preview_monetization.dart:323:84 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\time_watch_view.dart:64:106 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\monetization\view\time_watch_view.dart:80:50 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\notifications\api\notification_api.dart:41:59 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\notifications\view\notification_view.dart:93:76 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\notifications\view\notification_view.dart:128:70 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\onboarding\view\on_boarding_view.dart:58:19 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\onboarding\view\on_boarding_view.dart:60:19 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\playlist\controller\create_playlist_controller.dart:108:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:14:21 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:23:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:24:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:98:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:98:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:99:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:100:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:101:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:102:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:103:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:104:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:105:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:106:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:107:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:108:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:109:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:110:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:111:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:112:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:113:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:114:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:115:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:116:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:117:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\fetch_normal_video_model.dart:118:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\playlist\model\get_playList_with_serach_response_model.dart:1:1 - The file name 'get_playList_with_serach_response_model.dart' isn't a lower_case_with_underscores identifier. Try changing the name to follow the lower_case_with_underscores style. - file_names
+   info - lib\features\playlist\view\create_playlist_view.dart:49:30 - Use 'isNotEmpty' instead of 'length' to test whether the collection is empty. Try rewriting the expression to use 'isNotEmpty'. - prefer_is_empty
+   info - lib\features\playlist\view\create_playlist_view.dart:100:70 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\playlist\view\create_playlist_view.dart:121:68 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\playlist\view\create_playlist_view.dart:170:92 - Use 'isNotEmpty' instead of 'length' to test whether the collection is empty. Try rewriting the expression to use 'isNotEmpty'. - prefer_is_empty
+   info - lib\features\playlist\view\create_playlist_view.dart:252:84 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\playlist\view\create_playlist_view.dart:252:118 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\playlist\view\create_playlist_view.dart:261:84 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\playlist\view\create_playlist_view.dart:261:118 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\premium\view\payments_view.dart:254:15 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\premium\view\payments_view.dart:255:15 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\premium\view\purchase_plan_view.dart:50:46 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\premium\view\purchase_plan_view.dart:62:46 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\edit_profile.dart:604:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\edit_profile.dart:615:62 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\edit_profile.dart:637:62 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\profile_view.dart:51:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\profile\view\profile_view.dart:124:29 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\profile\view\profile_view.dart:336:37 - 'activeColor' is deprecated and shouldn't be used. Use activeTrackColor instead. This feature was deprecated after v3.24.0-0.2.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\profile_view.dart:520:76 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\profile_view.dart:557:70 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\profile_view.dart:627:76 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\profile\view\profile_view.dart:664:70 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\referral\view\referral_history_view.dart:99:26 - Unnecessary instance of 'Container'. Try removing the 'Container' (but not its children) from the widget tree. - avoid_unnecessary_containers
+   info - lib\features\referral\view\referral_program_view.dart:22:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\report\view\custom_channel_report_view.dart:53:35 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\report\view\custom_channel_report_view.dart:54:35 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\report\view\custom_channel_report_view.dart:68:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\controller\earn_reward_controller.dart:75:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\rewards\controller\earn_reward_controller.dart:276:32 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\rewards\view\earn_reward_view.dart:270:78 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:290:128 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:301:87 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:317:126 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:354:97 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:372:100 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:373:100 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:375:103 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:427:102 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:449:79 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:450:79 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:484:76 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:496:77 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:523:83 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:574:75 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:592:85 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:639:75 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:657:85 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:714:78 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:726:79 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:765:93 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:795:114 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:817:97 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:821:105 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\rewards\view\earn_reward_view.dart:852:87 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\search\controller\search_controller.dart:222:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\search\controller\search_controller.dart:253:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\search\controller\search_controller.dart:281:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\search\controller\search_controller.dart:303:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\search\model\search_model.dart:232:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:234:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:236:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:238:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:240:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:242:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:244:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:246:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:248:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:250:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:252:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:254:13 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:256:13 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:258:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:260:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:262:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:264:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:266:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:268:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:468:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:470:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:472:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:474:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:476:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:478:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:480:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:482:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:484:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:486:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:488:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:490:13 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:492:13 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:494:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:496:15 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:498:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:500:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:502:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:504:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\model\search_model.dart:685:12 - Unnecessary use of getter and setter to wrap a field. Try removing the getter and setter and renaming the field. - unnecessary_getters_setters
+   info - lib\features\search\view\search_view.dart:108:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\search\view\search_view.dart:109:71 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\search\view\search_view.dart:193:123 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\view\language_view.dart:152:35 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\view\language_view.dart:153:35 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\view\settings_view.dart:65:25 - 'activeColor' is deprecated and shouldn't be used. Use activeTrackColor instead. This feature was deprecated after v3.24.0-0.2.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\view\settings_view.dart:106:31 - 'activeColor' is deprecated and shouldn't be used. Use activeTrackColor instead. This feature was deprecated after v3.24.0-0.2.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\settings\view\settings_view.dart:141:25 - 'activeColor' is deprecated and shouldn't be used. Use activeTrackColor instead. This feature was deprecated after v3.24.0-0.2.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\splash\view\splash_screen_view.dart:131:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\splash\view\splash_screen_view.dart:135:9 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\splash\view\splash_screen_view.dart:138:11 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\splash\view\splash_screen_view.dart:149:15 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\splash\view\splash_screen_view.dart:152:15 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\splash\view\splash_screen_view.dart:174:13 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\subscriptions\controller\nav_subscription_controller.dart:216:42 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\subscriptions\controller\nav_subscription_controller.dart:251:44 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\subscriptions\controller\nav_subscription_controller.dart:285:44 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:14:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:23:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:24:42 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:89:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:89:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:90:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:91:34 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:92:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:93:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:94:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:95:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:96:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:97:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:98:30 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:99:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:100:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:101:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:102:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:103:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:104:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:105:28 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\model\get_subscribed_channel_video_model.dart:106:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\subscriptions\view\nav_subscription_view.dart:69:7 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\subscriptions\view\nav_subscription_view.dart:615:132 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\subscriptions\view\nav_subscription_view.dart:615:166 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\tiers\view\creator_tier_view.dart:157:74 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\tiers\view\tasker_tier_view.dart:156:74 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\api\upload_video_api.dart:100:54 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\upload\view\audience_page.dart:60:29 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\audience_page.dart:61:29 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\comments_page.dart:38:113 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\comments_page.dart:38:158 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\description_page.dart:61:128 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\description_page.dart:92:128 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\set_thumbnail_page.dart:81:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\set_thumbnail_page.dart:91:108 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\upload_video_view.dart:453:108 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\upload_video_view.dart:601:56 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\upload_video_view.dart:607:110 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\video_charges_view.dart:140:17 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\video_charges_view.dart:141:17 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\visibility_page.dart:56:23 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\upload\view\visibility_page.dart:57:23 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\controller\normal_video_details_controller.dart:341:65 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\video\model\get_related_video_model.dart:14:19 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\video\model\get_related_video_model.dart:20:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\video\model\get_related_video_model.dart:20:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\video\model\get_related_video_model.dart:21:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:22:23 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:69:35 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\video\model\get_related_video_model.dart:77:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\video\model\get_related_video_model.dart:77:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\video\model\get_related_video_model.dart:78:19 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:79:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:80:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:81:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:82:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:83:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:84:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:85:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:86:9 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:87:22 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:89:26 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:90:20 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:91:35 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:92:35 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:117:39 - Unnecessary 'new' keyword. Try removing the 'new' keyword. - unnecessary_new
+   info - lib\features\video\model\get_related_video_model.dart:117:39 - Unnecessary constructor invocation. Try using a collection literal. - prefer_collection_literals
+   info - lib\features\video\model\get_related_video_model.dart:118:24 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:119:21 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:120:25 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:121:32 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:122:31 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\model\get_related_video_model.dart:123:27 - Unnecessary 'this.' qualifier. Try removing 'this.'. - unnecessary_this
+   info - lib\features\video\view\normal_video_details_view.dart:88:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\video\view\normal_video_details_view.dart:135:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\video\view\normal_video_details_view.dart:169:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\video\view\normal_video_details_view.dart:206:9 - 'onPopInvoked' is deprecated and shouldn't be used. Use onPopInvokedWithResult instead. This feature was deprecated after v3.22.0-12.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:937:81 - 'activeColor' is deprecated and shouldn't be used. Use activeTrackColor instead. This feature was deprecated after v3.24.0-0.2.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:1216:75 - 'activeColor' is deprecated and shouldn't be used. Use activeTrackColor instead. This feature was deprecated after v3.24.0-0.2.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:1499:59 - Statements in an if should be enclosed in a block. Try wrapping the statement in a block. - curly_braces_in_flow_control_structures
+   info - lib\features\video\view\normal_video_details_view.dart:1669:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:1728:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:1931:68 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:1994:68 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\normal_video_details_view.dart:2765:49 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\video\view\shorts_video_details_view.dart:514:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\video\view\shorts_video_details_view.dart:532:40 - Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check. - use_build_context_synchronously
+   info - lib\features\video\view\shorts_video_details_view.dart:733:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video\view\shorts_video_details_view.dart:745:69 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\video_promotion\view\promote_video_view.dart:298:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\wallet\api\get_wallet_history_api.dart:55:56 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\wallet\api\get_withdraw_history_api.dart:22:58 - Unnecessary braces in a string interpolation. Try removing the braces. - unnecessary_brace_in_string_interps
+   info - lib\features\wallet\controller\my_wallet_controller.dart:53:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\wallet\controller\my_wallet_controller.dart:58:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\features\wallet\view\my_wallet_view.dart:147:26 - Unnecessary instance of 'Container'. Try removing the 'Container' (but not its children) from the widget tree. - avoid_unnecessary_containers
+   info - lib\features\wallet\view\withdraw_history_view.dart:107:26 - Unnecessary instance of 'Container'. Try removing the 'Container' (but not its children) from the widget tree. - avoid_unnecessary_containers
+   info - lib\features\wallet\view\withdraw_view.dart:541:13 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\features\wallet\view\withdraw_view.dart:542:13 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\main.dart:466:5 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\shared\dialogs\app_exit_dialog.dart:5:8 - The import of 'package:flutter/services.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart'. Try removing the import directive. - unnecessary_import
+   info - lib\shared\dialogs\app_exit_dialog.dart:55:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\app_exit_dialog.dart:99:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\app_exit_dialog.dart:119:62 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\app_exit_dialog.dart:147:57 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\app_exit_dialog.dart:152:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\blocked_user_dialog.dart:54:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\blocked_user_dialog.dart:98:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\blocked_user_dialog.dart:119:51 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\blocked_user_dialog.dart:124:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:41:12 - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:55:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:84:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:90:25 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\shared\dialogs\force_update_dialog.dart:125:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:146:51 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:151:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\dialogs\force_update_dialog.dart:181:36 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\basic_button.dart:111:55 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\common_share.dart:29:18 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\shared\widgets\common_share.dart:60:13 - 'Share' is deprecated and shouldn't be used. Use SharePlus instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\common_share.dart:60:19 - 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\normal_video_ui.dart:212:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\normal_video_ui.dart:277:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\premium_plan_dialog.dart:45:56 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\short_video_ui.dart:169:37 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\short_video_ui.dart:201:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\small_video_widget.dart:59:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\small_video_widget.dart:116:84 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\small_video_widget.dart:116:118 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\small_video_widget.dart:121:84 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\shared\widgets\small_video_widget.dart:121:118 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+899 issues found.
+exit=2

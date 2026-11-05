@@ -1,0 +1,18 @@
+{
+ "visited": [
+  "Library",
+  "Bites",
+  "Search",
+  "Notifications",
+  "Profile",
+  "Tasker",
+  "Home",
+  "Subscription"
+ ],
+ "problems": [],
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80"
+ ]
+}

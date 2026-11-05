@@ -1,0 +1,200 @@
+# Phase 2 starting working tree — 2026-10-01T15:29:46+05:30 — HEAD 894b2f4e
+ M f7a2af116d1e706d DEPLOYMENT.md
+ M 29ebe6874c75188d admin/frontend/src/util/AwsFunction.js
+ M 81fdd77316649b03 api/index.js
+ M a6056b15f2ffc1d1 functions/backend/controllers/admin/file.controller.js
+ M 1317b1516f492665 functions/backend/controllers/admin/video.controller.js
+ M ea79721e877cce43 functions/backend/controllers/admin/withDrawalRequest.controller.js
+ M 4ac26e9c5fe3636e functions/backend/controllers/client/file.controller.js
+ M b0d9b92547230347 functions/backend/controllers/client/otp.controller.js
+ M 3b3675b30ce82b56 functions/backend/controllers/client/partner.controller.js
+ M bb45e04e6cdeb15e functions/backend/controllers/client/payment.controller.js
+ M 3ba7b1c2ce95e158 functions/backend/controllers/client/payout.controller.js
+ M 0f9991560aeb9f4f functions/backend/controllers/client/user.controller.js
+ M b13c191fcfceeb0a functions/backend/controllers/client/userTaskReward.controller.js
+ M ba67dd6cc0e24434 functions/backend/controllers/client/video.controller.js
+ M 9147d0e25c6b0551 functions/backend/controllers/client/watchSession.controller.js
+ M f7ebe3890e60caa2 functions/backend/controllers/client/withDrawalRequest.controller.js
+ M 35a9fbe24a20d61d functions/backend/index.js
+ M 36923bce98fa818e functions/backend/middleware/admin.middleware.js
+ M a1ae42feb94bd50d functions/backend/models/otp.model.js
+ M 6b8a3e8b9d67058e functions/backend/routes/admin/file.route.js
+ M 129a02acad5468ce functions/backend/routes/client/creatorTier.route.js
+ M f0c8fcde3d6b2c7b functions/backend/routes/client/dailyRewardCoin.route.js
+ M 5a88d3d663ce78f0 functions/backend/routes/client/file.route.js
+ M 3336d5bbe549d52f functions/backend/routes/client/localBusinessAd.route.js
+ M 87e8358165379eed functions/backend/routes/client/partner.route.js
+ M d7f6e4216fd58ed7 functions/backend/routes/client/report.route.js
+ M 35b740c409be4ba4 functions/backend/routes/client/user.route.js
+ M 50a9ca77ca040910 functions/backend/routes/client/userTaskReward.route.js
+ M bb3ab1a70c19bf37 functions/backend/routes/client/video.route.js
+ M 3c7d05bc6a186beb functions/backend/routes/client/withdrawalRequest.route.js
+ M cec4ae7918725743 functions/backend/util/cloudflareStorage.service.js
+ M e282df671287466f functions/backend/util/firestoreDb.service.js
+ M b798d1cacb08fbad functions/backend/util/imageStorage.service.js
+ M 286450ce90afedca functions/backend/util/referral.service.js
+ M 5bef42b1eec08cd6 functions/backend/util/rewardEngine.js
+ M 90069949afb20bb4 functions/backend/util/uploadMiddleware.js
+ M f7bb0b2c1612e88a functions/backend/util/videoPipeline.service.js
+ M fbf2cc0ded61c39f functions/backend/util/watchLedger.service.js
+ M 95874ac6462e5e3c package.json
+ M f07a455810fa356c vercel.json
+ M 07e20f76705e6965 youpeak/lib/core/ads/google_ad_helper.dart
+ M a270e0c9e0746568 youpeak/lib/core/ads/google_full_native_ad.dart
+ M cd24cd3ae7a6572f youpeak/lib/core/ads/load_multiple_ads.dart
+ M 2f23d72a08f1092a youpeak/lib/core/config/size_config.dart
+ M 5c06fb1deda05336 youpeak/lib/core/deep_link/services/deep_link_services.dart
+ M 6c2685aff126e251 youpeak/lib/core/file_upload/convert_channel_image_api.dart
+ M 4764dc9fb3318589 youpeak/lib/core/file_upload/convert_video_api.dart
+ M 7469cf73910a4991 youpeak/lib/core/file_upload/convert_video_image_api.dart
+ M b3d70221951a0f38 youpeak/lib/core/file_upload/direct_upload_video_api.dart
+ M 1805e580436dbc9e youpeak/lib/core/localization/localization_service.dart
+ M 97b32ca4213ae4ad youpeak/lib/core/localization/localizations_delegate.dart
+ M 8d3292043138738e youpeak/lib/core/network/app_session.dart
+ M d530f3c6bf6f8f37 youpeak/lib/core/services/branch_io_services.dart
+ M 8ad32d221eb85a35 youpeak/lib/features/auth/api/sign_up_api.dart
+ M 314374c799bd7b0d youpeak/lib/features/auth/view/create_new_password_view.dart
+ M 2ca1b0d04057a5dd youpeak/lib/features/auth/view/fill_profile_view.dart
+ M 8dc31990ca63cfcd youpeak/lib/features/auth/view/forget_password_view.dart
+ M 5c5c1e32d1897283 youpeak/lib/features/auth/view/forgot_password_otp_view.dart
+ M 4e5360d7d388516f youpeak/lib/features/auth/view/lets_you_in_view.dart
+ M 3a8b6dbe52bd72b3 youpeak/lib/features/auth/view/login_view.dart
+ M cc73c7aae4cba759 youpeak/lib/features/auth/view/sign_up_view.dart
+ M fd036306c1c723d9 youpeak/lib/features/bites/controller/create_short_controller.dart
+ M 0b54e0b0de9e2405 youpeak/lib/features/bites/view/create_short_view.dart
+ M 3d07c556e8c30243 youpeak/lib/features/bites/view/nav_shorts_details_view.dart
+ M dcfedf48d6a569ce youpeak/lib/features/bites/view/nav_shorts_view.dart
+ M f4ed5864058b4df9 youpeak/lib/features/bites/view/preview_shorts_video.dart
+ M cdc6e3fadbdb1b7e youpeak/lib/features/bites/view/preview_shorts_view.dart
+ M 694bd29f88d61d4a youpeak/lib/features/channel/api/create_channel_api.dart
+ M 024d0d727dca7d52 youpeak/lib/features/channel/api/edit_subscription_plan_api.dart
+ M 6ee0676c386ac43f youpeak/lib/features/channel/view/channel_home_tab_view.dart
+ M 876af689a5b7af7e youpeak/lib/features/channel/view/channel_playlist_tab_view.dart
+ M fe4b4b0746e83557 youpeak/lib/features/channel/view/channel_video_tab_view.dart
+ M 2d92b5e40d543941 youpeak/lib/features/channel/view/create_channel_screen.dart
+ M 9fadb06e162fc251 youpeak/lib/features/channel/view/create_channel_view.dart
+ M cd2d640fab604acf youpeak/lib/features/channel/view/get_playList_page.dart
+ M 577c0b599d5be293 youpeak/lib/features/channel/view/preview_playlist_view.dart
+ M f12d853166552e2e youpeak/lib/features/channel/view/subscription_plan_view.dart
+ M 38ab8bc391847721 youpeak/lib/features/channel/view/your_channel_view.dart
+ M 47c48caa948263b9 youpeak/lib/features/channel/widget/channel_profile_shimmer_ui.dart
+ M de50306ae757a62d youpeak/lib/features/channel/widget/subscription_plan_widget.dart
+ M 10cde35a9be0fadd youpeak/lib/features/coins/api/convert_coin_api.dart
+ M 99a2096b7d747998 youpeak/lib/features/coins/api/get_coin_history_api.dart
+ M 60dad9f18b2800fb youpeak/lib/features/coins/api/get_my_coin_api.dart
+ M 9688db48dd584b6e youpeak/lib/features/coins/view/buy_coin_history_view.dart
+ M 6bfff5a656777e72 youpeak/lib/features/coins/view/buy_coin_view.dart
+ M aacb1f03bdba0227 youpeak/lib/features/coins/view/coin_history_view.dart
+ M d1ec09d88dea91c2 youpeak/lib/features/coins/view/convert_coin_view.dart
+ M 3fd2d81028cad495 youpeak/lib/features/coins/widget/buy_coin_widget.dart
+ M ab16dcb87a33fd6b youpeak/lib/features/coins/widget/coin_payment_view.dart
+ M 3620663b9ccd1c23 youpeak/lib/features/coins/widget/convert_coin_shimmer_ui.dart
+ M 68b20c4d43fb7e80 youpeak/lib/features/coins/widget/withdrawal_done_dialog.dart
+ M c85ae5e2c6586072 youpeak/lib/features/comments/widget/comment_shimmer_ui.dart
+ M 49a4b249c6c9ec47 youpeak/lib/features/comments/widget/reply_bottom_sheet.dart
+ M 80fce3669ec6bd5e youpeak/lib/features/edit_video/api/edit_video_api.dart
+ M f3feaf7e665a8a57 youpeak/lib/features/edit_video/view/edit_video_view.dart
+ M 5d34abb267b97250 youpeak/lib/features/home/controller/nav_home_controller.dart
+ M 1c0b7c2be0208879 youpeak/lib/features/home/view/nav_home_page.dart
+ M 224032dfefe9ecbe youpeak/lib/features/home/widget/nav_home_widget.dart
+ M 4a29ae4ea5e6f71e youpeak/lib/features/library/api/delete_video_api.dart
+ M 69f5fb360f308a32 youpeak/lib/features/library/view/download_view.dart
+ M 59841dd9cc059d62 youpeak/lib/features/library/view/history_view.dart
+ M ee5dfeb1e50e9753 youpeak/lib/features/library/view/nav_library_page.dart
+ M 1632c83768080b2b youpeak/lib/features/library/view/preview_normal_video.dart
+ M ffc950dd55063866 youpeak/lib/features/library/view/watch_later_view.dart
+ M 61b668044bc22a7c youpeak/lib/features/library/view/your_video_page.dart
+ M c7aa7cb5c7adc216 youpeak/lib/features/live/view/add_thumbnail_view.dart
+ M b9c0fa63b41d34b2 youpeak/lib/features/live/view/go_live_view.dart
+ M 6e1080a975152500 youpeak/lib/features/live/view/live_view.dart
+ M defade416190ffb4 youpeak/lib/features/main/view/main_home_view.dart
+ M 22750674496c1681 youpeak/lib/features/monetization/api/video_engagement_reward_api.dart
+ M f5645c5c9aafd29a youpeak/lib/features/monetization/view/content_engagement_view.dart
+ M f9001bc1299b975b youpeak/lib/features/monetization/view/monetization_view.dart
+ M aad0cc868dae3791 youpeak/lib/features/monetization/view/preview_monetization.dart
+ M 30dff6620cce99ed youpeak/lib/features/monetization/view/time_watch_view.dart
+ M 7924f77f805c6315 youpeak/lib/features/notifications/view/notification_view.dart
+ M bba09acc6d482110 youpeak/lib/features/playlist/view/create_playlist_view.dart
+ M 57a2123c0439ec0a youpeak/lib/features/premium/view/payments_view.dart
+ M 1afc61014ba52be1 youpeak/lib/features/premium/view/premium_plan_view.dart
+ M 8e197f57162363c7 youpeak/lib/features/premium/view/purchase_plan_view.dart
+ M 6ffd23d38da24d04 youpeak/lib/features/profile/api/delete_account_api.dart
+ M 6d335db3dd77a0fd youpeak/lib/features/profile/api/edit_profile_api.dart
+ M 22f544758f4ec23d youpeak/lib/features/profile/view/edit_profile.dart
+ M e3d1f128d44ae711 youpeak/lib/features/profile/view/profile_view.dart
+ M 516ef82d49902dec youpeak/lib/features/referral/api/get_referral_history_api.dart
+ M 48bf56ef1eb30951 youpeak/lib/features/referral/api/referral_code_apply_api.dart
+ M 73d65e894dfdc666 youpeak/lib/features/referral/view/referral_history_view.dart
+ M b2ca8862f9ea4aff youpeak/lib/features/referral/view/referral_program_view.dart
+ M 42b848a51b78037a youpeak/lib/features/report/api/report_video_api.dart
+ M 7d1ab85d35702c0b youpeak/lib/features/rewards/api/earn_coin_from_check_in_api.dart
+ M 582a0ee931153600 youpeak/lib/features/rewards/api/earn_coin_from_watch_ad_api.dart
+ M a183f28c22f77348 youpeak/lib/features/rewards/api/get_daily_reward_api.dart
+ M dd99fb7922c9f94c youpeak/lib/features/rewards/view/earn_reward_view.dart
+ M 0bc9aaae5355ba49 youpeak/lib/features/rewards/widget/check_in_done_dialog.dart
+ M 3d888449b0364db7 youpeak/lib/features/rewards/widget/earn_reward_shimmer_ui.dart
+ M 60e08f68fa91d3ad youpeak/lib/features/search/view/search_view.dart
+ M 6316cffde236c9e8 youpeak/lib/features/settings/view/privacy_policy_web_view.dart
+ M 3c69c61dd5a87ef9 youpeak/lib/features/splash/view/splash_screen_view.dart
+ M 8ba639b33f5400c2 youpeak/lib/features/subscriptions/view/nav_subscription_view.dart
+ M 10b2e6c77461d428 youpeak/lib/features/upload/api/upload_video_api.dart
+ M 387a995b020ffd8d youpeak/lib/features/upload/view/audience_page.dart
+ M 8fc6d4765b8eac4a youpeak/lib/features/upload/view/set_thumbnail_page.dart
+ M 355585624110b551 youpeak/lib/features/upload/view/upload_video_view.dart
+ M e5387cd92c2a2bbb youpeak/lib/features/upload/view/video_charges_view.dart
+ M f14452dcd356265a youpeak/lib/features/upload/view/visibility_page.dart
+ M d919777cf1323eab youpeak/lib/features/video/api/like_dislike_api.dart
+ M 5860e4326a53d72d youpeak/lib/features/video/api/unlock_private_video_api.dart
+ M 352cbe12e5b3c99e youpeak/lib/features/video/controller/normal_video_details_controller.dart
+ M 91732401cd8ebe84 youpeak/lib/features/video/view/normal_video_details_view.dart
+ M 00147b169bb11b6c youpeak/lib/features/video/view/shorts_video_details_view.dart
+ M 41ddc5f4c3c4e465 youpeak/lib/features/wallet/api/get_wallet_history_api.dart
+ M e196c2c088c61332 youpeak/lib/features/wallet/api/get_withdraw_history_api.dart
+ M 2cb56e2fa11195f2 youpeak/lib/features/wallet/api/with_draw_request_api.dart
+ M d06cec05ed06ae8e youpeak/lib/features/wallet/api/withdraw_setting_api.dart
+ M 7f15da10f4e80419 youpeak/lib/features/wallet/view/my_wallet_view.dart
+ M 3104f4f7d44a56d5 youpeak/lib/features/wallet/view/withdraw_history_view.dart
+ M 3eb01b4baf35a379 youpeak/lib/features/wallet/view/withdraw_view.dart
+ M 3807b3930712fe0b youpeak/lib/main.dart
+ M c9b061bfa39334a4 youpeak/lib/shared/dialogs/custom_dialog.dart
+ M 19fa9beacf5c8d85 youpeak/lib/shared/shimmer/container_shimmer_ui.dart
+ M 70250df7d0d9853c youpeak/lib/shared/shimmer/normal_video_shimmer_ui.dart
+ M 66a13c92bdf27b31 youpeak/lib/shared/shimmer/video_list_shimmer_ui.dart
+ M 7fcafa09c3e8f6e0 youpeak/lib/shared/widgets/basic_button.dart
+ M b04e33af89d8a74e youpeak/lib/shared/widgets/custom_text_field.dart
+ M d006d8c3e47e1829 youpeak/lib/shared/widgets/normal_video_ui.dart
+ M cd3dab69ebb037e8 youpeak/lib/shared/widgets/premium_plan_dialog.dart
+ M effbd654cde06390 youpeak/lib/shared/widgets/preview_image.dart
+ M 78c7f2249a5e0219 youpeak/lib/shared/widgets/small_video_widget.dart
+ M e65411cbd4d7a75d youpeak/lib/shared/widgets/subscribed_success_dialog.dart
+ M ab46b00315ef17f7 youpeak/pubspec.lock
+ M 9730f24ea8a4c87d youpeak/pubspec.yaml
+ M 383f7939be40ba9b youpeak/test/widget_test.dart
+ M 25c50927d28aa5da youpeak/web/flutter_bootstrap.js
+ M 74c1fbcc0a6c8764 youpeak/web/index.html
+?? 3f8fcac38f44500c YOUPEAK_AUDIT_FIX_LOG.txt
+?? efa43c7c491e1e0d YOUPEAK_FULL_PROJECT_AUDIT.txt
+?? aa870488da8e4c84 YOUPEAK_REQUIREMENTS_MATRIX.txt
+?? 460a5762ec5284e3 functions/backend/controllers/client/mediaDelivery.controller.js
+?? 05197b6cb2e44f50 functions/backend/middleware/bindAppUser.middleware.js
+?? 0966395fcdada449 functions/backend/util/mediaPolicy.js
+?? 6d960a15b8c2d4a3 functions/backend/util/payoutHold.js
+?? 6889f3fe6e2eb34b reports/project-audit/REVIEW.md
+?? 6110a9b9458a7898 reports/project-audit/VALIDATION.md
+?? da5ccb9a59e4d829 reports/project-audit/dart-analysis.txt
+?? 55805d1671a36753 reports/project-audit/phase2/baseline-worktree.txt
+?? febb3d5351058ffa reports/project-audit/source-inventory.json
+?? 0d7e821e718d2011 scripts/audit-source.cjs
+?? 1550844d154544a1 tests/helpers/loadModule.cjs
+?? ee63406cd00dd8ea tests/media.test.cjs
+?? 9f60a308265674c1 tests/webhooks.test.cjs
+?? 8579b50fc9d6f2a5 youpeak/lib/core/platform/app_layout.dart
+?? afb63b30b9935693 youpeak/lib/core/platform/browser_fullscreen.dart
+?? 3334f33afa501d87 youpeak/lib/core/platform/browser_fullscreen_stub.dart
+?? 451d8bfc416d807d youpeak/lib/core/platform/browser_fullscreen_web.dart
+?? c0ed150af3c7f128 youpeak/lib/core/platform/browser_url.dart
+?? e3871b65aa271597 youpeak/lib/core/platform/browser_url_stub.dart
+?? a6f465cd003bbb5e youpeak/lib/core/platform/browser_url_web.dart
+?? 3721c4fcf4c2f40a youpeak/lib/core/platform/web_video_fullscreen.dart
+?? 69c9a13108579761 youpeak/lib/core/platform/wheel_page_turner.dart
+?? 6c0b139c2fe774d2 youpeak/lib/features/main/view/wide_side_nav.dart

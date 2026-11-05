@@ -1,0 +1,29 @@
+{
+ "franchiseOpensUserTable": {
+  "path": "/admin/agencyDashboard"
+ },
+ "unknownRoute": {
+  "path": "/admin/agencyDashboard",
+  "textLen": 1295
+ },
+ "back": {
+  "path": "/admin/franchisePartners"
+ },
+ "offline": {
+  "text": "YouPeak\n\nOVERVIEW\n\nDashboard\n\nDISTRICT FRANCHISE\n\nDigital Partners\nReferrals\nFranchise Reports\nPartner Reports\n\nSYSTEM\n\nProfile\nLogout\nTrichy District Partner\nDashboard unavailable.\nCouldn't load your"
+ },
+ "invalidToken": {
+  "path": "/login",
+  "sessionToken": false,
+  "isAuth": null,
+  "text": "YouPeak\nADMIN CONSOLE\nControl Center &\nPlatform Management\n\nManage users, live broadcasts, monetization, coin transactions, and app settings for the YouPeak pla"
+ },
+ "refreshKeepsSession": {
+  "path": "/admin/partnerWallet",
+  "heading": "Wallet"
+ },
+ "superAdminUnknownRoute": {
+  "path": "/admin/doesNotExist",
+  "mainText": ""
+ }
+}

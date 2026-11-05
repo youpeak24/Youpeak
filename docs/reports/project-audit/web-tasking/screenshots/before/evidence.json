@@ -1,0 +1,1366 @@
+{
+ "label": "before",
+ "webOff": true,
+ "routes": {
+  "10-tasker": {
+   "390": {
+    "labels": [
+     "Back",
+     "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00",
+     "Today's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left",
+     "Tasks and rewards are available in the YouPeak mobile app only.",
+     "Check again",
+     "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+     "0",
+     "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+     "Withdraw",
+     "Starter Pass",
+     "Watch ads & do tasks"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Back",
+     "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00",
+     "Today's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left",
+     "Tasks and rewards are available in the YouPeak mobile app only.",
+     "Check again",
+     "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+     "0",
+     "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+     "Withdraw",
+     "Starter Pass",
+     "Watch ads & do tasks"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Back",
+     "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left\nTasks and rewards are available in the YouPeak mobile app only.\nLifetime Watch Hours\n0.0 / 50 hrs\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up.\nDaily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+     "0",
+     "Check again",
+     "Withdraw",
+     "Starter Pass",
+     "Watch ads & do tasks",
+     "Progress to next level 0 percent"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Back",
+     "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left\nTasks and rewards are available in the YouPeak mobile app only.\nLifetime Watch Hours\n0.0 / 50 hrs\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up.\nDaily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+     "0",
+     "Check again",
+     "Withdraw",
+     "Starter Pass",
+     "Watch ads & do tasks",
+     "Progress to next level 0 percent"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "11-earn": {
+   "390": {
+    "labels": [
+     "Back",
+     "Tasks paused",
+     "Tasks and rewards are available in the YouPeak mobile app only.",
+     "You can still watch and subscribe. Earning resumes once this is fixed.",
+     "Check again"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Back",
+     "Tasks paused",
+     "Tasks and rewards are available in the YouPeak mobile app only.",
+     "You can still watch and subscribe. Earning resumes once this is fixed.",
+     "Check again"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Back",
+     "Tasks paused",
+     "Tasks and rewards are available in the YouPeak mobile app only.",
+     "You can still watch and subscribe. Earning resumes once this is fixed.",
+     "Check again"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Back",
+     "Tasks paused",
+     "Tasks and rewards are available in the YouPeak mobile app only.",
+     "You can still watch and subscribe. Earning resumes once this is fixed.",
+     "Check again"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "20-history": {
+   "390": {
+    "labels": [
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "21-your-videos": {
+   "390": {
+    "labels": [
+     "History\nView All",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "History\nView All",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "History",
+     "View All",
+     "Videos you watch will appear here.",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "History",
+     "View All",
+     "Videos you watch will appear here.",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "22-playlists": {
+   "390": {
+    "labels": [
+     "History\nView All",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "History\nView All",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "History",
+     "View All",
+     "Videos you watch will appear here.",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "History",
+     "View All",
+     "Videos you watch will appear here.",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "23-watch-later": {
+   "390": {
+    "labels": [
+     "Video Not Saved !!"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Video Not Saved !!"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Video Not Saved !!"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Video Not Saved !!"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "30-wallet": {
+   "390": {
+    "labels": [
+     "My Wallet",
+     "My Balance",
+     "$ 0",
+     "History",
+     "All",
+     "No Earning Transactions Recorded",
+     "Withdraw"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "My Wallet",
+     "My Balance",
+     "$ 0",
+     "History",
+     "All",
+     "No Earning Transactions Recorded",
+     "Withdraw"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "My Wallet",
+     "My Balance",
+     "$ 0",
+     "History",
+     "All",
+     "No Earning Transactions Recorded",
+     "Withdraw"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "My Wallet",
+     "My Balance",
+     "$ 0",
+     "History",
+     "All",
+     "No Earning Transactions Recorded",
+     "Withdraw"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "31-settings": {
+   "390": {
+    "labels": [
+     "History",
+     "Autoplay Next Video",
+     "Dark Mode",
+     "Payments History",
+     "Language",
+     "Notifications",
+     "Privacy Policy",
+     "Grievance Officer"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "History",
+     "Autoplay Next Video",
+     "Dark Mode",
+     "Payments History",
+     "Language",
+     "Notifications",
+     "Privacy Policy",
+     "Grievance Officer"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "History",
+     "Autoplay Next Video",
+     "Dark Mode",
+     "Payments History",
+     "Language",
+     "Notifications",
+     "Privacy Policy",
+     "Grievance Officer"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "History",
+     "Autoplay Next Video",
+     "Dark Mode",
+     "Payments History",
+     "Language",
+     "Notifications",
+     "Privacy Policy",
+     "Grievance Officer"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "32-help": {
+   "390": {
+    "labels": [
+     "FAQ",
+     "Contact us",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "FAQ",
+     "Contact us",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "FAQ",
+     "Contact us",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "FAQ",
+     "Contact us",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "33-time-watched": {
+   "390": {
+    "labels": [
+     "0 Minute Daily Average",
+     "0.00% from last week",
+     "Today",
+     "0 min",
+     "Last Seven Days",
+     "Daily Average"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "0 Minute Daily Average",
+     "0.00% from last week",
+     "Today",
+     "0 min",
+     "Last Seven Days",
+     "Daily Average"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "0 Minute Daily Average",
+     "0.00% from last week",
+     "Today",
+     "0 min",
+     "Last Seven Days",
+     "Daily Average"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "0 Minute Daily Average",
+     "0.00% from last week",
+     "Today",
+     "0 min",
+     "Last Seven Days",
+     "Daily Average"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "34-earn-from-profile": {
+   "390": {
+    "labels": [
+     "Earn Rewards",
+     "My Reward Coin",
+     "0",
+     "You have checked in for\n0\nday straight!\nEarn More\nReferral Reward\nMy Daily Tasks",
+     "+300\nToday",
+     "+330\n06/10",
+     "+350\n07/10",
+     "+400\n08/10",
+     "+450\n09/10",
+     "+550\n10/10",
+     "+600\n11/10",
+     "CHECK IN",
+     "Go",
+     "Engagement Rewards\nGo",
+     "Starter Pass\nGo"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Earn Rewards",
+     "My Reward Coin",
+     "0",
+     "You have checked in for\n0\nday straight!\nEarn More\nReferral Reward\nMy Daily Tasks",
+     "+300\nToday",
+     "+330\n06/10",
+     "+350\n07/10",
+     "+400\n08/10",
+     "+450\n09/10",
+     "+550\n10/10",
+     "+600\n11/10",
+     "CHECK IN",
+     "Go",
+     "Engagement Rewards\nGo",
+     "Starter Pass\nGo"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Earn Rewards",
+     "My Reward Coin",
+     "0",
+     "You have checked in for\n0\nday straight!\nEarn More\nReferral Reward\nMy Daily Tasks",
+     "+300\nToday",
+     "+330\n06/10",
+     "+350\n07/10",
+     "+400\n08/10",
+     "+450\n09/10",
+     "+550\n10/10",
+     "+600\n11/10",
+     "CHECK IN",
+     "Go",
+     "Engagement Rewards\nGo",
+     "Starter Pass\nGo"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Earn Rewards",
+     "My Reward Coin",
+     "0",
+     "You have checked in for\n0\nday straight!\nEarn More\nReferral Reward\nMy Daily Tasks",
+     "+300\nToday",
+     "+330\n06/10",
+     "+350\n07/10",
+     "+400\n08/10",
+     "+450\n09/10",
+     "+550\n10/10",
+     "+600\n11/10",
+     "CHECK IN",
+     "Go",
+     "Engagement Rewards\nGo",
+     "Starter Pass\nGo"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "35-create-channel": {
+   "390": {
+    "labels": [
+     "Channel Name",
+     "Tell us about yourself...",
+     "Public",
+     "Continue"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Channel Name",
+     "Tell us about yourself...",
+     "Public",
+     "Continue"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Channel Name",
+     "Tell us about yourself...",
+     "Public",
+     "Continue"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Channel Name",
+     "Tell us about yourself...",
+     "Public",
+     "Continue"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "40-search": {
+   "390": {
+    "labels": [
+     "Search",
+     "Search History",
+     "Clear All",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Search",
+     "Search History",
+     "Clear All",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Search History",
+     "Clear All",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Search History",
+     "Clear All",
+     "Data not found !!"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "41-notifications": {
+   "390": {
+    "labels": [
+     "No notifications yet."
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "No notifications yet."
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "No notifications yet."
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "No notifications yet."
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "42-profile": {
+   "390": {
+    "labels": [
+     "0",
+     "Local Test Viewer",
+     "viewer@youpeak.test",
+     "My Balance : 0$",
+     "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Turn on Incognito",
+     "Create Your Channel",
+     "Manage Subscription",
+     "Earn Rewards",
+     "My Wallet",
+     "Time Watched",
+     "Monetization",
+     "Creator VIP Pass",
+     "Promote Video",
+     "Settings",
+     "Help Center",
+     "Logout",
+     "Delete Account"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "0",
+     "Local Test Viewer",
+     "viewer@youpeak.test",
+     "My Balance : 0$",
+     "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Turn on Incognito",
+     "Create Your Channel",
+     "Manage Subscription",
+     "Earn Rewards",
+     "My Wallet",
+     "Time Watched",
+     "Monetization",
+     "Creator VIP Pass",
+     "Promote Video",
+     "Settings",
+     "Help Center",
+     "Logout",
+     "Delete Account"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "0",
+     "Local Test Viewer",
+     "viewer@youpeak.test",
+     "My Balance : 0$",
+     "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Turn on Incognito",
+     "Create Your Channel",
+     "Manage Subscription",
+     "Earn Rewards",
+     "My Wallet",
+     "Time Watched",
+     "Monetization",
+     "Creator VIP Pass",
+     "Promote Video",
+     "Settings",
+     "Help Center",
+     "Logout",
+     "Delete Account"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "0",
+     "Local Test Viewer",
+     "viewer@youpeak.test",
+     "My Balance : 0$",
+     "Turn on Incognito",
+     "Create Your Channel",
+     "Manage Subscription",
+     "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+     "Earn Rewards",
+     "My Wallet",
+     "Time Watched",
+     "Monetization",
+     "Creator VIP Pass",
+     "Promote Video",
+     "Settings",
+     "Help Center",
+     "Logout",
+     "Delete Account"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "43-library": {
+   "390": {
+    "labels": [
+     "History\nView All",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "History\nView All",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "History",
+     "View All",
+     "Videos you watch will appear here.",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "History",
+     "View All",
+     "Videos you watch will appear here.",
+     "Your Videos",
+     "Playlists",
+     "New Playlist",
+     "Watch Later",
+     "My Playlist"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  },
+  "44-home": {
+   "390": {
+    "labels": [
+     "Search videos...",
+     "YouPeak",
+     "Notifications",
+     "Tasker dashboard",
+     "Your profile",
+     "All",
+     "Popular",
+     "New",
+     "Live",
+     "09:56",
+     "Welcome to YouPeak — Next Gen Creator Platform\nSuper Admin (Master) - 0 views  - Just now",
+     "10:53",
+     "Top 10 High Energy Tech Trends in 2026\nTech Pulse Labs (Channel Creator) - 0 views  - Just now",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 390,
+     "innerW": 390
+    }
+   },
+   "768": {
+    "labels": [
+     "Search videos...",
+     "YouPeak",
+     "Notifications",
+     "Tasker dashboard",
+     "Your profile",
+     "All",
+     "Popular",
+     "New",
+     "Live",
+     "09:56",
+     "Welcome to YouPeak — Next Gen Creator Platform\nSuper Admin (Master) - 0 views  - Just now",
+     "10:53",
+     "Top 10 High Energy Tech Trends in 2026\nTech Pulse Labs (Channel Creator) - 0 views  - Just now",
+     "Home",
+     "Bites",
+     "Subscription",
+     "Library"
+    ],
+    "overflow": {
+     "scrollW": 768,
+     "innerW": 768
+    }
+   },
+   "1366": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Search videos...",
+     "Tasker dashboard",
+     "Your profile",
+     "All",
+     "Popular",
+     "New",
+     "Live",
+     "09:56",
+     "Welcome to YouPeak — Next Gen Creator Platform\nSuper Admin (Master) - 0 views  - Just now",
+     "10:53",
+     "Top 10 High Energy Tech Trends in 2026\nTech Pulse Labs (Channel Creator) - 0 views  - Just now",
+     "View All",
+     "Local test Bite B (portrait 9:16)\n0 views",
+     "Fast Mobile Dev Hacks You Need to Know! 🚀\n0 views",
+     "Epic Sunset Live Stream Recap 🌅✨\n0 views"
+    ],
+    "overflow": {
+     "scrollW": 1366,
+     "innerW": 1366
+    }
+   },
+   "1920": {
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library",
+     "Search",
+     "Notifications",
+     "Tasker",
+     "Profile",
+     "Search videos...",
+     "Tasker dashboard",
+     "Your profile",
+     "All",
+     "Popular",
+     "New",
+     "Live",
+     "09:56",
+     "Welcome to YouPeak — Next Gen Creator Platform\nSuper Admin (Master) - 0 views  - Just now",
+     "10:53",
+     "Top 10 High Energy Tech Trends in 2026\nTech Pulse Labs (Channel Creator) - 0 views  - Just now",
+     "View All",
+     "Local test Bite B (portrait 9:16)\n0 views",
+     "Fast Mobile Dev Hacks You Need to Know! 🚀\n0 views",
+     "Epic Sunset Live Stream Recap 🌅✨\n0 views"
+    ],
+    "overflow": {
+     "scrollW": 1920,
+     "innerW": 1920
+    }
+   }
+  }
+ },
+ "results": [
+  {
+   "name": "signed in (backend user exists)",
+   "ok": true,
+   "detail": {
+    "id": "local_app_user",
+    "coin": 0
+   }
+  },
+  {
+   "name": "browser attested without device claims",
+   "ok": true,
+   "detail": {
+    "appVersion": "1.0.0+1",
+    "deviceIntegrity": "unavailable-in-browser",
+    "datacenterIp": false,
+    "deviceId": "",
+    "platform": "web"
+   }
+  },
+  {
+   "name": "web off: dashboard explains it",
+   "ok": false,
+   "detail": "Home | YouPeak | Create | Bites | Subscription | Library | Search | Notifications | Tasker | Profile | Back | ★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost include"
+  },
+  {
+   "name": "web off: no Check again loop offered",
+   "ok": false
+  },
+  {
+   "name": "earning page keeps the desktop sidebar at 1920",
+   "ok": false
+  },
+  {
+   "name": "web off: lock page explains, offers Go back, not Check again",
+   "ok": false,
+   "detail": "Back | Tasks paused | Tasks and rewards are available in the YouPeak mobile app only. | You can still watch and subscribe. Earning resumes once this is fixed. | Check again"
+  }
+ ],
+ "taskerText": "Home | YouPeak | Create | Bites | Subscription | Library | Search | Notifications | Tasker | Profile | Back | ★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left\nTasks and rewards are available in the YouPeak mobile app only.\nLifetime Watch Hours\n0.0 / 50 hrs\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up.\nDaily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min | 0 | Check again | Withdraw | Starter Pass | Watch ads & do tasks | Progress to next level 0 percent",
+ "earnText": "Back | Tasks paused | Tasks and rewards are available in the YouPeak mobile app only. | You can still watch and subscribe. Earning resumes once this is fixed. | Check again",
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+  "OPTIONS https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA3LefltA4wG0htRi1mJM8rGYIjdNoeqjM"
+ ],
+ "failed": [
+  "GET https://accounts.google.com/gsi/client net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET http://127.0.0.1:8095/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects%2Fyoupeak-9ff65%2Fdatabases%2F(default)&RID=rpc&SID=rZCmuFJQ8SMtJkXxH net::ERR_ABORTED",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET http://127.0.0.1:5091/assets/FontManifest.json net::ERR_ABORTED"
+ ],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT"
+ ]
+}

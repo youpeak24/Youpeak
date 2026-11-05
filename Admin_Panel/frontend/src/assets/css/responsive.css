@@ -1,0 +1,485 @@
+@media screen and (min-width: 320px) and (max-width: 650px) {
+}
+
+@media screen and (min-width: 992px) and (max-width: 1324px) {
+  /* .dashboard-count-box {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  } */
+}
+
+@media screen and (min-width: 992px) and (max-width: 1324px) {
+  .dashboard-chart-box {
+    width: 60%;
+  }
+  .dashboard-total-user {
+    width: 40%;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .create-channel-model {
+    width: 411px !important;
+  }
+}
+@media only screen and (max-width: 420px) {
+  .fake-user .fake-create-img img{
+    width: 150px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .dashboard .dashboard-user-count text{
+    text-anchor: end !important;
+  }
+}
+@media only screen and (max-width: 412px) {
+  /* Removed redundant pagination styles that are now handled more generally */
+}
+@media screen and (max-width: 434px) {
+  /* .create-channel-model {
+    width: 291px !important;
+  } */
+  .create-channel-model form{
+    padding: 15px
+  }
+}
+
+@media screen and (min-width: 540px) and (max-width: 768px) {
+  .create-channel-model {
+    width: 500px !important;
+  }
+}
+@media screen and (min-width: 768px) {
+  .create-channel-model {
+    width: 600px !important;
+  }
+}
+
+@media screen and (max-width: 573px) {
+  .video-show {
+    flex-direction: column;
+  }
+  .video-show video {
+    margin-bottom: 10px;
+  }
+  .video-upload-page .video-show img{
+   margin: 0px;
+  }
+}
+
+/* @media screen and (max-width: 650px) {
+  .multiButton .MuiButtonBase-root {
+    border: 1px solid var(--lightOrangeColor) !important;
+  }
+  .multiButton .MuiToggleButtonGroup-root {
+    border: none !important;
+  }
+} */
+
+@media screen and (max-width: 425px) {
+  .custom-pagination {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px !important;
+    padding: 0 15px !important;
+  }
+
+  .pagination-wrapper {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .pagination-limit-text {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    text-align: center !important;
+  }
+
+  .pagination-text {
+    color: #999 !important; /* Lighter color as seen in reference */
+    font-size: 14px !important;
+  }
+
+  .custom-pagination .pagination {
+    width: 100% !important;
+    justify-content: center !important;
+    margin: 10px 0 0 0 !important;
+    padding: 0 !important;
+  }
+
+  .custom-pagination .page-item .page-link {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 14px !important;
+    margin: 0 3px !important;
+    border-radius: 6px !important;
+  }
+}
+
+/* Table Responsiveness Wrapper - applied globally to ensure scrolling on all screen sizes */
+.table-custom, .primeMain {
+  overflow-x: auto !important;
+  display: block;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+.primeTable {
+  min-width: 800px; /* Ensures a minimum width to trigger scrolling when container is narrow */
+}
+
+/* =====================================================
+   MOBILE / TABLET SIDEBAR DRAWER  (screens <= 1024px)
+   
+   Strategy:
+   - Sidebar is display:none (completely removed from view)
+   - containerLeft wrapper takes zero space
+   - Logo shows in navbar instead
+   - When hamburger is clicked, JS adds .mobSidebar class
+     which makes it display:block + position:fixed (drawer)
+   - Close (X) button inside drawer to close it
+   - Backdrop overlay behind drawer
+   ===================================================== */
+
+@media screen and (max-width: 425px) {
+  .mainAdmin {
+    margin-left: 0px !important;
+    padding: 15px !important;
+    overflow-x: auto !important; /* Allow horizontal scroll for content */
+  }
+
+  .userPage {
+    padding: 10px !important;
+  }   
+
+  .user-table-top, .user-table-top > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .user-table-top h5 {
+    margin-bottom: 5px !important;
+  }
+
+  .Searching, .Searching > div {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+    align-items: flex-start !important;
+  }
+
+  .search-action {
+    flex-direction: column !important;
+    gap: 15px;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .search-action > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+
+  /* Pagination stacking */
+  .pagination-content-box {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .pagination-content-box > div {
+    justify-content: center !important;
+  }
+
+  /* Filter sections in Video/Shorts page */
+  .videoPage .d-flex.flex-column.align-items-end,
+  .videoPage .d-flex.align-items-center.gap-2.flex-wrap,
+  .videoPage .d-flex.justify-content-end {
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+  }
+
+  .videoPage .form-select,
+  .channelPage .form-select {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Sound & Channel Module Responsiveness */
+  .channelPage .user-table-top > .d-flex,
+  .channelPage .user-table-top .d-flex.justify-content-end,
+  .channelPage .dashboardHeader .row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .channelPage .searching-box,
+  .channelPage .search-input-box {
+    float: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
+  }
+
+  .channelPage .searching-box input {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .channelPage .date-range-style {
+    float: none !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .channelPage .ms-3 {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .channelPage .ms-3 button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .channelPage .user-table-top h5 {
+    margin-bottom: 0px !important;
+  }
+
+  .channelPage .pagination-box {
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+
+  .channelPage .pagination-box > div {
+    width: 100% !important;
+  }
+
+
+
+  /* Profile and Other Box Pages */
+  .profile-page .card1, .payment-setting .card1 {
+    padding: 10px !important;
+  }
+
+  .withdrawal-box {
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+  }
+
+  .profile-avatar-img {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  /* .submit-btn {
+    width: 100% !important;
+    margin-left: 0 !important;
+  } */
+}
+
+@media screen and (max-width: 1024px) {
+
+  /* 1. Sidebar wrapper takes NO space */
+  .containerLeft {
+    width: 0 !important;
+    min-width: 0 !important;
+    flex: none !important;
+    overflow: hidden;
+  }
+
+  /* 2. Sidebar is COMPLETELY HIDDEN by default */
+  .sideBar {
+    display: none !important;
+  }
+
+  /* 3. When hamburger is clicked, JS adds .mobSidebar → show as fixed drawer */
+  .sideBar.mobSidebar {
+    display: block !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 999999 !important;
+    width: 270px !important;
+    height: 100vh !important;
+    background-color: #fff !important;
+    overflow-y: auto !important;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15) !important;
+    animation: slideInLeft 0.3s ease forwards;
+  }
+
+  /* Slide-in animation */
+  @keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
+  }
+
+  /* 4. Inside open drawer: show all labels */
+  .sideBar.mobSidebar .sideBarLogo span,
+  .sideBar.mobSidebar .mainMenu li a > div > span,
+  .sideBar.mobSidebar .mainMenu > li > a > i,
+  .sideBar.mobSidebar .subMenu li a span,
+  .sideBar.mobSidebar .sideBarTitle {
+    display: block !important;
+    visibility: visible !important;
+    font-size: 15px !important;
+    text-align: left !important;
+  }
+
+  .sideBar.mobSidebar .mainMenu li a > div {
+    display: flex !important;
+    align-items: center;
+  }
+
+  .sideBar.mobSidebar .mainMenu > li > a {
+    justify-content: flex-start !important;
+    align-items: center;
+  }
+
+  .sideBar.mobSidebar .mainMenu li a svg {
+    margin-right: 10px !important;
+  }
+
+  .sideBar.mobSidebar .subMenu li a {
+    padding-left: 30px;
+  }
+
+  .sideBar.mobSidebar .sideBarLogo img {
+    margin-right: 10px !important;
+  }
+
+  /* 5. Close button visible inside drawer */
+  .sideBar .close-sidebar-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* 6. Sidebar header: logo + close button */
+  .sideBar.mobSidebar .sideBarLogo {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 16px !important;
+  }
+
+  .sideBar.mobSidebar .sideBarLogo a span {
+    display: block !important;
+  }
+
+  /* 7. Backdrop */
+  .responsive-bg {
+    display: block !important;
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99998;
+    cursor: pointer;
+  }
+
+  /* 8. Navbar: show logo and adjust layout */
+  .mainNavbar .logo-show-nav {
+    display: block !important;
+  }
+
+  .mobNav .navBox {
+    padding-bottom: 0px !important;
+  }
+
+
+
+  /* Translation Dialog Tabs & Filter */
+  .MuiTabs-root {
+    min-height: 44px !important;
+  }
+  .MuiTab-root {
+    min-width: 80px !important;
+    font-size: 14px !important;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  /* Language Module Responsiveness */
+  .primeHeader .user-table-top > .d-flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+
+  .primeHeader .user-table-top .d-flex.justify-content-end {
+    flex-direction: row !important; /* Keep buttons in row if possible */
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .primeHeader .user-table-top .search-filter-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 5px;
+  }
+
+  .primeHeader .user-table-top button {
+    flex: 1 1 auto !important; /* Allow buttons to grow and shrink */
+    min-width: 100px;
+    justify-content: center !important;
+  }
+
+  .dayAnalytics {
+    justify-content: start;
+    margin-top: 10px;
+    padding: 0px 12px;
+  }
+  .login-img {
+    display: flex;
+    justify-content: center;
+  }
+  .login-img img {
+    width: 250px;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .right-login-img{
+    display: none;
+  }
+ .text-login{
+  border-left: none !important;
+ }
+ .login-page-content .login-page-box{
+  width: 100%;
+    max-width: 377px;
+ }
+}
+@media screen and (max-width: 400px) {
+  .login-page-content .login-page-box{
+      max-width: 308px !important;
+      padding: 20px
+   }
+}@media screen and (max-width: 600px) {
+  .model-style {
+    width: 95% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    outline: none !important;
+  }
+}

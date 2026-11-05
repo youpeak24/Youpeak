@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "agency_trichy_01",
+    "name": "Trichy District Agency",
+    "code": "TRICHY01",
+    "email": "agency.trichy@youpeak.in",
+    "password": "AgencyTrichy@123",
+    "mobileNumber": "+919842412345",
+    "commissionRatePercentage": 30,
+    "state": "Tamil Nadu",
+    "district": "Trichy",
+    "cities": ["Tiruchirappalli", "Srirangam", "Lalgudi"],
+    "zipCodes": ["620001", "620002", "620006"],
+    "geofenceCenter": { "latitude": 10.7905, "longitude": 78.7047 },
+    "radiusKm": 50,
+    "isActive": true,
+    "createdAt": "2026-09-01T00:00:00.000Z"
+  }
+]

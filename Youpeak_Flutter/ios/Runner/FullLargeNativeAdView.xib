@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment version="2048" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="rJl-hh-GIg" customClass="GADNativeAdView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Headline" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5XW-Yh-Q0T">
+                    <rect key="frame" x="59" y="594" width="171" height="20.5"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20.5" id="CI9-tQ-IdS"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="17"/>
+                    <color key="textColor" systemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z1j-EX-6h8">
+                    <rect key="frame" x="0.0" y="0.0" width="15" height="15"/>
+                    <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="15" id="YBu-CH-eEQ"/>
+                        <constraint firstAttribute="height" constant="15" id="lo5-OE-cGS"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="11"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Body that is really really long and can take up to two lines or sometimes even more." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ff-DZ-xA3">
+                    <rect key="frame" x="60" y="613" width="157" height="34"/>
+                    <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="14"/>
+                    <color key="textColor" systemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="G1O-GC-KfM">
+                    <rect key="frame" x="238" y="605" width="129" height="42"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Install">
+                        <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <buttonConfiguration key="configuration" style="filled" title="Install" cornerStyle="medium" titleAlignment="center">
+                        <backgroundConfiguration key="background">
+                            <color key="backgroundColor" red="1" green="0.30196078430000001" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </backgroundConfiguration>
+                        <fontDescription key="titleFontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="19"/>
+                        <directionalEdgeInsets key="contentInsets" top="0.0" leading="0.0" bottom="0.0" trailing="0.0"/>
+                        <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="baseBackgroundColor" red="1" green="0.30196078430000001" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </buttonConfiguration>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vse-fi-RGE">
+                    <rect key="frame" x="7" y="598" width="49" height="49"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="49" id="Eqd-cu-xht"/>
+                        <constraint firstAttribute="width" constant="49" id="k4w-mQ-fsM"/>
+                    </constraints>
+                </imageView>
+                <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="YeU-kl-9l9" customClass="GADMediaView">
+                    <rect key="frame" x="16" y="108" width="344" height="387"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="750" constant="387" id="GRZ-wE-Eex"/>
+                        <constraint firstAttribute="width" constant="344" id="rGM-19-mMw"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="0.98303861469999998" blue="0.92887652860000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Vse-fi-RGE" firstAttribute="leading" secondItem="8ff-DZ-xA3" secondAttribute="leading" constant="-53" id="17z-fr-es1"/>
+                <constraint firstItem="YeU-kl-9l9" firstAttribute="top" secondItem="8ff-DZ-xA3" secondAttribute="bottom" constant="-539" id="4j5-YQ-krc"/>
+                <constraint firstAttribute="trailing" secondItem="8ff-DZ-xA3" secondAttribute="trailing" constant="158" id="ALx-Tq-hKa"/>
+                <constraint firstItem="5XW-Yh-Q0T" firstAttribute="top" secondItem="rJl-hh-GIg" secondAttribute="top" constant="594" id="Dzz-w0-5Zg"/>
+                <constraint firstAttribute="trailing" secondItem="5XW-Yh-Q0T" secondAttribute="trailing" constant="145" id="Ky1-HH-eaA"/>
+                <constraint firstItem="Z1j-EX-6h8" firstAttribute="top" secondItem="rJl-hh-GIg" secondAttribute="top" id="OMO-p1-wAn"/>
+                <constraint firstAttribute="right" relation="greaterThanOrEqual" secondItem="Z1j-EX-6h8" secondAttribute="right" constant="20" symbolic="YES" id="TPN-e4-jyb"/>
+                <constraint firstItem="Vse-fi-RGE" firstAttribute="leading" secondItem="rJl-hh-GIg" secondAttribute="leading" constant="7" id="Tgy-Wz-KH7"/>
+                <constraint firstItem="YeU-kl-9l9" firstAttribute="centerX" secondItem="rJl-hh-GIg" secondAttribute="centerX" constant="0.5" id="bRq-ye-16X"/>
+                <constraint firstItem="Z1j-EX-6h8" firstAttribute="left" secondItem="rJl-hh-GIg" secondAttribute="left" id="dq3-q1-IzF"/>
+                <constraint firstItem="Vse-fi-RGE" firstAttribute="bottom" secondItem="8ff-DZ-xA3" secondAttribute="bottom" id="e3S-lI-jnr"/>
+                <constraint firstItem="5XW-Yh-Q0T" firstAttribute="leading" secondItem="Vse-fi-RGE" secondAttribute="trailing" constant="3" id="jU9-16-f9x"/>
+                <constraint firstItem="Vse-fi-RGE" firstAttribute="top" secondItem="rJl-hh-GIg" secondAttribute="top" constant="598" id="sx0-QS-lH5"/>
+                <constraint firstItem="8ff-DZ-xA3" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Vse-fi-RGE" secondAttribute="bottom" constant="-34" id="ygW-9B-mHK"/>
+            </constraints>
+            <connections>
+                <outlet property="bodyView" destination="8ff-DZ-xA3" id="BK4-bR-I9M"/>
+                <outlet property="headlineView" destination="5XW-Yh-Q0T" id="tnz-Pe-V0a"/>
+                <outlet property="iconView" destination="Vse-fi-RGE" id="d8T-pd-bJM"/>
+                <outlet property="mediaView" destination="YeU-kl-9l9" id="bpI-77-O3n"/>
+            </connections>
+            <point key="canvasLocation" x="13.6" y="-5.8470764617691158"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

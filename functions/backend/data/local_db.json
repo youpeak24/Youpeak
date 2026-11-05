@@ -1,0 +1,82 @@
+{
+  "languages": {
+    "lang_default_en": {
+      "_id": "lang_default_en",
+      "name": "English",
+      "code": "en",
+      "isDefault": true,
+      "createdAt": "2026-08-30T08:36:30.973Z",
+      "updatedAt": "2026-08-30T08:36:30.973Z",
+      "id": "lang_default_en"
+    }
+  },
+  "currencies": {
+    "currency_default": {
+      "_id": "currency_default",
+      "name": "Indian Rupee",
+      "symbol": "₹",
+      "currencyCode": "INR",
+      "isDefault": true,
+      "createdAt": "2026-08-30T08:36:40.357Z",
+      "updatedAt": "2026-08-30T08:36:40.357Z",
+      "id": "currency_default"
+    }
+  },
+  "admins": {
+    "admin_default": {
+      "name": "Super Admin",
+      "email": "youpeak24@gmail.com",
+      "password": "6eef2c60142020abde555aef52ae270bd82f0bcf2643042d44ee93651d25a8c0e95dc89ec16a5a16cd52c12dc0897c72d1eeb8a93d121e2011ad77bf6ae871b6b86f87baacf2e4d03830cc67ebdd6c3c49efa5a2726cf1e3c8624b26022d81d374e727a654a6b9ba",
+      "role": "SUPER_ADMIN",
+      "purchaseCode": "LIC-DEFAULT",
+      "createdAt": "2026-08-30T08:36:45.885Z",
+      "updatedAt": "2026-08-30T08:36:45.885Z",
+      "_id": "admin_default",
+      "id": "admin_default"
+    },
+    "admin_1788079059771": {
+      "_id": "admin_1788079059771",
+      "name": "Chennai 50KM Regional Agency",
+      "email": "agency001@gmail.com",
+      "password": "f00473c843d12bb8aadba140cd5c47add1d6d59ef51ab662e2c36d477d569cb3797fbe46805d591c7bc0027dbba5870557775bdf0ab217856b7d74d4c10a58d7c01e9d64932233b2dd163e3a658dfc8f87a4a6feff7884be841e7122f097a2aa9dad768b1550dd2a",
+      "role": "AGENCY_ADMIN",
+      "agencyId": "agency_1788079059765",
+      "createdAt": "2026-08-30T08:37:39.771Z",
+      "updatedAt": "2026-08-30T08:37:39.771Z",
+      "id": "admin_1788079059771"
+    }
+  },
+  "agencies": {
+    "agency_1788079059765": {
+      "_id": "agency_1788079059765",
+      "name": "Chennai 50KM Regional Agency",
+      "code": "CHN001",
+      "email": "agency001@gmail.com",
+      "password": "f00473c843d12bb8aadba140cd5c47add1d6d59ef51ab662e2c36d477d569cb3797fbe46805d591c7bc0027dbba5870557775bdf0ab217856b7d74d4c10a58d7c01e9d64932233b2dd163e3a658dfc8f87a4a6feff7884be841e7122f097a2aa9dad768b1550dd2a",
+      "mobileNumber": "9876543210",
+      "commissionRatePercentage": 10,
+      "state": "Tamil Nadu",
+      "district": "Chennai",
+      "cities": [],
+      "zipCodes": [],
+      "geofenceCenter": {
+        "latitude": 0,
+        "longitude": 0
+      },
+      "radiusKm": 50,
+      "isActive": true,
+      "createdAt": "2026-08-30T08:37:39.765Z",
+      "updatedAt": "2026-08-30T08:37:39.765Z",
+      "id": "agency_1788079059765"
+    }
+  },
+  "logins": {
+    "default_login": {
+      "login": true,
+      "createdAt": "2026-08-30T08:40:15.780Z",
+      "updatedAt": "2026-08-30T08:40:15.780Z",
+      "_id": "default_login",
+      "id": "default_login"
+    }
+  }
+}

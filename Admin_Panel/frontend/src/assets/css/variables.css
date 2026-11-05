@@ -1,0 +1,27 @@
+/* ── YouPeak Design System Tokens ── */
+:root {
+  /* Brand accent — Forest Green */
+  --new-color:           #16a34a;
+  --new-color-dark:      #15803d;
+  --new-color-gradient:  #16a34a; /* NO gradient — flat color */
+  --new-border-color:    #e5e7eb;
+
+  /* Old variables kept for legacy compatibility */
+  --prime--:          #16a34a;
+  --btnPrime--:       #16a34a;
+  --pink--:           #16a34a;
+  --blackPrime--:     #111827;
+  --grayPrime--:      #6b7280;
+  --inputBorder--:    #d1d5db;
+  --tablePrime--:     #f9fafb;
+  --lightOrangeColor: #16a34a;
+
+  /* Radius — all zero for flat design */
+  --radius-sm:  0px;
+  --radius-md:  0px;
+  --radius-lg:  0px;
+
+  /* Shadows — minimal */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md:  0 1px 3px rgba(0,0,0,0.07);
+}

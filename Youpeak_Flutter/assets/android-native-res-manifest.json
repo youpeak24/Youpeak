@@ -1,0 +1,170 @@
+[
+  {
+    "path": "drawable/ads_img_boder.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/ads_img_border.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/button4dp_act.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/buttonavs_act.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/ic_notification.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/ic_splash.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/launch_background.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/logo.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/search.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/shorts.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/splash_logo.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable/subscription.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-hdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-mdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-v21/launch_background.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-v21/splash_logo.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-xhdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-xxhdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "drawable-xxxhdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-anydpi-v26/ic_launcher.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-anydpi-v26/ic_launcher_round.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-anydpi-v26/launcher_icon.xml",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-hdpi/ic_launcher.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-hdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-hdpi/ic_launcher_round.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-hdpi/launcher_icon.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-mdpi/ic_launcher.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-mdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-mdpi/ic_launcher_round.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-mdpi/launcher_icon.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xhdpi/ic_launcher.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xhdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xhdpi/ic_launcher_round.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xhdpi/launcher_icon.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxhdpi/ic_launcher.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxhdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxhdpi/ic_launcher_round.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxhdpi/launcher_icon.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxxhdpi/ic_launcher.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxxhdpi/ic_launcher_foreground.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxxhdpi/ic_launcher_round.png",
+    "status": "preserved existing native Android resource"
+  },
+  {
+    "path": "mipmap-xxxhdpi/launcher_icon.png",
+    "status": "preserved existing native Android resource"
+  }
+]

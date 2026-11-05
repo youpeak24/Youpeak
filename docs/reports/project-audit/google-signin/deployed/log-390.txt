@@ -1,0 +1,9 @@
+1.7 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_core
+1.7 console.debug: Initializing Firebase firebase_core
+1.7 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_firestore
+1.7 console.debug: Initializing Firebase firebase_firestore
+1.7 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_auth
+1.7 console.debug: Initializing Firebase firebase_auth
+1.7 console.debug: TrustedTypes available. Creating policy: flutterfire-firebase_messaging
+1.7 console.debug: Initializing Firebase firebase_messaging
+21.2 --- click Continue with Google (button not found)

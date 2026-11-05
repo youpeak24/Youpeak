@@ -1,0 +1,80 @@
+[{
+  "_id": {
+    "$oid": "65cc85f3b6904dc87d0e009c"
+  },
+  "name": "USD",
+  "symbol": "$",
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2024-02-14T09:20:51.573Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-14T11:50:57.549Z"
+  },
+  "currencyCode": "USD",
+  "countryCode": "USA"
+},
+{
+  "_id": {
+    "$oid": "65cc86374b1ff2e48a472203"
+  },
+  "name": "INR",
+  "symbol": "₹",
+  "isDefault": true,
+  "createdAt": {
+    "$date": "2024-02-14T09:21:59.925Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-14T11:50:57.568Z"
+  },
+  "currencyCode": "INR",
+  "countryCode": "IN"
+},
+{
+  "_id": {
+    "$oid": "65cc87874b1ff2e48a472207"
+  },
+  "name": "POUND",
+  "symbol": "£",
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2024-02-14T09:27:35.335Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-14T11:50:57.549Z"
+  },
+  "currencyCode": "POUND",
+  "countryCode": "US"
+},
+{
+  "_id": {
+    "$oid": "65cc87bc4b1ff2e48a472209"
+  },
+  "name": "RUB",
+  "symbol": "₽",
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2024-02-14T09:28:28.388Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-14T11:50:57.549Z"
+  },
+  "currencyCode": "RUB",
+  "countryCode": "RUB"
+},
+{
+  "_id": {
+    "$oid": "65cc884f4b1ff2e48a472216"
+  },
+  "name": "EUR",
+  "symbol": "€",
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2024-02-14T09:30:55.412Z"
+  },
+  "updatedAt": {
+    "$date": "2024-06-14T11:50:57.549Z"
+  },
+  "currencyCode": "EUR",
+  "countryCode": "EU"
+}]

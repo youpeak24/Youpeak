@@ -1,0 +1,12 @@
+export const GET_VIDEO ="GET_VIDEO"
+export const GET_FAKE_USER_NAME ="GET_FAKE_USER_NAME"
+export const IMPORT_VIDEO ="IMPORT_VIDEO"
+export const EDIT_VIDEO ="EDIT_VIDEO"
+export const DELETE_VIDEO ="DELETE_VIDEO"
+export const COMMENT_GET ="COMMENT_GET"
+export const DELETE_VIDEO_COMMENTS ="DELETE_VIDEO_COMMENTS"
+
+
+
+
+

@@ -1,0 +1,107 @@
+{
+ "results": [
+  {
+   "name": "two quick taps open a single Google window",
+   "ok": true,
+   "detail": {
+    "popups": 1
+   }
+  },
+  {
+   "name": "closing the Google window returns to the sign-in screen (no stuck loader, no error toast)",
+   "ok": true,
+   "detail": {
+    "toasts": [],
+    "labels": [
+     "Continue with phone",
+     "Continue with Google",
+     "or",
+     "Sign in with password",
+     "Don't have an account? Sign up"
+    ]
+   }
+  },
+  {
+   "name": "emulator Google picker: new account created and chosen",
+   "ok": true,
+   "detail": {
+    "added": true,
+    "autogen": true,
+    "signedIn": true
+   }
+  },
+  {
+   "name": "backend verified the Google token and created the user (emulator Firestore)",
+   "ok": true,
+   "detail": {
+    "before": 0,
+    "after": 1
+   }
+  },
+  {
+   "name": "new Google user is sent to Fill Profile",
+   "ok": true,
+   "detail": [
+    "Fill Your Profile",
+    "+91",
+    "10 characters remaining",
+    "Age",
+    "Male",
+    "Country",
+    "Continue"
+   ]
+  },
+  {
+   "name": "session persists across a page refresh (main screen)",
+   "ok": true,
+   "detail": [
+    "Home",
+    "YouPeak",
+    "Create",
+    "Bites",
+    "Subscription",
+    "Library",
+    "Search",
+    "Notifications"
+   ]
+  },
+  {
+   "name": "logout returns to the sign-in screen",
+   "ok": true,
+   "detail": [
+    "Let’s you in",
+    "Continue with phone",
+    "Continue with Google",
+    "or",
+    "Sign in with password",
+    "Don't have an account? Sign up"
+   ]
+  },
+  {
+   "name": "returning Google user goes straight to the main screen (no duplicate account)",
+   "ok": true,
+   "detail": {
+    "picked": true,
+    "users": 1,
+    "labels": [
+     "Home",
+     "YouPeak",
+     "Create",
+     "Bites",
+     "Subscription",
+     "Library"
+    ]
+   }
+  }
+ ],
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "OPTIONS https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA3LefltA4wG0htRi1mJM8rGYIjdNoeqjM",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80"
+ ],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT"
+ ]
+}

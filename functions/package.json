@@ -1,0 +1,44 @@
+{
+  "name": "functions",
+  "description": "Firebase Cloud Functions for YouPeak 100% Firebase Backend",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "dev": "node backend/server.js",
+    "dev:local": "node backend/server.js"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.556.0",
+    "@aws-sdk/s3-request-presigner": "^3.1128.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "cryptr": "^6.2.0",
+    "csv-parser": "^3.2.0",
+    "dayjs": "^1.11.9",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.1.1",
+    "firebase-functions": "^5.0.0",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^3.0.1",
+    "node-cron": "^4.2.1",
+    "razorpay": "^2.9.6",
+    "resend": "^4.6.0",
+    "socket.io": "^4.7.1",
+    "stripe": "^20.3.1",
+    "uuid": "^11.1.1"
+  },
+  "private": true
+}

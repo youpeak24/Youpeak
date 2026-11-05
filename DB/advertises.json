@@ -1,0 +1,30 @@
+[{
+  "_id": {
+    "$oid": "665022950cd335db3f9b8c93"
+  },
+  "android": {
+    "google": {
+      "interstitial": "android_interstitial_id",
+      "native": "ca-app-pub-3940256099942544/2247696110",
+      "reward": "ca-app-pub-3940256099942544/5224354917",
+      "nativeAdVideo": "ca-app-pub-3940256099942544/1044960115",
+      "videoAdUrl": "www.ok.com.9633"
+    }
+  },
+  "ios": {
+    "google": {
+      "interstitial": "ios_interstitial_id",
+      "native": "ca-app-pub-3940256099942544/3986624511",
+      "reward": "ca-app-pub-3940256099942544/5224354917",
+      "nativeAdVideo": "ca-app-pub-3940256099942544/2521693316",
+      "videoAdUrl": "www.testok.com.368"
+    }
+  },
+  "isGoogle": true,
+  "createdAt": {
+    "$date": "2024-05-24T05:16:05.908Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-12T11:53:25.912Z"
+  }
+}]

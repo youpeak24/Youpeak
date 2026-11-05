@@ -1,0 +1,22 @@
+/* App-level overrides — keep minimal, all styles live in index.css */
+
+/* Radio inputs */
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.active-radio input[type="radio"] {
+  accent-color: var(--accent);
+}
+
+.custom-radio {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}

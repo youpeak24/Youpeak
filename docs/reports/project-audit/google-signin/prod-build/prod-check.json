@@ -1,0 +1,16 @@
+{
+ "liveClientSetting": {
+  "status": 200,
+  "secretFieldNamesPresent": [],
+  "totalKeys": 156
+ },
+ "unauthorizedOrigin": {
+  "origin": "http://127.0.0.1:5087",
+  "console": [
+   "GOOGLE_SIGNIN_DEBUG: web popup FAILED => unauthorized-domain"
+  ],
+  "toasts": [
+   "Google sign-in is not available on this website address yet. Please use phone or password sign-in for now."
+  ]
+ }
+}

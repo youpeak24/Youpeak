@@ -1,0 +1,44 @@
+[
+  {
+    "name": "list shows the three paid local campaigns with delivered / estimated impressions",
+    "ok": true,
+    "detail": [
+      "1Street food tour (promoted fixture)Local Promo Creatorpromo-creator@youpeak.testBoost Plan4 day(s) · Global₹ 249active1 / 3,000–8,00010/8/2026, 4:30:56 PM → 10/12/2026, 4:30:56 PMMark reviewedPauseTake DownHistory",
+      "2My public free videoLocal Viewer Channelviewer@youpeak.testWeekly Mega Plan7 day(s) · Global₹ 1000active3 / 50,000–75,00010/7/2026, 4:30:56 PM → 10/14/2026, 4:30:56 PMMark reviewedPauseTake DownHistory",
+      "3Old cooking clipLocal Viewer Channelviewer@youpeak.testStarter Plan1 day(s) · Global₹ 49expired0 / 2,000–2,5009/27/2026, 4:30:56 PM → 9/28/2026, 4:30:56 PMHistory"
+    ]
+  },
+  {
+    "name": "Mark reviewed keeps the campaign dates",
+    "ok": true,
+    "detail": {
+      "before": "10/7/2026, 4:30:56 PM → 10/14/2026, 4:30:56 PM",
+      "after": "10/7/2026, 4:30:56 PM → 10/14/2026, 4:30:56 PM"
+    }
+  },
+  {
+    "name": "Pause → status paused",
+    "ok": true
+  },
+  {
+    "name": "Resume → active again",
+    "ok": true
+  },
+  {
+    "name": "History lists payment activation and each admin action",
+    "ok": true,
+    "detail": [
+      "10/7/2026, 4:30:56 PM — activated by payment",
+      "10/10/2026, 1:22:40 PM — reviewed by admin",
+      "10/10/2026, 1:22:43 PM — paused by admin",
+      "10/10/2026, 1:22:45 PM — resumed by admin"
+    ]
+  },
+  {
+    "name": "toasts",
+    "ok": true,
+    "detail": [
+      "Campaign resumed."
+    ]
+  }
+]

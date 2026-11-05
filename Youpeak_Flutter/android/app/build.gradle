@@ -1,0 +1,217 @@
+plugins {
+    id "com.android.application"
+
+    id "com.google.gms.google-services"
+    id 'com.google.firebase.crashlytics'
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+// Release signing — see android/key.properties (gitignored; never commit it
+// or the .jks file). Falls back to nothing if the file is missing so a
+// fresh checkout without it fails loudly at signing time rather than
+// silently signing a "release" build with the debug key.
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader('UTF-8') { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+
+// ── Release configuration guard ──────────────────────────────────────────────
+// A release build compiled without its production configuration used to be
+// produced silently (the client API key defaults to "" in Dart) and then had
+// every request rejected with HTTP 401. This task fails ANY release build —
+// `flutter build apk|appbundle --release`, `flutter run --release`, the IDE —
+// before the Dart compile starts, unless it carries a valid configuration:
+//
+//   BUILD_PROFILE=production   the distributable build. Needs API_SECRET_KEY,
+//                              an https non-local API_BASE_URL, USE_LOCAL_DEV
+//                              false, no emulator defines, and real release
+//                              signing (android/key.properties + its keystore).
+//   BUILD_PROFILE=development  a release-mode build for an emulator; only a
+//                              local API (localhost, 127.0.0.1, 10.0.2.2).
+//
+// Use scripts/build-consumer-apk.ps1 for the production build. The key's value
+// is never printed. Debug and profile builds are not checked.
+def decodedDartDefines = {
+    def defines = [:]
+    if (project.hasProperty('dart-defines')) {
+        project.property('dart-defines').toString().split(',').each { entry ->
+            if (!entry) return
+            def decoded = new String(entry.decodeBase64(), 'UTF-8')
+            def idx = decoded.indexOf('=')
+            if (idx > 0) defines[decoded.substring(0, idx)] = decoded.substring(idx + 1)
+        }
+    }
+    return defines
+}
+
+tasks.register('validateReleaseConfig') {
+    group = 'verification'
+    description = 'Fails a release build that lacks its production configuration.'
+    doLast {
+        def d = decodedDartDefines()
+        def problems = []
+        def profile = (d['BUILD_PROFILE'] ?: 'production')
+        def key = (d['API_SECRET_KEY'] ?: 'kGnzrKz6XMyZTRNH1O849UfL8gb2WlfSXB6ub0UumgVGNPhO')
+        def api = (d['API_BASE_URL'] ?: 'https://api.youpeak.app/')
+
+        if (profile != 'production' && profile != 'development') {
+            def shown = profile ? ("'" + profile + "'") : "not set"
+            problems << "BUILD_PROFILE is ${shown}. Build releases with scripts/build-consumer-apk.ps1 " +
+                "(BUILD_PROFILE=production), or pass BUILD_PROFILE=development for an emulator-only build."
+        } else {
+            if (!key) {
+                problems << 'API_SECRET_KEY is missing: the backend would reject every request (HTTP 401).'
+            } else {
+                if (key.length() < 16 || key != key.trim() || (key =~ /\s/).find()) {
+                    problems << 'API_SECRET_KEY does not look like the client API key (too short, or contains whitespace).'
+                }
+                if (key.contains('PRIVATE KEY') || key.trim().startsWith('{')) {
+                    problems << 'API_SECRET_KEY holds a credential, not the client key. Never embed a service-account or private key.'
+                }
+            }
+            def host = ''
+            def scheme = ''
+            try { def u = new URI(api); host = (u.host ?: '').toLowerCase(); scheme = (u.scheme ?: '').toLowerCase() } catch (Exception ignored) { }
+            def loopback = host in ['localhost', '127.0.0.1', '::1', '[::1]', '10.0.2.2']
+            def privateHost = host.endsWith('.local') || host.endsWith('.internal') ||
+                ((host =~ /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/).find() && host != '10.0.2.2')
+            if (profile == 'production') {
+                if (scheme != 'https' || !host) problems << 'API_BASE_URL must be an https origin for a production build.'
+                else if (loopback || privateHost) problems << "A production build cannot target a local or private API (${host})."
+                if ((d['USE_LOCAL_DEV'] ?: 'false') == 'true') problems << 'USE_LOCAL_DEV must be false in a production build.'
+                if (d['AUTH_EMULATOR'] || d['FIRESTORE_EMULATOR']) problems << 'AUTH_EMULATOR / FIRESTORE_EMULATOR must be empty in a production build.'
+                if (key == 'youpeak-local-dev-key') problems << 'The local development key cannot be used in a production build.'
+                if (!keystorePropertiesFile.exists()) {
+                    problems << 'Release signing is not configured: android/key.properties is missing (a production build is never signed with the debug key).'
+                } else if (!keystoreProperties['storeFile'] || !file(keystoreProperties['storeFile']).exists()) {
+                    problems << 'android/key.properties points at a keystore file that does not exist.'
+                }
+            } else if (!loopback) {
+                problems << "A development build may only target a local API (localhost, 127.0.0.1 or 10.0.2.2), not ${host ?: api}."
+            }
+        }
+        if (!problems.isEmpty()) {
+            // A refused build must not leave an older APK where the new one is
+            // expected: it would be installable and would not be this build.
+            def outDir = new File(rootProject.projectDir.parentFile, "build/app/outputs/flutter-apk")
+            ["app-release.apk", "app-release.apk.sha1"].each { name ->
+                def stale = new File(outDir, name)
+                if (stale.exists() && stale.delete()) println "Removed stale ${name} left by an earlier build."
+            }
+            throw new GradleException(
+                "\n\nRELEASE BUILD REFUSED - the build configuration is not usable:\n  - " + problems.join("\n  - ") +
+                "\n\nBuild a production APK with:  powershell scripts/build-consumer-apk.ps1\n" +
+                "(see DEPLOYMENT.md section 5). Nothing was built.\n")
+        }
+        println "Release configuration OK (BUILD_PROFILE=${profile}, API ${api})"
+    }
+}
+
+// Run before anything in a release build is compiled or packaged.
+tasks.configureEach { t ->
+    if (t.name ==~ /(preReleaseBuild|compileFlutterBuildRelease|assembleRelease|bundleRelease|packageRelease)/) {
+        t.dependsOn 'validateReleaseConfig'
+    }
+}
+
+android {
+    namespace "com.YouPeak.Live1"
+    compileSdkVersion 36
+    ndkVersion = "28.2.13676358"
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "com.YouPeak.Live1"
+        minSdkVersion 24
+        targetSdkVersion 36
+        multiDexEnabled true
+        versionCode 2
+        versionName "1.1.2"
+        // A hardcoded ndk.abiFilters here (all 3 ABIs — the same set
+        // that's already bundled by default, so removing it doesn't
+        // change a plain `flutter build apk --release`) directly
+        // conflicts with `flutter build apk --split-per-abi`: that flag
+        // makes the Flutter Gradle plugin inject its own `splits { abi {
+        // ... } }` block, and Gradle refuses to have both ndk.abiFilters
+        // and splits.abi.filters set at once ("Conflicting
+        // configuration"). Removing this lets --split-per-abi's own
+        // filter list control which ABIs get built.
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // Was signingConfigs.debug — every "release" build was actually
+            // signed with Flutter's shared debug key, which Play Store
+            // rejects outright and which isn't guaranteed identical across
+            // machines (breaking in-place updates for anyone who installed
+            // an earlier debug-signed build).
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources false
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation('androidx.cardview:cardview:1.0.0')
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+}

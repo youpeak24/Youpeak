@@ -1,0 +1,8 @@
+{
+  "_comment": "Non-secret identity of the YouPeak Android release. The release helper and verifier refuse an APK that does not match. Change signingCertificateSha256 only when the app is deliberately moved to a new signing key.",
+  "applicationId": "com.YouPeak.Live1",
+  "allowedApiOrigins": ["https://api.youpeak.app/"],
+  "appDomain": "youpeak.app",
+  "signingCertificateSha256": "50c0a130de3be10a296b85520ff2c270c0c070642723372e564e7ed9a0c0f986",
+  "signingCertificateSha1": "36e05d07096a1e4b444691e01f9ae043f2cfca06"
+}

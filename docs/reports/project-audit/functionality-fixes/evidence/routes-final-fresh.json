@@ -1,0 +1,152 @@
+{
+  "tasker": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Back",
+        "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00",
+        "Today's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left",
+        "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+        "0",
+        "Daily Action Limits\nVideo Ads\nIn the mobile app\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+        "Withdraw",
+        "Starter Pass",
+        "Check in & daily tasks"
+      ]
+    }
+  },
+  "earn": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Earn Rewards",
+        "Back",
+        "Convert coins",
+        "My Reward Coin\n0\nYour spendable coin balance. 100 coins = ₹1.",
+        "Daily check-in\n0-day streak\nCheck in once a day (India time). The reward depends on the weekday.\nEarn More\nMy Daily Tasks\nRewarded video ads are available in the YouPeak mobile app only (a browser can't verify a completed ad). Check-in, likes, comments and watch time earn here.",
+        "Missed\nMon\nMissed",
+        "Missed\nTue\nMissed",
+        "Missed\nWed\nMissed",
+        "Missed\nThu\nMissed",
+        "Today\n+450",
+        "Sat\n+550",
+        "Sun\n+600",
+        "CHECK IN · +450 coins",
+        "Referral Reward\nInvite friends and earn when they join.",
+        "Engagement Rewards\nLikes, comments and watch time you earned today.",
+        "Starter Pass\nRaise your daily limits and earning cap.",
+        "Tasker dashboard\nToday's cap, earned coins and lifetime watch hours.",
+        "Withdraw\nYour wallet and withdrawals."
+      ]
+    }
+  },
+  "starter-pass": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Unlock higher daily earning limits — instantly, or work up to them for free over time.",
+        "Lifetime Watch Hours\n0.0 / 50 hrs\nFree upgrade to Level 1 Tasker at 50 lifetime hours. Hours never reset.",
+        "0",
+        "A level unlocks when you buy its pass OR reach its watch hours — either one is enough. Rewarded video ads are available in the mobile app; check-in, likes, comments and watch time also earn on the web.",
+        "Free Tasker\nCurrent Tier\nFree\nDaily Earning Cap\n1,000 coins (₹ 10.00)\nLikes / day\n5\nComments / day\n2\nAds / day (app only)\n20\nThis is your level",
+        "Upgrade Now · ₹ 999",
+        "Level 2 Tasker\n₹ 2,499\nor free at 100 lifetime watch hours\nDaily Earning Cap\n4,500 coins (₹ 45.00)\nLikes / day\n20\nComments / day\n10\nAds / day (app only)\n20\nAd Credits Granted\n2,500\n100.0 more watch hours to unlock it free"
+      ]
+    }
+  },
+  "notifications": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Mark all read",
+        "Clear All",
+        "🔔 New Video Alert! 🔔\nHey there! A new video was posted. Tap to watch it now.\n33 minutes ago",
+        "Tech Pulse Labs posted a video\nHey there! A new video was posted. Tap to watch it now.\n3 hours ago",
+        "Welcome to YouPeak\nHey there! A new video was posted. Tap to watch it now.\n1 day ago"
+      ]
+    }
+  },
+  "library": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "History\nView All",
+        "Your Videos",
+        "Playlists",
+        "New Playlist",
+        "Watch Later",
+        "My Playlist",
+        "Home",
+        "Bites",
+        "Subscription",
+        "Library"
+      ]
+    }
+  },
+  "my-playlists": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "1\nShared picks\nPublic\n1 videos",
+        "Playlist options",
+        "2\nWeekend watch\nPrivate\n2 videos"
+      ]
+    }
+  },
+  "your-videos": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Video",
+        "Bites",
+        "00:06\nMy scheduled video\n0 views • 40 minutes ago\nScheduled · 11/10 11:52",
+        "00:06\nMy public free video\n0 views • 1 hour ago",
+        "00:06\nMy private video\n0 views • 2 hours ago\nPrivate",
+        "00:06\nMy paid video\n0 views • 3 hours ago\nPaid"
+      ]
+    }
+  },
+  "video": {
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Seek\nVolume\n0:05 / 0:05 0:05 of 0:05",
+        "Back",
+        "Replay",
+        "Play (k)",
+        "Back 10 seconds (←)",
+        "Forward 10 seconds (→)",
+        "Next video",
+        "Mute (m)",
+        "Playback speed\n1x",
+        "Full screen (f)",
+        "0 Views · 56 years ago",
+        "Super Admin (Master)\n0 Subscribes",
+        "Subscribe",
+        "Like\n1.42k",
+        "Dislike\n12",
+        "Share a link to this video\nShare",
+        "Remove from Watch Later\nSaved",
+        "Downloads are available in the YouPeak Android app\nDownloads",
+        "Peak Boost this creator\nPeak Boost",
+        "Report this video\nReport",
+        "#YouPeak  #Tech  #Trending  #Creator\nDiscover incredible videos, shorts, live streams, and earn rewards on YouPeak!\nShow more",
+        "Comments · 0",
+        "View all",
+        "Add a Comments...",
+        "Post comment",
+        "Related videos",
+        "No related videos yet."
+      ]
+    }
+  },
+  "consoleErrors": []
+}

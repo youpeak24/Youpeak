@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "user_101",
+    "name": "YouPeak Admin",
+    "fullName": "YouPeak Official",
+    "email": "youpeak24@gmail.com",
+    "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+    "channelId": "channel_101",
+    "isChannel": true,
+    "coin": 50000,
+    "subscriber": 154000,
+    "watchTime": 12800,
+    "isActive": true,
+    "isBlock": false,
+    "isAddByAdmin": false,
+    "createdAt": "2026-08-01T00:00:00.000Z"
+  },
+  {
+    "_id": "user_102",
+    "name": "Alex Tech",
+    "fullName": "Tech Pulse Labs",
+    "email": "alex.tech@youpeak.app",
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+    "channelId": "channel_102",
+    "isChannel": true,
+    "coin": 12500,
+    "subscriber": 89200,
+    "watchTime": 8900,
+    "isActive": true,
+    "isBlock": false,
+    "isAddByAdmin": false,
+    "createdAt": "2026-08-05T00:00:00.000Z"
+  },
+  {
+    "_id": "user_103",
+    "name": "Sarah Creative",
+    "fullName": "Creative Studio",
+    "email": "sarah.design@youpeak.app",
+    "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+    "channelId": "channel_103",
+    "isChannel": true,
+    "coin": 8400,
+    "subscriber": 64500,
+    "watchTime": 5400,
+    "isActive": true,
+    "isBlock": false,
+    "isAddByAdmin": false,
+    "createdAt": "2026-08-10T00:00:00.000Z"
+  }
+]

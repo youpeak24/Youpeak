@@ -1,0 +1,38 @@
+{
+  "label": "after",
+  "results": [
+    {
+      "id": "E8",
+      "name": "cancel during an upload: stops, publishes nothing, leaves no orphan",
+      "ok": true,
+      "notes": [],
+      "info": {
+        "during": [
+          "Uploading video… 100%",
+          "Cancel"
+        ],
+        "toasts": [
+          "Video uploading....",
+          "Upload cancelled."
+        ]
+      },
+      "errors": [],
+      "blocked": [
+        "GET https://accounts.google.com/gsi/client",
+        "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+        "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+        "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+        "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80"
+      ],
+      "failed": [
+        "GET https://accounts.google.com/gsi/client net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "GET http://127.0.0.1:8095/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects%2Fyoupeak-9ff65%2Fdatabases%2F(default)&RID=rpc&SID=NEhvNkSLvCj6stsEk net::ERR_ABORTED",
+        "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "PUT https://127.0.0.1:5099/youpeak-videos/youpeakvideos/be54e0e3-fa81-4a41-bfca-bda943e4dccd.webm?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAY net::ERR_ABORTED"
+      ]
+    }
+  ]
+}

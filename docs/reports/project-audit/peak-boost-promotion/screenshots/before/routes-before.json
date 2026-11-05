@@ -1,0 +1,134 @@
+{
+  "old-promote-page": {
+    "390": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Promote a Video",
+        "My Promotions",
+        "Weekly Mega Plan",
+        "Weekly Mega Plan • $ 1000",
+        "ACTIVE",
+        "Starter Plan",
+        "Starter Plan • $ 49",
+        "EXPIRED"
+      ]
+    },
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Promote a Video",
+        "My Promotions",
+        "Weekly Mega Plan",
+        "Weekly Mega Plan • $ 1000",
+        "ACTIVE",
+        "Starter Plan",
+        "Starter Plan • $ 49",
+        "EXPIRED"
+      ]
+    },
+    "1366": {
+      "overflow": false,
+      "sidebar": true,
+      "labels": [
+        "Home",
+        "YouPeak",
+        "Create",
+        "Bites",
+        "Subscription",
+        "Library",
+        "Search",
+        "Notifications",
+        "Tasker",
+        "Profile",
+        "Promote a Video",
+        "My Promotions",
+        "Weekly Mega Plan",
+        "Weekly Mega Plan • $ 1000",
+        "ACTIVE",
+        "Starter Plan",
+        "Starter Plan • $ 49",
+        "EXPIRED"
+      ]
+    },
+    "1920": {
+      "overflow": false,
+      "sidebar": true,
+      "labels": [
+        "Home",
+        "YouPeak",
+        "Create",
+        "Bites",
+        "Subscription",
+        "Library",
+        "Search",
+        "Notifications",
+        "Tasker",
+        "Profile",
+        "Promote a Video",
+        "My Promotions",
+        "Weekly Mega Plan",
+        "Weekly Mega Plan • $ 1000",
+        "ACTIVE",
+        "Starter Plan",
+        "Starter Plan • $ 49",
+        "EXPIRED"
+      ]
+    }
+  },
+  "old-plan-picker": {
+    "390": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Select a promotion plan",
+        "Starter Plan\n1 days • 2,000 – 2,500 impressions\n$ 49",
+        "Basic Plan\n2 days • 3,000 – 3,500 impressions\n$ 99",
+        "Pro Starter\n2 days • 3,000 – 5,000 impressions\n$ 199",
+        "Boost Plan\n4 days • 3,000 – 8,000 impressions\n$ 249",
+        "Weekly Mega Plan\n7 days • \n$ 1000",
+        "Monthly Pro Plan\n30 days • \n$ 3000"
+      ]
+    },
+    "768": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Select a promotion plan",
+        "Starter Plan\n1 days • 2,000 – 2,500 impressions\n$ 49",
+        "Basic Plan\n2 days • 3,000 – 3,500 impressions\n$ 99",
+        "Pro Starter\n2 days • 3,000 – 5,000 impressions\n$ 199",
+        "Boost Plan\n4 days • 3,000 – 8,000 impressions\n$ 249",
+        "Weekly Mega Plan\n7 days • \n$ 1000",
+        "Monthly Pro Plan\n30 days • \n$ 3000"
+      ]
+    },
+    "1366": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Select a promotion plan",
+        "Starter Plan\n1 days • 2,000 – 2,500 impressions\n$ 49",
+        "Basic Plan\n2 days • 3,000 – 3,500 impressions\n$ 99",
+        "Pro Starter\n2 days • 3,000 – 5,000 impressions\n$ 199",
+        "Boost Plan\n4 days • 3,000 – 8,000 impressions\n$ 249",
+        "Weekly Mega Plan\n7 days • \n$ 1000",
+        "Monthly Pro Plan\n30 days • \n$ 3000"
+      ]
+    },
+    "1920": {
+      "overflow": false,
+      "sidebar": false,
+      "labels": [
+        "Select a promotion plan",
+        "Starter Plan\n1 days • 2,000 – 2,500 impressions\n$ 49",
+        "Basic Plan\n2 days • 3,000 – 3,500 impressions\n$ 99",
+        "Pro Starter\n2 days • 3,000 – 5,000 impressions\n$ 199",
+        "Boost Plan\n4 days • 3,000 – 8,000 impressions\n$ 249",
+        "Weekly Mega Plan\n7 days • \n$ 1000",
+        "Monthly Pro Plan\n30 days • \n$ 3000"
+      ]
+    }
+  }
+}

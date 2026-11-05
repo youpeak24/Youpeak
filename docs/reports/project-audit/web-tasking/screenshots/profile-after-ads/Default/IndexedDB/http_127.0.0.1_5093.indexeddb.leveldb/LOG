@@ -1,0 +1,20 @@
+2026/10/05-14:33:13.419 32c0 Creating DB E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-after-ads\Default\IndexedDB\http_127.0.0.1_5093.indexeddb.leveldb since it was missing.
+2026/10/05-14:33:13.426 32c0 Reusing MANIFEST E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-after-ads\Default\IndexedDB\http_127.0.0.1_5093.indexeddb.leveldb/MANIFEST-000001
+2026/10/05-14:33:13.629 64a8 Level-0 table #5: started
+2026/10/05-14:33:13.633 64a8 Level-0 table #5: 1313 bytes OK
+2026/10/05-14:33:13.635 64a8 Delete type=0 #3
+2026/10/05-14:33:13.636 32c0 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/05-14:33:36.089 6a40 Level-0 table #7: started
+2026/10/05-14:33:36.091 6a40 Level-0 table #7: 3966 bytes OK
+2026/10/05-14:33:36.093 6a40 Delete type=0 #4
+2026/10/05-14:33:36.094 32c0 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/05-14:33:58.940 570c Level-0 table #9: started
+2026/10/05-14:33:58.945 570c Level-0 table #9: 2206 bytes OK
+2026/10/05-14:33:58.949 570c Delete type=0 #6
+2026/10/05-14:33:58.949 32c0 Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at '\x00\x05\x00\x00\x05' @ 201 : 1
+2026/10/05-14:33:58.949 32c0 Compacting 1@0 + 1@1 files
+2026/10/05-14:33:58.953 32c0 Generated table #10@0: 70 keys, 2550 bytes
+2026/10/05-14:33:58.953 32c0 Compacted 1@0 + 1@1 files => 2550 bytes
+2026/10/05-14:33:58.957 32c0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/10/05-14:33:58.957 32c0 Delete type=2 #9
+2026/10/05-14:33:58.958 32c0 Manual compaction at level-0 from '\x00\x05\x00\x00\x05' @ 201 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)

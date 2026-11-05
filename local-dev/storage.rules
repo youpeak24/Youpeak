@@ -1,0 +1,20 @@
+rules_version = '2';
+
+// YouPeak media split:
+//   • Videos & Shorts  -> Cloudflare Stream / R2  (never Firebase Storage)
+//   • All other assets -> Firebase Storage under public/, uploaded by the
+//     backend (Admin SDK, which bypasses these rules)
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Public assets (images, thumbnails, channel art, sounds) — world-readable,
+    // no client writes.
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+    // Everything else is closed.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

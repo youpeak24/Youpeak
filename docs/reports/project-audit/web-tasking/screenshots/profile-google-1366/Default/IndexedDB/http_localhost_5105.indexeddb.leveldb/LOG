@@ -1,0 +1,11 @@
+2026/10/06-17:32:12.383 9500 Creating DB E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-google-1366\Default\IndexedDB\http_localhost_5105.indexeddb.leveldb since it was missing.
+2026/10/06-17:32:12.390 9500 Reusing MANIFEST E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-google-1366\Default\IndexedDB\http_localhost_5105.indexeddb.leveldb/MANIFEST-000001
+2026/10/06-17:32:12.404 24d8 Level-0 table #5: started
+2026/10/06-17:32:12.407 24d8 Level-0 table #5: 1264 bytes OK
+2026/10/06-17:32:12.411 24d8 Delete type=0 #3
+2026/10/06-17:32:12.412 24d8 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/06-17:33:06.877 9500 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/06-17:33:36.704 128 Level-0 table #7: started
+2026/10/06-17:33:36.708 128 Level-0 table #7: 7863 bytes OK
+2026/10/06-17:33:36.717 128 Delete type=0 #4
+2026/10/06-17:33:36.718 9500 Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -1,0 +1,324 @@
+[{
+  "_id": {
+    "$oid": "69e1ba253b22bafa3bc3b697"
+  },
+  "languageTitle": "English",
+  "languageCode": "en",
+  "localLanguageTitle": "English",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776400932367_english.jpg",
+  "errorCount": 2,
+  "isActive": true,
+  "isDefault": true,
+  "createdAt": {
+    "$date": "2026-04-17T04:42:13.377Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e1c3c563e85a5bfd7dfcab"
+  },
+  "languageTitle": "Hindi",
+  "languageCode": "hi",
+  "localLanguageTitle": "हिन्दी",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776403396003_hindi.jpg",
+  "errorCount": 2,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-17T05:23:17.051Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e1c43e63e85a5bfd7dfcb7"
+  },
+  "languageTitle": "French",
+  "languageCode": "fr",
+  "localLanguageTitle": "français",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776403517503_francais.jpeg",
+  "errorCount": 2,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-17T05:25:18.385Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e1c46363e85a5bfd7dfcc3"
+  },
+  "languageTitle": "Spanish",
+  "languageCode": "es",
+  "localLanguageTitle": "español",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776403554384_spanish.jpg",
+  "errorCount": 2,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-17T05:25:55.239Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e1c48d63e85a5bfd7dfccf"
+  },
+  "languageTitle": "Arabic",
+  "languageCode": "ar",
+  "localLanguageTitle": "عربي",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776403596073_arabic.png",
+  "errorCount": 0,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-17T05:26:37.004Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e1c4c863e85a5bfd7dfcdb"
+  },
+  "languageTitle": "Russian",
+  "languageCode": "ru",
+  "localLanguageTitle": "русский",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776403655827_russian.png",
+  "errorCount": 2,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-17T05:27:36.710Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e224a1ce2a6890f5fd7806"
+  },
+  "languageTitle": "Tamil",
+  "languageCode": "ta",
+  "localLanguageTitle": "Tamil",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776428192134_download (.jpg",
+  "errorCount": 2,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-17T12:16:33.122Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e319030b8ccae3bd4b62ee"
+  },
+  "languageTitle": "Bengali",
+  "languageCode": "bn",
+  "localLanguageTitle": "বাংলা",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776490754643_bn.png",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:39:15.661Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e319a30b8ccae3bd4b6ef4"
+  },
+  "languageTitle": "German",
+  "languageCode": "de",
+  "localLanguageTitle": "Deutsche",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776490914282_de.webp",
+  "errorCount": 445,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:41:55.277Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31a1f0b8ccae3bd4b6f00"
+  },
+  "languageTitle": "Indonesian",
+  "languageCode": "id",
+  "localLanguageTitle": "bahasa indo",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491038856_id.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:43:59.775Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31a750b8ccae3bd4b6f0c"
+  },
+  "languageTitle": "Italian",
+  "languageCode": "it",
+  "localLanguageTitle": "italiana",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491124743_it.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:45:25.718Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31b930b8ccae3bd4b6f25"
+  },
+  "languageTitle": "Korean",
+  "languageCode": "ko",
+  "localLanguageTitle": "한국인",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491410410_ko.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:50:11.451Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31c430b8ccae3bd4b6f3d"
+  },
+  "languageTitle": "Portuguese",
+  "languageCode": "pt",
+  "localLanguageTitle": "português",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491586006_pt.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:53:07.009Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31c880b8ccae3bd4b6f49"
+  },
+  "languageTitle": "Swahili",
+  "languageCode": "sw",
+  "localLanguageTitle": "Kiswahili",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491655134_sw.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:54:16.072Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31ce70b8ccae3bd4b6f55"
+  },
+  "languageTitle": "Telugu",
+  "languageCode": "te",
+  "localLanguageTitle": "తెలుగు",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491750315_te.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:55:51.291Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31d180b8ccae3bd4b6f61"
+  },
+  "languageTitle": "Turkish",
+  "languageCode": "tr",
+  "localLanguageTitle": "Türk",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491799213_tr.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:56:40.171Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69e31d6e0b8ccae3bd4b6f6d"
+  },
+  "languageTitle": "Urdu",
+  "languageCode": "ur",
+  "localLanguageTitle": "اردو",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1776491885131_ur.webp",
+  "errorCount": 5,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-18T05:58:06.133Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69f19bf0c0b0efc2a8f2236e"
+  },
+  "languageTitle": "Chinese",
+  "languageCode": "zh",
+  "localLanguageTitle": "Chinese",
+  "languageIcon": "https://codderlab.blr1.cdn.digitaloceanspaces.com/youPeak/language/1777441774832_ChatGPT Im.png",
+  "errorCount": 0,
+  "isActive": true,
+  "isDefault": false,
+  "createdAt": {
+    "$date": "2026-04-29T05:49:36.113Z"
+  },
+  "updatedAt": {
+    "$date": "2026-05-30T10:14:16.095Z"
+  }
+}]

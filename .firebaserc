@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "youpeak-9ff65"
+  },
+  "targets": {
+    "youpeak-9ff65": {
+      "hosting": {
+        "app": [
+          "youpeak-9ff65"
+        ],
+        "admin": [
+          "youpeak-admin"
+        ]
+      }
+    }
+  }
+}

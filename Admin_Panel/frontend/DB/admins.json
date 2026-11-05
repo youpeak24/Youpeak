@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "admin_super_01",
+    "name": "Super Admin (Master)",
+    "email": "youpeak24@gmail.com",
+    "password": "12345678",
+    "role": "SUPER_ADMIN",
+    "purchaseCode": "LIC-SUPER-2026",
+    "permissions": ["ALL"],
+    "createdAt": "2026-09-01T00:00:00.000Z"
+  },
+  {
+    "_id": "admin_agency_trichy",
+    "name": "Trichy Agency Manager",
+    "email": "agency.trichy@youpeak.in",
+    "password": "AgencyTrichy@123",
+    "role": "AGENCY_ADMIN",
+    "agencyId": "agency_trichy_01",
+    "createdAt": "2026-09-01T00:00:00.000Z"
+  }
+]

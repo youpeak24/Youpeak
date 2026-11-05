@@ -1,0 +1,22 @@
+const E = require('./e2e-lib.cjs'); const { L } = E;
+const fs = require('fs');
+const path = require('path');
+(async () => {
+  const [dir, port, out] = process.argv.slice(2);
+  fs.mkdirSync(out, { recursive: true });
+  const coords = await E.probeSignInCoords({ dir, port: Number(port) + 5, width: 1366, height: 768, cacheFile: `${out}/coords.json` });
+  const app = await E.openApp({ dir, port: Number(port), width: 1366, height: 768, profile: out + '/p' });
+  const { page } = app;
+  await app.goExternalThenApp({ semantics: false });
+  await E.signInByCoords(page, coords);
+  await L.tap(page, 'Create', { role: 'button', timeout: 10000, after: 1500 });
+  const up = await L.findNode(page, 'Upload a Video');
+  const fixture = path.resolve(__dirname, '../../../../local-dev/fixtures/fixture-bite-landscape.webm');
+  const [chooser] = await Promise.all([page.waitForFileChooser({ timeout: 15000 }), page.mouse.click(up.x, up.y)]);
+  await chooser.accept([fixture]);
+  await L.sleep(6000);
+  console.log('labels', JSON.stringify(await E.labels(page, 60)));
+  console.log('nodes', JSON.stringify((await L.nodes(page)).filter((n) => n.label).map((n) => [n.label.slice(0, 40), n.role, n.tag, Math.round(n.x), Math.round(n.y), Math.round(n.w), Math.round(n.h)])));
+  await page.screenshot({ path: out + '/upload-page.png' });
+  await app.close();
+})();

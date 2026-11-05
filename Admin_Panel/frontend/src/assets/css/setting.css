@@ -1,0 +1,1133 @@
+/* Settings Page Custom Styles — theme aligned with reference (emerald accent) */
+:root {
+    --settings-accent: #059669;
+    --settings-accent-hover: #047857;
+    --settings-accent-active: #064e3b;
+    --settings-accent-border: #059669;
+    --settings-accent-ring: rgba(5, 150, 105, 0.28);
+    --settings-surface: #ffffff;
+    --settings-muted: #64748b;
+    --settings-border: #e5e7eb;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+/* Page heading above tabs (title + subtitle) */
+.settings-page-header {
+    padding: 1rem 1.25rem 1rem;
+    margin: 0;
+    text-align: left;
+    /* border-bottom: 1px solid #e5e7eb; */
+    background: #fff;
+}
+
+.settings-page-title {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0a0a0a;
+    line-height: 1.25;
+}
+
+.settings-page-subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #64748b;
+    max-width: 42rem;
+}
+
+@media (max-width: 767px) {
+    .settings-page-header {
+        padding: 0.875rem 1rem 0.875rem;
+    }
+
+    .settings-page-title {
+        font-size: 1.25rem;
+    }
+
+    .settings-page-subtitle {
+        font-size: 0.8125rem;
+    }
+}
+
+.settings-nav {
+    background: transparent;
+    padding: 0 0.25rem;
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap !important;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 0.75rem 1.5rem;
+    width: max-content;
+    min-width: 100%;
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--settings-border);
+    border-top: none;
+}
+
+/* Header | tabs | submit */
+.settings-toolbar {
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+    padding: 0;
+    min-height: auto;
+}
+
+.settings-toolbar-row--tabs {
+    width: 100%;
+    padding: 0.5rem 1rem 0;
+    box-sizing: border-box;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.settings-toolbar-row--tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.settings-toolbar-row--actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin-top: 0;
+    padding: 0.55rem 1.25rem 0.65rem;
+    box-sizing: border-box;
+    /* border-top: 1px solid #f1f5f9; */
+}
+
+.settings-toolbar .settings-nav {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.settings-toolbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0;
+    margin: 0;
+}
+
+.settings-toolbar-sticky {
+    position: sticky;
+    top: 50px;
+    z-index: 4;
+
+    margin-bottom: 1.25rem;
+
+    border-radius: 0px 0px 6px 6px;
+    /* Let tab row scroll horizontally without clipping overlap; clip only on Y if needed */
+    overflow-x: visible;
+    overflow-y: visible;
+    border: 1px solid var(--settings-border);
+    background: var(--settings-surface);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+/* Scroll only the tab content so nothing slides behind the toolbar */
+.settings-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-height: 0;
+    max-height: calc(100dvh - 8.5rem);
+}
+
+.settings-shell .settings-toolbar-sticky {
+    position: static;
+    top: auto;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    z-index: auto;
+}
+
+.settings-shell-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+    padding-right: 2px;
+}
+
+@media (max-width: 767px) {
+    .settings-shell {
+        max-height: calc(100dvh - 9.5rem);
+    }
+
+    .settings-toolbar-sticky {
+        top: 78px;
+    }
+
+    .settings-toolbar-row--tabs {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Tabs scroll logic moved to base class to support tablets */
+    .settings-nav {
+        gap: 0.5rem 1.25rem;
+        padding: 0 0.125rem;
+    }
+
+    .settings-toolbar-row--actions {
+        padding: 0.45rem 1rem 0.6rem;
+    }
+}
+
+.settings-toolbar-submit {
+    font-size: 1rem;
+    /* font-family: inherit; */
+    line-height: 1.25;
+}
+
+.settings-nav-link-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.settings-nav-icon {
+    font-size: 1.0625rem;
+    line-height: 1;
+    flex-shrink: 0;
+    color: var(--settings-muted);
+    transition: color 0.15s ease;
+}
+
+.settings-nav-link.active .settings-nav-icon {
+    color: var(--settings-accent);
+}
+
+.settings-nav-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+/* Underline tabs — bottom border lines up with toolbar rule */
+.settings-nav-link {
+    position: relative;
+    z-index: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    padding: 0.65rem 0.5rem 0.4rem;
+    margin: 0;
+    margin-bottom: -1px;
+    border-radius: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    color: #475569;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent !important;
+    cursor: pointer;
+    box-shadow: none;
+    box-sizing: border-box;
+    white-space: nowrap;
+    min-width: max-content;
+}
+
+.settings-nav-link:hover {
+    background-color: transparent !important;
+    color: #0f172a;
+    border-bottom-color: transparent;
+}
+
+.settings-nav-link.active {
+    z-index: auto;
+    background-color: transparent !important;
+    color: var(--settings-accent);
+    font-weight: 500;
+    border-bottom-color: var(--settings-accent-border);
+    box-shadow: none;
+}
+
+.settings-nav-link:focus-visible {
+    outline: 2px solid var(--settings-accent);
+    outline-offset: 2px;
+}
+
+.settings-content {
+    background: transparent;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .settings-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.settings-grid-full {
+    grid-column: 1 / -1;
+}
+
+.setting-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.setting-card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.setting-card-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.setting-card-body {
+    padding: 1.25rem;
+}
+
+.setting-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.setting-label {
+    font-size: 0.875rem;
+    color: #374151;
+    margin: 0;
+}
+
+.setting-label-small {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.setting-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.setting-input-group:last-child {
+    margin-bottom: 0;
+}
+
+.setting-input-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.setting-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.setting-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.setting-section-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin: 1rem 0 0.75rem 0;
+}
+
+.setting-submit-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.settings-submit-btn {
+    background-color: var(--settings-accent);
+    color: #ffffff;
+    padding: 8px 16px;
+    margin-right: 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.settings-submit-btn:hover {
+    background-color: var(--settings-accent-hover);
+}
+
+.settings-submit-btn:active {
+    background-color: var(--settings-accent-active);
+}
+
+/* Win over themeButton when used on settings forms */
+button.themeButton.settings-submit-btn {
+    background-color: var(--settings-accent);
+    color: #ffffff;
+}
+
+button.themeButton.settings-submit-btn:hover {
+    background-color: var(--settings-accent-hover);
+}
+
+/* Toolbar Submit: second row, right-aligned */
+.settings-toolbar .settings-toolbar-actions .settings-submit-btn {
+    padding: 0.5rem 1.35rem;
+    margin: 0;
+    margin-right: 0;
+    border-radius: 4px;
+    border: none;
+    box-sizing: border-box;
+    line-height: 1.35;
+    font-size: 0.875rem;
+    background-color: var(--settings-accent);
+    box-shadow: 0 1px 2px var(--settings-accent-ring);
+}
+
+.settings-toolbar .settings-toolbar-actions .settings-submit-btn:hover {
+    background-color: var(--settings-accent-hover);
+    box-shadow: 0 2px 4px var(--settings-accent-ring);
+}
+
+.coin-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #eab308;
+}
+
+.info-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #9ca3af;
+    cursor: help;
+}
+
+.info-icon:hover {
+    color: #6b7280;
+}
+
+.code-textarea {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    min-height: 120px;
+    resize: vertical;
+}
+
+.code-textarea-large {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    min-height: 200px;
+    resize: vertical;
+}
+
+/* Table Styles */
+.settings-table-container {
+    background: white;
+    border: 1px solid var(--settings-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.settings-table-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.settings-table-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #111827;
+    margin: 0;
+}
+
+.settings-add-btn {
+    background-color: var(--settings-accent);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.settings-add-btn:hover {
+    background-color: var(--settings-accent-hover);
+}
+
+.settings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.settings-table thead {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.settings-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.settings-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.settings-table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-btn:hover {
+    opacity: 0.8;
+}
+
+.action-btn-edit {
+    background-color: #cff3ff;
+}
+
+.action-btn-delete {
+    background-color: #ffe7e7;
+}
+
+.action-btn img {
+    width: 1.375rem;
+    height: 1.375rem;
+}
+
+/* Withdrawal Limit Card */
+.withdrawal-limit-card {
+    background: var(--settings-surface);
+    border: 1px solid var(--settings-border);
+    padding: 0;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+.withdrawal-limit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+}
+
+.withdrawal-limit-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.withdrawal-limit-divider {
+    width: 97%;
+    margin: 0.4375rem 0.5625rem;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+.withdrawal-limit-body {
+    padding: 0 1.5rem;
+}
+
+.withdrawal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .withdrawal-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.withdrawal-input-label {
+    color: #7a7a7a;
+    font-weight: 400;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.withdrawal-note {
+    color: #3c28b2;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+/* Loading States */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 0.25rem;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    /* .settings-layout {
+        padding: 1rem;
+    } */
+
+    .setting-grid-3,
+    .setting-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .settings-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .settings-add-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+/* Utility Classes */
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+.mt-1 {
+    margin-top: 0.25rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* ----- Settings page shell (reference layout: light gray page, white nav, card grid) ----- */
+
+
+
+@media (min-width: 992px) {
+    .settings-page {
+        padding: 1.5rem 0 2rem;
+    }
+}
+
+
+
+.settings-tab-panel {
+    min-height: 200px;
+}
+
+/* Tab toolbar: section title (+ optional Submit) in a card-style bar */
+.mainAdminGrid .settings-page .mainSetting .settings-tab-submit-box {
+    border: 1px solid var(--settings-border);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    background: var(--settings-surface);
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settings-tab-submit-box-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
+    box-sizing: border-box;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settings-tab-submit-box-inner .settingboxheader {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Withdraw table: Payment Setting–style switch row in ENABLED column */
+.mainAdminGrid .settings-page .payment-setting .settings-table-container .payment-withdraw-switch-row {
+    min-width: min(100%, 320px);
+}
+
+.mainAdminGrid .settings-page .payment-setting .settings-table-container .payment-withdraw-switch-row .payment-content-button {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Card shells: override mainAdminGrid / SCSS theme (dark green headers → clean white cards) */
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter {
+    /* background-color: #ffffff !important; */
+    border: 1px solid var(--settings-border) !important;
+    border-radius: 6px !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .settingBoxHeader {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    padding: 1rem 1.25rem !important;
+    border-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom: 1px solid #e8eaed !important;
+    margin: 0;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .settingboxheader {
+    color: #1f2937 !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    margin: 0;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .settingBoxHeader h4.settingboxheader {
+    font-size: 1rem !important;
+    line-height: 1.35;
+}
+
+/* Divider under card header (reference layout) */
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter>hr {
+    display: block;
+    width: calc(100% - 1.5rem);
+    max-width: 100%;
+    margin: 0.25rem auto 0.5rem;
+    border: none;
+    border-top: 1px solid #e8eaed;
+    opacity: 1;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter>.d-flex.justify-content-between {
+    padding: 1rem 1.25rem 1.25rem !important;
+    align-items: center !important;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .isfake {
+    color: #374151;
+    font-size: 0.875rem;
+    margin: 0;
+    padding-left: 0;
+}
+
+/* Chat-style: label above field, full width — matches Chat Setting card */
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .inputData {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    flex-wrap: nowrap !important;
+    gap: 0.35rem;
+    width: 100%;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .inputData>label {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #383636 !important;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .inputData>input,
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .inputData>textarea {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.mainAdminGrid .settings-page .mainSetting .settingBox .settingBoxOuter .inputData>.errorMessage {
+    width: 100%;
+}
+
+/* Padded card body + vertical field groups */
+.mainAdminGrid .settings-page .setting-box-body {
+    padding: 0 1.25rem 0.625rem;
+    box-sizing: border-box;
+    background: #ffffff;
+}
+
+.mainAdminGrid .settings-page .setting-fields-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+/* Random Call Charge: Male / Female / Both in one row (stacks on small screens) */
+.mainAdminGrid .settings-page .setting-random-call-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    width: 100%;
+    align-items: start;
+}
+
+@media (max-width: 767px) {
+    .mainAdminGrid .settings-page .setting-random-call-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Private Call Charge: Audio / Video in one row */
+.mainAdminGrid .settings-page .setting-private-call-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    width: 100%;
+    align-items: start;
+}
+
+@media (max-width: 767px) {
+    .mainAdminGrid .settings-page .setting-private-call-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.mainAdminGrid .settings-page .setting-box-label {
+    user-select: none;
+    font-weight: 500;
+    font-size: 14px;
+    color: #383636;
+    margin: 0;
+    line-height: 1.45;
+
+}
+
+.mainAdminGrid .settings-page .setting-box-label .setting-box-label-hint {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 400;
+
+}
+
+.mainAdminGrid .settings-page .setting-box-toggle-row {
+    padding: 0 1.25rem 0.75rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    .mainAdminGrid .settings-page .setting-box-toggle-row {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Avoid double horizontal padding when toggle rows sit inside .setting-box-body */
+.mainAdminGrid .settings-page .setting-box-body>.setting-box-toggle-row {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media (max-width: 767px) {
+    .mainAdminGrid .settings-page .setting-box-body>.setting-box-toggle-row {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.mainAdminGrid .settings-page .setting-coin-label-row {
+    margin: 0 0 0.5rem 0;
+}
+
+.mainAdminGrid .settings-page .setting-coin-label-row.setting-coin-label-row--spaced {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.mainAdminGrid .settings-page .setting-coin-equals {
+    font-size: 1.35rem;
+    line-height: 1.2;
+    opacity: 0.45;
+    font-weight: 500;
+    padding: 0.125rem 0;
+}
+
+@media (max-width: 767px) {
+    .mainAdminGrid .settings-page .setting-box-body {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Inputs inside admin setting cards */
+.mainAdminGrid .settings-page .mainSetting .inputData input,
+.mainAdminGrid .settings-page .mainSetting .inputData textarea,
+.mainAdminGrid .settings-page .mainSetting .setting-box-body .custom-input input,
+.mainAdminGrid .settings-page .mainSetting .setting-box-body .custom-input textarea {
+    background-color: #f1f3f5 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 10px 12px !important;
+    color: #111827;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mainAdminGrid .settings-page .mainSetting .inputData input:focus,
+.mainAdminGrid .settings-page .mainSetting .inputData textarea:focus,
+.mainAdminGrid .settings-page .mainSetting .setting-box-body .custom-input input:focus,
+.mainAdminGrid .settings-page .mainSetting .setting-box-body .custom-input textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--settings-accent-ring);
+}
+
+/* Payment Setting cards: stacked toggle rows (label left, switch right, full width) */
+.mainAdminGrid .settings-page .mainSetting .payment-toggle-stack {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+.mainAdminGrid .settings-page .mainSetting .payment-toggle-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.65rem 0;
+    border-top: 1px solid #e8eaed;
+    box-sizing: border-box;
+}
+
+.mainAdminGrid .settings-page .mainSetting .payment-toggle-stack .payment-toggle-row:first-child {
+    border-top: none;
+    padding-top: 0.35rem;
+}
+
+.mainAdminGrid .settings-page .mainSetting .payment-toggle-label {
+    flex: 1;
+    min-width: 0;
+    font-weight: 500;
+    font-size: 14px;
+    color: #383636;
+    line-height: 1.45;
+}
+
+.mainAdminGrid .settings-page .mainSetting .payment-toggle-hint {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.mainAdminGrid .settings-page .mainSetting .payment-toggle-row .switch {
+    flex-shrink: 0;
+}
+
+/* Toggles use the global .switch styles (same as other pages) — no overrides here */
+
+/* ----- Settings route: fix global style.css clashes + cards outside .settingBox (e.g. Ads tab) ----- */
+
+.mainAdminGrid .settings-page .payment-setting {
+    padding: 0 !important;
+}
+
+.mainAdminGrid .settings-page .mainSetting .card1 {
+    border: 1px solid var(--settings-border);
+    border-radius: 6px;
+    background: var(--settings-surface);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+.mainAdminGrid .settings-page .mainSetting .card1>.cardHeader {
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--settings-border) !important;
+}
+
+/* Any settings card with settingBoxOuter (even when not under .settingBox row) */
+.mainAdminGrid .settings-page .mainSetting .withdrawal-box.settingBoxOuter {
+    background-color: #ffffff !important;
+    border: 1px solid var(--settings-border) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+/* Payment gateway row labels — align with violet theme */
+.mainAdminGrid .settings-page .payment-setting .payment-content-button {
+    /* background: rgba(139, 92, 246, 0.07) !important; */
+}
+
+.mainAdminGrid .settings-page .payment-setting .payment-content-button span {
+    color: #475569 !important;
+}
+
+.mainAdminGrid .settings-shell-body .settings-page {
+    background: transparent;
+}
+
+/* Primary actions on settings tabs — override global theme (--new-color) to match settings violet */
+.mainAdminGrid .settings-page .themeBtn.submit-btn,
+.mainAdminGrid .settings-page .payment-setting .themeBtn.submit-btn {
+    background-color: var(--settings-accent) !important;
+    color: #ffffff !important;
+    border-radius: 4px !important;
+}
+
+.mainAdminGrid .settings-page .themeBtn.submit-btn:hover,
+.mainAdminGrid .settings-page .payment-setting .themeBtn.submit-btn:hover {
+    background-color: var(--settings-accent-hover) !important;
+}
+/* Payment Setting Responsiveness Fixes */
+.payment-setting .payment-content-button {
+    height: auto !important;
+    min-height: 37px;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    cursor: default !important;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.payment-setting .payment-content-button span {
+    white-space: normal !important;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.payment-setting .withdrawal-input .d-flex {
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 767px) {
+    .payment-setting .withdrawal-input .d-flex {
+        align-items: center !important;
+    }
+
+    .payment-setting .MuiFormControlLabel-root {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-setting .payment-content-button span {
+        font-size: 13px !important;
+    }
+}
+

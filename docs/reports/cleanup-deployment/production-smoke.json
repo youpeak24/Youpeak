@@ -1,0 +1,61 @@
+[
+  {
+    "name": "consumer",
+    "requestedUrl": "https://youpeak-web.vercel.app/",
+    "finalUrl": "https://youpeak-web.vercel.app/",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "flutter": true,
+    "react": false
+  },
+  {
+    "name": "apex",
+    "requestedUrl": "https://youpeak.app/",
+    "finalUrl": "https://www.youpeak.app/",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "flutter": true,
+    "react": false
+  },
+  {
+    "name": "www",
+    "requestedUrl": "https://www.youpeak.app/",
+    "finalUrl": "https://www.youpeak.app/",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "flutter": true,
+    "react": false
+  },
+  {
+    "name": "admin",
+    "requestedUrl": "https://admin.youpeak.app/",
+    "finalUrl": "https://admin.youpeak.app/",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "flutter": false,
+    "react": true
+  },
+  {
+    "name": "api-ping",
+    "requestedUrl": "https://api.youpeak.app/api/ping",
+    "finalUrl": "https://api.youpeak.app/api/ping",
+    "status": 200,
+    "type": "application/json; charset=utf-8",
+    "flutter": false,
+    "react": false,
+    "response": {
+      "status": true,
+      "service": "youpeak-api",
+      "dependenciesChecked": false
+    }
+  },
+  {
+    "name": "api-settings-without-key",
+    "requestedUrl": "https://api.youpeak.app/client/setting",
+    "finalUrl": "https://api.youpeak.app/client/setting",
+    "status": 401,
+    "type": "application/json; charset=utf-8",
+    "flutter": false,
+    "react": false
+  }
+]

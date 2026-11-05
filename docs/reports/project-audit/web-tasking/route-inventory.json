@@ -1,0 +1,816 @@
+[
+ {
+  "page": "ActivationLockView",
+  "file": "lib/features/access_gate/presentation/activation_lock_view.dart",
+  "openedFrom": [
+   "features/auth/service/post_login_router.dart",
+   "features/splash/view/splash_screen_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "AddThumbnailView",
+  "file": "lib/features/live/view/add_thumbnail_view.dart",
+  "openedFrom": [
+   "features/live/view/go_live_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "AudiencePageView",
+  "file": "lib/features/upload/view/audience_page.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "BuyCoinHistoryView",
+  "file": "lib/features/coins/view/buy_coin_history_view.dart",
+  "openedFrom": [
+   "features/coins/widget/buy_coin_widget.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "BuyCoinView",
+  "file": "lib/features/coins/view/buy_coin_view.dart",
+  "openedFrom": [
+   "features/coins/view/convert_coin_view.dart",
+   "features/profile/view/profile_view.dart",
+   "shared/widgets/subscribe_premium_channel_bottom_sheet.dart",
+   "shared/widgets/unlock_premium_video_bottom_sheet.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CoinHistoryView",
+  "file": "lib/features/coins/view/coin_history_view.dart",
+  "openedFrom": [
+   "features/coins/view/convert_coin_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CoinPaymentView",
+  "file": "lib/features/coins/widget/coin_payment_view.dart",
+  "openedFrom": [
+   "features/coins/controller/buy_coin_controller.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CommentsPageView",
+  "file": "lib/features/upload/view/comments_page.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "ContentEngagementView",
+  "file": "lib/features/monetization/view/content_engagement_view.dart",
+  "openedFrom": [
+   "features/rewards/view/earn_reward_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "ConvertCoinView",
+  "file": "lib/features/coins/view/convert_coin_view.dart",
+  "openedFrom": [
+   "features/rewards/view/earn_reward_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CreateChannelScreen",
+  "file": "lib/features/channel/view/create_channel_screen.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CreateChannelView",
+  "file": "lib/features/channel/view/create_channel_view.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CreateNewPasswordView",
+  "file": "lib/features/auth/view/create_new_password_view.dart",
+  "openedFrom": [
+   "features/auth/view/forgot_password_otp_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "CreatePlayListView",
+  "file": "lib/features/playlist/view/create_playlist_view.dart",
+  "openedFrom": [
+   "features/library/view/nav_library_page.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "CreateShortView",
+  "file": "lib/features/bites/view/create_short_view.dart",
+  "openedFrom": [
+   "features/bites/view/nav_shorts_details_view.dart",
+   "features/bites/view/preview_shorts_video.dart",
+   "features/main/view/main_home_view.dart",
+   "features/video/view/shorts_video_details_view.dart"
+  ],
+  "desktop": "full window (camera/live/Bites player)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "CreatorTierView",
+  "file": "lib/features/tiers/view/creator_tier_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "DescriptionPageView",
+  "file": "lib/features/upload/view/description_page.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "DownloadView",
+  "file": "lib/features/library/view/download_view.dart",
+  "openedFrom": [
+   "features/library/view/nav_library_page.dart",
+   "features/main/view/main_home_view.dart",
+   "features/splash/view/splash_screen_view.dart",
+   "features/video/view/normal_video_details_view.dart",
+   "features/video/widget/more_information_bottom_sheet.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "EarnRewardView",
+  "file": "lib/features/rewards/view/earn_reward_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "behind TaskLockGate"
+ },
+ {
+  "page": "EditProfileView",
+  "file": "lib/features/profile/view/edit_profile.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "EditVideoView",
+  "file": "lib/features/edit_video/view/edit_video_view.dart",
+  "openedFrom": [
+   "features/library/view/your_video_page.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "FillProfileView",
+  "file": "lib/features/auth/view/fill_profile_view.dart",
+  "openedFrom": [
+   "features/auth/service/google_sign_in_flow.dart",
+   "features/auth/service/post_login_router.dart",
+   "features/auth/view/lets_you_in_view.dart",
+   "features/auth/view/login_view.dart",
+   "features/auth/view/sign_up_otp_view.dart",
+   "features/auth/view/sign_up_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "ForgotPasswordOtpView",
+  "file": "lib/features/auth/view/forgot_password_otp_view.dart",
+  "openedFrom": [
+   "features/auth/view/forget_password_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "ForgotPasswordView",
+  "file": "lib/features/auth/view/forget_password_view.dart",
+  "openedFrom": [
+   "features/auth/view/login_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "GetPlaylistPage",
+  "file": "lib/features/channel/view/get_playList_page.dart",
+  "openedFrom": [
+   "features/library/controller/nav_library_controller.dart",
+   "features/library/view/nav_library_page.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "GoLiveView",
+  "file": "lib/features/live/view/go_live_view.dart",
+  "openedFrom": [
+   "features/main/view/main_home_view.dart"
+  ],
+  "desktop": "full window (camera/live/Bites player)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "GrievanceView",
+  "file": "lib/features/settings/view/grievance_view.dart",
+  "openedFrom": [
+   "features/settings/view/settings_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "HelpCenterView",
+  "file": "lib/features/help_center/view/help_center_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 760px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "HistoryPageView",
+  "file": "lib/features/library/view/history_view.dart",
+  "openedFrom": [
+   "features/library/view/nav_library_page.dart",
+   "features/settings/view/settings_view.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "LanguageView",
+  "file": "lib/features/settings/view/language_view.dart",
+  "openedFrom": [
+   "features/settings/view/settings_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "LetsYouInView",
+  "file": "lib/features/auth/view/lets_you_in_view.dart",
+  "openedFrom": [
+   "core/storage/database/database.dart",
+   "features/onboarding/view/on_boarding_view.dart",
+   "features/splash/view/splash_screen_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "LivePage",
+  "file": "lib/features/live/view/live_view.dart",
+  "openedFrom": [
+   "features/home/widget/nav_home_widget.dart",
+   "features/live/controller/add_thumbnail_controller.dart",
+   "features/live/view/go_live_view.dart",
+   "features/subscriptions/view/nav_subscription_view.dart",
+   "features/subscriptions/view/subscribed_channel_view.dart"
+  ],
+  "desktop": "full window (camera/live/Bites player)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "LoginView",
+  "file": "lib/features/auth/view/login_view.dart",
+  "openedFrom": [
+   "features/auth/view/create_new_password_view.dart",
+   "features/auth/view/lets_you_in_view.dart",
+   "features/auth/view/sign_up_view.dart",
+   "features/splash/view/splash_screen_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "MainHomePageView",
+  "file": "lib/features/main/view/main_home_view.dart",
+  "openedFrom": [
+   "features/access_gate/presentation/activation_lock_view.dart",
+   "features/auth/service/google_sign_in_flow.dart",
+   "features/auth/service/post_login_router.dart",
+   "features/auth/view/fill_profile_view.dart",
+   "features/auth/view/lets_you_in_view.dart",
+   "features/auth/view/login_view.dart",
+   "features/auth/view/sign_up_view.dart",
+   "features/splash/view/splash_screen_view.dart"
+  ],
+  "desktop": "own desktop layout (wide route)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "MonetizationView",
+  "file": "lib/features/monetization/view/monetization_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "MyWalletView",
+  "file": "lib/features/wallet/view/my_wallet_view.dart",
+  "openedFrom": [
+   "features/monetization/view/preview_monetization.dart",
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "NormalVideoDetailsView",
+  "file": "lib/features/video/view/normal_video_details_view.dart",
+  "openedFrom": [
+   "core/deep_link/services/deep_link_services.dart",
+   "features/channel/view/channel_home_tab_view.dart",
+   "features/channel/view/channel_video_tab_view.dart",
+   "features/channel/view/preview_playlist_view.dart",
+   "features/home/widget/nav_home_widget.dart",
+   "features/home/widget/premium_videos_shelf.dart",
+   "features/library/view/download_view.dart",
+   "features/library/view/history_view.dart",
+   "features/library/view/nav_library_page.dart",
+   "features/library/view/watch_later_view.dart",
+   "features/library/view/your_video_page.dart",
+   "features/search/view/search_view.dart",
+   "features/subscriptions/view/nav_subscription_view.dart"
+  ],
+  "desktop": "own desktop layout (wide route)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "NotificationPageView",
+  "file": "lib/features/notifications/view/notification_view.dart",
+  "openedFrom": [
+   "features/home/view/nav_home_page.dart",
+   "features/library/view/nav_library_page.dart",
+   "features/subscriptions/view/nav_subscription_view.dart"
+  ],
+  "desktop": "shell + sidebar, 760px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "OnBoardIngScreen",
+  "file": "lib/features/onboarding/view/on_boarding_view.dart",
+  "openedFrom": [
+   "features/splash/view/splash_screen_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "PaymentView",
+  "file": "lib/features/premium/view/payments_view.dart",
+  "openedFrom": [
+   "features/premium/view/premium_plan_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PhoneLoginView",
+  "file": "lib/features/auth/phone/presentation/phone_login_view.dart",
+  "openedFrom": [
+   "features/auth/view/lets_you_in_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "PremiumPlanPurchaseHistoryView",
+  "file": "lib/features/premium/view/premium_plan_purchase_history_view.dart",
+  "openedFrom": [
+   "features/settings/view/settings_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PremiumPlanView",
+  "file": "lib/features/premium/view/premium_plan_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart",
+   "shared/widgets/premium_plan_dialog.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PreviewMonetization",
+  "file": "lib/features/monetization/view/preview_monetization.dart",
+  "openedFrom": [
+   "features/monetization/view/monetization_view.dart",
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PreviewPlaylistView",
+  "file": "lib/features/channel/view/preview_playlist_view.dart",
+  "openedFrom": [
+   "features/channel/view/channel_playlist_tab_view.dart",
+   "features/channel/view/get_playList_page.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PreviewShortsView",
+  "file": "lib/features/bites/view/preview_shorts_view.dart",
+  "openedFrom": [
+   "features/home/widget/nav_home_widget.dart"
+  ],
+  "desktop": "full window (camera/live/Bites player)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "PrivacyPolicyWebView",
+  "file": "lib/features/settings/view/privacy_policy_web_view.dart",
+  "openedFrom": [
+   "features/settings/view/privacy_policy_web_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "ProfileView",
+  "file": "lib/features/profile/view/profile_view.dart",
+  "openedFrom": [
+   "features/home/view/nav_home_page.dart",
+   "features/library/view/nav_library_page.dart",
+   "features/subscriptions/view/nav_subscription_view.dart"
+  ],
+  "desktop": "shell + sidebar, 1120px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PromoteVideoView",
+  "file": "lib/features/video_promotion/view/promote_video_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "PurchasePlanView",
+  "file": "lib/features/premium/view/purchase_plan_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "ReferralHistoryView",
+  "file": "lib/features/referral/view/referral_history_view.dart",
+  "openedFrom": [
+   "features/referral/view/referral_program_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "ReferralProgramView",
+  "file": "lib/features/referral/view/referral_program_view.dart",
+  "openedFrom": [
+   "features/rewards/view/earn_reward_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "SearchView",
+  "file": "lib/features/search/view/search_view.dart",
+  "openedFrom": [
+   "features/bites/view/nav_shorts_details_view.dart",
+   "features/bites/view/preview_shorts_video.dart",
+   "features/home/view/nav_home_page.dart",
+   "features/library/view/nav_library_page.dart",
+   "features/main/view/main_home_view.dart",
+   "features/subscriptions/view/nav_subscription_view.dart",
+   "features/video/view/shorts_video_details_view.dart"
+  ],
+  "desktop": "shell + sidebar, 1200px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "SetThumbnailPage",
+  "file": "lib/features/upload/view/set_thumbnail_page.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "SettingsView",
+  "file": "lib/features/settings/view/settings_view.dart",
+  "openedFrom": [
+   "features/library/view/watch_later_view.dart",
+   "features/library/view/your_video_page.dart",
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 760px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "ShortsVideoDetailsView",
+  "file": "lib/features/video/view/shorts_video_details_view.dart",
+  "openedFrom": [
+   "core/deep_link/services/deep_link_services.dart",
+   "features/channel/view/channel_home_tab_view.dart",
+   "features/channel/view/channel_video_tab_view.dart",
+   "features/library/view/history_view.dart",
+   "features/library/view/nav_library_page.dart",
+   "features/library/view/watch_later_view.dart",
+   "features/library/view/your_video_page.dart",
+   "features/search/view/search_view.dart",
+   "features/subscriptions/view/nav_subscription_view.dart"
+  ],
+  "desktop": "full window (camera/live/Bites player)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "SignUpOtpView",
+  "file": "lib/features/auth/view/sign_up_otp_view.dart",
+  "openedFrom": [
+   "features/auth/view/sign_up_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "SignUpView",
+  "file": "lib/features/auth/view/sign_up_view.dart",
+  "openedFrom": [
+   "features/auth/view/lets_you_in_view.dart",
+   "features/auth/view/login_view.dart"
+  ],
+  "desktop": "branded split (sign-in/onboarding)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "SplashScreenView",
+  "file": "lib/features/splash/view/splash_screen_view.dart",
+  "openedFrom": [
+   "main.dart (home)"
+  ],
+  "desktop": "full window (splash)",
+  "below900": "full width",
+  "taskGate": "—"
+ },
+ {
+  "page": "SubscribedChannelView",
+  "file": "lib/features/subscriptions/view/subscribed_channel_view.dart",
+  "openedFrom": [
+   "features/subscriptions/view/nav_subscription_view.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "SubscriptionPlanView",
+  "file": "lib/features/channel/view/subscription_plan_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "TaskLockGate",
+  "file": "lib/core/security/presentation/task_lock_gate.dart",
+  "openedFrom": [
+   "features/peak_boost/presentation/peak_boost_button.dart",
+   "features/tasker/presentation/tasker_dashboard_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "is the gate"
+ },
+ {
+  "page": "TaskerDashboardView",
+  "file": "lib/features/tasker/presentation/tasker_dashboard_view.dart",
+  "openedFrom": [
+   "features/home/view/nav_home_page.dart"
+  ],
+  "desktop": "shell + sidebar, 1180px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "shows server lock state"
+ },
+ {
+  "page": "TaskerTierView",
+  "file": "lib/features/tiers/view/tasker_tier_view.dart",
+  "openedFrom": [
+   "features/rewards/view/earn_reward_view.dart",
+   "features/tasker/presentation/tasker_dashboard_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "shows server lock state"
+ },
+ {
+  "page": "TimeWatchView",
+  "file": "lib/features/monetization/view/time_watch_view.dart",
+  "openedFrom": [
+   "features/profile/view/profile_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "UploadVideoView",
+  "file": "lib/features/upload/view/upload_video_view.dart",
+  "openedFrom": [
+   "features/bites/controller/create_short_controller.dart",
+   "features/bites/view/create_short_view.dart",
+   "features/main/view/main_home_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "VideoChargesView",
+  "file": "lib/features/upload/view/video_charges_view.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "VisibilityPageView",
+  "file": "lib/features/upload/view/visibility_page.dart",
+  "openedFrom": [
+   "features/upload/view/upload_video_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "WatchLaterView",
+  "file": "lib/features/library/view/watch_later_view.dart",
+  "openedFrom": [
+   "features/library/view/nav_library_page.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "WithdrawHistoryView",
+  "file": "lib/features/wallet/view/withdraw_history_view.dart",
+  "openedFrom": [
+   "features/wallet/view/withdraw_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "WithdrawView",
+  "file": "lib/features/wallet/view/withdraw_view.dart",
+  "openedFrom": [
+   "features/wallet/view/my_wallet_view.dart"
+  ],
+  "desktop": "shell + sidebar, 600px phone column",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "YourChannelView",
+  "file": "lib/features/channel/view/your_channel_view.dart",
+  "openedFrom": [
+   "features/bites/view/nav_shorts_details_view.dart",
+   "features/bites/view/preview_shorts_video.dart",
+   "features/home/widget/nav_home_widget.dart",
+   "features/profile/view/profile_view.dart",
+   "features/search/view/search_view.dart",
+   "features/subscriptions/view/subscribed_channel_view.dart",
+   "features/video/view/normal_video_details_view.dart",
+   "features/video/view/shorts_video_details_view.dart",
+   "shared/widgets/normal_video_ui.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ },
+ {
+  "page": "YourVideoPageView",
+  "file": "lib/features/library/view/your_video_page.dart",
+  "openedFrom": [
+   "features/library/view/nav_library_page.dart",
+   "features/upload/controller/upload_video_controller.dart"
+  ],
+  "desktop": "shell + sidebar, 960px",
+  "below900": "600px column (full width under 600px)",
+  "taskGate": "—"
+ }
+]

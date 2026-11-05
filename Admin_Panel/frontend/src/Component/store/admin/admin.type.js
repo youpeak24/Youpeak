@@ -1,0 +1,18 @@
+// login
+export const LOGIN_ADMIN = "LOGIN_ADMIN";
+export const LOGOUT_ADMIN = "LOGOUT_ADMIN";
+export const SIGNUP_ADMIN = "SIGNUP_ADMIN";
+export const SET_ADMIN = "SET_ADMIN";
+export const UNSET_ADMIN = "UNSET_ADMIN";
+export const FORGOT_PASSWORD = "FORGOT_PASSWORD";
+export const SEND_EMAIL = "SEND_EMAIL";
+export const UPDATE_PROFILE = "UPDATE_PROFILE";
+export const ADMIN_EARNING = "ADMIN_EARNING";
+export const COIN_PLAN_EARNING = "COIN_PLAN_EARNING";
+export const CLEAN_EARNING = "CLEAN_EARNING";
+
+// All plan earnings (user coin + VIP history)
+export const ALL_PLAN_EARNING_REQUEST = "ALL_PLAN_EARNING_REQUEST";
+export const ALL_PLAN_EARNING_SUCCESS = "ALL_PLAN_EARNING_SUCCESS";
+export const ALL_PLAN_EARNING_FAILURE = "ALL_PLAN_EARNING_FAILURE";
+export const CLEAN_ALL_PLAN_EARNING = "CLEAN_ALL_PLAN_EARNING";

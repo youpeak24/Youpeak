@@ -1,0 +1,10 @@
+{
+  "results": {
+    "created-channel": {
+      "tabsShown": true,
+      "reportsOnChannelPage": 0
+    },
+    "error": "semantics node not found: Profile"
+  },
+  "reports": []
+}

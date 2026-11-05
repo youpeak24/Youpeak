@@ -1,0 +1,30 @@
+//express
+const express = require("express");
+const route = express.Router();
+
+//admin index.js
+const admin = require("./admin/index");
+
+//client index.js
+const client = require("./client/index");
+
+//cron (scheduled maintenance)
+const cron = require("./cron.route");
+
+//payment webhook (server-to-server)
+const payment = require("./payment.route");
+
+//cloudflare stream webhook
+const stream = require("./stream.route");
+
+//internal (fingerprint worker, server-to-server)
+const internal = require("./internal.route");
+
+route.use("/admin", admin);
+route.use("/client", client);
+route.use("/cron", cron);
+route.use("/payment", payment);
+route.use("/stream", stream);
+route.use("/internal", internal);
+
+module.exports = route;

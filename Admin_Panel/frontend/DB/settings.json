@@ -1,0 +1,97 @@
+[{
+  "_id": {
+    "$oid": "6a5a008c9fb97d1dc7aa9e61"
+  },
+  "privacyPolicyLink": "",
+  "privacyPolicyText": "PRIVACY POLICY TEXT",
+  "adminCommissionOfPaidChannel": 0,
+  "adminCommissionOfPaidVideo": 0,
+  "durationOfShorts": 120,
+  "createdAt": {
+    "$date": "2023-08-08T12:48:46.902Z"
+  },
+  "updatedAt": {
+    "$date": "2026-07-17T10:00:12.848Z"
+  },
+  "minWithdrawalRequestedAmount": 10,
+  "zegoAppId": "",
+  "zegoAppSignIn": "",
+  "googlePlaySwitch": true,
+  "earningPerHour": 2,
+  "minSubScriber": 1,
+  "minWatchTime": 2,
+  "isMonetization": true,
+  "adDisplayIndex": 2,
+  "currency": {
+    "name": "INR",
+    "symbol": "₹",
+    "countryCode": "IN",
+    "currencyCode": "INR",
+    "isDefault": true
+  },
+  "privateKey": {},
+  "maxAdPerDay": 20,
+  "minCoinForCashOut": 100,
+  "commentingRewardCoins": 100,
+  "likeVideoRewardCoins": 100,
+  "loginRewardCoins": 100,
+  "referralRewardCoins": 100,
+  "requiredMembers": 5,
+  "watchingVideoRewardCoins": 100,
+  "minWithdrawalRequestedCoin": 0,
+  "minConvertCoin": 1000,
+  "isWatermarkOn": false,
+  "watermarkIcon": "",
+  "watermarkType": 2,
+  "storage": {
+    "local": true,
+    "awsS3": false,
+    "digitalOcean": false
+  },
+  "resendApiKey": "",
+  "awsAccessKey": "AWS ACCESS",
+  "awsBucketName": "AWS BUCKET UPDATE",
+  "awsEndpoint": "AWS ENDPOINTS",
+  "awsHostname": "AWS HOST",
+  "awsRegion": "AWS REGION",
+  "awsSecretKey": "AWS SECRET KEY",
+  "doAccessKey": "",
+  "doBucketName": "",
+  "doEndpoint": "",
+  "doHostname": "",
+  "doRegion": "",
+  "doSecretKey": "",
+  "androidAppLink": "",
+  "androidAppVersion": "1.0.0",
+  "iosAppLink": "",
+  "iosAppVersion": "1.0.0",
+  "zegoServerSecret": "",
+  "androidAssetLinks": [
+    {
+      "relation": [
+        "delegate_permission/common.handle_all_urls"
+      ],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.demo",
+        "sha256_cert_fingerprints": [
+          "85:CE:04:29:D7:0A:77:F7:91:19:2E:97:28:24:35:5F:59:AD:11:40:6D:A7:1E"
+        ]
+      }
+    }
+  ],
+  "appleAppSiteAssociation": {
+    "applinks": {
+      "apps": [],
+      "details": [
+        {
+          "appID": "W5T948BC35.com.demo",
+          "paths": [
+            "*"
+          ]
+        }
+      ]
+    }
+  },
+  "websiteUrl": ""
+}]

@@ -1,0 +1,532 @@
+# git status before web-tasking task, 2026-10-05T13:36:38+05:30, HEAD 894b2f4e
+ M DEPLOYMENT.md
+ M admin/frontend/src/Component/store/admin/admin.action.js
+ M admin/frontend/src/util/AwsFunction.js
+ M api/index.js
+ M functions/backend/controllers/admin/file.controller.js
+ M functions/backend/controllers/admin/user.controller.js
+ M functions/backend/controllers/admin/video.controller.js
+ M functions/backend/controllers/admin/withDrawalRequest.controller.js
+ M functions/backend/controllers/client/file.controller.js
+ M functions/backend/controllers/client/otp.controller.js
+ M functions/backend/controllers/client/partner.controller.js
+ M functions/backend/controllers/client/payment.controller.js
+ M functions/backend/controllers/client/payout.controller.js
+ M functions/backend/controllers/client/peakBoost.controller.js
+ M functions/backend/controllers/client/playbackSession.controller.js
+ M functions/backend/controllers/client/saveToWatchLater.controller.js
+ M functions/backend/controllers/client/user.controller.js
+ M functions/backend/controllers/client/userFirestore.controller.js
+ M functions/backend/controllers/client/userTaskReward.controller.js
+ M functions/backend/controllers/client/userWiseDownload.controller.js
+ M functions/backend/controllers/client/userWiseSubscription.controller.js
+ M functions/backend/controllers/client/video.controller.js
+ M functions/backend/controllers/client/watchHistory.controller.js
+ M functions/backend/controllers/client/watchSession.controller.js
+ M functions/backend/controllers/client/withDrawalRequest.controller.js
+ M functions/backend/index.js
+ M functions/backend/middleware/admin.middleware.js
+ M functions/backend/models/otp.model.js
+ M functions/backend/routes/admin/file.route.js
+ M functions/backend/routes/admin/index.js
+ M functions/backend/routes/admin/payment.route.js
+ M functions/backend/routes/client/adRewardCoin.route.js
+ M functions/backend/routes/client/coinplan.route.js
+ M functions/backend/routes/client/creatorFunding.route.js
+ M functions/backend/routes/client/creatorTier.route.js
+ M functions/backend/routes/client/dailyRewardCoin.route.js
+ M functions/backend/routes/client/file.route.js
+ M functions/backend/routes/client/grievance.route.js
+ M functions/backend/routes/client/index.js
+ M functions/backend/routes/client/liveUser.route.js
+ M functions/backend/routes/client/localBusinessAd.route.js
+ M functions/backend/routes/client/monetizationRequest.route.js
+ M functions/backend/routes/client/notification.route.js
+ M functions/backend/routes/client/partner.route.js
+ M functions/backend/routes/client/payment.route.js
+ M functions/backend/routes/client/playList.route.js
+ M functions/backend/routes/client/playbackSession.route.js
+ M functions/backend/routes/client/premiumPlan.route.js
+ M functions/backend/routes/client/report.route.js
+ M functions/backend/routes/client/saveToWatchLater.route.js
+ M functions/backend/routes/client/taskerTier.route.js
+ M functions/backend/routes/client/user.route.js
+ M functions/backend/routes/client/userTaskReward.route.js
+ M functions/backend/routes/client/userWiseDownload.route.js
+ M functions/backend/routes/client/userWiseSubscription.route.js
+ M functions/backend/routes/client/video.route.js
+ M functions/backend/routes/client/videoComment.route.js
+ M functions/backend/routes/client/videoPromotion.route.js
+ M functions/backend/routes/client/watchHistory.route.js
+ M functions/backend/routes/client/withdrawalRequest.route.js
+ M functions/backend/server.js
+ M functions/backend/util/cloudflareStorage.service.js
+ M functions/backend/util/digitalPartner.service.js
+ M functions/backend/util/firestoreDb.service.js
+ M functions/backend/util/imageStorage.service.js
+ M functions/backend/util/partnerNetwork.service.js
+ M functions/backend/util/payment.service.js
+ M functions/backend/util/referral.service.js
+ M functions/backend/util/revenueCommission.service.js
+ M functions/backend/util/revenueSplit.service.js
+ M functions/backend/util/rewardEngine.js
+ M functions/backend/util/uploadMiddleware.js
+ M functions/backend/util/videoPipeline.service.js
+ M functions/backend/util/watchLedger.service.js
+ M local-dev/README.md
+ M local-dev/config.js
+ M local-dev/firebase.json
+ M local-dev/seed.js
+ M local-dev/start.js
+ M package.json
+ M vercel.json
+ M youpeak/lib/core/ads/google_ad_helper.dart
+ M youpeak/lib/core/ads/google_full_native_ad.dart
+ M youpeak/lib/core/ads/load_multiple_ads.dart
+ M youpeak/lib/core/config/size_config.dart
+ M youpeak/lib/core/constants/app_string.dart
+ M youpeak/lib/core/deep_link/services/deep_link_services.dart
+ M youpeak/lib/core/file_upload/convert_channel_image_api.dart
+ M youpeak/lib/core/file_upload/convert_video_api.dart
+ M youpeak/lib/core/file_upload/convert_video_image_api.dart
+ M youpeak/lib/core/file_upload/direct_upload_video_api.dart
+ M youpeak/lib/core/localization/languages/language_en.dart
+ M youpeak/lib/core/localization/localization_service.dart
+ M youpeak/lib/core/localization/localizations_delegate.dart
+ M youpeak/lib/core/network/app_api_client.dart
+ M youpeak/lib/core/network/app_session.dart
+ M youpeak/lib/core/payment/payment_api.dart
+ M youpeak/lib/core/services/branch_io_services.dart
+ M youpeak/lib/core/settings/admin_settings_api.dart
+ M youpeak/lib/core/utils/custom_toast.dart
+ M youpeak/lib/features/auth/api/forgot_password_send_otp_api.dart
+ M youpeak/lib/features/auth/api/login_api.dart
+ M youpeak/lib/features/auth/api/set_password_api.dart
+ M youpeak/lib/features/auth/api/sign_up_api.dart
+ M youpeak/lib/features/auth/api/sign_up_send_otp_api.dart
+ M youpeak/lib/features/auth/api/verification_otp_api.dart
+ M youpeak/lib/features/auth/model/sign_up_model.dart
+ M youpeak/lib/features/auth/service/google_login.dart
+ M youpeak/lib/features/auth/view/create_new_password_view.dart
+ M youpeak/lib/features/auth/view/fill_profile_view.dart
+ M youpeak/lib/features/auth/view/forget_password_view.dart
+ M youpeak/lib/features/auth/view/forgot_password_otp_view.dart
+ M youpeak/lib/features/auth/view/lets_you_in_view.dart
+ M youpeak/lib/features/auth/view/login_view.dart
+ M youpeak/lib/features/auth/view/sign_up_view.dart
+ M youpeak/lib/features/bites/api/get_shorts_video_api.dart
+ M youpeak/lib/features/bites/api/get_sound_api.dart
+ M youpeak/lib/features/bites/api/preview_shorts_api.dart
+ M youpeak/lib/features/bites/controller/create_short_controller.dart
+ M youpeak/lib/features/bites/controller/nav_shorts_controller.dart
+ M youpeak/lib/features/bites/view/create_short_view.dart
+ M youpeak/lib/features/bites/view/nav_shorts_details_view.dart
+ M youpeak/lib/features/bites/view/nav_shorts_view.dart
+ M youpeak/lib/features/bites/view/preview_shorts_video.dart
+ M youpeak/lib/features/bites/view/preview_shorts_view.dart
+ M youpeak/lib/features/channel/api/channel_about_api.dart
+ M youpeak/lib/features/channel/api/channel_home_api.dart
+ M youpeak/lib/features/channel/api/channel_playlist_api.dart
+ M youpeak/lib/features/channel/api/check_channel_name_api.dart
+ M youpeak/lib/features/channel/api/create_channel_api.dart
+ M youpeak/lib/features/channel/api/edit_subscription_plan_api.dart
+ M youpeak/lib/features/channel/api/get_channel_video_api.dart
+ M youpeak/lib/features/channel/view/channel_home_tab_view.dart
+ M youpeak/lib/features/channel/view/channel_playlist_tab_view.dart
+ M youpeak/lib/features/channel/view/channel_video_tab_view.dart
+ M youpeak/lib/features/channel/view/create_channel_screen.dart
+ M youpeak/lib/features/channel/view/create_channel_view.dart
+ M youpeak/lib/features/channel/view/get_playList_page.dart
+ M youpeak/lib/features/channel/view/preview_playlist_view.dart
+ M youpeak/lib/features/channel/view/subscription_plan_view.dart
+ M youpeak/lib/features/channel/view/your_channel_view.dart
+ M youpeak/lib/features/channel/widget/channel_profile_shimmer_ui.dart
+ M youpeak/lib/features/channel/widget/subscription_plan_widget.dart
+ M youpeak/lib/features/coins/api/convert_coin_api.dart
+ M youpeak/lib/features/coins/api/fetch_buy_coin_history_api.dart
+ M youpeak/lib/features/coins/api/fetch_coin_plan_api.dart
+ M youpeak/lib/features/coins/api/get_coin_history_api.dart
+ M youpeak/lib/features/coins/api/get_my_coin_api.dart
+ M youpeak/lib/features/coins/api/purchase_coin_plan_api.dart
+ M youpeak/lib/features/coins/view/buy_coin_history_view.dart
+ M youpeak/lib/features/coins/view/buy_coin_view.dart
+ M youpeak/lib/features/coins/view/coin_history_view.dart
+ M youpeak/lib/features/coins/view/convert_coin_view.dart
+ M youpeak/lib/features/coins/widget/buy_coin_widget.dart
+ M youpeak/lib/features/coins/widget/coin_payment_view.dart
+ M youpeak/lib/features/coins/widget/convert_coin_shimmer_ui.dart
+ M youpeak/lib/features/coins/widget/withdrawal_done_dialog.dart
+ M youpeak/lib/features/comments/api/create_comment_api.dart
+ M youpeak/lib/features/comments/api/create_reply_api.dart
+ M youpeak/lib/features/comments/api/get_all_comment_api.dart
+ M youpeak/lib/features/comments/api/get_all_reply_api.dart
+ M youpeak/lib/features/comments/api/like_dislike_comment_api.dart
+ M youpeak/lib/features/comments/widget/comment_shimmer_ui.dart
+ M youpeak/lib/features/comments/widget/reply_bottom_sheet.dart
+ M youpeak/lib/features/edit_video/api/edit_video_api.dart
+ M youpeak/lib/features/edit_video/view/edit_video_view.dart
+ M youpeak/lib/features/help_center/api/get_contact_api.dart
+ M youpeak/lib/features/help_center/api/get_faq_api.dart
+ M youpeak/lib/features/home/api/fetch_all_video_api.dart
+ M youpeak/lib/features/home/api/fetch_new_video_api.dart
+ M youpeak/lib/features/home/api/fetch_popular_video_api.dart
+ M youpeak/lib/features/home/api/fetch_public_live_api.dart
+ M youpeak/lib/features/home/controller/nav_home_controller.dart
+ M youpeak/lib/features/home/view/nav_home_page.dart
+ M youpeak/lib/features/home/widget/nav_home_widget.dart
+ M youpeak/lib/features/library/api/create_watch_history_api.dart
+ M youpeak/lib/features/library/api/create_watch_later_api.dart
+ M youpeak/lib/features/library/api/delete_video_api.dart
+ M youpeak/lib/features/library/api/watch_later_api.dart
+ M youpeak/lib/features/library/view/download_view.dart
+ M youpeak/lib/features/library/view/history_view.dart
+ M youpeak/lib/features/library/view/nav_library_page.dart
+ M youpeak/lib/features/library/view/preview_normal_video.dart
+ M youpeak/lib/features/library/view/watch_later_view.dart
+ M youpeak/lib/features/library/view/your_video_page.dart
+ M youpeak/lib/features/live/api/create_live_user_api.dart
+ M youpeak/lib/features/live/api/get_live_users_api.dart
+ M youpeak/lib/features/live/view/add_thumbnail_view.dart
+ M youpeak/lib/features/live/view/go_live_view.dart
+ M youpeak/lib/features/live/view/live_view.dart
+ M youpeak/lib/features/main/view/main_home_view.dart
+ M youpeak/lib/features/monetization/api/monetization_api.dart
+ M youpeak/lib/features/monetization/api/monetization_request_api.dart
+ M youpeak/lib/features/monetization/api/preview_monetization_api.dart
+ M youpeak/lib/features/monetization/api/video_engagement_reward_api.dart
+ M youpeak/lib/features/monetization/model/video_engagement_reward_model.dart
+ M youpeak/lib/features/monetization/view/content_engagement_view.dart
+ M youpeak/lib/features/monetization/view/monetization_view.dart
+ M youpeak/lib/features/monetization/view/preview_monetization.dart
+ M youpeak/lib/features/monetization/view/time_watch_view.dart
+ M youpeak/lib/features/notifications/api/clear_notification_api.dart
+ M youpeak/lib/features/notifications/api/notification_api.dart
+ M youpeak/lib/features/notifications/controller/notification_controller.dart
+ M youpeak/lib/features/notifications/view/notification_view.dart
+ M youpeak/lib/features/playlist/api/add_into_play_list_api.dart
+ M youpeak/lib/features/playlist/api/create_play_list_api.dart
+ M youpeak/lib/features/playlist/api/fetch_normal_video_api.dart
+ M youpeak/lib/features/playlist/api/play_list_get_with_search_api.dart
+ M youpeak/lib/features/playlist/view/create_playlist_view.dart
+ M youpeak/lib/features/premium/api/get_premium_plan_api.dart
+ M youpeak/lib/features/premium/api/get_premium_purchase_history_api.dart
+ M youpeak/lib/features/premium/view/payments_view.dart
+ M youpeak/lib/features/premium/view/premium_plan_view.dart
+ M youpeak/lib/features/premium/view/purchase_plan_view.dart
+ M youpeak/lib/features/profile/api/delete_account_api.dart
+ M youpeak/lib/features/profile/api/edit_profile_api.dart
+ M youpeak/lib/features/profile/api/get_profile_api.dart
+ M youpeak/lib/features/profile/view/edit_profile.dart
+ M youpeak/lib/features/profile/view/profile_view.dart
+ M youpeak/lib/features/referral/api/get_referral_history_api.dart
+ M youpeak/lib/features/referral/api/referral_code_apply_api.dart
+ M youpeak/lib/features/referral/view/referral_history_view.dart
+ M youpeak/lib/features/referral/view/referral_program_view.dart
+ M youpeak/lib/features/report/api/report_video_api.dart
+ M youpeak/lib/features/rewards/api/earn_coin_from_check_in_api.dart
+ M youpeak/lib/features/rewards/api/earn_coin_from_watch_ad_api.dart
+ M youpeak/lib/features/rewards/api/get_ad_reward_api.dart
+ M youpeak/lib/features/rewards/api/get_daily_reward_api.dart
+ M youpeak/lib/features/rewards/model/earn_coin_from_watch_ad_model.dart
+ M youpeak/lib/features/rewards/view/earn_reward_view.dart
+ M youpeak/lib/features/rewards/widget/check_in_done_dialog.dart
+ M youpeak/lib/features/rewards/widget/earn_reward_shimmer_ui.dart
+ M youpeak/lib/features/search/api/search_api.dart
+ M youpeak/lib/features/search/view/search_view.dart
+ M youpeak/lib/features/settings/api/fetch_language_api.dart
+ M youpeak/lib/features/settings/api/grievance_api.dart
+ M youpeak/lib/features/settings/view/privacy_policy_web_view.dart
+ M youpeak/lib/features/splash/view/splash_screen_view.dart
+ M youpeak/lib/features/subscriptions/api/get_subscribed_channel_api.dart
+ M youpeak/lib/features/subscriptions/api/get_subscribed_channel_video_api.dart
+ M youpeak/lib/features/subscriptions/api/subscribe_channel_api.dart
+ M youpeak/lib/features/subscriptions/view/nav_subscription_view.dart
+ M youpeak/lib/features/tasker/presentation/tasker_dashboard_provider.dart
+ M youpeak/lib/features/tasker/presentation/tasker_dashboard_view.dart
+ M youpeak/lib/features/tiers/api/creator_tier_api.dart
+ M youpeak/lib/features/tiers/api/tasker_tier_api.dart
+ M youpeak/lib/features/upload/api/upload_video_api.dart
+ M youpeak/lib/features/upload/view/audience_page.dart
+ M youpeak/lib/features/upload/view/set_thumbnail_page.dart
+ M youpeak/lib/features/upload/view/upload_video_view.dart
+ M youpeak/lib/features/upload/view/video_charges_view.dart
+ M youpeak/lib/features/upload/view/visibility_page.dart
+ M youpeak/lib/features/video/api/get_related_video_api.dart
+ M youpeak/lib/features/video/api/like_dislike_api.dart
+ M youpeak/lib/features/video/api/share_count_api.dart
+ M youpeak/lib/features/video/api/unlock_private_video_api.dart
+ M youpeak/lib/features/video/api/video_details_api.dart
+ M youpeak/lib/features/video/controller/normal_video_details_controller.dart
+ M youpeak/lib/features/video/model/unlock_private_video_model.dart
+ M youpeak/lib/features/video/view/normal_video_details_view.dart
+ M youpeak/lib/features/video/view/shorts_video_details_view.dart
+ M youpeak/lib/features/video_promotion/api/video_promotion_api.dart
+ M youpeak/lib/features/wallet/api/get_wallet_history_api.dart
+ M youpeak/lib/features/wallet/api/get_withdraw_history_api.dart
+ M youpeak/lib/features/wallet/api/with_draw_list_api.dart
+ M youpeak/lib/features/wallet/api/with_draw_request_api.dart
+ M youpeak/lib/features/wallet/api/withdraw_setting_api.dart
+ M youpeak/lib/features/wallet/view/my_wallet_view.dart
+ M youpeak/lib/features/wallet/view/withdraw_history_view.dart
+ M youpeak/lib/features/wallet/view/withdraw_view.dart
+ M youpeak/lib/main.dart
+ M youpeak/lib/shared/dialogs/custom_dialog.dart
+ M youpeak/lib/shared/shimmer/container_shimmer_ui.dart
+ M youpeak/lib/shared/shimmer/normal_video_shimmer_ui.dart
+ M youpeak/lib/shared/shimmer/video_list_shimmer_ui.dart
+ M youpeak/lib/shared/widgets/basic_button.dart
+ M youpeak/lib/shared/widgets/custom_text_field.dart
+ M youpeak/lib/shared/widgets/data_not_found_ui.dart
+ M youpeak/lib/shared/widgets/normal_video_ui.dart
+ M youpeak/lib/shared/widgets/premium_plan_dialog.dart
+ M youpeak/lib/shared/widgets/preview_image.dart
+ M youpeak/lib/shared/widgets/small_video_widget.dart
+ M youpeak/lib/shared/widgets/subscribed_success_dialog.dart
+ M youpeak/pubspec.lock
+ M youpeak/pubspec.yaml
+ M youpeak/test/core/app_api_client_test.dart
+ M youpeak/test/widget_test.dart
+ M youpeak/web/flutter_bootstrap.js
+ M youpeak/web/index.html
+?? YOUPEAK_AUDIT_FIX_LOG.txt
+?? YOUPEAK_FULL_PROJECT_AUDIT.txt
+?? YOUPEAK_PHASE2_REMEDIATION_REPORT.txt
+?? YOUPEAK_REQUIREMENTS_MATRIX.txt
+?? admin/frontend/src/util/apiError.js
+?? admin/frontend/src/util/apiError.test.js
+?? functions/backend/controllers/admin/mediaAudit.controller.js
+?? functions/backend/controllers/client/mediaDelivery.controller.js
+?? functions/backend/middleware/bindAppUser.middleware.js
+?? functions/backend/middleware/optionalAppUser.middleware.js
+?? functions/backend/middleware/withholdLockedPlayback.js
+?? functions/backend/routes/admin/mediaAudit.route.js
+?? functions/backend/util/localServerGuard.js
+?? functions/backend/util/mediaPolicy.js
+?? functions/backend/util/payoutHold.js
+?? functions/backend/util/safeUser.js
+?? functions/backend/util/uploadGrants.js
+?? functions/backend/util/videoVisibility.js
+?? functions/backend/util/withdrawalLedger.js
+?? local-dev/fixtures/fixture-bite-landscape.jpg
+?? local-dev/fixtures/fixture-bite-landscape.webm
+?? local-dev/fixtures/fixture-bite-portrait-a.jpg
+?? local-dev/fixtures/fixture-bite-portrait-a.webm
+?? local-dev/fixtures/fixture-bite-portrait-b.jpg
+?? local-dev/fixtures/fixture-bite-portrait-b.webm
+?? reports/project-audit/REVIEW.md
+?? reports/project-audit/VALIDATION.md
+?? reports/project-audit/dart-analysis.txt
+?? reports/project-audit/domain-split-runbook.md
+?? reports/project-audit/google-signin-report.md
+?? reports/project-audit/google-signin/dart-analysis.txt
+?? reports/project-audit/google-signin/deployed/01-start-1920.png
+?? reports/project-audit/google-signin/deployed/01-start-390.png
+?? reports/project-audit/google-signin/deployed/02-letsin-1920.png
+?? reports/project-audit/google-signin/deployed/02-letsin-390.png
+?? reports/project-audit/google-signin/deployed/03-after-click-1920.png
+?? reports/project-audit/google-signin/deployed/03-after-click-390.png
+?? reports/project-audit/google-signin/deployed/log-1920.txt
+?? reports/project-audit/google-signin/deployed/log-390.txt
+?? reports/project-audit/google-signin/flutter-test.txt
+?? reports/project-audit/google-signin/flutter-web-build.txt
+?? reports/project-audit/google-signin/harness/deployed-google.cjs
+?? reports/project-audit/google-signin/harness/google-e2e.cjs
+?? reports/project-audit/google-signin/harness/lib.cjs
+?? reports/project-audit/google-signin/harness/prod-check.cjs
+?? reports/project-audit/google-signin/local-emulator/g01-letsin-1920.png
+?? reports/project-audit/google-signin/local-emulator/g01-letsin-390.png
+?? reports/project-audit/google-signin/local-emulator/g02-after-cancel-1920.png
+?? reports/project-audit/google-signin/local-emulator/g02-after-cancel-390.png
+?? reports/project-audit/google-signin/local-emulator/g03-emulator-picker-1920.png
+?? reports/project-audit/google-signin/local-emulator/g03-emulator-picker-390.png
+?? reports/project-audit/google-signin/local-emulator/g04-new-user-1920.png
+?? reports/project-audit/google-signin/local-emulator/g04-new-user-390.png
+?? reports/project-audit/google-signin/local-emulator/g05-after-refresh-1920.png
+?? reports/project-audit/google-signin/local-emulator/g05-after-refresh-390.png
+?? reports/project-audit/google-signin/local-emulator/g05b-logout-sheet-1920.png
+?? reports/project-audit/google-signin/local-emulator/g05b-logout-sheet-390.png
+?? reports/project-audit/google-signin/local-emulator/g06-after-logout-1920.png
+?? reports/project-audit/google-signin/local-emulator/g06-after-logout-390.png
+?? reports/project-audit/google-signin/local-emulator/g07-returning-user-1920.png
+?? reports/project-audit/google-signin/local-emulator/g07-returning-user-390.png
+?? reports/project-audit/google-signin/local-emulator/google-e2e-1920.json
+?? reports/project-audit/google-signin/local-emulator/google-e2e-390.json
+?? reports/project-audit/google-signin/prod-build/prod-build-unauthorized-domain.png
+?? reports/project-audit/google-signin/prod-build/prod-check.json
+?? reports/project-audit/migration-ui-login-report.md
+?? reports/project-audit/migration/admin-api-authz.txt
+?? reports/project-audit/migration/admin-build-final.txt
+?? reports/project-audit/migration/dart-analysis-final.txt
+?? reports/project-audit/migration/dart-analysis-initial.txt
+?? reports/project-audit/migration/emulator-test-final-under-load.txt
+?? reports/project-audit/migration/emulator-test-final.txt
+?? reports/project-audit/migration/emulator-test-initial.txt
+?? reports/project-audit/migration/flutter-test-final.txt
+?? reports/project-audit/migration/flutter-test-initial.txt
+?? reports/project-audit/migration/flutter-web-build-final.txt
+?? reports/project-audit/migration/harness/admin-verify.cjs
+?? reports/project-audit/migration/harness/capture.cjs
+?? reports/project-audit/migration/harness/compare-trees.cjs
+?? reports/project-audit/migration/harness/debug-check.cjs
+?? reports/project-audit/migration/harness/lib.cjs
+?? reports/project-audit/migration/harness/make-fixtures.cjs
+?? reports/project-audit/migration/harness/montage.cjs
+?? reports/project-audit/migration/harness/search-results.cjs
+?? reports/project-audit/migration/harness/states.cjs
+?? reports/project-audit/migration/node-test-final.txt
+?? reports/project-audit/migration/node-test-initial.txt
+?? reports/project-audit/migration/reconciliation-applied.txt
+?? reports/project-audit/migration/screenshots/admin/admin-00-before-3000-network-error.png
+?? reports/project-audit/migration/screenshots/admin/admin-01-invalid-password.png
+?? reports/project-audit/migration/screenshots/admin/admin-02-dashboard.png
+?? reports/project-audit/migration/screenshots/admin/admin-03-after-refresh.png
+?? reports/project-audit/migration/screenshots/admin/admin-04-signed-out.png
+?? reports/project-audit/migration/screenshots/admin/admin-05-backend-unavailable-3000.png
+?? reports/project-audit/migration/screenshots/admin/admin-verify.json
+?? reports/project-audit/migration/screenshots/after/00-home-after-login-1920.png
+?? reports/project-audit/migration/screenshots/after/00-login-filled-1920.png
+?? reports/project-audit/migration/screenshots/after/01-onboarding-1366.png
+?? reports/project-audit/migration/screenshots/after/01-onboarding-1920.png
+?? reports/project-audit/migration/screenshots/after/01-onboarding-390.png
+?? reports/project-audit/migration/screenshots/after/01-onboarding-768.png
+?? reports/project-audit/migration/screenshots/after/02-library-1366.png
+?? reports/project-audit/migration/screenshots/after/02-library-1920.png
+?? reports/project-audit/migration/screenshots/after/02-library-390.png
+?? reports/project-audit/migration/screenshots/after/02-library-768.png
+?? reports/project-audit/migration/screenshots/after/03-bites-1366.png
+?? reports/project-audit/migration/screenshots/after/03-bites-1920.png
+?? reports/project-audit/migration/screenshots/after/03-bites-390.png
+?? reports/project-audit/migration/screenshots/after/03-bites-768.png
+?? reports/project-audit/migration/screenshots/after/04-search-1366.png
+?? reports/project-audit/migration/screenshots/after/04-search-1920.png
+?? reports/project-audit/migration/screenshots/after/04-search-390.png
+?? reports/project-audit/migration/screenshots/after/04-search-768.png
+?? reports/project-audit/migration/screenshots/after/04-search-results-1366.png
+?? reports/project-audit/migration/screenshots/after/04-search-results-1920.png
+?? reports/project-audit/migration/screenshots/after/04-search-results-390.png
+?? reports/project-audit/migration/screenshots/after/04-search-results-768.png
+?? reports/project-audit/migration/screenshots/after/05-notifications-1366.png
+?? reports/project-audit/migration/screenshots/after/05-notifications-1920.png
+?? reports/project-audit/migration/screenshots/after/05-notifications-390.png
+?? reports/project-audit/migration/screenshots/after/05-notifications-768.png
+?? reports/project-audit/migration/screenshots/after/06-profile-1366.png
+?? reports/project-audit/migration/screenshots/after/06-profile-1920.png
+?? reports/project-audit/migration/screenshots/after/06-profile-390.png
+?? reports/project-audit/migration/screenshots/after/06-profile-768.png
+?? reports/project-audit/migration/screenshots/after/07-tasker-1366.png
+?? reports/project-audit/migration/screenshots/after/07-tasker-1920.png
+?? reports/project-audit/migration/screenshots/after/07-tasker-390.png
+?? reports/project-audit/migration/screenshots/after/07-tasker-768.png
+?? reports/project-audit/migration/screenshots/after/evidence.json
+?? reports/project-audit/migration/screenshots/before/00-home-after-login-1920.png
+?? reports/project-audit/migration/screenshots/before/00-login-filled-1920.png
+?? reports/project-audit/migration/screenshots/before/01-onboarding-1366.png
+?? reports/project-audit/migration/screenshots/before/01-onboarding-1920.png
+?? reports/project-audit/migration/screenshots/before/01-onboarding-390.png
+?? reports/project-audit/migration/screenshots/before/01-onboarding-768.png
+?? reports/project-audit/migration/screenshots/before/02-library-1366.png
+?? reports/project-audit/migration/screenshots/before/02-library-1920.png
+?? reports/project-audit/migration/screenshots/before/02-library-390.png
+?? reports/project-audit/migration/screenshots/before/02-library-768.png
+?? reports/project-audit/migration/screenshots/before/03-bites-1366.png
+?? reports/project-audit/migration/screenshots/before/03-bites-1920.png
+?? reports/project-audit/migration/screenshots/before/03-bites-390.png
+?? reports/project-audit/migration/screenshots/before/03-bites-768.png
+?? reports/project-audit/migration/screenshots/before/04-search-1366.png
+?? reports/project-audit/migration/screenshots/before/04-search-1920.png
+?? reports/project-audit/migration/screenshots/before/04-search-390.png
+?? reports/project-audit/migration/screenshots/before/04-search-768.png
+?? reports/project-audit/migration/screenshots/before/05-notifications-1366.png
+?? reports/project-audit/migration/screenshots/before/05-notifications-1920.png
+?? reports/project-audit/migration/screenshots/before/05-notifications-390.png
+?? reports/project-audit/migration/screenshots/before/05-notifications-768.png
+?? reports/project-audit/migration/screenshots/before/06-profile-1366.png
+?? reports/project-audit/migration/screenshots/before/06-profile-1920.png
+?? reports/project-audit/migration/screenshots/before/06-profile-390.png
+?? reports/project-audit/migration/screenshots/before/06-profile-768.png
+?? reports/project-audit/migration/screenshots/before/07-tasker-1366.png
+?? reports/project-audit/migration/screenshots/before/07-tasker-1920.png
+?? reports/project-audit/migration/screenshots/before/07-tasker-390.png
+?? reports/project-audit/migration/screenshots/before/07-tasker-768.png
+?? reports/project-audit/migration/screenshots/before/evidence.json
+?? reports/project-audit/migration/screenshots/compare/compare-01-onboarding.png
+?? reports/project-audit/migration/screenshots/compare/compare-02-library.png
+?? reports/project-audit/migration/screenshots/compare/compare-03-bites.png
+?? reports/project-audit/migration/screenshots/compare/compare-04-search.png
+?? reports/project-audit/migration/screenshots/compare/compare-05-notifications.png
+?? reports/project-audit/migration/screenshots/compare/compare-06-profile.png
+?? reports/project-audit/migration/screenshots/compare/compare-07-tasker.png
+?? reports/project-audit/migration/screenshots/debug/burst-strip.png
+?? reports/project-audit/migration/screenshots/debug/debug-check.json
+?? reports/project-audit/migration/screenshots/states/bites-1-playing.png
+?? reports/project-audit/migration/screenshots/states/bites-2-after-swipe.png
+?? reports/project-audit/migration/screenshots/states/bites-3-paused.png
+?? reports/project-audit/migration/screenshots/states/bites-4-landscape-contain.png
+?? reports/project-audit/migration/screenshots/states/bites-5-comments-1920.png
+?? reports/project-audit/migration/screenshots/states/bites-playing-1366.png
+?? reports/project-audit/migration/screenshots/states/bites-playing-390.png
+?? reports/project-audit/migration/screenshots/states/bites-playing-768.png
+?? reports/project-audit/migration/screenshots/states/library-after-watching-1920.png
+?? reports/project-audit/migration/screenshots/states/state-bites-empty.png
+?? reports/project-audit/migration/screenshots/states/state-bites-error.png
+?? reports/project-audit/migration/screenshots/states/state-bites-loading.png
+?? reports/project-audit/migration/screenshots/states/state-notifications-401.png
+?? reports/project-audit/migration/screenshots/states/state-notifications-empty.png
+?? reports/project-audit/migration/screenshots/states/state-notifications-error.png
+?? reports/project-audit/migration/screenshots/states/state-tasker-error.png
+?? reports/project-audit/migration/screenshots/states/states.json
+?? reports/project-audit/migration/worktree-C-before.txt
+?? reports/project-audit/migration/worktree-E-before.txt
+?? reports/project-audit/phase2/REMEDIATION_QUEUE.md
+?? reports/project-audit/phase2/baseline-worktree.txt
+?? reports/project-audit/phase2/dart-analysis-phase2.txt
+?? reports/project-audit/phase2/emulator-results.json
+?? reports/project-audit/phase2/flutter-test.txt
+?? reports/project-audit/phase2/flutter-web-build.txt
+?? reports/project-audit/phase2/historical-emulator-out/results.json
+?? reports/project-audit/phase2/node-check.txt
+?? reports/project-audit/phase2/node-test.txt
+?? reports/project-audit/phase2/phase2-changed-files.txt
+?? reports/project-audit/source-inventory.json
+?? reports/project-audit/web-tasking/git-status-before.txt
+?? scripts/audit-source.cjs
+?? scripts/build-consumer-web.ps1
+?? tests/api-liveness.test.cjs
+?? tests/emulator/.gitignore
+?? tests/emulator/firebase.json
+?? tests/emulator/harness.cjs
+?? tests/emulator/run.cjs
+?? tests/emulator/suites/01-phase1.cjs
+?? tests/emulator/suites/02-phase2.cjs
+?? tests/emulator/suites/03-privacy-auth.cjs
+?? tests/emulator/suites/04-peakboost.cjs
+?? tests/emulator/suites/05-payments.cjs
+?? tests/emulator/suites/06-withdrawals.cjs
+?? tests/emulator/suites/07-rewards.cjs
+?? tests/emulator/suites/08-media.cjs
+?? tests/emulator/suites/09-requirements.cjs
+?? tests/helpers/loadModule.cjs
+?? tests/localServerGuard.test.cjs
+?? tests/media.test.cjs
+?? tests/webhooks.test.cjs
+?? youpeak/lib/core/config/local_emulators.dart
+?? youpeak/lib/core/platform/app_layout.dart
+?? youpeak/lib/core/platform/browser_fullscreen.dart
+?? youpeak/lib/core/platform/browser_fullscreen_stub.dart
+?? youpeak/lib/core/platform/browser_fullscreen_web.dart
+?? youpeak/lib/core/platform/browser_url.dart
+?? youpeak/lib/core/platform/browser_url_stub.dart
+?? youpeak/lib/core/platform/browser_url_web.dart
+?? youpeak/lib/core/platform/web_video_fullscreen.dart
+?? youpeak/lib/core/platform/wheel_page_turner.dart
+?? youpeak/lib/features/auth/service/google_sign_in_flow.dart
+?? youpeak/lib/features/bites/view/bites_desktop.dart
+?? youpeak/lib/features/main/view/wide_side_nav.dart
+?? youpeak/lib/shared/widgets/adaptive_video_list.dart
+?? youpeak/test/core/desktop_shell_layout_test.dart
+?? youpeak/test/core/local_emulators_test.dart
+?? youpeak/test/features/bites_desktop_test.dart
+?? youpeak/test/features/google_sign_in_flow_test.dart
+?? youpeak/test/features/sign_up_model_test.dart
+?? youpeak/test/features/tasker_dashboard_state_test.dart
+?? youpeak/web/vercel.json

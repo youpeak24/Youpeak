@@ -1,0 +1,552 @@
+[
+  {
+    "filename": "account_balance_rounded.png",
+    "dart_symbol": "Icons.account_balance_rounded",
+    "font_glyph": "account_balance_rounded"
+  },
+  {
+    "filename": "account_balance_wallet_rounded.png",
+    "dart_symbol": "Icons.account_balance_wallet_rounded",
+    "font_glyph": "account_balance_wallet_rounded"
+  },
+  {
+    "filename": "add.png",
+    "dart_symbol": "Icons.add",
+    "font_glyph": "add_rounded"
+  },
+  {
+    "filename": "add_circle_outline.png",
+    "dart_symbol": "Icons.add_circle_outline",
+    "font_glyph": "add_circle_outline_rounded"
+  },
+  {
+    "filename": "add_rounded.png",
+    "dart_symbol": "Icons.add_rounded",
+    "font_glyph": "add_rounded"
+  },
+  {
+    "filename": "arrow_back.png",
+    "dart_symbol": "Icons.arrow_back",
+    "font_glyph": "arrow_back_rounded"
+  },
+  {
+    "filename": "arrow_back_ios_new.png",
+    "dart_symbol": "Icons.arrow_back_ios_new",
+    "font_glyph": "arrow_back_ios_new_rounded"
+  },
+  {
+    "filename": "arrow_back_rounded.png",
+    "dart_symbol": "Icons.arrow_back_rounded",
+    "font_glyph": "arrow_back_rounded"
+  },
+  {
+    "filename": "arrow_drop_down.png",
+    "dart_symbol": "Icons.arrow_drop_down",
+    "font_glyph": "arrow_drop_down_rounded"
+  },
+  {
+    "filename": "arrow_forward_ios_rounded.png",
+    "dart_symbol": "Icons.arrow_forward_ios_rounded",
+    "font_glyph": "arrow_forward_ios_rounded"
+  },
+  {
+    "filename": "arrow_forward_rounded.png",
+    "dart_symbol": "Icons.arrow_forward_rounded",
+    "font_glyph": "arrow_forward_rounded"
+  },
+  {
+    "filename": "auto_awesome.png",
+    "dart_symbol": "Icons.auto_awesome",
+    "font_glyph": "auto_awesome_rounded"
+  },
+  {
+    "filename": "build_circle_outlined.png",
+    "dart_symbol": "Icons.build_circle_outlined",
+    "font_glyph": "build_circle_outlined"
+  },
+  {
+    "filename": "calculate_outlined.png",
+    "dart_symbol": "Icons.calculate_outlined",
+    "font_glyph": "calculate_outlined"
+  },
+  {
+    "filename": "calendar_today_outlined.png",
+    "dart_symbol": "Icons.calendar_today_outlined",
+    "font_glyph": "calendar_today_outlined"
+  },
+  {
+    "filename": "campaign_rounded.png",
+    "dart_symbol": "Icons.campaign_rounded",
+    "font_glyph": "campaign_rounded"
+  },
+  {
+    "filename": "chat_bubble_rounded.png",
+    "dart_symbol": "Icons.chat_bubble_rounded",
+    "font_glyph": "chat_bubble_rounded"
+  },
+  {
+    "filename": "check.png",
+    "dart_symbol": "Icons.check",
+    "font_glyph": "check_rounded"
+  },
+  {
+    "filename": "check_circle.png",
+    "dart_symbol": "Icons.check_circle",
+    "font_glyph": "check_circle_rounded"
+  },
+  {
+    "filename": "check_circle_outline.png",
+    "dart_symbol": "Icons.check_circle_outline",
+    "font_glyph": "check_circle_outline_rounded"
+  },
+  {
+    "filename": "check_circle_rounded.png",
+    "dart_symbol": "Icons.check_circle_rounded",
+    "font_glyph": "check_circle_rounded"
+  },
+  {
+    "filename": "chevron_right.png",
+    "dart_symbol": "Icons.chevron_right",
+    "font_glyph": "chevron_right_rounded"
+  },
+  {
+    "filename": "chevron_right_rounded.png",
+    "dart_symbol": "Icons.chevron_right_rounded",
+    "font_glyph": "chevron_right_rounded"
+  },
+  {
+    "filename": "circle.png",
+    "dart_symbol": "Icons.circle",
+    "font_glyph": "circle_rounded"
+  },
+  {
+    "filename": "close.png",
+    "dart_symbol": "Icons.close",
+    "font_glyph": "close_rounded"
+  },
+  {
+    "filename": "close_rounded.png",
+    "dart_symbol": "Icons.close_rounded",
+    "font_glyph": "close_rounded"
+  },
+  {
+    "filename": "cloud_off_rounded.png",
+    "dart_symbol": "Icons.cloud_off_rounded",
+    "font_glyph": "cloud_off_rounded"
+  },
+  {
+    "filename": "delete_outline_outlined.png",
+    "dart_symbol": "Icons.delete_outline_outlined",
+    "font_glyph": "delete_outline_outlined"
+  },
+  {
+    "filename": "delete_outlined.png",
+    "dart_symbol": "Icons.delete_outlined",
+    "font_glyph": "delete_outlined"
+  },
+  {
+    "filename": "done.png",
+    "dart_symbol": "Icons.done",
+    "font_glyph": "done_rounded"
+  },
+  {
+    "filename": "done_all_rounded.png",
+    "dart_symbol": "Icons.done_all_rounded",
+    "font_glyph": "done_all_rounded"
+  },
+  {
+    "filename": "download_rounded.png",
+    "dart_symbol": "Icons.download_rounded",
+    "font_glyph": "download_rounded"
+  },
+  {
+    "filename": "edit.png",
+    "dart_symbol": "Icons.edit",
+    "font_glyph": "edit_rounded"
+  },
+  {
+    "filename": "edit_outlined.png",
+    "dart_symbol": "Icons.edit_outlined",
+    "font_glyph": "edit_outlined"
+  },
+  {
+    "filename": "edit_rounded.png",
+    "dart_symbol": "Icons.edit_rounded",
+    "font_glyph": "edit_rounded"
+  },
+  {
+    "filename": "email_outlined.png",
+    "dart_symbol": "Icons.email_outlined",
+    "font_glyph": "email_outlined"
+  },
+  {
+    "filename": "emoji_events_outlined.png",
+    "dart_symbol": "Icons.emoji_events_outlined",
+    "font_glyph": "emoji_events_outlined"
+  },
+  {
+    "filename": "emoji_events_rounded.png",
+    "dart_symbol": "Icons.emoji_events_rounded",
+    "font_glyph": "emoji_events_rounded"
+  },
+  {
+    "filename": "error_outline_rounded.png",
+    "dart_symbol": "Icons.error_outline_rounded",
+    "font_glyph": "error_outline_rounded"
+  },
+  {
+    "filename": "female.png",
+    "dart_symbol": "Icons.female",
+    "font_glyph": "female_rounded"
+  },
+  {
+    "filename": "forward_10_rounded.png",
+    "dart_symbol": "Icons.forward_10_rounded",
+    "font_glyph": "forward_10_rounded"
+  },
+  {
+    "filename": "front_hand_rounded.png",
+    "dart_symbol": "Icons.front_hand_rounded",
+    "font_glyph": "front_hand_rounded"
+  },
+  {
+    "filename": "fullscreen_exit_rounded.png",
+    "dart_symbol": "Icons.fullscreen_exit_rounded",
+    "font_glyph": "fullscreen_exit_rounded"
+  },
+  {
+    "filename": "fullscreen_rounded.png",
+    "dart_symbol": "Icons.fullscreen_rounded",
+    "font_glyph": "fullscreen_rounded"
+  },
+  {
+    "filename": "gavel_outlined.png",
+    "dart_symbol": "Icons.gavel_outlined",
+    "font_glyph": "gavel_outlined"
+  },
+  {
+    "filename": "gpp_bad_rounded.png",
+    "dart_symbol": "Icons.gpp_bad_rounded",
+    "font_glyph": "gpp_bad_rounded"
+  },
+  {
+    "filename": "home_outlined.png",
+    "dart_symbol": "Icons.home_outlined",
+    "font_glyph": "home_outlined"
+  },
+  {
+    "filename": "hourglass_disabled.png",
+    "dart_symbol": "Icons.hourglass_disabled",
+    "font_glyph": "hourglass_disabled_rounded"
+  },
+  {
+    "filename": "hourglass_top_rounded.png",
+    "dart_symbol": "Icons.hourglass_top_rounded",
+    "font_glyph": "hourglass_top_rounded"
+  },
+  {
+    "filename": "image.png",
+    "dart_symbol": "Icons.image",
+    "font_glyph": "image_rounded"
+  },
+  {
+    "filename": "info_outline.png",
+    "dart_symbol": "Icons.info_outline",
+    "font_glyph": "info_outline_rounded"
+  },
+  {
+    "filename": "info_outline_rounded.png",
+    "dart_symbol": "Icons.info_outline_rounded",
+    "font_glyph": "info_outline_rounded"
+  },
+  {
+    "filename": "link.png",
+    "dart_symbol": "Icons.link",
+    "font_glyph": "link_rounded"
+  },
+  {
+    "filename": "location_on_outlined.png",
+    "dart_symbol": "Icons.location_on_outlined",
+    "font_glyph": "location_on_outlined"
+  },
+  {
+    "filename": "lock_outline_rounded.png",
+    "dart_symbol": "Icons.lock_outline_rounded",
+    "font_glyph": "lock_outline_rounded"
+  },
+  {
+    "filename": "lock_person_rounded.png",
+    "dart_symbol": "Icons.lock_person_rounded",
+    "font_glyph": "lock_person_rounded"
+  },
+  {
+    "filename": "lock_rounded.png",
+    "dart_symbol": "Icons.lock_rounded",
+    "font_glyph": "lock_rounded"
+  },
+  {
+    "filename": "male.png",
+    "dart_symbol": "Icons.male",
+    "font_glyph": "male_rounded"
+  },
+  {
+    "filename": "monetization_on_rounded.png",
+    "dart_symbol": "Icons.monetization_on_rounded",
+    "font_glyph": "monetization_on_rounded"
+  },
+  {
+    "filename": "more_vert.png",
+    "dart_symbol": "Icons.more_vert",
+    "font_glyph": "more_vert_rounded"
+  },
+  {
+    "filename": "more_vert_rounded.png",
+    "dart_symbol": "Icons.more_vert_rounded",
+    "font_glyph": "more_vert_rounded"
+  },
+  {
+    "filename": "nightlight_round.png",
+    "dart_symbol": "Icons.nightlight_round",
+    "font_glyph": "nightlight_round_rounded"
+  },
+  {
+    "filename": "notifications_none_rounded.png",
+    "dart_symbol": "Icons.notifications_none_rounded",
+    "font_glyph": "notifications_none_rounded"
+  },
+  {
+    "filename": "ondemand_video_rounded.png",
+    "dart_symbol": "Icons.ondemand_video_rounded",
+    "font_glyph": "ondemand_video_rounded"
+  },
+  {
+    "filename": "open_in_new_rounded.png",
+    "dart_symbol": "Icons.open_in_new_rounded",
+    "font_glyph": "open_in_new_rounded"
+  },
+  {
+    "filename": "outlined_flag_rounded.png",
+    "dart_symbol": "Icons.outlined_flag_rounded",
+    "font_glyph": "outlined_flag_rounded"
+  },
+  {
+    "filename": "pause_circle_filled_rounded.png",
+    "dart_symbol": "Icons.pause_circle_filled_rounded",
+    "font_glyph": "pause_circle_filled_rounded"
+  },
+  {
+    "filename": "pause_rounded.png",
+    "dart_symbol": "Icons.pause_rounded",
+    "font_glyph": "pause_rounded"
+  },
+  {
+    "filename": "phone_iphone_rounded.png",
+    "dart_symbol": "Icons.phone_iphone_rounded",
+    "font_glyph": "phone_iphone_rounded"
+  },
+  {
+    "filename": "phone_outlined.png",
+    "dart_symbol": "Icons.phone_outlined",
+    "font_glyph": "phone_outlined"
+  },
+  {
+    "filename": "phonelink_lock_rounded.png",
+    "dart_symbol": "Icons.phonelink_lock_rounded",
+    "font_glyph": "phonelink_lock_rounded"
+  },
+  {
+    "filename": "play_arrow_rounded.png",
+    "dart_symbol": "Icons.play_arrow_rounded",
+    "font_glyph": "play_arrow_rounded"
+  },
+  {
+    "filename": "play_circle_fill.png",
+    "dart_symbol": "Icons.play_circle_fill",
+    "font_glyph": "play_circle_fill_rounded"
+  },
+  {
+    "filename": "play_circle_fill_rounded.png",
+    "dart_symbol": "Icons.play_circle_fill_rounded",
+    "font_glyph": "play_circle_fill_rounded"
+  },
+  {
+    "filename": "play_circle_outline.png",
+    "dart_symbol": "Icons.play_circle_outline",
+    "font_glyph": "play_circle_outline_rounded"
+  },
+  {
+    "filename": "play_circle_outline_rounded.png",
+    "dart_symbol": "Icons.play_circle_outline_rounded",
+    "font_glyph": "play_circle_outline_rounded"
+  },
+  {
+    "filename": "public.png",
+    "dart_symbol": "Icons.public",
+    "font_glyph": "public_rounded"
+  },
+  {
+    "filename": "qr_code_rounded.png",
+    "dart_symbol": "Icons.qr_code_rounded",
+    "font_glyph": "qr_code_rounded"
+  },
+  {
+    "filename": "radio_button_unchecked_rounded.png",
+    "dart_symbol": "Icons.radio_button_unchecked_rounded",
+    "font_glyph": "radio_button_unchecked_rounded"
+  },
+  {
+    "filename": "receipt_long_outlined.png",
+    "dart_symbol": "Icons.receipt_long_outlined",
+    "font_glyph": "receipt_long_outlined"
+  },
+  {
+    "filename": "refresh.png",
+    "dart_symbol": "Icons.refresh",
+    "font_glyph": "refresh_rounded"
+  },
+  {
+    "filename": "refresh_rounded.png",
+    "dart_symbol": "Icons.refresh_rounded",
+    "font_glyph": "refresh_rounded"
+  },
+  {
+    "filename": "remove_circle_outline.png",
+    "dart_symbol": "Icons.remove_circle_outline",
+    "font_glyph": "remove_circle_outline_rounded"
+  },
+  {
+    "filename": "replay_10_rounded.png",
+    "dart_symbol": "Icons.replay_10_rounded",
+    "font_glyph": "replay_10_rounded"
+  },
+  {
+    "filename": "replay_rounded.png",
+    "dart_symbol": "Icons.replay_rounded",
+    "font_glyph": "replay_rounded"
+  },
+  {
+    "filename": "rocket_launch_rounded.png",
+    "dart_symbol": "Icons.rocket_launch_rounded",
+    "font_glyph": "rocket_launch_rounded"
+  },
+  {
+    "filename": "schedule_outlined.png",
+    "dart_symbol": "Icons.schedule_outlined",
+    "font_glyph": "schedule_outlined"
+  },
+  {
+    "filename": "search.png",
+    "dart_symbol": "Icons.search",
+    "font_glyph": "search_rounded"
+  },
+  {
+    "filename": "search_rounded.png",
+    "dart_symbol": "Icons.search_rounded",
+    "font_glyph": "search_rounded"
+  },
+  {
+    "filename": "send_rounded.png",
+    "dart_symbol": "Icons.send_rounded",
+    "font_glyph": "send_rounded"
+  },
+  {
+    "filename": "skip_next_rounded.png",
+    "dart_symbol": "Icons.skip_next_rounded",
+    "font_glyph": "skip_next_rounded"
+  },
+  {
+    "filename": "speed_rounded.png",
+    "dart_symbol": "Icons.speed_rounded",
+    "font_glyph": "speed_rounded"
+  },
+  {
+    "filename": "stop.png",
+    "dart_symbol": "Icons.stop",
+    "font_glyph": "stop_rounded"
+  },
+  {
+    "filename": "thumb_up_alt_rounded.png",
+    "dart_symbol": "Icons.thumb_up_alt_rounded",
+    "font_glyph": "thumb_up_alt_rounded"
+  },
+  {
+    "filename": "timer_outlined.png",
+    "dart_symbol": "Icons.timer_outlined",
+    "font_glyph": "timer_outlined"
+  },
+  {
+    "filename": "timer_rounded.png",
+    "dart_symbol": "Icons.timer_rounded",
+    "font_glyph": "timer_rounded"
+  },
+  {
+    "filename": "verified.png",
+    "dart_symbol": "Icons.verified",
+    "font_glyph": "verified_rounded"
+  },
+  {
+    "filename": "verified_outlined.png",
+    "dart_symbol": "Icons.verified_outlined",
+    "font_glyph": "verified_outlined"
+  },
+  {
+    "filename": "verified_user_rounded.png",
+    "dart_symbol": "Icons.verified_user_rounded",
+    "font_glyph": "verified_user_rounded"
+  },
+  {
+    "filename": "video_file.png",
+    "dart_symbol": "Icons.video_file",
+    "font_glyph": "video_file_rounded"
+  },
+  {
+    "filename": "videocam_off_outlined.png",
+    "dart_symbol": "Icons.videocam_off_outlined",
+    "font_glyph": "videocam_off_outlined"
+  },
+  {
+    "filename": "visibility.png",
+    "dart_symbol": "Icons.visibility",
+    "font_glyph": "visibility_rounded"
+  },
+  {
+    "filename": "visibility_outlined.png",
+    "dart_symbol": "Icons.visibility_outlined",
+    "font_glyph": "visibility_outlined"
+  },
+  {
+    "filename": "volume_down_rounded.png",
+    "dart_symbol": "Icons.volume_down_rounded",
+    "font_glyph": "volume_down_rounded"
+  },
+  {
+    "filename": "volume_off_rounded.png",
+    "dart_symbol": "Icons.volume_off_rounded",
+    "font_glyph": "volume_off_rounded"
+  },
+  {
+    "filename": "volume_up_rounded.png",
+    "dart_symbol": "Icons.volume_up_rounded",
+    "font_glyph": "volume_up_rounded"
+  },
+  {
+    "filename": "vpn_lock_rounded.png",
+    "dart_symbol": "Icons.vpn_lock_rounded",
+    "font_glyph": "vpn_lock_rounded"
+  },
+  {
+    "filename": "warning_amber_rounded.png",
+    "dart_symbol": "Icons.warning_amber_rounded",
+    "font_glyph": "warning_amber_rounded"
+  },
+  {
+    "filename": "wifi_off_rounded.png",
+    "dart_symbol": "Icons.wifi_off_rounded",
+    "font_glyph": "wifi_off_rounded"
+  },
+  {
+    "filename": "workspace_premium_rounded.png",
+    "dart_symbol": "Icons.workspace_premium_rounded",
+    "font_glyph": "workspace_premium_rounded"
+  }
+]

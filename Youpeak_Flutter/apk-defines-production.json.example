@@ -1,0 +1,10 @@
+{
+  "BUILD_PROFILE": "production",
+  "API_BASE_URL": "https://api.youpeak.app/",
+  "APP_DOMAIN": "youpeak.app",
+  "API_SECRET_KEY": "REPLACE_WITH_YOUR_PRODUCTION_CLIENT_SECRET_KEY",
+  "USE_LOCAL_DEV": "false",
+  "FIRESTORE_EMULATOR": "",
+  "AUTH_EMULATOR": ""
+}
+

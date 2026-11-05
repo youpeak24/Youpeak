@@ -1,0 +1,428 @@
+{
+  "Apk": "E:\\Legendary One\\youpeak\\source\\youpeak\\build\\app\\outputs\\flutter-apk\\app-release.apk",
+  "Bytes": 246296027,
+  "Groups": [
+    {
+      "Group": "lib/armeabi-v7a",
+      "PackedMB": 66.74,
+      "RawMB": 66.74
+    },
+    {
+      "Group": "lib/x86_64",
+      "PackedMB": 65.1,
+      "RawMB": 65.1
+    },
+    {
+      "Group": "lib/arm64-v8a",
+      "PackedMB": 59.88,
+      "RawMB": 59.88
+    },
+    {
+      "Group": "flutter_assets",
+      "PackedMB": 23.44,
+      "RawMB": 27.56
+    },
+    {
+      "Group": "dex",
+      "PackedMB": 13.69,
+      "RawMB": 35.5
+    },
+    {
+      "Group": "resources.arsc",
+      "PackedMB": 2.97,
+      "RawMB": 2.97
+    },
+    {
+      "Group": "res",
+      "PackedMB": 2.04,
+      "RawMB": 2.85
+    },
+    {
+      "Group": "google",
+      "PackedMB": 0.14,
+      "RawMB": 0.39
+    },
+    {
+      "Group": "META-INF",
+      "PackedMB": 0.02,
+      "RawMB": 0.05
+    },
+    {
+      "Group": "assets",
+      "PackedMB": 0.02,
+      "RawMB": 0.03
+    },
+    {
+      "Group": "org",
+      "PackedMB": 0.01,
+      "RawMB": 0.09
+    },
+    {
+      "Group": "kotlin",
+      "PackedMB": 0.01,
+      "RawMB": 0.05
+    },
+    {
+      "Group": "AndroidManifest.xml",
+      "PackedMB": 0.01,
+      "RawMB": 0.06
+    },
+    {
+      "Group": "firebase-encoders.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-auth.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-base.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-basement.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-cloud-messaging.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-cronet.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-fido.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-identity.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-location.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-maps.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-measurement-base.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-measurement-sdk-api.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-pal.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-places-placereport.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-stats.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-tasks.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-wallet.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "recaptcha.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "billing.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "androidsupportmultidexversion.txt",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-auth-base.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-auth-api-phone.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-appset.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-ads.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-iid-interop.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-measurement-connector.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-database-collection.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-auth.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "googleid.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "integrity.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "interactivemedia.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-auth-interop.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "kotlin-tooling-metadata.json",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-encoders-proto.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "firebase-annotations.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "core-common.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "lpms.json",
+      "PackedMB": 0.0,
+      "RawMB": 0.02
+    },
+    {
+      "Group": "messaging_event_extension.proto",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "messaging_event.proto",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "tv-ads.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "client_analytics.proto",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-ads-api.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-ads-base.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "play-services-ads-identifier.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "DebugProbesKt.bin",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    },
+    {
+      "Group": "user-messaging-platform.properties",
+      "PackedMB": 0.0,
+      "RawMB": 0.0
+    }
+  ],
+  "Largest": [
+    {
+      "Path": "lib/x86_64/libZegoExpressEngine.so",
+      "PackedMB": 23.2,
+      "RawMB": 23.2
+    },
+    {
+      "Path": "lib/arm64-v8a/libZegoExpressEngine.so",
+      "PackedMB": 21.05,
+      "RawMB": 21.05
+    },
+    {
+      "Path": "lib/armeabi-v7a/libZegoExpressEngine.so",
+      "PackedMB": 16.06,
+      "RawMB": 16.06
+    },
+    {
+      "Path": "lib/armeabi-v7a/libapp.so",
+      "PackedMB": 14.39,
+      "RawMB": 14.39
+    },
+    {
+      "Path": "lib/x86_64/libapp.so",
+      "PackedMB": 13.38,
+      "RawMB": 13.38
+    },
+    {
+      "Path": "lib/arm64-v8a/libapp.so",
+      "PackedMB": 12.88,
+      "RawMB": 12.88
+    },
+    {
+      "Path": "lib/x86_64/libflutter.so",
+      "PackedMB": 12.26,
+      "RawMB": 12.26
+    },
+    {
+      "Path": "lib/arm64-v8a/libflutter.so",
+      "PackedMB": 11.04,
+      "RawMB": 11.04
+    },
+    {
+      "Path": "lib/x86_64/libavcodec.so",
+      "PackedMB": 9.04,
+      "RawMB": 9.04
+    },
+    {
+      "Path": "lib/arm64-v8a/libavcodec.so",
+      "PackedMB": 8.38,
+      "RawMB": 8.38
+    },
+    {
+      "Path": "lib/armeabi-v7a/libavcodec_neon.so",
+      "PackedMB": 8.28,
+      "RawMB": 8.28
+    },
+    {
+      "Path": "lib/armeabi-v7a/libflutter.so",
+      "PackedMB": 8.06,
+      "RawMB": 8.06
+    },
+    {
+      "Path": "lib/armeabi-v7a/libavcodec.so",
+      "PackedMB": 8.06,
+      "RawMB": 8.06
+    },
+    {
+      "Path": "classes3.dex",
+      "PackedMB": 3.16,
+      "RawMB": 7.8
+    },
+    {
+      "Path": "lib/x86_64/libavfilter.so",
+      "PackedMB": 3.15,
+      "RawMB": 3.15
+    },
+    {
+      "Path": "classes5.dex",
+      "PackedMB": 3.06,
+      "RawMB": 8.89
+    },
+    {
+      "Path": "classes.dex",
+      "PackedMB": 3.02,
+      "RawMB": 7.29
+    },
+    {
+      "Path": "resources.arsc",
+      "PackedMB": 2.97,
+      "RawMB": 2.97
+    },
+    {
+      "Path": "classes4.dex",
+      "PackedMB": 2.94,
+      "RawMB": 7.39
+    },
+    {
+      "Path": "lib/arm64-v8a/libavfilter.so",
+      "PackedMB": 2.75,
+      "RawMB": 2.75
+    },
+    {
+      "Path": "lib/armeabi-v7a/libavfilter.so",
+      "PackedMB": 2.47,
+      "RawMB": 2.47
+    },
+    {
+      "Path": "lib/armeabi-v7a/libavfilter_neon.so",
+      "PackedMB": 2.47,
+      "RawMB": 2.47
+    },
+    {
+      "Path": "lib/x86_64/libavformat.so",
+      "PackedMB": 2.29,
+      "RawMB": 2.29
+    },
+    {
+      "Path": "lib/arm64-v8a/libavformat.so",
+      "PackedMB": 2.09,
+      "RawMB": 2.09
+    },
+    {
+      "Path": "lib/armeabi-v7a/libavformat_neon.so",
+      "PackedMB": 1.99,
+      "RawMB": 1.99
+    }
+  ]
+}

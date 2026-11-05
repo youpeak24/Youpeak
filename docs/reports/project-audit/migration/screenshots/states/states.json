@@ -1,0 +1,317 @@
+{
+ "results": [
+  {
+   "name": "fresh email sign-in reaches the main screen",
+   "ok": true,
+   "detail": [
+    "Home",
+    "YouPeak",
+    "Create",
+    "Bites",
+    "Subscription",
+    "Library",
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile"
+   ]
+  },
+  {
+   "name": "exactly one Bite plays (any preloaded neighbour is paused)",
+   "ok": true,
+   "detail": [
+    {
+     "src": "fixture-bite-portrait-b.webm",
+     "paused": false,
+     "muted": false,
+     "volume": 1,
+     "t": 0.5,
+     "vw": 360,
+     "vh": 640
+    }
+   ]
+  },
+  {
+   "name": "ArrowDown steps through the Bites one at a time",
+   "ok": true,
+   "detail": [
+    "fixture-bite-portrait-b.webm",
+    "fixture-bite-landscape.webm",
+    "fixture-bite-portrait-a.webm"
+   ]
+  },
+  {
+   "name": "ArrowUp steps back to the first Bite",
+   "ok": true,
+   "detail": {
+    "now": [
+     "fixture-bite-portrait-b.webm"
+    ],
+    "expected": "fixture-bite-portrait-b.webm"
+   }
+  },
+  {
+   "name": "one wheel notch moves to the next Bite",
+   "ok": true,
+   "detail": {
+    "now": [
+     "fixture-bite-landscape.webm"
+    ],
+    "expected": "fixture-bite-landscape.webm"
+   }
+  },
+  {
+   "name": "a long trackpad swipe forward moves exactly one Bite",
+   "ok": true,
+   "detail": {
+    "now": [
+     "fixture-bite-landscape.webm"
+    ],
+    "expected": "fixture-bite-landscape.webm",
+    "order": [
+     "fixture-bite-portrait-b.webm",
+     "fixture-bite-landscape.webm",
+     "fixture-bite-portrait-a.webm"
+    ]
+   }
+  },
+  {
+   "name": "a long trackpad swipe back moves exactly one Bite",
+   "ok": true,
+   "detail": {
+    "now": [
+     "fixture-bite-portrait-b.webm"
+    ],
+    "expected": "fixture-bite-portrait-b.webm"
+   }
+  },
+  {
+   "name": "sound control mutes the active Bite",
+   "ok": true,
+   "detail": {
+    "src": "fixture-bite-portrait-b.webm",
+    "paused": false,
+    "muted": true,
+    "volume": 0,
+    "t": 1.95,
+    "vw": 360,
+    "vh": 640
+   }
+  },
+  {
+   "name": "mute carries over to the next Bite",
+   "ok": true,
+   "detail": {
+    "src": "fixture-bite-landscape.webm",
+    "paused": false,
+    "muted": true,
+    "volume": 0,
+    "t": 2.42,
+    "vw": 640,
+    "vh": 360
+   }
+  },
+  {
+   "name": "pause control pauses playback",
+   "ok": true,
+   "detail": [
+    {
+     "src": "fixture-bite-landscape.webm",
+     "paused": true,
+     "muted": false,
+     "volume": 1,
+     "t": 3.23,
+     "vw": 640,
+     "vh": 360
+    },
+    {
+     "src": "fixture-bite-portrait-b.webm",
+     "paused": true,
+     "muted": true,
+     "volume": 0,
+     "t": 0,
+     "vw": 360,
+     "vh": 640
+    }
+   ]
+  },
+  {
+   "name": "play control resumes playback",
+   "ok": true,
+   "detail": [
+    "fixture-bite-landscape.webm"
+   ]
+  },
+  {
+   "name": "landscape fixture reached for the contain check",
+   "ok": true,
+   "detail": [
+    "fixture-bite-landscape.webm"
+   ]
+  },
+  {
+   "name": "comments panel opens on desktop",
+   "ok": true,
+   "detail": [
+    "Comments",
+    "Top",
+    "Newest",
+    "Most Liked",
+    "👍",
+    "❤",
+    "😂",
+    "🔥",
+    "👏",
+    "😍",
+    "🙏",
+    "💯"
+   ]
+  },
+  {
+   "name": "Bites leaves the loading state after a slow response",
+   "ok": true,
+   "detail": [
+    {
+     "src": "fixture-bite-portrait-b.webm",
+     "paused": false,
+     "muted": false,
+     "volume": 1,
+     "t": 4.07,
+     "vw": 360,
+     "vh": 640
+    }
+   ]
+  },
+  {
+   "name": "Bites empty state is localized (\"No Bites yet.\")",
+   "ok": true,
+   "detail": [
+    "Library",
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "No Bites yet."
+   ]
+  },
+  {
+   "name": "Bites network failure shows an error with Retry",
+   "ok": true,
+   "detail": [
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "Couldn't load Bites. Check your connection and try again.",
+    "Retry"
+   ]
+  },
+  {
+   "name": "Retry recovers Bites once the server answers",
+   "ok": true,
+   "detail": [
+    {
+     "src": "fixture-bite-portrait-a.webm",
+     "paused": false,
+     "muted": false,
+     "volume": 1,
+     "t": 5.35,
+     "vw": 360,
+     "vh": 640
+    }
+   ]
+  },
+  {
+   "name": "Notifications finish loading: empty inbox shows \"No notifications yet.\"",
+   "ok": true,
+   "detail": [
+    "Library",
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "No notifications yet."
+   ]
+  },
+  {
+   "name": "Notifications network failure shows an error with Retry",
+   "ok": true,
+   "detail": [
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "Couldn't load your notifications. Check your connection and try again.",
+    "Retry"
+   ]
+  },
+  {
+   "name": "Notifications 401 asks the user to sign in again",
+   "ok": true,
+   "detail": [
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "Please sign in again to continue.",
+    "Sign in"
+   ]
+  },
+  {
+   "name": "Tasker finishes loading with live (local) data",
+   "ok": true,
+   "detail": [
+    "Back",
+    "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left\nTasks and rewards are available in the YouPeak mobile app only.\nLifetime Watch Hours\n0.0 / 50 hrs\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up.\nDaily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+    "0",
+    "Check again",
+    "Withdraw",
+    "Starter Pass",
+    "Watch ads & do tasks",
+    "Progress to next level 0 percent"
+   ]
+  },
+  {
+   "name": "Tasker network failure shows an error with Try again (no fake balance)",
+   "ok": true,
+   "detail": [
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "Back",
+    "Couldn't reach YouPeak. Check your connection and try again.",
+    "Try again"
+   ]
+  },
+  {
+   "name": "Library desktop panel lists the library destinations",
+   "ok": true,
+   "detail": [
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "History",
+    "View All",
+    "Videos you watch will appear here.",
+    "Your Videos",
+    "Playlists",
+    "New Playlist",
+    "Watch Later",
+    "My Playlist"
+   ]
+  }
+ ],
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+  "OPTIONS https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA3LefltA4wG0htRi1mJM8rGYIjdNoeqjM"
+ ],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT",
+  "Failed to load resource: net::ERR_FAILED",
+  "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+ ]
+}

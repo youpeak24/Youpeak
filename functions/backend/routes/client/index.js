@@ -1,0 +1,98 @@
+//express
+const express = require("express");
+const route = express.Router();
+
+//require client's route.js
+const user = require("./user.route");
+const FAQ = require("./FAQ.route");
+const premiumPlan = require("./premiumPlan.route");
+const contact = require("./contact.route");
+const video = require("./video.route");
+const watchHistory = require("./watchHistory.route");
+const userWiseSubscription = require("./userWiseSubscription.route");
+const playlist = require("./playList.route");
+const userWiseDownload = require("./userWiseDownload.route");
+const saveToWatchLater = require("./saveToWatchLater.route");
+const notification = require("./notification.route");
+const report = require("./report.route");
+const videoComment = require("./videoComment.route");
+const file = require("./file.route");
+const soundList = require("./soundList.route");
+const liveUser = require("./liveUser.route");
+const withdraw = require("./withdraw.route");
+const otp = require("./otp.route");
+const withdrawalRequest = require("./withdrawalRequest.route");
+const monetizationRequest = require("./monetizationRequest.route");
+const setting = require("./setting.route");
+const adRewardCoin = require("./adRewardCoin.route");
+const dailyCoinReward = require("./dailyRewardCoin.route");
+const coinplan = require("./coinplan.route");
+const playbackSession = require("./playbackSession.route");
+const translation = require("./translation.route");
+const creatorTier = require("./creatorTier.route");
+const taskerTier = require("./taskerTier.route");
+const userTaskReward = require("./userTaskReward.route");
+const videoPromotion = require("./videoPromotion.route");
+const grievance = require("./grievance.route");
+const payment = require("./payment.route");
+const partner = require("./partner.route");
+const creatorFunding = require("./creatorFunding.route");
+const localBusinessAd = require("./localBusinessAd.route");
+const watch = require("./watch.route");
+const peakBoost = require("./peakBoost.route");
+const tasker = require("./tasker.route");
+const security = require("./security.route");
+const payout = require("./payout.route");
+const adCredits = require("./adCredits.route");
+const portal = require("./portal.route");
+
+// F-27: coin-locked videos' playback URLs only reach viewers who may play them.
+route.use(require("../../middleware/withholdLockedPlayback"));
+// P-01: credentials, push tokens, device ids and others' contact details never leave the client API.
+route.use(require("../../middleware/stripSensitiveFields"));
+
+//exports client's route.js
+route.use("/user", user);
+route.use("/FAQ", FAQ);
+route.use("/premiumPlan", premiumPlan);
+route.use("/contact", contact);
+route.use("/video", video);
+route.use("/watchHistory", watchHistory);
+route.use("/userWiseSubscription", userWiseSubscription);
+route.use("/playlist", playlist);
+route.use("/userWiseDownload", userWiseDownload);
+route.use("/saveToWatchLater", saveToWatchLater);
+route.use("/notification", notification);
+route.use("/report", report);
+route.use("/videoComment", videoComment);
+route.use("/file", file);
+route.use("/soundList", soundList);
+route.use("/liveUser", liveUser);
+route.use("/withdraw", withdraw);
+route.use("/otp", otp);
+route.use("/withdrawalRequest", withdrawalRequest);
+route.use("/monetizationRequest", monetizationRequest);
+route.use("/setting", setting);
+route.use("/adRewardCoin", adRewardCoin);
+route.use("/dailyCoinReward", dailyCoinReward);
+route.use("/coinplan", coinplan);
+route.use("/playbackSession", playbackSession);
+route.use("/translation", translation);
+route.use("/creatorTier", creatorTier);
+route.use("/taskerTier", taskerTier);
+route.use("/userTaskReward", userTaskReward);
+route.use("/videoPromotion", videoPromotion);
+route.use("/grievance", grievance);
+route.use("/payment", payment);
+route.use("/partner", partner);
+route.use("/creatorFunding", creatorFunding);
+route.use("/localBusinessAd", localBusinessAd);
+route.use("/watch", watch);
+route.use("/peakBoost", peakBoost);
+route.use("/tasker", tasker);
+route.use("/security", security);
+route.use("/payout", payout);
+route.use("/adCredits", adCredits);
+route.use("/portal", portal);
+
+module.exports = route;
