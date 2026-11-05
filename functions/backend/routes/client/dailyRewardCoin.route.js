@@ -1,5 +1,6 @@
 const express = require("express");
 const route = express.Router();
+const bindAppUser = require("../../middleware/bindAppUser.middleware");
 
 //checkAccessWithSecretKey
 const checkAccessWithSecretKey = require("../../checkAccess");
@@ -8,9 +9,9 @@ const checkAccessWithSecretKey = require("../../checkAccess");
 const dailyRewardCoinController = require("../../controllers/client/dailyRewardCoin.controller");
 
 //get daily reward coin
-route.get("/getDailyRewardCoinByUser", checkAccessWithSecretKey(), dailyRewardCoinController.getDailyRewardCoinByUser);
+route.get("/getDailyRewardCoinByUser", bindAppUser(), dailyRewardCoinController.getDailyRewardCoinByUser);
 
 //earn coin from daily check In
-route.patch("/handleDailyCheckInReward", checkAccessWithSecretKey(), dailyRewardCoinController.handleDailyCheckInReward);
+route.patch("/handleDailyCheckInReward", bindAppUser(), dailyRewardCoinController.handleDailyCheckInReward);
 
 module.exports = route;

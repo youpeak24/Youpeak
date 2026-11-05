@@ -62,13 +62,21 @@ function deviceHash(platform, deviceId) {
 function reasonsFor(attestation, c = cfg()) {
   const s = (attestation && attestation.signals) || {};
   const reasons = [];
-  if (s.platform === "web" && !c.allowWeb) reasons.push(REASON.WEB_PLATFORM);
+  if (s.platform === "web") {
+    // A browser cannot report device integrity (emulator, root, VPN, device
+    // id), so none of those apply or are assumed. Web eligibility rests on
+    // the verified sign-in (every reward route requires it), this server-side
+    // network check and the same account-level caps as the app.
+    if (!c.allowWeb) reasons.push(REASON.WEB_PLATFORM);
+    if (c.blockVpn && s.datacenterIp === true) reasons.push(REASON.DATACENTER_IP);
+    return reasons;
+  }
   if (c.blockEmulator && s.isPhysicalDevice === false) reasons.push(REASON.EMULATOR);
   if (c.blockRooted && s.isRooted === true) reasons.push(REASON.ROOTED);
   if (c.blockVpn && s.vpnActive === true) reasons.push(REASON.VPN);
   if (c.blockVpn && s.proxyActive === true) reasons.push(REASON.PROXY);
   if (c.blockVpn && s.datacenterIp === true) reasons.push(REASON.DATACENTER_IP);
-  if (s.platform !== "web" && !s.deviceId) reasons.push(REASON.NO_DEVICE_ID);
+  if (!s.deviceId) reasons.push(REASON.NO_DEVICE_ID);
   if (c.oneAccountPerDevice && attestation && attestation.deviceConflict) {
     reasons.push(REASON.DEVICE_LINKED_TO_OTHER_ACCOUNT);
   }
@@ -93,8 +101,8 @@ function taskLockState(user) {
 }
 
 const MESSAGES = {
-  [REASON.ATTESTATION_REQUIRED]: "Open the YouPeak app to verify this device before earning.",
-  [REASON.WEB_PLATFORM]: "Tasks and rewards are available in the YouPeak mobile app only.",
+  [REASON.ATTESTATION_REQUIRED]: "We need to verify this sign-in before it can earn. Reopen YouPeak or check your connection.",
+  [REASON.WEB_PLATFORM]: "Earning on the website is switched off right now. Use the YouPeak mobile app to earn.",
   [REASON.EMULATOR]: "Tasks can't run on an emulator. Use a real phone.",
   [REASON.ROOTED]: "Tasks can't run on a rooted or jailbroken device.",
   [REASON.VPN]: "Turn off your VPN to continue earning.",
@@ -118,16 +126,22 @@ async function attestDevice(user, body, ip) {
   const platform = PLATFORMS.has(String(body.platform)) ? String(body.platform) : "android";
   const deviceId = typeof body.deviceId === "string" ? body.deviceId.trim().slice(0, 200) : "";
 
-  const signals = {
-    platform,
-    deviceId: deviceId ? "present" : "",
-    isPhysicalDevice: body.isPhysicalDevice !== false,
-    isRooted: body.isRooted === true,
-    vpnActive: body.vpnActive === true,
-    proxyActive: body.proxyActive === true,
-    datacenterIp: !!ip && isLikelyVpnOrProxy(ip),
-    appVersion: typeof body.appVersion === "string" ? body.appVersion.slice(0, 32) : "",
-  };
+  const appVersion = typeof body.appVersion === "string" ? body.appVersion.slice(0, 32) : "";
+  const datacenterIp = !!ip && isLikelyVpnOrProxy(ip);
+  // Web: only what the server can establish. A browser's device fields are
+  // not stored as if they were device checks.
+  const signals = platform === "web"
+    ? { platform, deviceId: "", deviceIntegrity: "unavailable-in-browser", datacenterIp, appVersion }
+    : {
+        platform,
+        deviceId: deviceId ? "present" : "",
+        isPhysicalDevice: body.isPhysicalDevice !== false,
+        isRooted: body.isRooted === true,
+        vpnActive: body.vpnActive === true,
+        proxyActive: body.proxyActive === true,
+        datacenterIp,
+        appVersion,
+      };
 
   // One tasker account per physical device: the first account to attest
   // from a device owns it; any other account attesting from it is locked out
@@ -180,4 +194,31 @@ async function attestDevice(user, body, ip) {
   return state;
 }
 
-module.exports = { REASON, cfg, clientIp, deviceHash, reasonsFor, taskLockState, attestDevice, lockMessage };
+/**
+ * Rewarded ads can only be credited from the native app, where the ad SDK
+ * shows the ad. The web app has no rewarded-ad flow whose completion this
+ * server can verify, so a request made by a browser is refused. Browsers
+ * always send Origin on these POSTs and Sec-Fetch-Site on every request, and
+ * page scripts cannot remove either; the app's native HTTP client sends
+ * neither. (Sec-Fetch-Mode alone is not used: Node's fetch sends it too.)
+ *
+ * Honest limit: this stops the website (and anyone using a browser) from
+ * claiming ad rewards. It is not ad-completion proof — the native app's
+ * claims are still client-reported until AdMob server-side verification is
+ * set up.
+ */
+function isBrowserRequest(req) {
+  const h = (req && req.headers) || {};
+  return !!(h.origin || h["sec-fetch-site"]);
+}
+
+const AD_REWARD_APP_ONLY = {
+  code: "AD_REWARD_APP_ONLY",
+  message: "Rewarded ads are available in the YouPeak mobile app. Your other tasks keep earning here.",
+};
+
+function adRewardRefusal(req) {
+  return isBrowserRequest(req) ? AD_REWARD_APP_ONLY : null;
+}
+
+module.exports = { REASON, cfg, clientIp, deviceHash, reasonsFor, taskLockState, attestDevice, lockMessage, isBrowserRequest, adRewardRefusal };

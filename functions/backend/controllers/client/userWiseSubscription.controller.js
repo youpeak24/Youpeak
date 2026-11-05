@@ -1,4 +1,6 @@
 const UserWiseSubscription = require("../../models/userWiseSubscription.model");
+const engagement = require("../../util/engagement.service");
+const visibility = require("../../util/videoVisibility");
 
 //import model
 const User = require("../../models/user.model");
@@ -60,24 +62,28 @@ exports.subscribedUnSubscibed = async (req, res) => {
       });
     }
 
-    const alreadySubscribed = await UserWiseSubscription.exists({
-      userId: userObjectId,
-      channelId: channel.channelId,
-    });
+    // Explicit `subscribe=true|false` is idempotent (retries and double taps
+    // leave the same state). Without it the endpoint toggles, as older app
+    // versions expect.
+    const rawWant = req.query.subscribe ?? req.body?.subscribe;
+    if (rawWant !== undefined && !["true", "false", true, false].includes(rawWant)) {
+      return res.status(200).json({ status: false, message: "subscribe must be true or false." });
+    }
+    const alreadySubscribed = await engagement.isSubscribed(String(userObjectId), channel.channelId);
+    const want = rawWant === undefined ? !alreadySubscribed : rawWant === true || rawWant === "true";
 
-    if (alreadySubscribed) {
+    if (!want) {
       console.log("🔁 UNSUBSCRIBE");
-
-      await UserWiseSubscription.deleteOne({
-        userId: userObjectId,
-        channelId: channel.channelId,
-      });
-
+      await engagement.setFreeSubscription({ userId: String(userObjectId), channelId: channel.channelId, subscribed: false });
       return res.status(200).json({
         status: true,
         message: "Successfully unsubscribed from the channel!",
         isSubscribed: false,
+        totalSubscribers: await engagement.subscriberCount(channel.channelId),
       });
+    }
+    if (alreadySubscribed) {
+      return res.status(200).json({ status: true, message: "Already subscribed.", isSubscribed: true, changed: false, totalSubscribers: await engagement.subscriberCount(channel.channelId) });
     }
 
     /* ================= FREE CHANNEL ================= */
@@ -88,14 +94,9 @@ exports.subscribedUnSubscibed = async (req, res) => {
     // unset, which must not turn into an unpayable "paid" channel.
     const isPaidChannel = Number(channel.channelType) === 2 && Number(channel.subscriptionCost) > 0;
     if (!isPaidChannel) {
-      await UserWiseSubscription.create({
-        userId: userObjectId,
-        channelId: channel.channelId,
-        isPublic: true,
-        expiryDate: null,
-      });
+      const r = await engagement.setFreeSubscription({ userId: String(userObjectId), channelId: channel.channelId, subscribed: true });
 
-      if (channel.fcmToken) {
+      if (r.changed && channel.fcmToken) {
         try {
           const adminInstance = await admin;
           await adminInstance.messaging().send({
@@ -115,47 +116,30 @@ exports.subscribedUnSubscibed = async (req, res) => {
         status: true,
         message: "Successfully subscribed to the channel!",
         isSubscribed: true,
+        changed: r.changed,
+        totalSubscribers: await engagement.subscriberCount(channel.channelId),
       });
     }
 
     /* ================= PAID CHANNEL ================= */
     const coinsRequired = Number(channel.subscriptionCost || 0);
 
-    if (coinsRequired <= 0) {
+    // Debit, owner credit and the subscription record commit together in one
+    // transaction: parallel requests charge once, and a failure leaves no
+    // half-done state (the old flow could charge twice on a double tap).
+    const paid = await engagement.subscribePaid({ userId: String(userObjectId), channelId: channel.channelId, ownerId: String(channel._id), cost: coinsRequired });
+    if (!paid.ok) {
       return res.status(200).json({
         status: false,
-        message: "Invalid subscription cost.",
+        message: paid.reason === "INSUFFICIENT" ? "Insufficient coins to subscribe to this channel." : "Subscription could not be completed.",
       });
     }
-
-    // Atomic debit — a plain "user.coin < coinsRequired" check reads a
-    // stale balance; two concurrent subscribe requests for the same paid
-    // channel could both pass it and both deduct, driving the subscriber's
-    // balance negative. spendBalance() refuses the whole operation (no
-    // write at all) if the real-time balance can't cover it. See
-    // firestoreDb.service.js spendBalance().
-    const spend = await db.spendBalance("users", String(userObjectId), "coin", coinsRequired);
-    if (!spend.ok) {
-      return res.status(200).json({
-        status: false,
-        message: "Insufficient coins to subscribe to this channel.",
-      });
+    if (!paid.changed) {
+      return res.status(200).json({ status: true, message: "Already subscribed.", isSubscribed: true, changed: false, totalSubscribers: await engagement.subscriberCount(channel.channelId) });
     }
 
     const [uniqueIdOwner, uniqueIdUser] = await Promise.all([generateHistoryUniqueId(), generateHistoryUniqueId()]);
-
-    const expiryDate = new Date();
-    expiryDate.setMonth(expiryDate.getMonth() + 1);
-
-    const operations = [
-      UserWiseSubscription.create({
-        userId: userObjectId,
-        channelId: channel.channelId,
-        isPublic: false,
-        expiryDate,
-      }),
-      // Add coins to channel owner (atomic — see mongooseShim.js $inc handling)
-      User.updateOne({ _id: channel._id }, { $inc: { coin: coinsRequired } }),
+    await Promise.all([
       // Owner history (+)
       History.create({
         userId: channel._id,
@@ -165,7 +149,7 @@ exports.subscribedUnSubscibed = async (req, res) => {
         type: 10,
         date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
       }),
-      // User history (-)  — the debit itself already happened atomically above
+      // User history (-)
       History.create({
         otherUserId: userObjectId,
         channelId: channel.channelId,
@@ -174,9 +158,7 @@ exports.subscribedUnSubscibed = async (req, res) => {
         type: 10,
         date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
       }),
-    ];
-
-    await Promise.all(operations);
+    ]);
 
     if (channel.fcmToken) {
       try {
@@ -198,6 +180,8 @@ exports.subscribedUnSubscibed = async (req, res) => {
       status: true,
       message: "Successfully subscribed to the paid channel!",
       isSubscribed: true,
+      changed: true,
+      totalSubscribers: await engagement.subscriberCount(channel.channelId),
     });
   } catch (error) {
     console.error("subscribedUnSubscibed error:", error);
@@ -356,6 +340,8 @@ exports.videoOfSubscribedChannel = async (req, res) => {
           localField: "channelId",
           foreignField: "channelId",
           pipeline: [
+            // F-12: subscribers see a channel's public, published, unmoderated videos only.
+            { $match: visibility.publicListingMatch() },
             {
               $project: {
                 _id: 1,
@@ -437,6 +423,7 @@ exports.videoOfSubscribedChannel = async (req, res) => {
           isSaveToWatchLater: { $gt: [{ $size: "$isSaveToWatchLater" }, 0] },
           isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
           isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+          storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
         },
       },
       {
@@ -528,7 +515,10 @@ exports.videoOfSubscribedChannel = async (req, res) => {
                 channelId: "$channel.channelId",
                 channelType: "$channel.channelType",
                 subscriptionCost: "$channel.subscriptionCost",
-                videoUnlockCost: "$channel.videoUnlockCost",
+                // Free videos have no price, whatever the channel charges for its paid ones
+                // (issue: free uploads were listed as "Premium Exclusive").
+                videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                 channelImage: "$channel.image",
                 isSaveToWatchLater: 1,
                 views: 1,

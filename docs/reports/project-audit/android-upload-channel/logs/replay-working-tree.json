@@ -1,0 +1,182 @@
+[
+  {
+    "name": "profile (owner)",
+    "method": "GET",
+    "path": "/client/user/profile",
+    "status": 200,
+    "ok": true,
+    "code": "",
+    "message": "Retrieve profile of the user.",
+    "keys": "message,status,user"
+  },
+  {
+    "name": "profile (no token)",
+    "method": "GET",
+    "path": "/client/user/profile",
+    "status": 401,
+    "ok": false,
+    "code": "AUTH_REQUIRED",
+    "message": "Please sign in again to continue.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "profile (other's token)",
+    "method": "GET",
+    "path": "/client/user/profile",
+    "status": 403,
+    "ok": false,
+    "code": "USER_MISMATCH",
+    "message": "You can only do this for your own account.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "channel home (owner)",
+    "method": "GET",
+    "path": "/client/user/detailsOfChannel",
+    "status": 200,
+    "ok": true,
+    "code": "",
+    "message": "Success",
+    "keys": "channelImage,channelName,channelType,detailsOfChannel,isSubscribed,message,status,subscriptionCost,totalSubscribers,totalVideosOfChannel,videoUnlockCost"
+  },
+  {
+    "name": "channel home (no token)",
+    "method": "GET",
+    "path": "/client/user/detailsOfChannel",
+    "status": 200,
+    "ok": true,
+    "code": "",
+    "message": "Success",
+    "keys": "channelImage,channelName,channelType,detailsOfChannel,isSubscribed,message,status,subscriptionCost,totalSubscribers,totalVideosOfChannel,videoUnlockCost"
+  },
+  {
+    "name": "channel home (bad token)",
+    "method": "GET",
+    "path": "/client/user/detailsOfChannel",
+    "status": 401,
+    "ok": false,
+    "code": "AUTH_INVALID",
+    "message": "Your session has expired. Please sign in again.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "channel home (other's token, userId=owner)",
+    "method": "GET",
+    "path": "/client/user/detailsOfChannel",
+    "status": 403,
+    "ok": false,
+    "code": "USER_MISMATCH",
+    "message": "You can only do this for your own account.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "channel home (channelId empty)",
+    "method": "GET",
+    "path": "/client/user/detailsOfChannel",
+    "status": 200,
+    "ok": false,
+    "code": "",
+    "message": "channelId is required.",
+    "keys": "message,status"
+  },
+  {
+    "name": "channel home (unknown channel)",
+    "method": "GET",
+    "path": "/client/user/detailsOfChannel",
+    "status": 200,
+    "ok": false,
+    "code": "",
+    "message": "Channel not found.",
+    "keys": "message,status"
+  },
+  {
+    "name": "channel videos tab",
+    "method": "GET",
+    "path": "/client/user/videosOfChannel",
+    "status": 200,
+    "ok": true,
+    "code": "",
+    "message": "Success",
+    "keys": "message,status,total,video,videosTypeWiseOfChannel"
+  },
+  {
+    "name": "channel playlists tab",
+    "method": "GET",
+    "path": "/client/user/playListsOfChannel",
+    "status": 200,
+    "ok": true,
+    "code": "",
+    "message": "Success",
+    "keys": "message,playList,playListsOfChannel,status,total"
+  },
+  {
+    "name": "channel about tab",
+    "method": "GET",
+    "path": "/client/user/aboutOfChannel",
+    "status": 200,
+    "ok": true,
+    "code": "",
+    "message": "Success",
+    "keys": "aboutOfChannel,channel,message,status"
+  },
+  {
+    "name": "direct-upload-url (owner)",
+    "method": "POST",
+    "path": "/client/file/direct-upload-url",
+    "status": 503,
+    "ok": false,
+    "code": "R2_NOT_CONFIGURED",
+    "message": "Video storage is not configured.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "direct-upload-url (no token)",
+    "method": "POST",
+    "path": "/client/file/direct-upload-url",
+    "status": 401,
+    "ok": false,
+    "code": "AUTH_REQUIRED",
+    "message": "Please sign in again to continue.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "createVideo (no token)",
+    "method": "POST",
+    "path": "/client/video/createVideo",
+    "status": 401,
+    "ok": false,
+    "code": "AUTH_REQUIRED",
+    "message": "Please sign in again to continue.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "createVideo (owner, not an uploaded object)",
+    "method": "POST",
+    "path": "/client/video/createVideo",
+    "status": 400,
+    "ok": false,
+    "code": "INVALID_VIDEO_PROVIDER",
+    "message": "Upload videos and bites to the configured Cloudflare storage first.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "createVideo (other's token, owner's ids)",
+    "method": "POST",
+    "path": "/client/video/createVideo",
+    "status": 400,
+    "ok": false,
+    "code": "INVALID_VIDEO_PROVIDER",
+    "message": "Upload videos and bites to the configured Cloudflare storage first.",
+    "keys": "code,message,status"
+  },
+  {
+    "name": "createVideo (no channel yet, empty channelId)",
+    "method": "POST",
+    "path": "/client/video/createVideo",
+    "status": 400,
+    "ok": false,
+    "code": "INVALID_VIDEO_PROVIDER",
+    "message": "Upload videos and bites to the configured Cloudflare storage first.",
+    "keys": "code,message,status"
+  }
+]

@@ -1,0 +1,622 @@
+{
+  "ranAt": "2026-10-01T12:13:04.797Z",
+  "suites": [
+    "01-phase1.cjs",
+    "02-phase2.cjs",
+    "03-privacy-auth.cjs",
+    "04-peakboost.cjs",
+    "05-payments.cjs",
+    "06-withdrawals.cjs",
+    "07-rewards.cjs",
+    "08-media.cjs",
+    "09-requirements.cjs"
+  ],
+  "results": [
+    {
+      "id": "01-phase1:SEC-01",
+      "name": "withdrawal with only the shared key is refused (401)",
+      "ok": true,
+      "ms": 57
+    },
+    {
+      "id": "01-phase1:SEC-02",
+      "name": "withdrawal naming another user is refused (403 USER_MISMATCH)",
+      "ok": true,
+      "ms": 55
+    },
+    {
+      "id": "01-phase1:SEC-03",
+      "name": "owner's own withdrawal request still works",
+      "ok": true,
+      "ms": 152
+    },
+    {
+      "id": "01-phase1:SEC-04",
+      "name": "deleteUserAccount for another user is refused; account stays active",
+      "ok": true,
+      "ms": 52
+    },
+    {
+      "id": "01-phase1:SEC-05",
+      "name": "coinToAmountConverter with only the key is refused",
+      "ok": true,
+      "ms": 26
+    },
+    {
+      "id": "01-phase1:SEC-06",
+      "name": "setPassword by ?userId (old takeover) is refused",
+      "ok": true,
+      "ms": 53
+    },
+    {
+      "id": "01-phase1:SEC-07",
+      "name": "setPassword by email without a verified OTP is refused",
+      "ok": true,
+      "ms": 63
+    },
+    {
+      "id": "01-phase1:SEC-08",
+      "name": "verified OTP allows one reset; the grant is consumed",
+      "ok": true,
+      "ms": 354
+    },
+    {
+      "id": "01-phase1:SEC-09",
+      "name": "5 wrong OTP guesses lock the code (correct code then fails)",
+      "ok": true,
+      "ms": 342
+    },
+    {
+      "id": "01-phase1:SEC-10",
+      "name": "6th OTP request within an hour is refused",
+      "ok": true,
+      "ms": 283
+    },
+    {
+      "id": "01-phase1:SEC-11",
+      "name": "partner dashboard for another partner does not return portal credentials",
+      "ok": true,
+      "ms": 86
+    },
+    {
+      "id": "01-phase1:REQ-DP-API-02",
+      "name": "partner's own dashboard: real earnings, pending and watch progress",
+      "ok": true,
+      "ms": 225
+    },
+    {
+      "id": "01-phase1:FIN-01",
+      "name": "two concurrent approvals against a ₹100 balance (legacy unreserved requests): exactly one paid",
+      "ok": true,
+      "ms": 2774
+    },
+    {
+      "id": "01-phase1:FRAUD-01",
+      "name": "suspended partner cannot withdraw (legacy route and /payout/request)",
+      "ok": true,
+      "ms": 113
+    },
+    {
+      "id": "01-phase1:FRAUD-02",
+      "name": "fraud-restricted user cannot withdraw",
+      "ok": true,
+      "ms": 63
+    },
+    {
+      "id": "01-phase1:FRAUD-03",
+      "name": "held referral rewards stay frozen while the referrer is suspended, then release",
+      "ok": true,
+      "ms": 234
+    },
+    {
+      "id": "01-phase1:FRAUD-04",
+      "name": "VPN signup on a partner's code suspends the partner (no permanent block)",
+      "ok": true,
+      "ms": 197
+    },
+    {
+      "id": "01-phase1:REQ-PP-05",
+      "name": "Stage 2 deadline is 7 days from the referred user's registration",
+      "ok": true,
+      "ms": 17
+    },
+    {
+      "id": "01-phase1:FRAUD-05",
+      "name": "3 flagged referrals suspend a Digital Partner (2 do not)",
+      "ok": true,
+      "ms": 945
+    },
+    {
+      "id": "01-phase1:FIN-02",
+      "name": "40 concurrent ad rewards never pass 20 ads/day; ledger = balance; follow-ups stop at exactly 20",
+      "ok": true,
+      "ms": 23118
+    },
+    {
+      "id": "01-phase1:FIN-03",
+      "name": "daily coin cap holds under concurrency (990/1000 + 10 parallel ads = 1000)",
+      "ok": true,
+      "ms": 3668
+    },
+    {
+      "id": "01-phase1:FIN-04",
+      "name": "pacing rule holds under concurrency (credited likes never closer than 3 s)",
+      "ok": true,
+      "ms": 3656
+    },
+    {
+      "id": "01-phase1:FIN-05",
+      "name": "per-video reward dedupe holds under concurrency (5 parallel -> 1)",
+      "ok": true,
+      "ms": 3599
+    },
+    {
+      "id": "01-phase1:REQ-ACC-04",
+      "name": "unpaid joining fee blocks coin earning on the server",
+      "ok": true,
+      "ms": 101
+    },
+    {
+      "id": "01-phase1:MOD-01",
+      "name": "getVideos hides a video held for review",
+      "ok": true,
+      "ms": 109
+    },
+    {
+      "id": "02-phase2:VIS-01",
+      "name": "F-13: anonymous getVideos returns only public/approved videos",
+      "ok": true,
+      "ms": 30
+    },
+    {
+      "id": "02-phase2:VIS-02",
+      "name": "F-12: authenticated getVideos hides held/flagged/private/inactive",
+      "ok": true,
+      "ms": 74
+    },
+    {
+      "id": "02-phase2:VIS-03",
+      "name": "F-12: getVideoList hides held/flagged videos",
+      "ok": true,
+      "ms": 38
+    },
+    {
+      "id": "02-phase2:VIS-04",
+      "name": "F-12: detailsOfVideo returns false for a held video (non-owner)",
+      "ok": true,
+      "ms": 91
+    },
+    {
+      "id": "02-phase2:VIS-05",
+      "name": "F-12: detailsOfVideo returns false for a copyright-flagged video",
+      "ok": true,
+      "ms": 82
+    },
+    {
+      "id": "02-phase2:PW-01",
+      "name": "F-19: signup response does not expose password or passwordHash",
+      "ok": true,
+      "ms": 151
+    },
+    {
+      "id": "02-phase2:PW-02",
+      "name": "F-19: stored credential is bcrypt (not cryptr ciphertext)",
+      "ok": true,
+      "ms": 53
+    },
+    {
+      "id": "02-phase2:PW-03",
+      "name": "F-19: login with bcrypt-hashed password succeeds without exposing credential",
+      "ok": true,
+      "ms": 154
+    },
+    {
+      "id": "02-phase2:PW-04",
+      "name": "F-19: login with wrong password is refused",
+      "ok": true,
+      "ms": 117
+    },
+    {
+      "id": "02-phase2:PW-05",
+      "name": "F-19: getProfile response does not expose password or passwordHash",
+      "ok": true,
+      "ms": 73
+    },
+    {
+      "id": "02-phase2:PW-06",
+      "name": "F-19: setPassword writes a bcrypt hash and clears legacy field",
+      "ok": true,
+      "ms": 158
+    },
+    {
+      "id": "02-phase2:PW-07",
+      "name": "F-19: legacy cryptr user logs in once, is migrated to bcrypt, legacy field cleared",
+      "ok": true,
+      "ms": 599
+    },
+    {
+      "id": "02-phase2:PW-08",
+      "name": "F-19: a profile update never wipes an unmigrated legacy password",
+      "ok": true,
+      "ms": 249
+    },
+    {
+      "id": "02-phase2:PW-09",
+      "name": "F-19: admin user list and profile never include credentials",
+      "ok": true,
+      "ms": 28
+    },
+    {
+      "id": "02-phase2:PW-10",
+      "name": "F-19: admin password reset stores bcrypt, never plain text",
+      "ok": true,
+      "ms": 119
+    },
+    {
+      "id": "03-privacy-auth:VIS-10",
+      "name": "anonymous and signed-in getVideos list only the public video of the 8 states",
+      "ok": true,
+      "ms": 133
+    },
+    {
+      "id": "03-privacy-auth:VIS-11",
+      "name": "searchShorts returns public shorts only (it used to search PRIVATE shorts)",
+      "ok": true,
+      "ms": 73
+    },
+    {
+      "id": "03-privacy-auth:VIS-12",
+      "name": "searchChannelVideoShortsByUser (videos and shorts) never returns private/held/flagged",
+      "ok": true,
+      "ms": 155
+    },
+    {
+      "id": "03-privacy-auth:VIS-13",
+      "name": "getAllLikeThis (related) never returns private/held/flagged/inactive",
+      "ok": true,
+      "ms": 96
+    },
+    {
+      "id": "03-privacy-auth:VIS-14",
+      "name": "channel page: others see public only; the verified owner sees own private/held",
+      "ok": true,
+      "ms": 181
+    },
+    {
+      "id": "03-privacy-auth:VIS-15",
+      "name": "detailsOfVideo: owner opens own held/private video; others and anonymous cannot",
+      "ok": true,
+      "ms": 581
+    },
+    {
+      "id": "03-privacy-auth:VIS-16",
+      "name": "private playlist hidden from others; playlist videos now load and are filtered",
+      "ok": true,
+      "ms": 230
+    },
+    {
+      "id": "03-privacy-auth:VIS-17",
+      "name": "subscription feed shows the channel's public videos only",
+      "ok": true,
+      "ms": 109
+    },
+    {
+      "id": "03-privacy-auth:AUTH-01",
+      "name": "owner routes refuse a key-only call and a mismatched token",
+      "ok": true,
+      "ms": 507
+    },
+    {
+      "id": "03-privacy-auth:AUTH-02",
+      "name": "browse routes drop a caller-chosen userId when there is no token",
+      "ok": true,
+      "ms": 144
+    },
+    {
+      "id": "03-privacy-auth:AUTH-03",
+      "name": "browse route with a token for someone else is refused (403)",
+      "ok": true,
+      "ms": 31
+    },
+    {
+      "id": "03-privacy-auth:PAY-01",
+      "name": "locked video URL is withheld from non-buyers in feeds and details",
+      "ok": true,
+      "ms": 298
+    },
+    {
+      "id": "03-privacy-auth:PAY-02",
+      "name": "unlock: 5 parallel taps charge once, return the URL, then details carry it",
+      "ok": true,
+      "ms": 3543
+    },
+    {
+      "id": "03-privacy-auth:PAY-03",
+      "name": "a held or private video cannot be bought",
+      "ok": true,
+      "ms": 52
+    },
+    {
+      "id": "04-peakboost:PB-01",
+      "name": "amounts 100 / 101 / 500 / 2,000 / 10,000 / 1,000,000: debit = creator + platform, 80/20 by the implemented rounding",
+      "ok": true,
+      "ms": 1434
+    },
+    {
+      "id": "04-peakboost:PB-02",
+      "name": "invalid amounts are refused with no state change (99, max+1, 0, -100, 150.5, '200', null)",
+      "ok": true,
+      "ms": 348
+    },
+    {
+      "id": "04-peakboost:PB-03",
+      "name": "insufficient funds refused; exact balance succeeds and leaves 0",
+      "ok": true,
+      "ms": 411
+    },
+    {
+      "id": "04-peakboost:PB-04",
+      "name": "same requestId replayed returns the first result and charges once; different payload -> 409",
+      "ok": true,
+      "ms": 362
+    },
+    {
+      "id": "04-peakboost:PB-05",
+      "name": "rapid double tap (10 parallel, one requestId) charges once",
+      "ok": true,
+      "ms": 268
+    },
+    {
+      "id": "04-peakboost:PB-06",
+      "name": "concurrent different boosts never overdraw: 10 x 300 against 1,000 -> exactly 3",
+      "ok": true,
+      "ms": 7771
+    },
+    {
+      "id": "04-peakboost:PB-07",
+      "name": "self-boost, missing video, blocked creator and private video are refused with no debit",
+      "ok": true,
+      "ms": 316
+    },
+    {
+      "id": "04-peakboost:PB-08",
+      "name": "blocked viewer is refused before any write",
+      "ok": true,
+      "ms": 81
+    },
+    {
+      "id": "04-peakboost:PB-09",
+      "name": "a failure inside the transaction leaves nothing behind (no debit, no credit, no boost row)",
+      "ok": true,
+      "ms": 281
+    },
+    {
+      "id": "05-payments:PF-01",
+      "name": "duplicate webhook: coins credited once, COMPLETED, one ledger row with the platform share",
+      "ok": true,
+      "ms": 310
+    },
+    {
+      "id": "05-payments:PF-02",
+      "name": "5 simultaneous webhooks + the client callback: exactly one credit",
+      "ok": true,
+      "ms": 3539
+    },
+    {
+      "id": "05-payments:PF-03",
+      "name": "amount or currency mismatch -> VALIDATION_FAILED, nothing granted, later correct event doesn't auto-fulfil",
+      "ok": true,
+      "ms": 234
+    },
+    {
+      "id": "05-payments:PF-04",
+      "name": "invalid signature (webhook 400; callback doesn't mark someone's order failed); unknown order 503",
+      "ok": true,
+      "ms": 145
+    },
+    {
+      "id": "05-payments:PF-05",
+      "name": "failed/cancelled and out-of-order events: failure event changes nothing; capture after it fulfils",
+      "ok": true,
+      "ms": 345
+    },
+    {
+      "id": "05-payments:PF-06",
+      "name": "an effect fails mid-fulfilment -> REQUIRES_RECONCILIATION (500 to gateway); retry finishes only the missing effects",
+      "ok": true,
+      "ms": 650
+    },
+    {
+      "id": "05-payments:PF-07",
+      "name": "crash after claim: live PROCESSING lease -> 503; expired lease is reclaimed and completed",
+      "ok": true,
+      "ms": 318
+    },
+    {
+      "id": "05-payments:PF-08",
+      "name": "a pre-state-machine order already fulfilled (fulfilled:true) is never re-run",
+      "ok": true,
+      "ms": 49
+    },
+    {
+      "id": "05-payments:PF-09",
+      "name": "F-26/F-15: Tasker pass grants its Ad Credits; a Free-tier referrer gets no 10% bonus",
+      "ok": true,
+      "ms": 345
+    },
+    {
+      "id": "05-payments:PF-10",
+      "name": "F-14: checkout refuses a Tasker pass at or below the current level",
+      "ok": true,
+      "ms": 192
+    },
+    {
+      "id": "05-payments:PF-11",
+      "name": "Digital Partner licence delivered twice: credits 25,000 once, one franchise commission",
+      "ok": true,
+      "ms": 539
+    },
+    {
+      "id": "05-payments:PF-12",
+      "name": "admin reconcile: dry run lists stuck orders; retry completes them idempotently",
+      "ok": true,
+      "ms": 269
+    },
+    {
+      "id": "06-withdrawals:WD-01",
+      "name": "first payout: ₹99 refused, exactly ₹100 reserved (available 100 → 0, reserved 0 → 100)",
+      "ok": true,
+      "ms": 251
+    },
+    {
+      "id": "06-withdrawals:WD-02",
+      "name": "6 simultaneous requests (both routes) → exactly one pending, balance reserved once",
+      "ok": true,
+      "ms": 8161
+    },
+    {
+      "id": "06-withdrawals:WD-03",
+      "name": "approval consumes the reservation once (concurrent double approval → one), lock released, next request allowed",
+      "ok": true,
+      "ms": 3352
+    },
+    {
+      "id": "06-withdrawals:WD-04",
+      "name": "after a paid payout the ₹500 standard minimum applies",
+      "ok": true,
+      "ms": 194
+    },
+    {
+      "id": "06-withdrawals:WD-05",
+      "name": "decline releases exactly once; racing decline + approve → one winner; money conserved",
+      "ok": true,
+      "ms": 3632
+    },
+    {
+      "id": "06-withdrawals:WD-06",
+      "name": "coin shortfall converted inside the reservation (₹50 + 10,000 coins → ₹100 request)",
+      "ok": true,
+      "ms": 176
+    },
+    {
+      "id": "06-withdrawals:WD-07",
+      "name": "insufficient coins + ₹: refused with nothing reserved or converted",
+      "ok": true,
+      "ms": 222
+    },
+    {
+      "id": "06-withdrawals:WD-08",
+      "name": "fraud hold after the request blocks approval; reservation stays until declined",
+      "ok": true,
+      "ms": 317
+    },
+    {
+      "id": "06-withdrawals:WD-09",
+      "name": "approval is admin-only: the app key cannot reach the admin route",
+      "ok": true,
+      "ms": 35
+    },
+    {
+      "id": "07-rewards:RW-01",
+      "name": "business day is Asia/Kolkata whatever the host timezone (18:29:59Z = same day, 18:30Z = next)",
+      "ok": true,
+      "ms": 0
+    },
+    {
+      "id": "07-rewards:RW-02",
+      "name": "first requests after midnight (stale counters at yesterday's cap): no credited count is lost to a stale reset",
+      "ok": true,
+      "ms": 3653
+    },
+    {
+      "id": "07-rewards:RW-03",
+      "name": "120-minute bonus under 3 parallel reports: paid once and capped by the day's room (800/1000 → +200)",
+      "ok": true,
+      "ms": 3609
+    },
+    {
+      "id": "07-rewards:RW-04",
+      "name": "like → unlike → re-like: net one like; double unlike reverses once",
+      "ok": true,
+      "ms": 3684
+    },
+    {
+      "id": "07-rewards:RW-05",
+      "name": "reversal never drives the balance negative (coins already spent → shortfall reported)",
+      "ok": true,
+      "ms": 281
+    },
+    {
+      "id": "07-rewards:RW-06",
+      "name": "lifetime watch minutes survive the daily reset and a free level-up (2999 + 1 → L1 at 3000)",
+      "ok": true,
+      "ms": 169
+    },
+    {
+      "id": "07-rewards:RW-07",
+      "name": "+500 cap boost (capacity) and the 500-coin watch reward are separate values",
+      "ok": true,
+      "ms": 76
+    },
+    {
+      "id": "08-media:MED-01",
+      "name": "publishing needs the caller's own grant: other user's upload 403, no grant 403, own grant OK",
+      "ok": true,
+      "ms": 252
+    },
+    {
+      "id": "08-media:MED-02",
+      "name": "the same upload can't be published twice; an expired grant is refused",
+      "ok": true,
+      "ms": 63
+    },
+    {
+      "id": "08-media:MED-03",
+      "name": "failed-publish cleanup deletes only the caller's own unpublished upload (F-28)",
+      "ok": true,
+      "ms": 67
+    },
+    {
+      "id": "08-media:MED-05",
+      "name": "publish without channelId no longer crashes after responding (process survives, video kept)",
+      "ok": true,
+      "ms": 240
+    },
+    {
+      "id": "08-media:MED-04",
+      "name": "grant records owner, provider and ref; bound to the video after publish",
+      "ok": true,
+      "ms": 9
+    },
+    {
+      "id": "08-media:MED-06",
+      "name": "media audit dry run lists expired unused uploads and external-URL videos without changing anything",
+      "ok": true,
+      "ms": 77
+    },
+    {
+      "id": "09-requirements:REQ-0111",
+      "name": "5 reports from 5 users within 24 h hold the video and it leaves the public feed",
+      "ok": true,
+      "ms": 844
+    },
+    {
+      "id": "09-requirements:REQ-0040",
+      "name": "a Free Tasker referrer gets the flat 250 coins per registered referral",
+      "ok": true,
+      "ms": 232
+    },
+    {
+      "id": "09-requirements:REQ-0088",
+      "name": "verified joining-fee payment sets paymentStatus / payment_status (signed webhook, once)",
+      "ok": true,
+      "ms": 160
+    },
+    {
+      "id": "09-requirements:REQ-0035",
+      "name": "a dislike earns 2 coins once per video",
+      "ok": true,
+      "ms": 126
+    }
+  ]
+}

@@ -57,6 +57,15 @@ exports.getDashboard = async (req, res) => {
       : [];
     const nameById = {};
     referredUsers.forEach((u, i) => { if (u) nameById[referredIds[i]] = u.fullName || u.nickName || "Youpeak User"; });
+    // TRS §5: the dashboard shows each referred user's watch-time progress
+    // toward Stage 2 (lifetime watch minutes, users.totalWatchTime).
+    const watchMinutesById = {};
+    referredUsers.forEach((u, i) => { if (u) watchMinutesById[referredIds[i]] = num(u.totalWatchTime); });
+    const stage2Minutes = num((global.settingJSON || {}).referralStage2WatchMinutes, 100);
+
+    // PartnerProfile.totalEarnings is never written; the referral ledger is
+    // the source of truth (coins released to the wallet, 100 coins = ₹1).
+    const releasedCoins = referrals.reduce((sum, r) => sum + num(r.totalRewardCoinsGiven), 0);
 
     // Web Portal login — see fulfilDigitalPartnerLicense in
     // payment.controller.js for why this exists. While the account is
@@ -97,7 +106,8 @@ exports.getDashboard = async (req, res) => {
         awaitingWatchTimeMilestone: stage1Only.length,
         completedBothStages: bothStages.length,
         flagged: referrals.length - activeReferrals.length,
-        totalEarningsInr: num(profile.totalEarnings),
+        totalEarningsInr: Number((releasedCoins / 100).toFixed(2)),
+        pendingInr: Number((num(user.pendingReferralCoin) / 100).toFixed(2)),
       },
       license: {
         feePaidInr: num(profile.licenseFeePaid),
@@ -108,6 +118,9 @@ exports.getDashboard = async (req, res) => {
         referredUserName: nameById[r.referredUserId] || "Youpeak User",
         stage1Completed: !!r.stage1Completed,
         stage2Completed: !!r.stage2Completed,
+        watchMinutes: watchMinutesById[r.referredUserId] ?? 0,
+        stage2TargetMinutes: stage2Minutes,
+        stage2DeadlineAt: r.stage2DeadlineAt || null,
         status: r.status,
         createdAt: r.createdAt,
       })),

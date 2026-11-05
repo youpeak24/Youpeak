@@ -8,9 +8,10 @@
 
 const db = require("../../util/connection");
 const Cryptr = require("cryptr");
-// TODO(step-4): migrate user passwords to bcrypt (verify-and-rehash on login).
-// Key is overridable so it can be rotated once that migration exists.
+const bcrypt = require("bcryptjs");
+// Legacy key — used only for reading pre-migration passwords.
 const cryptr = new Cryptr(process.env.USER_PW_SECRET || "myTotallySecretKey");
+const BCRYPT_ROUNDS = 10;
 const { generateUniqueId } = require("../../util/generateUniqueId");
 const { generateReferralCode } = require("../../util/generateReferralCode");
 const admin = require("../../util/privateKey");
@@ -71,7 +72,9 @@ function buildUserData(existing, body) {
     ipAddress: body.ipAddress || existing.ipAddress || "",
     descriptionOfChannel: body.descriptionOfChannel || existing.descriptionOfChannel || "",
     loginType: body.loginType !== undefined ? body.loginType : existing.loginType,
-    password: body.password ? cryptr.encrypt(body.password) : existing.password || "",
+    // F-19: no password field here. buildUserData is written on every login,
+    // so a value here would overwrite a legacy credential before it has been
+    // migrated; callers set passwordHash themselves (signup / reset / migration).
     identity: body.identity || existing.identity || "",
     fcmToken: body.fcmToken || existing.fcmToken || "",
     socialMediaLinks: {
@@ -107,13 +110,42 @@ function buildUserData(existing, body) {
   };
 }
 
-// ─── Create an email+password (loginType 4) app account server-side ──────
-// Used when a District Franchise onboards a Digital Partner who has no app
-// account yet (util/partnerNetwork.service.js). Produces exactly what the
-// app's own signup below produces — same fields, referral code, uniqueId,
-// login bonus + its history row, and the same cryptr password format the
-// app's loginType-4 login checks — so the person can simply log in to the
-// app with that email and password.
+// ─── Strip credential fields from any user object before sending to a client ──
+// F-19 (Phase 2): passwords (plaintext, cryptr-encrypted or bcrypt) must never
+// leave the server through ordinary profile / login / admin serialisation.
+function safeUser(u) {
+  if (!u || typeof u !== "object") return u;
+  const out = { ...u };
+  delete out.password;
+  delete out.passwordHash;
+  delete out.passwordResetGrantUntil;
+  return out;
+}
+
+// ─── Verify a plain-text password against a stored credential ─────────────────
+// Supports both bcrypt hashes (new) and cryptr ciphertext (legacy).
+// Returns { ok, rehashWith } where rehashWith is set when a legacy password
+// was accepted and should be migrated to bcrypt.
+async function verifyPassword(plain, stored) {
+  if (!stored) return { ok: false };
+  // bcrypt hashes start with "$2b$" or "$2a$"
+  if (stored.startsWith("$2")) {
+    const ok = await bcrypt.compare(plain, stored);
+    return { ok };
+  }
+  // Legacy cryptr ciphertext
+  try {
+    const decrypted = cryptr.decrypt(stored);
+    if (decrypted === plain) {
+      const rehashWith = await bcrypt.hash(plain, BCRYPT_ROUNDS);
+      return { ok: true, rehashWith };
+    }
+  } catch { /* malformed ciphertext */ }
+  return { ok: false };
+}
+
+// ─── Create an email+password (loginType 4) app account server-side ──────────
+// F-19 (Phase 2): uses bcrypt instead of cryptr for new passwords.
 exports.createEmailPasswordAccount = async ({ fullName, email, password, mobileNumber = "", state = "", district = "" }) => {
   const bonusCoins = global.settingJSON?.loginRewardCoins ? global.settingJSON.loginRewardCoins : 5000;
   const referralCode = await uniqueReferralCode();
@@ -140,6 +172,9 @@ exports.createEmailPasswordAccount = async ({ fullName, email, password, mobileN
   newUserData.state = state;
   newUserData.district = district;
   newUserData.createdAt = new Date().toISOString();
+  // F-19: store bcrypt hash, not cryptr ciphertext or plaintext
+  if (password) newUserData.passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+  delete newUserData.password;
 
   const createdUser = await db.create("users", newUserData);
   try {
@@ -156,8 +191,10 @@ exports.createEmailPasswordAccount = async ({ fullName, email, password, mobileN
   return createdUser;
 };
 
-// Re-encrypts an app (loginType 4) password in the app's own format.
-exports.encryptAppPassword = (plain) => cryptr.encrypt(plain);
+// bcrypt hash for an app (loginType 4) password — the only format new
+// passwords are written in (F-19). Callers store it as users.passwordHash and
+// clear users.password.
+exports.hashPassword = (plain) => bcrypt.hash(String(plain), BCRYPT_ROUNDS);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/user/login   →  login OR signup
@@ -213,21 +250,25 @@ exports.store = async (req, res) => {
       // Firebase phone OTP — matched on the verified number only
       existingUser = await db.findOne("users", { verifiedPhoneNumber: verifiedPhone });
     } else if (loginType === 4) {
-      // Email + Password
+      // Email + Password — verify against stored credential (bcrypt or legacy cryptr)
       if (!email || !password) {
         return res.status(200).json({ status: false, message: "email and password both must be required." });
       }
       const found = await db.findOne("users", { email: email.trim(), loginType: 4 });
       if (found) {
-        try {
-          const decrypted = cryptr.decrypt(found.password || "");
-          if (decrypted !== password) {
-            return res.status(200).json({ status: false, message: "Oops ! Password doesn't match." });
-          }
-        } catch {
+        // F-19: support both bcrypt hash (passwordHash) and legacy cryptr (password)
+        const stored = found.passwordHash || found.password || "";
+        const { ok, rehashWith } = await verifyPassword(password, stored);
+        if (!ok) {
           return res.status(200).json({ status: false, message: "Oops ! Password doesn't match." });
         }
         existingUser = found;
+        // Migrate legacy cryptr password to bcrypt on first successful login
+        if (rehashWith) {
+          try {
+            await db.update("users", found._id || found.id, { passwordHash: rehashWith, password: null });
+          } catch { /* non-fatal */ }
+        }
       }
     } else {
       return res.status(200).json({ status: false, message: "loginType must be passed valid." });
@@ -250,14 +291,11 @@ exports.store = async (req, res) => {
 
       const userId = existingUser._id || existingUser.id;
       const updatedUser = await db.update("users", userId, updates);
-      // Return password decrypted for client compatibility
-      const returnUser = { ...updatedUser };
-      if (req.body.password) returnUser.password = req.body.password;
-
+      // F-19: never return password or hash in login response
       return res.status(200).json({
         status: true,
         message: "User login Successfully.",
-        user: returnUser,
+        user: safeUser(updatedUser || existingUser),
         signUp: false,
         firebaseCustomToken: await mintAppSession(userId),
         accessGate: accessGateFor(updatedUser || existingUser),
@@ -287,6 +325,8 @@ exports.store = async (req, res) => {
       newUserData.totalRewardCoin = bonusCoins;
       newUserData.referralCode = referralCode;
       newUserData.createdAt = new Date().toISOString();
+      // Email + password signup: store only the bcrypt hash (F-19).
+      if (loginType === 4 && password) newUserData.passwordHash = await bcrypt.hash(String(password), BCRYPT_ROUNDS);
       if (verifiedPhone) {
         newUserData.verifiedPhoneNumber = verifiedPhone;
         newUserData.mobileNumber = verifiedPhone;
@@ -294,14 +334,11 @@ exports.store = async (req, res) => {
 
       const createdUser = await db.create("users", newUserData);
 
-      // Return password decrypted for client
-      const returnUser = { ...createdUser };
-      if (req.body.password) returnUser.password = req.body.password;
-
+      // F-19: never return password or hash in signup response
       res.status(200).json({
         status: true,
         message: "User Signup Successfully.",
-        user: returnUser,
+        user: safeUser(createdUser),
         signUp: true,
         firebaseCustomToken: await mintAppSession(createdUser._id || createdUser.id),
         accessGate: accessGateFor(createdUser),
@@ -356,9 +393,9 @@ exports.checkUser = async (req, res) => {
     const user = await db.findOne("users", { email: email.trim(), loginType: 4 });
 
     if (user) {
-      let decrypted = "";
-      try { decrypted = cryptr.decrypt(user.password || ""); } catch {}
-      if (decrypted !== password) {
+      const stored = user.passwordHash || user.password || "";
+      const { ok } = await verifyPassword(password, stored);
+      if (!ok) {
         return res.status(200).json({ status: false, message: "Password doesn't match for this user.", isLogin: false });
       }
       return res.status(200).json({ status: true, message: "User login Successfully.", isLogin: true });
@@ -435,8 +472,8 @@ exports.updateProfile = async (req, res) => {
     updates.updatedAt = new Date().toISOString();
 
     const updatedUser = await db.update("users", userId, updates);
-
-    return res.status(200).json({ status: true, message: "Success", user: updatedUser });
+    // F-19: never return password or hash in profile update response
+    return res.status(200).json({ status: true, message: "Success", user: safeUser(updatedUser) });
   } catch (error) {
     console.error("updateProfile error:", error);
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });
@@ -455,17 +492,17 @@ exports.getProfile = async (req, res) => {
 
     const user = await db.findById("users", userId);
     if (!user) {
-      return res.status(200).json({ status: false, message: "User does not found!" });
+      return res.status(200).json({ status: false, code: "USER_NOT_FOUND", message: "User does not found!" });
     }
     if (!user.isActive) {
-      return res.status(200).json({ status: false, message: "User does not found!" });
+      return res.status(200).json({ status: false, code: "USER_NOT_FOUND", message: "User does not found!" });
     }
     if (user.isBlock) {
-      return res.status(200).json({ status: false, message: "you are blocked by the admin." });
+      return res.status(200).json({ status: false, code: "USER_BLOCKED", message: "you are blocked by the admin." });
     }
 
     const userObj = {
-      ...user,
+      ...safeUser(user),
       paymentStatus: user.paymentStatus || false,
       payment_status: user.paymentStatus || false,
       // Whether the app must show the web-portal activation lock screen.

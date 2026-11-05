@@ -1,0 +1,86 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 03[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 03-money-and-scope.cjs
+[0mDELETE /client/video/deleteVideoRecord?videoId=ms_v1 [32m200[0m 109.798 ms - 64[0m
+FAIL 03-money-and-scope:MS-01 a normal user deleting THEIR OWN single video (client/video/deleteVideoRecord) deletes only that video
+     videos before=3 after=0; comments left=3 (other users' videos were deleted by user ms_u1)
+     
+     0 !== 2
+     
+[0mGET /admin/withDrawalRequest?startDate=All&endDate=All&type=All&start=1&limit=20 [32m200[0m 47.801 ms - 233[0m
+[0mGET /admin/withDrawalRequest?startDate=2020-01-01&endDate=2030-12-31&type=All&start=1&limit=20 [32m200[0m 70.258 ms - 89[0m
+FAIL 03-money-and-scope:MS-02 admin withdrawal list honours a date range that contains the request
+     date-ranged list returned 0 of 1 rows
+     
+     0 !== 1
+     
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'ms_buyer',
+  id: 'ms_buyer',
+  fullName: 'ms_buyer',
+  email: 'ms_buyer@test.local',
+  isActive: true,
+  isBlock: false,
+  coin: 10000,
+  totalEarningAmount: 0,
+  totalRewardCoin: 0,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:45:40.244Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:45:40.244Z',
+  purchasedCoin: 10000
+}
+Coin → Amount conversion (2 decimal points): 100
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=10000 [32m200[0m 210.825 ms - 77[0m
+FAIL 03-money-and-scope:MS-03 coins that were PURCHASED with money cannot be converted into withdrawable cash (no ₹ in → ₹ out channel)
+     converted 100 ₹ of purchased coins into withdrawable balance (totalEarningAmount=100)
+FAIL 03-money-and-scope:MS-04 resolveAgency prefers the franchise of the user's own district over another franchise in the same state
+     resolved to "ms_ag_chennai"
+     + actual - expected
+     
+     + 'ms_ag_chennai'
+     - 'ms_ag_trichy'
+              ^
+     
+FAIL 03-money-and-scope:MS-05 a franchise-created partner cannot receive ad credits that were never paid (self-reported licence fee)
+     partner ad-credit balance is 1000000 after an unverified, self-reported licence fee of 1000000
+     
+     1000000 !== 0
+     
+[0mGET /client/partner/dashboard [32m200[0m 256.141 ms - 462[0m
+[0mGET /client/partner/dashboard [32m200[0m 223.408 ms - 462[0m
+FAIL 03-money-and-scope:MS-06 GET client/partner/dashboard does not rotate or disclose the portal password (read-only request)
+     two GET requests returned two different plaintext portal passwords (present/present; differ=true)
+
+AUDIT RESULT 0/6 expectations met (6 defects demonstrated)
+[32m[1m+ [22m[39m Script exited successfully (code 0)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+exit=0

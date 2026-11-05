@@ -1,0 +1,42 @@
+{
+  "steps": {
+    "like": {
+      "uiAfter": "Remove like\n3.89k",
+      "serverLike": "3891",
+      "record": {
+        "_id": "local_app_user_video_102",
+        "id": "local_app_user_video_102",
+        "userId": "local_app_user",
+        "videoId": "video_102",
+        "channelId": "channel_102",
+        "likeOrDislike": "like",
+        "createdAt": "2026-10-09T06:56:01.002Z",
+        "updatedAt": "2026-10-09T06:56:01.002Z"
+      }
+    },
+    "save": {
+      "record": true
+    },
+    "subscribe": {
+      "subscriptions": 1
+    },
+    "comment": {
+      "serverComments": 1,
+      "uiCount": "Comments · 1"
+    },
+    "unlike": {
+      "serverLike": "3890",
+      "record": null
+    }
+  },
+  "before": {
+    "like": "3890"
+  },
+  "afterReload": {
+    "liked": true,
+    "saved": true,
+    "subscribed": true,
+    "comments": "Comments · 1"
+  },
+  "consoleErrors": []
+}

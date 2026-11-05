@@ -2,6 +2,7 @@ const firebaseAdmin = require("./firebaseAdmin"); // initialises firebase-admin 
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const { matchesQuery, needsInMemoryFilter, assertSupported, unwrap } = require("./queryMatcher");
 
 class FirestoreDbService {
   constructor() {
@@ -10,10 +11,12 @@ class FirestoreDbService {
     // Firestore op timeout. Cold connections can take >1.4s; serverless cold
     // starts more. Keep it well under the platform function limit.
     this.opTimeoutMs = Number(process.env.FIRESTORE_TIMEOUT_MS) || 8000;
+    this.arrayFields = {};
     // Local JSON mirror is a DEV-ONLY convenience. In production it hides real
     // Firestore failures and (on serverless) writes to an ephemeral tmp dir,
     // so it is OFF unless explicitly enabled.
-    this.allowLocalFallback = String(process.env.ALLOW_LOCAL_DB_FALLBACK || "").toLowerCase() === "true";
+    const production = process.env.NODE_ENV === "production" || !!process.env.VERCEL || !!process.env.K_SERVICE;
+    this.allowLocalFallback = !production && String(process.env.ALLOW_LOCAL_DB_FALLBACK || "").toLowerCase() === "true";
     if (this.allowLocalFallback) this.ensureLocalDbFile();
   }
 
@@ -149,6 +152,28 @@ class FirestoreDbService {
       // invisible to the app and unpurchasable. Both spellings now resolve
       // to the one collection the client/payment side already depends on.
       coinplan: "CoinPlan", coinplans: "CoinPlan",
+      // CF-01: engagement records are written by the Mongoose-shim models
+      // under the model name (WatchHistory, VideoComment, …), but ~70 aggregate
+      // $lookups read the Mongo-era plural ("watchhistories", …) and a few
+      // direct reads used camelCase ("userWiseSubscriptions", "playLists").
+      // Those were different, empty collections, so every feed and detail
+      // page showed 0 views/comments/subscribers and false like/subscribe/
+      // saved flags whatever the real records said. Every spelling now
+      // resolves to the collection the models write. (Nothing in the code or
+      // the DB import scripts ever wrote the plural spellings.)
+      watchhistory: "WatchHistory", watchhistories: "WatchHistory",
+      videocomment: "VideoComment", videocomments: "VideoComment",
+      userwisesubscription: "UserWiseSubscription", userwisesubscriptions: "UserWiseSubscription",
+      likehistoryofvideo: "LikeHistoryOfVideo", likehistoryofvideos: "LikeHistoryOfVideo",
+      likehistoryofvideocomment: "LikeHistoryOfVideoComment", likehistoryofvideocomments: "LikeHistoryOfVideoComment",
+      savetowatchlater: "SaveToWatchLater", savetowatchlaters: "SaveToWatchLater",
+      playlist: "PlayList", playlists: "PlayList",
+      liveuser: "LiveUser", liveusers: "LiveUser",
+      soundcategory: "SoundCategory", soundcategories: "SoundCategory",
+      userwisedownload: "UserWiseDownload", userwisedownloads: "UserWiseDownload",
+      notification: "Notification", notifications: "Notification",
+      playbacksession: "PlaybackSession", playbacksessions: "PlaybackSession",
+      searchhistory: "SearchHistory", searchhistories: "SearchHistory",
     };
     return MAP[key] || name;
   }
@@ -208,22 +233,59 @@ class FirestoreDbService {
     });
   }
 
+  // Fields stored as arrays, per collection (registered by the model layer
+  // from each schema), so equality filters on them mean "array contains".
+  registerArrayFields(collectionName, fields) {
+    if (!this.arrayFields) this.arrayFields = {};
+    if (fields && fields.length) this.arrayFields[this.normalizeCollectionName(collectionName)] = new Set(fields);
+  }
+
+  // Skip/limit after in-memory filtering and sorting.
+  _page(rows, options) {
+    const skip = Number(options.skip) > 0 ? Number(options.skip) : 0;
+    const limit = typeof options.limit === "number" && options.limit > 0 ? options.limit : null;
+    if (!skip && !limit) return rows;
+    return rows.slice(skip, limit ? skip + limit : undefined);
+  }
+
+  // Ids requested by `_id`/`id` as a scalar or `{ $in: [...] }` (fetched by
+  // doc path: many docs don't store an `_id` field, so a where() would miss).
+  _idTargets(query) {
+    if (!query || typeof query !== "object") return null;
+    for (const key of ["_id", "id"]) {
+      const v = query[key];
+      if (v === undefined || v === null) continue;
+      if (v && typeof v === "object" && !Array.isArray(v) && Array.isArray(v.$in) &&
+          Object.keys(v).length === 1) {
+        return v.$in.map((x) => unwrap(x)).filter((x) => x != null && typeof x !== "object").map(String);
+      }
+      const u = unwrap(v);
+      if (u != null && typeof u !== "object") return [String(u)];
+    }
+    return null;
+  }
+
   async find(collectionName, query = {}, options = {}) {
     const normalizedName = this.normalizeCollectionName(collectionName);
     const hasSort = options.sort && typeof options.sort === "object" &&
       !Array.isArray(options.sort) && Object.keys(options.sort).length > 0;
+    // Validate first: an unsupported operator must fail, never widen the
+    // filter to the whole collection (D-01).
+    assertSupported(query);
     const flatQuery = this._flattenQuery(query);
+    const residual = needsInMemoryFilter(query);
+    const finish = (rows) => {
+      let out = residual ? rows.filter((doc) => matchesQuery(doc, query)) : rows;
+      if (hasSort) out = this._applySort(out, options.sort);
+      return this._page(out, options);
+    };
 
-    // Lookup by document id → doc path (a where("_id","==") clause misses docs
-    // that don't store an _id field).
-    const idVal = flatQuery._id != null ? flatQuery._id : flatQuery.id;
-    if (idVal != null) {
-      const doc = await this.findById(collectionName, idVal);
-      if (!doc) return [];
-      for (const [k, v] of Object.entries(flatQuery)) {
-        if (k !== "_id" && k !== "id" && doc[k] !== v) return [];
-      }
-      return [doc];
+    // Lookup by document id(s) → doc path.
+    const ids = this._idTargets(query);
+    if (ids) {
+      const unique = [...new Set(ids)];
+      const docs = (await Promise.all(unique.map((id) => this.findById(collectionName, id)))).filter(Boolean);
+      return finish(docs.filter((doc) => matchesQuery(doc, query)));
     }
 
     try {
@@ -231,35 +293,31 @@ class FirestoreDbService {
       if (db) {
         let ref = db.collection(normalizedName);
 
-        // Equality filters only. Firestore serves multi-equality queries with
-        // no composite index; anything fancier ($gt/$in/$regex/…) is not
-        // supported by this shim and must be done in the controller.
+        // Plain equality pairs run in Firestore (multi-equality needs no
+        // composite index). Everything else is evaluated in memory against
+        // the candidates (queryMatcher), never dropped.
+        // Equality on an array field (e.g. PlayList.videoId) means "contains",
+        // as in Mongo; Firestore's "==" would compare the whole array.
+        const arrayFields = this.arrayFields[normalizedName];
         for (const [key, v] of Object.entries(flatQuery)) {
-          ref = ref.where(key, "==", v);
+          ref = ref.where(key, arrayFields && arrayFields.has(key) ? "array-contains" : "==", v);
         }
 
-        // Only push a DB-side limit when we are NOT sorting in memory
-        // (sorting after a truncated fetch would drop rows).
-        if (!hasSort && options.limit && typeof options.limit === "number") {
-          ref = ref.limit(options.limit);
+        // A DB-side limit is only safe when nothing is filtered or sorted in
+        // memory afterwards (that would drop rows).
+        if (!hasSort && !residual && typeof options.limit === "number" && options.limit > 0) {
+          ref = ref.limit(options.limit + (Number(options.skip) > 0 ? Number(options.skip) : 0));
         }
 
         const snapshot = await this.withTimeout(ref.get());
-        let results = [];
+        const results = [];
         snapshot.forEach((doc) => {
           results.push({ _id: doc.id, id: doc.id, ...doc.data() });
         });
-
-        if (hasSort) {
-          results = this._applySort(results, options.sort);
-          if (options.limit && typeof options.limit === "number") {
-            results = results.slice(options.skip || 0, (options.skip || 0) + options.limit);
-          }
-        }
-
-        return results;
+        return finish(results);
       }
     } catch (err) {
+      if (err && err.code === "UNSUPPORTED_QUERY_OPERATOR") throw err;
       console.error(`Firestore find() failed for "${normalizedName}":`, err.message);
       if (!this.allowLocalFallback) throw err;
     }
@@ -270,17 +328,9 @@ class FirestoreDbService {
     let results = Object.values(collection);
 
     for (const [key, v] of Object.entries(flatQuery)) {
-      results = results.filter((item) => item[key] === v);
+      results = results.filter((item) => (Array.isArray(item[key]) ? item[key].includes(v) : item[key] === v));
     }
-
-    if (hasSort) results = this._applySort(results, options.sort);
-
-    if (options.limit && typeof options.limit === "number") {
-      const skip = options.skip || 0;
-      results = results.slice(skip, skip + options.limit);
-    }
-
-    return results;
+    return finish(results);
   }
 
   async count(collectionName, query = {}) {
@@ -301,11 +351,10 @@ class FirestoreDbService {
       const doc = await this.findById(collectionName, flat[idKey]);
       if (!doc) return null;
       // still honour any other equality fields in the query
-      const others = Object.entries(flat).filter(([k]) => k !== "_id" && k !== "id");
-      for (const [k, v] of others) {
-        if (doc[k] !== v) return null;
-      }
-      return doc;
+      // …and every other condition, operators included (D-01: these used
+      // to be ignored on an id lookup).
+      assertSupported(query);
+      return matchesQuery(doc, query) ? doc : null;
     }
     const results = await this.find(collectionName, query, { limit: 1 });
     return results.length > 0 ? results[0] : null;
@@ -335,7 +384,11 @@ class FirestoreDbService {
     const cleanData = JSON.parse(JSON.stringify(data));
     cleanData.createdAt = cleanData.createdAt || new Date().toISOString();
     cleanData.updatedAt = new Date().toISOString();
-    const docId = String(customId || cleanData._id || cleanData.id || Date.now());
+    // A random 24-hex id (ObjectId-shaped) when none is given. Date.now() made
+    // two documents created in the same millisecond share an id — the second
+    // silently overwrote the first (e.g. parallel comment replies) — and made
+    // ids guessable (P-02).
+    const docId = String(customId || cleanData._id || cleanData.id || require("crypto").randomBytes(12).toString("hex"));
     cleanData._id = docId;
     cleanData.id = docId;
 

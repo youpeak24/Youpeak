@@ -1,0 +1,11 @@
+2026/10/05-14:54:42.953 69fc Creating DB E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-after-weboff\Default\IndexedDB\http_127.0.0.1_5094.indexeddb.leveldb since it was missing.
+2026/10/05-14:54:42.967 69fc Reusing MANIFEST E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-after-weboff\Default\IndexedDB\http_127.0.0.1_5094.indexeddb.leveldb/MANIFEST-000001
+2026/10/05-14:54:43.173 55a8 Level-0 table #5: started
+2026/10/05-14:54:43.176 55a8 Level-0 table #5: 1286 bytes OK
+2026/10/05-14:54:43.178 55a8 Delete type=0 #3
+2026/10/05-14:54:43.178 55a8 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/05-14:55:05.706 5f84 Level-0 table #7: started
+2026/10/05-14:55:05.712 5f84 Level-0 table #7: 3979 bytes OK
+2026/10/05-14:55:05.716 5f84 Delete type=0 #4
+2026/10/05-14:55:05.718 69fc Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/05-14:55:28.354 55a8 Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)

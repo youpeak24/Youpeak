@@ -1,0 +1,36 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 10[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 10-xss-sink.cjs
+[0mPOST /admin/franchisePortal/partners/create [32m200[0m 559.484 ms - 1090[0m
+FAIL 10-xss-sink:XSS-01 a franchise login cannot create a partner whose email contains HTML markup
+     server accepted the markup email: {"status":true,"message":"Digital Partner created. A new app account was created — they can log in to the app and the partner panel with this email and password.","partner":{"userId":"1791288509701","
+[0mPOST /admin/digitalPartner/regeneratePassword [32m200[0m 143.950 ms - 168[0m
+FAIL 10-xss-sink:XSS-02 the credentials returned to the Super Admin for a partner never contain unescaped markup
+     portalCredentials.email returned verbatim: <img/src=x/onerror=alert(document.domain)>@a.bc
+
+AUDIT RESULT 0/2 expectations met (2 defects demonstrated)
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 94
+[33m[1m! [22m[39m Script exited unsuccessfully (code 3221226505)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+
+[1m[31mError:[39m[22m Script "[1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 10[22m" exited with code 3221226505
+exit=127

@@ -96,6 +96,7 @@ module.exports = async (req, res, next) => {
         // every other admin page that uploads an image (util/AwsFunction.js
         // uploadFile()), not partner-specific data, safe to allow.
         path === "/admin/file/upload-file" ||
+        path === "/admin/file/direct-upload-url" ||
         SELF_SERVICE.includes(path);
       if (!allowed) {
         return res.status(403).json({ status: false, message: "This account only has access to the Digital Partner portal." });

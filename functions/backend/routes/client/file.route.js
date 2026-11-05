@@ -1,38 +1,12 @@
-//express
-const express = require("express");
-const route = express.Router();
-
-//s3multer
+const route = require("express").Router();
 const upload = require("../../util/uploadMiddleware");
-
-//checkAccessWithSecretKey
-const checkAccessWithSecretKey = require("../../checkAccess");
-
-//controller
-const FileController = require("../../controllers/client/file.controller");
-
-//upload content to digital ocean storage
-route.put(
-  "/upload-file",
-  function (request, response, next) {
-    upload(request, response, function (error) {
-      if (error) {
-        console.log("error in file ", error);
-      } else {
-        console.log("File uploaded successfully.");
-        next();
-      }
-    });
-  },
-  checkAccessWithSecretKey(),
-  FileController.uploadContent
-);
-
-// One-time Cloudflare Stream direct-upload URL (large videos upload straight to CF)
-route.post("/stream-upload-url", checkAccessWithSecretKey(), FileController.getStreamUploadUrl);
-route.get("/stream-upload-url", checkAccessWithSecretKey(), FileController.getStreamUploadUrl);
-
-// Direct-to-R2 presigned upload URL — bypasses our function's 4.5MB body cap
-route.post("/direct-upload-url", checkAccessWithSecretKey(), FileController.getDirectUploadUrl);
-
+const requireAppUser = require("../../middleware/appUser.middleware");
+const files = require("../../controllers/client/file.controller");
+// Authenticate before accepting file bytes or granting upload capacity.
+route.use(requireAppUser());
+route.put("/upload-file", upload, files.uploadContent);
+route.post("/stream-upload-url", files.getStreamUploadUrl);
+route.get("/stream-upload-url", files.getStreamUploadUrl);
+route.post("/direct-upload-url", files.getDirectUploadUrl);
+route.post("/abandon-upload", files.abandonUpload);
 module.exports = route;

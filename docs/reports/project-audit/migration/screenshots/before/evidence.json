@@ -1,0 +1,436 @@
+{
+ "label": "before",
+ "pages": {
+  "02-library": {
+   "nav": "Library",
+   "sizes": {
+    "390": {
+     "labels": [
+      "History\nView All",
+      "Your Videos",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "History\nView All",
+      "Your Videos",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "History\nView All",
+      "Your Videos",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "History\nView All",
+      "Your Videos",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist"
+     ],
+     "videos": []
+    }
+   }
+  },
+  "03-bites": {
+   "nav": "Bites",
+   "sizes": {
+    "390": {
+     "labels": [
+      "6.42k\n19\n0\n1.43k\nEpic Sunset Live Stream Recap 🌅✨\n#Shorts,#Nature,#4K",
+      "Subscribe",
+      "9.85k\n80\n0\n2.10k\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-landscape.webm",
+       "paused": false,
+       "muted": false,
+       "t": 3.94,
+       "vw": 640,
+       "vh": 360,
+       "fit": "contain",
+       "box": [
+        -498,
+        0,
+        1386,
+        780
+       ]
+      }
+     ]
+    },
+    "768": {
+     "labels": [
+      "6.42k\n19\n0\n1.43k\nEpic Sunset Live Stream Recap 🌅✨\n#Shorts,#Nature,#4K",
+      "Subscribe",
+      "9.85k\n80\n0\n2.10k\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-landscape.webm",
+       "paused": false,
+       "muted": false,
+       "t": 1.74,
+       "vw": 640,
+       "vh": 360,
+       "fit": "contain",
+       "box": [
+        -541,
+        0,
+        1681,
+        946
+       ]
+      }
+     ]
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "6.42k\n19\n0\n1.43k\nEpic Sunset Live Stream Recap 🌅✨\n#Shorts,#Nature,#4K",
+      "Subscribe",
+      "9.85k\n80\n0\n2.10k\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-landscape.webm",
+       "paused": false,
+       "muted": false,
+       "t": 0.65,
+       "vw": 640,
+       "vh": 360,
+       "fit": "contain",
+       "box": [
+        170,
+        0,
+        1259,
+        708
+       ]
+      }
+     ]
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "6.42k\n19\n0\n1.43k\nEpic Sunset Live Stream Recap 🌅✨\n#Shorts,#Nature,#4K",
+      "Subscribe",
+      "9.85k\n80\n0\n2.10k\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-landscape.webm",
+       "paused": false,
+       "muted": false,
+       "t": 4.43,
+       "vw": 640,
+       "vh": 360,
+       "fit": "contain",
+       "box": [
+        170,
+        0,
+        1813,
+        1020
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "04-search": {
+   "nav": "Search",
+   "sizes": {
+    "390": {
+     "labels": [
+      "Search",
+      "Clear All"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "Search",
+      "Clear All"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Search",
+      "Clear All"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Search",
+      "Clear All"
+     ],
+     "videos": []
+    }
+   }
+  },
+  "05-notifications": {
+   "nav": "Notifications",
+   "sizes": {
+    "390": {
+     "labels": [],
+     "videos": []
+    },
+    "768": {
+     "labels": [],
+     "videos": []
+    },
+    "1366": {
+     "labels": [],
+     "videos": []
+    },
+    "1920": {
+     "labels": [],
+     "videos": []
+    }
+   }
+  },
+  "06-profile": {
+   "nav": "Profile",
+   "sizes": {
+    "390": {
+     "labels": [
+      "0",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "0",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "0",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "0",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    }
+   }
+  },
+  "07-tasker": {
+   "nav": "Tasker",
+   "sizes": {
+    "390": {
+     "labels": [
+      "Back",
+      "Tasks and rewards are available in the YouPeak mobile app only.",
+      "Check again",
+      "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+      "0",
+      "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "Back",
+      "Tasks and rewards are available in the YouPeak mobile app only.",
+      "Check again",
+      "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+      "0",
+      "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Back",
+      "Tasks and rewards are available in the YouPeak mobile app only.",
+      "Check again",
+      "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+      "0",
+      "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Back",
+      "Tasks and rewards are available in the YouPeak mobile app only.",
+      "Check again",
+      "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+      "0",
+      "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks"
+     ],
+     "videos": []
+    }
+   }
+  }
+ },
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "OPTIONS https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA3LefltA4wG0htRi1mJM8rGYIjdNoeqjM",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80"
+ ],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT"
+ ],
+ "failed": [
+  "GET https://accounts.google.com/gsi/client net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET http://127.0.0.1:8095/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects%2Fyoupeak-9ff65%2Fdatabases%2F(default)&RID=rpc&SID=gDkTzz7qzdOVmKOVb net::ERR_ABORTED",
+  "HTTP 401 http://localhost:5055/client/user/validateAndApplyReferralCode?userId=local_app_user&referralCode=",
+  "HTTP 401 http://localhost:5055/client/user/profile?userId=local_app_user",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET http://127.0.0.1:5056/fixture-bite-portrait-a.webm net::ERR_ABORTED"
+ ],
+ "loginLandedOn": [],
+ "seededSession": {
+  "loginUserId": null,
+  "isNewUser": null
+ }
+}

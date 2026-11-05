@@ -1,10 +1,54 @@
 const OTP = require("../../models/otp.model");
+const crypto = require("crypto");
+const db = require("../../util/connection");
 
 //resend
 const { Resend } = require("resend");
 
 //import model
 const User = require("../../models/user.model");
+
+// A 4-digit code is guessable, so each code allows MAX_VERIFY_ATTEMPTS wrong
+// guesses and each email gets MAX_CODES_PER_HOUR codes: at most 25 guesses an
+// hour against 9,000 codes, instead of unlimited guesses in the 5 minutes.
+const MAX_VERIFY_ATTEMPTS = 5;
+const MAX_CODES_PER_HOUR = 5;
+// How long a verified code authorises the forgot-password reset
+// (client/user.controller.js setPassword).
+const RESET_GRANT_MINUTES = 10;
+
+// Stores a fresh code for this email. Returns null while the hourly cap is used up.
+async function issueOtp(email) {
+  const now = Date.now();
+  const newOtp = crypto.randomInt(1000, 10000);
+  const expiresAt = new Date(now + 5 * 60 * 1000); // 5 minutes
+
+  const existOTP = await OTP.findOne({ email });
+  if (existOTP) {
+    const windowStart = existOTP.windowStartedAt ? new Date(existOTP.windowStartedAt).getTime() : 0;
+    const inWindow = now - windowStart < 3600e3;
+    const issued = inWindow ? Number(existOTP.issuedInWindow) || 0 : 0;
+    if (issued >= MAX_CODES_PER_HOUR) return null;
+    existOTP.otp = newOtp;
+    existOTP.expiresAt = expiresAt;
+    existOTP.failedAttempts = 0;
+    existOTP.issuedInWindow = issued + 1;
+    if (!inWindow) existOTP.windowStartedAt = new Date(now).toISOString();
+    await existOTP.save();
+  } else {
+    const otp = new OTP();
+    otp.email = email;
+    otp.otp = newOtp;
+    otp.expiresAt = expiresAt;
+    otp.failedAttempts = 0;
+    otp.issuedInWindow = 1;
+    otp.windowStartedAt = new Date(now).toISOString();
+    await otp.save();
+  }
+  return newOtp;
+}
+
+const TOO_MANY_CODES = "Too many codes requested for this email. Please try again in an hour.";
 
 //create OTP when user login
 exports.otplogin = async (req, res) => {
@@ -13,22 +57,8 @@ exports.otplogin = async (req, res) => {
       return res.status(200).json({ status: false, message: "Email must be requried." });
     }
 
-    var newOtp = Math.floor(Math.random() * 8999) + 1000;
-    const expiryTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-
-    const existOTP = await OTP.findOne({ email: req.body.email.trim() });
-
-    if (existOTP) {
-      existOTP.otp = newOtp;
-      existOTP.expiresAt = expiryTime;
-      await existOTP.save();
-    } else {
-      const otp = new OTP();
-      otp.email = req?.body?.email?.trim();
-      otp.otp = newOtp;
-      otp.expiresAt = expiryTime;
-      await otp.save();
-    }
+    const newOtp = await issueOtp(req.body.email.trim());
+    if (newOtp === null) return res.status(200).json({ status: false, message: TOO_MANY_CODES });
 
     var tab = `<!DOCTYPE html>
     <html lang="en">
@@ -119,27 +149,13 @@ exports.store = async (req, res) => {
       return res.status(200).json({ status: false, message: "Email must be requried." });
     }
 
-    var newOtp = Math.floor(Math.random() * 8999) + 1000;
-    const expiryTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-
     const userEmail = await User.findOne({ email: req.body.email.trim() });
     if (!userEmail) {
       return res.status(200).json({ status: false, message: "User does not found with that email." });
     }
 
-    const existOTP = await OTP.findOne({ email: req.body.email });
-
-    if (existOTP) {
-      existOTP.otp = newOtp;
-      existOTP.expiresAt = expiryTime;
-      await existOTP.save();
-    } else {
-      const otp = new OTP();
-      otp.email = req.body.email;
-      otp.otp = newOtp;
-      otp.expiresAt = expiryTime;
-      await otp.save();
-    }
+    const newOtp = await issueOtp(req.body.email.trim());
+    if (newOtp === null) return res.status(200).json({ status: false, message: TOO_MANY_CODES });
 
     var tab = `<!DOCTYPE html>
     <html lang="en">
@@ -233,29 +249,44 @@ exports.verify = async (req, res) => {
       return res.status(200).json({ status: false, message: "OTP and email must be requried!" });
     }
 
-    const otpUser = await OTP.findOne({ email: req.body.email.trim() });
-    if (!otpUser) {
+    const email = req.body.email.trim();
+    const otpUser = await OTP.findOne({ email });
+    // otp is null once a code is used up — the document stays to keep the
+    // hourly code count (issueOtp).
+    if (!otpUser || otpUser.otp == null) {
       return res.status(200).json({ status: false, message: "user does not found!" });
     }
 
-    if (otpUser.expiresAt < new Date()) {
-      await otpUser.deleteOne();
+    if (new Date(otpUser.expiresAt) < new Date()) {
+      otpUser.otp = null;
+      await otpUser.save();
       return res.status(200).json({ status: false, message: "OTP has expired!" });
     }
 
-    if (parseInt(req.body.otp) === otpUser.otp) {
-      await otpUser.deleteOne();
+    if (parseInt(req.body.otp) === Number(otpUser.otp)) {
+      otpUser.otp = null;
+      await otpUser.save();
+
+      const owner = await db.findOne("users", { email });
+      if (owner) {
+        await db.update("users", owner._id || owner.id, {
+          passwordResetGrantUntil: new Date(Date.now() + RESET_GRANT_MINUTES * 60e3).toISOString(),
+        });
+      }
 
       return res.status(200).json({
         status: true,
         message: "OTP Verified Successfully!",
       });
-    } else {
-      return res.status(200).json({
-        status: false,
-        message: "OTP does not match!",
-      });
     }
+
+    otpUser.failedAttempts = (Number(otpUser.failedAttempts) || 0) + 1;
+    if (otpUser.failedAttempts >= MAX_VERIFY_ATTEMPTS) otpUser.otp = null;
+    await otpUser.save();
+    return res.status(200).json({
+      status: false,
+      message: otpUser.otp == null ? "Too many wrong attempts. Please request a new OTP." : "OTP does not match!",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });

@@ -1,0 +1,45 @@
+
+> youpeak-platform@1.0.0 test
+> node --test tests/*.test.cjs
+
+✔ domain liveness never calls the backend or claims dependency readiness (7.856ms)
+✔ normal API traffic still reaches the backend (1.7135ms)
+✔ a plain local start with the live key file on disk is refused (1.9406ms)
+✔ with no credentials at all the default project is live, so it is refused (0.425ms)
+✔ the emulator alone is not enough: the project must be a demo-* project (0.3909ms)
+✔ a demo project without the emulator is refused (Firestore would go to Google) (0.2887ms)
+✔ explicit production or override starts are allowed (0.3963ms)
+✔ project resolution follows firebaseAdmin order: env account, key files, env ids (1.5992ms)
+✔ public delivery rejects unsigned S3 endpoints, credentials and non-HTTPS URLs (2.3439ms)
+✔ external demo media cannot masquerade as Cloudflare by provider label (0.6229ms)
+✔ video uploads persist in Cloudflare, metadata in Firebase, and clean staging (4.7895ms)
+✔ images persist in Firebase, including metadata, and never go to R2 (1.9801ms)
+✔ Firebase outage fails honestly instead of returning local or R2 fallback (2.2391ms)
+✔ R2 outage cannot return a successful local video URL (1.8163ms)
+✔ metadata persistence failure is not reported as upload success (1.7531ms)
+✔ invalid multipart form still cleans its temporary file (1.7877ms)
+✔ R2 presigning refuses images and unsupported content types (1.7756ms)
+✔ unconfigured Stream returns an error rather than a mock upload (2.6317ms)
+✔ Firebase URL uses a download token without relying on public object ACLs (2.6406ms)
+✔ legacy playback redirects to Cloudflare rather than proxying bytes (1.7094ms)
+✔ legacy private R2 playback uses a fresh short-lived Cloudflare URL (1.2459ms)
+✔ signed Stream webhook rejects stale/replayed and malformed events (131.8552ms)
+✔ client upload authorization runs before multipart or signing handlers (255.905ms)
+✔ oversized multipart upload returns 413 instead of hanging (108.8307ms)
+✔ channel input: names are trimmed, collapsed and bounded; description and type are required/validated (3.5233ms)
+✔ channel names collide case- and whitespace-insensitively (one reservation per name) (1.293ms)
+✔ direct upload URL: declared size must be positive and within the limit; older apps without a size still work (4.3954ms)
+✔ abandon-upload only hands string URLs of sane length to the ownership-checked discard (3.4858ms)
+✔ the R2 endpoint override is honoured for loopback only (8.4102ms)
+✔ Stream acknowledges only after Firebase persistence and preserves Firebase thumbnail (14.7537ms)
+✔ Stream persistence failure returns retryable 500 (7.3209ms)
+✔ Captured payment with a missing order is retryable, not acknowledged as settled (3.7133ms)
+✔ Payment response follows the persistent idempotency check (4.4712ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 975.5362

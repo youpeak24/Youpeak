@@ -1,0 +1,27 @@
+2026/10/06-16:26:25.969 65c0 Creating DB E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-watch\Default\IndexedDB\http_127.0.0.1_5101.indexeddb.leveldb since it was missing.
+2026/10/06-16:26:25.976 65c0 Reusing MANIFEST E:\Legendary One\youpeak\source\reports\project-audit\web-tasking\screenshots\profile-watch\Default\IndexedDB\http_127.0.0.1_5101.indexeddb.leveldb/MANIFEST-000001
+2026/10/06-16:26:26.180 8b64 Level-0 table #5: started
+2026/10/06-16:26:26.183 8b64 Level-0 table #5: 1313 bytes OK
+2026/10/06-16:26:26.186 8b64 Delete type=0 #3
+2026/10/06-16:26:26.187 65c0 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/06-16:26:48.306 8b64 Level-0 table #7: started
+2026/10/06-16:26:48.310 8b64 Level-0 table #7: 3957 bytes OK
+2026/10/06-16:26:48.312 8b64 Delete type=0 #4
+2026/10/06-16:26:48.312 8b64 Manual compaction at level-0 from '\x00\x04\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x05\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/06-16:28:07.512 6a74 Compacting 1@1 + 1@2 files
+2026/10/06-16:28:07.518 6a74 Generated table #8@1: 41 keys, 2258 bytes
+2026/10/06-16:28:07.518 6a74 Compacted 1@1 + 1@2 files => 2258 bytes
+2026/10/06-16:28:07.519 6a74 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/10/06-16:28:07.520 6a74 Delete type=2 #5
+2026/10/06-16:28:07.520 6a74 Delete type=2 #7
+2026/10/06-16:29:51.726 6a74 Level-0 table #10: started
+2026/10/06-16:29:51.729 6a74 Level-0 table #10: 2229 bytes OK
+2026/10/06-16:29:51.732 6a74 Delete type=0 #6
+2026/10/06-16:29:51.733 65c0 Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/06-16:30:57.253 6a74 Manual compaction at level-0 from '\x00\x06\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x07\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/10/06-16:30:57.258 6a74 Compacting 1@1 + 1@2 files
+2026/10/06-16:30:57.260 6a74 Generated table #11@1: 40 keys, 2245 bytes
+2026/10/06-16:30:57.260 6a74 Compacted 1@1 + 1@2 files => 2245 bytes
+2026/10/06-16:30:57.264 6a74 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/10/06-16:30:57.265 6a74 Delete type=2 #8
+2026/10/06-16:30:57.265 6a74 Delete type=2 #10

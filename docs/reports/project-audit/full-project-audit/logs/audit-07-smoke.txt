@@ -1,0 +1,290 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  emulators:[22m[39m It seems that you are running multiple instances of the emulator suite for project demo-youpeak-audit. This may result in unexpected behavior.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 07[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 07-endpoint-smoke.cjs
+[0mGET /client/FAQ [32m200[0m 18.544 ms - 59[0m
+PASS 07-endpoint-smoke:C-FAQ GET /client/FAQ answers with status:true
+[0mGET /client/contact [32m200[0m 34.873 ms - 48[0m
+PASS 07-endpoint-smoke:C-contact GET /client/contact answers with status:true
+[0mGET /client/setting [32m200[0m 36.078 ms - 5462[0m
+PASS 07-endpoint-smoke:C-setting GET /client/setting answers with status:true
+[0mGET /client/soundList/getSoundList?start=1&limit=5 [32m200[0m 22.521 ms - 50[0m
+PASS 07-endpoint-smoke:C-soundList GET /client/soundList/getSoundList answers with status:true
+[0mGET /client/withdraw/withdrawList [32m200[0m 23.609 ms - 92[0m
+PASS 07-endpoint-smoke:C-withdrawList GET /client/withdraw/withdrawList answers with status:true
+[0mGET /client/premiumPlan [32m200[0m 66.999 ms - 52[0m
+PASS 07-endpoint-smoke:C-premiumPlan GET /client/premiumPlan answers with status:true
+[0mGET /client/coinplan/retriveCoinplanByUser [32m200[0m 42.895 ms - 67[0m
+PASS 07-endpoint-smoke:C-coinplan GET /client/coinplan/retriveCoinplanByUser answers with status:true
+[0mGET /client/taskerTier/getAvailableTiers [32m200[0m 69.973 ms - 92[0m
+PASS 07-endpoint-smoke:C-taskerTiers GET /client/taskerTier/getAvailableTiers answers with status:true
+[0mGET /client/creatorTier/getAvailableTiers [32m200[0m 68.353 ms - 112[0m
+PASS 07-endpoint-smoke:C-creatorTiers GET /client/creatorTier/getAvailableTiers answers with status:true
+[0mGET /client/grievance [32m200[0m 12.520 ms - 582[0m
+PASS 07-endpoint-smoke:C-grievanceOfficer GET /client/grievance answers with status:true
+[0mGET /client/translation/revealLatestVersion [32m200[0m 34.637 ms - 54[0m
+PASS 07-endpoint-smoke:C-translationVersion GET /client/translation/revealLatestVersion answers with status:true
+[0mGET /client/translation/harvestActiveLanguages [32m200[0m 24.075 ms - 47[0m
+FAIL 07-endpoint-smoke:C-activeLanguages GET /client/translation/harvestActiveLanguages answers with status:true
+     HTTP 200; status=false; message="No languages found"
+[0mGET /client/user/profile [32m200[0m 50.567 ms - 701[0m
+PASS 07-endpoint-smoke:C-profile GET /client/user/profile answers with status:true
+[0mGET /client/user/detailsOfChannel?channelId=sm_creator&start=1&limit=5 [32m200[0m 62.247 ms - 958[0m
+PASS 07-endpoint-smoke:C-detailsOfChannel GET /client/user/detailsOfChannel answers with status:true
+[0mGET /client/user/videosOfChannel?channelId=sm_creator [32m200[0m 52.262 ms - 809[0m
+PASS 07-endpoint-smoke:C-videosOfChannel GET /client/user/videosOfChannel answers with status:true
+[0mGET /client/user/playListsOfChannel?channelId=sm_viewer [32m200[0m 50.923 ms - 59[0m
+PASS 07-endpoint-smoke:C-playListsOfChannel GET /client/user/playListsOfChannel answers with status:true
+[0mGET /client/user/loadReferralHistoryByUser [32m200[0m 51.302 ms - 68[0m
+PASS 07-endpoint-smoke:C-referralHistory GET /client/user/loadReferralHistoryByUser answers with status:true
+[0mGET /client/user/retriveCoinHistoryByUser [32m200[0m 49.154 ms - 58[0m
+PASS 07-endpoint-smoke:C-coinHistory GET /client/user/retriveCoinHistoryByUser answers with status:true
+[0mGET /client/user/fetchWalletHistoryByUser [32m200[0m 50.106 ms - 58[0m
+PASS 07-endpoint-smoke:C-walletHistory GET /client/user/fetchWalletHistoryByUser answers with status:true
+[0mGET /client/video/getShorts [32m200[0m 83.311 ms - 561[0m
+PASS 07-endpoint-smoke:C-getShorts GET /client/video/getShorts answers with status:true
+[0mGET /client/video/getVideos [32m200[0m 67.883 ms - 445[0m
+PASS 07-endpoint-smoke:C-getVideos GET /client/video/getVideos answers with status:true
+[0mGET /client/video/videosOfHome?type=all&start=1&limit=10 [32m200[0m 93.537 ms - 1006[0m
+PASS 07-endpoint-smoke:C-videosOfHome-all GET /client/video/videosOfHome answers with status:true
+[0mGET /client/video/videosOfHome?type=new&start=1&limit=10 [32m200[0m 79.590 ms - 1033[0m
+PASS 07-endpoint-smoke:C-videosOfHome-new GET /client/video/videosOfHome answers with status:true
+[0mGET /client/video/videosOfHome?type=popular&start=1&limit=10 [32m200[0m 79.140 ms - 994[0m
+PASS 07-endpoint-smoke:C-videosOfHome-popular GET /client/video/videosOfHome answers with status:true
+[0mGET /client/video/detailsOfVideo?videoId=sm_v1&videoType=1 [32m200[0m 64.501 ms - 616[0m
+PASS 07-endpoint-smoke:C-detailsOfVideo GET /client/video/detailsOfVideo answers with status:true
+[0mPOST /client/video/search [32m200[0m 49.133 ms - 842[0m
+PASS 07-endpoint-smoke:C-search POST /client/video/search answers with status:true
+[0mPOST /client/video/searchShorts [32m200[0m 65.003 ms - 427[0m
+PASS 07-endpoint-smoke:C-searchShorts POST /client/video/searchShorts answers with status:true
+[0mPOST /client/video/searchChannelVideoShortsByUser?searchString=Smoke&type=all [32m200[0m 75.805 ms - 1330[0m
+PASS 07-endpoint-smoke:C-searchChannelVideoShortsByUser POST /client/video/searchChannelVideoShortsByUser answers with status:true
+[0mGET /client/video/searchData [32m200[0m 49.625 ms - 57[0m
+PASS 07-endpoint-smoke:C-searchData GET /client/video/searchData answers with status:true
+[0mGET /client/video/getTopViewedVideos [32m200[0m 84.998 ms - 79[0m
+PASS 07-endpoint-smoke:C-getTopViewedVideos GET /client/video/getTopViewedVideos answers with status:true
+[0mGET /client/video/getVideoList [32m200[0m 71.269 ms - 447[0m
+PASS 07-endpoint-smoke:C-getVideoList GET /client/video/getVideoList answers with status:true
+[0mGET /client/video/getUserVideos [32m200[0m 68.870 ms - 79[0m
+PASS 07-endpoint-smoke:C-getUserVideos GET /client/video/getUserVideos answers with status:true
+[0mGET /client/video/getAllLikeThis?videoId=sm_v1 [32m200[0m 87.616 ms - 70[0m
+PASS 07-endpoint-smoke:C-getAllLikeThis GET /client/video/getAllLikeThis answers with status:true
+TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at getPath (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:131:12)
+    at E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:235:16
+    at Array.map (<anonymous>)
+    at applyLookup (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:234:18)
+    at runPipeline (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:289:17)
+    at runPipeline (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:286:75)
+    at ModelConstructor.aggregate (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:869:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async exports.getComments (E:\Legendary One\youpeak\source\functions\backend\controllers\client\videoComment.controller.js:289:20)
+[0mGET /client/videoComment/getComments?videoId=sm_v1&commentType=newest [31m500[0m 45.894 ms - 84[0m
+FAIL 07-endpoint-smoke:C-getComments GET /client/videoComment/getComments answers with status:true
+     HTTP 500; status=false; message="Cannot read properties of undefined (reading 'indexOf')"
+[0mGET /client/videoComment/repliesOfVideoComment?videoId=sm_v1&recursiveCommentId=1791283830105 [31m500[0m 71.578 ms - 84[0m
+FAIL 07-endpoint-smoke:C-repliesOfVideoComment GET /client/videoComment/repliesOfVideoComment answers with status:true
+     HTTP 500; status=false; message="Cannot read properties of undefined (reading 'indexOf')"
+TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at getPath (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:131:12)
+    at E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:235:16
+    at Array.map (<anonymous>)
+    at applyLookup (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:234:18)
+    at runPipeline (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:289:17)
+    at ModelConstructor.aggregate (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:869:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Promise.all (index 1)
+    at async exports.getWatchHistory (E:\Legendary One\youpeak\source\functions\backend\controllers\client\watchHistory.controller.js:215:28)
+[0mGET /client/watchHistory/getWatchHistory [31m500[0m 59.583 ms - 84[0m
+FAIL 07-endpoint-smoke:C-getWatchHistory GET /client/watchHistory/getWatchHistory answers with status:true
+     HTTP 500; status=false; message="Cannot read properties of undefined (reading 'indexOf')"
+[0mGET /client/watchHistory/weeklyViewsAnalytics?userId=sm_creator&startDate=2020-01-01&endDate=2030-01-01 [33m403[0m 26.871 ms - 94[0m
+FAIL 07-endpoint-smoke:C-weeklyViewsAnalytics GET /client/watchHistory/weeklyViewsAnalytics answers with status:true
+     HTTP 403; status=false; message="You can only do this for your own account."
+[0mGET /client/playbackSession/getMyWatchHistory [32m200[0m 71.589 ms - 85[0m
+PASS 07-endpoint-smoke:C-getMyWatchHistory GET /client/playbackSession/getMyWatchHistory answers with status:true
+[0mGET /client/saveToWatchLater/getSaveToWatchLater [32m200[0m 72.882 ms - 433[0m
+PASS 07-endpoint-smoke:C-getSaveToWatchLater GET /client/saveToWatchLater/getSaveToWatchLater answers with status:true
+TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at getPath (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:131:12)
+    at E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:235:16
+    at Array.map (<anonymous>)
+    at applyLookup (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:234:18)
+    at runPipeline (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:289:17)
+    at ModelConstructor.aggregate (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:869:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Promise.all (index 1)
+    at async exports.getdownloadVideoHistory (E:\Legendary One\youpeak\source\functions\backend\controllers\client\userWiseDownload.controller.js:76:38)
+[0mGET /client/userWiseDownload/getdownloadVideoHistory [31m500[0m 47.932 ms - 84[0m
+FAIL 07-endpoint-smoke:C-getdownloadVideoHistory GET /client/userWiseDownload/getdownloadVideoHistory answers with status:true
+     HTTP 500; status=false; message="Cannot read properties of undefined (reading 'indexOf')"
+[0mGET /client/userWiseSubscription/getSubscribedChannel [32m200[0m 51.488 ms - 188[0m
+PASS 07-endpoint-smoke:C-getSubscribedChannel GET /client/userWiseSubscription/getSubscribedChannel answers with status:true
+[0mGET /client/userWiseSubscription/videoOfSubscribedChannel?type=all [32m200[0m 74.783 ms - 867[0m
+PASS 07-endpoint-smoke:C-videoOfSubscribedChannel GET /client/userWiseSubscription/videoOfSubscribedChannel answers with status:true
+[0mGET /client/notification/getNotificationList [32m200[0m 23.458 ms - 301[0m
+PASS 07-endpoint-smoke:C-getNotificationList GET /client/notification/getNotificationList answers with status:true
+[0mGET /client/tasker/dashboard [32m200[0m 65.702 ms - 1078[0m
+PASS 07-endpoint-smoke:C-taskerDashboard GET /client/tasker/dashboard answers with status:true
+[0mGET /client/userTaskReward/status [32m200[0m 49.752 ms - 421[0m
+PASS 07-endpoint-smoke:C-taskStatus GET /client/userTaskReward/status answers with status:true
+[0mGET /client/dailyCoinReward/getDailyRewardCoinByUser [32m200[0m 52.081 ms - 86[0m
+FAIL 07-endpoint-smoke:C-dailyRewardCoin GET /client/dailyCoinReward/getDailyRewardCoinByUser answers with status:true
+     HTTP 200; status=false; message="Daily reward configuration missing. Please contact admin."
+[0mGET /client/withdrawalRequest/fetchSettingDetails [32m200[0m 40.044 ms - 398[0m
+PASS 07-endpoint-smoke:C-fetchSettingDetails GET /client/withdrawalRequest/fetchSettingDetails answers with status:true
+[0mGET /client/withdrawalRequest/getWithdrawRequests?startDate=All&endDate=All [32m200[0m 53.005 ms - 206[0m
+PASS 07-endpoint-smoke:C-getWithdrawRequests GET /client/withdrawalRequest/getWithdrawRequests answers with status:true
+[0mGET /client/monetizationRequest/getMonetization [32m200[0m 66.789 ms - 198[0m
+PASS 07-endpoint-smoke:C-getMonetization GET /client/monetizationRequest/getMonetization answers with status:true
+totalSubscribers:  1
+totalWatchTimeSeconds:  0
+totalWatchTimeHours:  0.00
+[0mGET /client/monetizationRequest/getMonetizationForUser?startDate=All&endDate=All [32m200[0m 58.192 ms - 782[0m
+PASS 07-endpoint-smoke:C-getMonetizationForUser GET /client/monetizationRequest/getMonetizationForUser answers with status:true
+[0mGET /client/partner/dashboard [32m200[0m 63.239 ms - 101[0m
+PASS 07-endpoint-smoke:C-partnerDashboard GET /client/partner/dashboard answers with status:true
+[0mGET /client/creatorFunding/eligibility [32m200[0m 48.175 ms - 146[0m
+PASS 07-endpoint-smoke:C-fundingEligibility GET /client/creatorFunding/eligibility answers with status:true
+[0mGET /client/creatorFunding/getActiveCampaigns [32m200[0m 50.716 ms - 30[0m
+PASS 07-endpoint-smoke:C-activeCampaigns GET /client/creatorFunding/getActiveCampaigns answers with status:true
+[0mGET /client/liveUser/getliveUserList [32m200[0m 65.872 ms - 69[0m
+PASS 07-endpoint-smoke:C-liveUserList GET /client/liveUser/getliveUserList answers with status:true
+[0mGET /client/videoPromotion/plans [32m200[0m 19.282 ms - 686[0m
+PASS 07-endpoint-smoke:C-promotionPlans GET /client/videoPromotion/plans answers with status:true
+[0mGET /client/adRewardCoin/getAdRewardByUser [32m200[0m 38.371 ms - 81[0m
+PASS 07-endpoint-smoke:C-adRewardByUser GET /client/adRewardCoin/getAdRewardByUser answers with status:true
+[0mGET /client/localBusinessAd/getActiveAdsForRegion [32m200[0m 50.909 ms - 24[0m
+PASS 07-endpoint-smoke:C-localAds GET /client/localBusinessAd/getActiveAdsForRegion answers with status:true
+[0mGET /client/premiumPlan/planHistoryOfUser [32m200[0m 67.068 ms - 62[0m
+PASS 07-endpoint-smoke:C-planHistoryOfUser GET /client/premiumPlan/planHistoryOfUser answers with status:true
+[0mGET /client/premiumPlan/fetchCoinplanHistoryOfUser?startDate=All&endDate=All [32m200[0m 49.746 ms - 61[0m
+PASS 07-endpoint-smoke:C-fetchCoinplanHistory GET /client/premiumPlan/fetchCoinplanHistoryOfUser answers with status:true
+[0mGET /admin/dashboard/dashboardCount?startDate=All&endDate=All [32m200[0m 95.497 ms - 140[0m
+PASS 07-endpoint-smoke:A-dashboardCount GET /admin/dashboard/dashboardCount (super admin) answers with status:true
+[0mGET /admin/dashboard/chartAnalytic?type=User&startDate=All&endDate=All [32m200[0m 51.351 ms - 116[0m
+PASS 07-endpoint-smoke:A-chartAnalytic GET /admin/dashboard/chartAnalytic (super admin) answers with status:true
+[0mGET /admin/user/getUsers?start=1&limit=10 [32m200[0m 52.042 ms - 3655[0m
+PASS 07-endpoint-smoke:A-getUsers GET /admin/user/getUsers (super admin) answers with status:true
+[0mGET /admin/user/channelsOfUser?start=1&limit=10 [32m200[0m 52.535 ms - 625[0m
+PASS 07-endpoint-smoke:A-channelsOfUser GET /admin/user/channelsOfUser (super admin) answers with status:true
+[0mGET /admin/video/videosOrShorts?start=1&limit=10&videoType=1 [32m200[0m 56.403 ms - 1487[0m
+PASS 07-endpoint-smoke:A-videosOrShorts GET /admin/video/videosOrShorts (super admin) answers with status:true
+ReferenceError: mongoose is not defined
+    at exports.getComment (E:\Legendary One\youpeak\source\functions\backend\controllers\admin\videoComment.controller.js:16:21)
+    at Layer.handle [as handle_request] (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\route.js:149:13)
+    at E:\Legendary One\youpeak\source\functions\backend\checkAccess.js:15:14
+    at Layer.handle [as handle_request] (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\layer.js:95:5)
+    at E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\index.js:284:15
+    at router.process_params (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\index.js:346:12)
+[0mGET /admin/videoComment/getComment?videoId=sm_v1&start=1&limit=10 [31m500[0m 34.881 ms - 52[0m
+FAIL 07-endpoint-smoke:A-getComment GET /admin/videoComment/getComment (super admin) answers with status:true
+     HTTP 500; status=false; message="mongoose is not defined"
+[0mGET /admin/videoComment/commentsOfVideos?start=1&limit=10&startDate=All&endDate=All&videoType=1 [32m200[0m 67.895 ms - 297[0m
+PASS 07-endpoint-smoke:A-commentsOfVideos GET /admin/videoComment/commentsOfVideos (super admin) answers with status:true
+[0mGET /admin/report/getReports?videoType=1&start=1&limit=10&startDate=All&endDate=All [32m200[0m 49.778 ms - 262[0m
+PASS 07-endpoint-smoke:A-getReports GET /admin/report/getReports (super admin) answers with status:true
+[0mGET /admin/withDrawalRequest?startDate=All&endDate=All&type=All [32m200[0m 67.896 ms - 242[0m
+PASS 07-endpoint-smoke:A-withDrawalRequest GET /admin/withDrawalRequest (super admin) answers with status:true
+[0mGET /admin/monetizationRequest/getAllMonetizationRequests?startDate=All&endDate=All&type=All [32m200[0m 38.790 ms - 81[0m
+PASS 07-endpoint-smoke:A-monetizationRequests GET /admin/monetizationRequest/getAllMonetizationRequests (super admin) answers with status:true
+[0mGET /admin/premiumPlan/ [32m200[0m 48.901 ms - 52[0m
+PASS 07-endpoint-smoke:A-premiumPlans GET /admin/premiumPlan/ (super admin) answers with status:true
+[0mGET /admin/premiumPlan/getpremiumPlanHistory?startDate=All&endDate=All&start=1&limit=10 [32m200[0m 35.328 ms - 65[0m
+PASS 07-endpoint-smoke:A-premiumHistory GET /admin/premiumPlan/getpremiumPlanHistory (super admin) answers with status:true
+[0mGET /admin/soundList/getSoundList?start=1&limit=10 [32m200[0m 23.419 ms - 89[0m
+PASS 07-endpoint-smoke:A-soundList GET /admin/soundList/getSoundList (super admin) answers with status:true
+[0mGET /admin/soundCategory/ [32m200[0m 49.868 ms - 97[0m
+PASS 07-endpoint-smoke:A-soundCategory GET /admin/soundCategory/ (super admin) answers with status:true
+[0mGET /admin/coinplan/fetchCoinplan [32m200[0m 32.345 ms - 70[0m
+PASS 07-endpoint-smoke:A-coinplan GET /admin/coinplan/fetchCoinplan (super admin) answers with status:true
+[0mGET /admin/language/harvestLanguages [32m200[0m 40.675 ms - 318[0m
+PASS 07-endpoint-smoke:A-language GET /admin/language/harvestLanguages (super admin) answers with status:true
+[0mGET /admin/translation/harvestTranslations?languageCode=en [32m200[0m 50.216 ms - 67[0m
+FAIL 07-endpoint-smoke:A-translations GET /admin/translation/harvestTranslations (super admin) answers with status:true
+     HTTP 200; status=false; message="No translation found for this language"
+[0mGET /admin/setting/ [32m200[0m 49.525 ms - 118[0m
+PASS 07-endpoint-smoke:A-settings GET /admin/setting/ (super admin) answers with status:true
+[0mGET /admin/platformConfig/ [32m200[0m 33.569 ms - 17658[0m
+PASS 07-endpoint-smoke:A-platformConfig GET /admin/platformConfig/ (super admin) answers with status:true
+[0mGET /admin/membershipTier/getTiers [32m200[0m 38.334 ms - 66[0m
+PASS 07-endpoint-smoke:A-tiers GET /admin/membershipTier/getTiers (super admin) answers with status:true
+[0mGET /admin/agency/getAgencies [32m200[0m 67.917 ms - 282[0m
+PASS 07-endpoint-smoke:A-agencies GET /admin/agency/getAgencies (super admin) answers with status:true
+[0mGET /admin/commission/getCommissions [32m200[0m 48.869 ms - 120[0m
+PASS 07-endpoint-smoke:A-commissions GET /admin/commission/getCommissions (super admin) answers with status:true
+[0mGET /admin/agencyReport/getAgencyReport [32m200[0m 53.703 ms - 286[0m
+PASS 07-endpoint-smoke:A-agencyReport GET /admin/agencyReport/getAgencyReport (super admin) answers with status:true
+[0mGET /admin/digitalPartner/list [32m200[0m 33.793 ms - 386[0m
+PASS 07-endpoint-smoke:A-digitalPartnerList GET /admin/digitalPartner/list (super admin) answers with status:true
+[0mGET /admin/digitalPartner/report [32m200[0m 29.148 ms - 372[0m
+PASS 07-endpoint-smoke:A-digitalPartnerReport GET /admin/digitalPartner/report (super admin) answers with status:true
+[0mGET /admin/payment/list [32m200[0m 32.175 ms - 33[0m
+PASS 07-endpoint-smoke:A-payments GET /admin/payment/list (super admin) answers with status:true
+[0mGET /admin/payment/reconcile [32m200[0m 31.688 ms - 57[0m
+PASS 07-endpoint-smoke:A-reconcile GET /admin/payment/reconcile (super admin) answers with status:true
+[0mGET /admin/fraud/getAlerts [32m200[0m 53.468 ms - 71[0m
+PASS 07-endpoint-smoke:A-fraud GET /admin/fraud/getAlerts (super admin) answers with status:true
+[0mGET /admin/referral/getReferralLogs [32m200[0m 48.856 ms - 70[0m
+PASS 07-endpoint-smoke:A-referralLogs GET /admin/referral/getReferralLogs (super admin) answers with status:true
+[0mGET /admin/referral/getLeaderboard [32m200[0m 47.890 ms - 4271[0m
+PASS 07-endpoint-smoke:A-leaderboard GET /admin/referral/getLeaderboard (super admin) answers with status:true
+[0mGET /admin/contentModeration/queue [32m200[0m 65.484 ms - 74[0m
+PASS 07-endpoint-smoke:A-moderationQueue GET /admin/contentModeration/queue (super admin) answers with status:true
+[0mGET /admin/copyrightModeration/flagged [32m200[0m 50.967 ms - 73[0m
+PASS 07-endpoint-smoke:A-copyrightFlagged GET /admin/copyrightModeration/flagged (super admin) answers with status:true
+[0mGET /admin/grievance/list [32m200[0m 51.165 ms - 72[0m
+PASS 07-endpoint-smoke:A-grievances GET /admin/grievance/list (super admin) answers with status:true
+[0mGET /admin/localBusinessAd/list [32m200[0m 52.290 ms - 34[0m
+PASS 07-endpoint-smoke:A-localBusinessAds GET /admin/localBusinessAd/list (super admin) answers with status:true
+[0mGET /admin/videoPromotion/index [32m200[0m 50.505 ms - 84[0m
+PASS 07-endpoint-smoke:A-videoPromotions GET /admin/videoPromotion/index (super admin) answers with status:true
+[0mGET /admin/creatorFunding/list [32m200[0m 33.543 ms - 40[0m
+PASS 07-endpoint-smoke:A-creatorFunding GET /admin/creatorFunding/list (super admin) answers with status:true
+[0mGET /admin/mediaAudit/report [32m200[0m 52.011 ms - 714[0m
+PASS 07-endpoint-smoke:A-mediaAudit GET /admin/mediaAudit/report (super admin) answers with status:true
+[0mGET /admin/currency/ [32m200[0m 62.170 ms - 230[0m
+PASS 07-endpoint-smoke:A-currency GET /admin/currency/ (super admin) answers with status:true
+[0mGET /admin/withdraw/ [32m200[0m 49.282 ms - 72[0m
+PASS 07-endpoint-smoke:A-withdrawMethods GET /admin/withdraw/ (super admin) answers with status:true
+[0mGET /admin/adRewardCoin/getAdReward [32m200[0m 49.501 ms - 71[0m
+PASS 07-endpoint-smoke:A-adRewardCoin GET /admin/adRewardCoin/getAdReward (super admin) answers with status:true
+[0mGET /admin/dailyRewardCoin/getDailyReward [32m200[0m 50.545 ms - 74[0m
+PASS 07-endpoint-smoke:A-dailyReward GET /admin/dailyRewardCoin/getDailyReward (super admin) answers with status:true
+[0mGET /admin/FAQ/ [32m200[0m 32.824 ms - 58[0m
+PASS 07-endpoint-smoke:A-faq GET /admin/FAQ/ (super admin) answers with status:true
+[0mGET /admin/contact/ [32m200[0m 33.118 ms - 48[0m
+PASS 07-endpoint-smoke:A-contact GET /admin/contact/ (super admin) answers with status:true
+[0mGET /admin/advertise/ [32m200[0m 48.429 ms - 54[0m
+FAIL 07-endpoint-smoke:A-advertise GET /admin/advertise/ (super admin) answers with status:true
+     HTTP 200; status=false; message="advertise does not found."
+[0mGET /admin/user/fetchUserCoinVipHistory?start=1&limit=10 [32m200[0m 48.760 ms - 55[0m
+PASS 07-endpoint-smoke:A-userCoinVipHistory GET /admin/user/fetchUserCoinVipHistory (super admin) answers with status:true
+
+AUDIT RESULT 94/104 expectations met (10 defects demonstrated)
+[32m[1m+ [22m[39m Script exited successfully (code 0)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+exit=0

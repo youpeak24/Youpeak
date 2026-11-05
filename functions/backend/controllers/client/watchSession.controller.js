@@ -13,6 +13,8 @@
 const db = require("../../util/connection");
 const { recordWatchProgress } = require("../../util/watchLedger.service");
 const { lockMessage } = require("../../util/taskSecurity.service");
+const viewLedger = require("../../util/viewLedger.service");
+const { payCreatorForViewing } = require("./watchHistory.controller");
 
 const MAX_PLAYBACK_RATE = 2;
 
@@ -20,14 +22,15 @@ const MAX_PLAYBACK_RATE = 2;
 const knownVideos = new Map();
 const VIDEO_CACHE_MS = 10 * 60 * 1000;
 
-async function videoExists(videoId) {
+// Returns the (cached) video document, or null if it doesn't exist / is inactive.
+async function activeVideo(videoId) {
   const cached = knownVideos.get(videoId);
-  if (cached && cached > Date.now()) return true;
+  if (cached && cached.until > Date.now()) return cached.video;
   const video = await db.findById("videos", videoId);
-  if (!video || video.isActive === false) return false;
+  if (!video || video.isActive === false) return null;
   if (knownVideos.size > 5000) knownVideos.clear();
-  knownVideos.set(videoId, Date.now() + VIDEO_CACHE_MS);
-  return true;
+  knownVideos.set(videoId, { until: Date.now() + VIDEO_CACHE_MS, video });
+  return video;
 }
 
 exports.heartbeat = async (req, res) => {
@@ -50,12 +53,28 @@ exports.heartbeat = async (req, res) => {
       return res.status(200).json({ status: true, creditedSeconds: 0, ignored });
     }
 
-    if (!(await videoExists(videoId))) {
+    const video = await activeVideo(videoId);
+    if (!video) {
       return res.status(200).json({ status: false, code: "VIDEO_NOT_FOUND", message: "Video not found." });
     }
 
+
     const maxSeconds = Number((global.settingJSON || {}).watchHeartbeatMaxCreditSeconds) || 15;
-    const progress = await recordWatchProgress(req.appUser, playedSeconds, { maxSeconds });
+    const positionSeconds = Number(body.positionSeconds);
+    const progress = await recordWatchProgress(req.appUser, playedSeconds, {
+      maxSeconds,
+      playback: Number.isFinite(positionSeconds) && positionSeconds >= 0 ? { videoId, positionSeconds } : null,
+    });
+    // Views and creator earnings come from verified viewing of THIS video,
+    // whether or not the viewer can earn coins themselves (viewLedger). After
+    // the reward claim, so that claim's wall-clock bound isn't delayed.
+    try {
+      const viewing = await viewLedger.recordViewing({ userId: req.appUserId, video, seconds: playedSeconds });
+      if (viewing.viewCounted) await payCreatorForViewing({ userId: req.appUserId, video });
+    } catch (e) {
+      console.error("heartbeat view ledger:", e.message);
+    }
+
     if (!progress.ok) {
       if (progress.reason === "SECURITY_LOCK") {
         return res.status(200).json({
@@ -65,7 +84,7 @@ exports.heartbeat = async (req, res) => {
           message: lockMessage(progress.lock.reasons),
         });
       }
-      return res.status(200).json({ status: false, code: progress.reason, message: "Account not found." });
+      return res.status(200).json({ status: false, code: progress.reason, message: progress.message || "Account not found." });
     }
 
     return res.status(200).json({

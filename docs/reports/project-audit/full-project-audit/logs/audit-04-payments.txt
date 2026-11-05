@@ -1,0 +1,62 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 04[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 04-payments.cjs
+[0mPOST /client/premiumPlan/createHistory [32m200[0m 111.185 ms - 348[0m
+FAIL 04-payments:PY-01 POST client/premiumPlan/createHistory requires proof of payment before activating a premium plan
+     premium plan activated with no payment: status=true, isPremiumPlan=true
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 65.457 ms - 85[0m
+User successfully purchased new coin plan: undefined
+FAIL 04-payments:PY-02 createCoinPlanHistory binds the gateway proof to the plan/amount that was actually paid for
+     credited 1100000 coins (₹11000) for a proof that was never tied to plan cp_big (₹10,000); response status=true
+     
+     1100000 !== 0
+     
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 99.592 ms - 85[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 121.324 ms - 85[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 130.286 ms - 85[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 136.814 ms - 85[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 162.140 ms - 85[0m
+[0mPOST /client/coinplan/createCoinPlanHistory [32m200[0m 168.123 ms - 85[0m
+User successfully purchased new coin plan: undefined
+User successfully purchased new coin plan: undefined
+User successfully purchased new coin plan: undefined
+User successfully purchased new coin plan: undefined
+User successfully purchased new coin plan: undefined
+User successfully purchased new coin plan: undefined
+FAIL 04-payments:PY-03 the same gateway payment cannot be credited more than once under concurrency
+     one ₹1 payment (100 coins) produced 600 coins after 6 parallel replays
+Error in order creation: Error: `key_id` or `oauthToken` is mandatory
+    at new Razorpay (E:\Legendary One\youpeak\source\functions\node_modules\razorpay\dist\razorpay.js:23:13)
+    at exports.processRazorpayPayment (E:\Legendary One\youpeak\source\functions\backend\controllers\client\coinplan.controller.js:348:22)
+    at Layer.handle [as handle_request] (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\Legendary One\youpeak\source\functions\node_modules\express\lib\router\route.js:149:13)
+    at E:\Legendary One\youpeak\source\functions\backend\middleware\bindAppUser.middleware.js:30:14
+    at E:\Legendary One\youpeak\source\functions\backend\middleware\appUser.middleware.js:52:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[0mPOST /client/coinplan/processRazorpayPayment [31m500[0m 35.287 ms - 87[0m
+FAIL 04-payments:PY-04 an authenticated user cannot create gateway orders of arbitrary amount (processRazorpayPayment)
+     processRazorpayPayment multiplies a client-supplied `amount` (no plan lookup, no per-user binding)
+
+AUDIT RESULT 0/4 expectations met (4 defects demonstrated)
+[32m[1m+ [22m[39m Script exited successfully (code 0)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+exit=0

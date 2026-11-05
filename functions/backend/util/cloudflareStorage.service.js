@@ -2,6 +2,7 @@ const axios = require("axios");
 const { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const fs = require("fs");
+const { r2PublicUrl } = require("./mediaPolicy");
 
 /**
  * Cloudflare Stream & R2 Media Management Service
@@ -22,6 +23,20 @@ class CloudflareStorageService {
       r2PublicDomain: process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN || s.r2PublicDomain || s.r2CdnUrl || "",
       streamCustomerCode: process.env.CLOUDFLARE_STREAM_CUSTOMER_CODE || s.cloudflareStreamCustomerCode || "",
     };
+  }
+
+  // The R2 S3 endpoint. CLOUDFLARE_R2_ENDPOINT exists only so the local test
+  // stack can point at a fake R2 on this machine: it is honoured for loopback
+  // hosts and ignored for anything else, so it cannot redirect production
+  // uploads (or their credentials) elsewhere.
+  _endpoint(accountId) {
+    try {
+      const override = new URL(process.env.CLOUDFLARE_R2_ENDPOINT || "");
+      if (["127.0.0.1", "localhost", "[::1]"].includes(override.hostname)) {
+        return override.origin;
+      }
+    } catch (_) { /* not set */ }
+    return `https://${accountId}.r2.cloudflarestorage.com`;
   }
 
   get accountId() { return this._cfg().accountId; }
@@ -46,7 +61,7 @@ class CloudflareStorageService {
     }
     return new S3Client({
       region: "auto",
-      endpoint: `https://${c.accountId}.r2.cloudflarestorage.com`,
+      endpoint: this._endpoint(c.accountId),
       credentials: {
         accessKeyId: c.r2AccessKey,
         secretAccessKey: c.r2SecretKey,
@@ -90,6 +105,7 @@ class CloudflareStorageService {
    * (and its much higher MAX_SERVER_SIDE_VIDEO_BYTES check) ever runs.
    */
   async getPresignedPutUrl(destinationKey, contentType = "application/octet-stream", expiresInSeconds = 900) {
+    const publicUrl = r2PublicUrl(this.r2PublicDomain, destinationKey);
     const client = this.getS3Client();
     const command = new PutObjectCommand({
       Bucket: this.r2BucketName,
@@ -97,8 +113,6 @@ class CloudflareStorageService {
       ContentType: contentType,
     });
     const uploadURL = await getSignedUrl(client, command, { expiresIn: expiresInSeconds });
-    const domain = this.r2PublicDomain;
-    const publicUrl = domain ? `${domain.replace(/\/$/, "")}/${destinationKey}` : null;
     return { uploadURL, publicUrl };
   }
 
@@ -108,12 +122,7 @@ class CloudflareStorageService {
   async createStreamDirectUpload(maxDurationSeconds = 3600) {
     try {
       if (!this.accountId || !this.apiToken) {
-        console.log("ℹ️ Cloudflare Stream credentials not set, returning local mock upload URL.");
-        return {
-          uploadURL: "",
-          uid: `cf_mock_${Date.now()}`,
-          streamPlaybackUrl: "",
-        };
+        throw new Error("Cloudflare Stream is not configured.");
       }
 
       const response = await axios.post(
@@ -149,6 +158,7 @@ class CloudflareStorageService {
    */
   async uploadToCloudflareR2(filePath, destinationKey, mimeType = "video/mp4") {
     try {
+      const publicUrl = r2PublicUrl(this.r2PublicDomain, destinationKey);
       const r2Client = this.getS3Client();
       const fileBuffer = fs.readFileSync(filePath);
       const command = new PutObjectCommand({
@@ -160,14 +170,6 @@ class CloudflareStorageService {
 
       await r2Client.send(command);
 
-      // Prefer a stable public/CDN URL when a domain is configured; otherwise
-      // fall back to a time-limited presigned URL.
-      const domain = this.r2PublicDomain;
-      const publicUrl = domain
-        ? `${domain.replace(/\/$/, "")}/${destinationKey}`
-        : (await this.getPresignedUrl(destinationKey));
-
-      console.log("✅ Video file successfully uploaded to Cloudflare R2:", publicUrl);
       return publicUrl;
     } catch (error) {
       console.error("❌ Cloudflare R2 upload error:", error.message);

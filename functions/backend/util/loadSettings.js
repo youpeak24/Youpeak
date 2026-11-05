@@ -50,7 +50,14 @@ async function loadSettings(force = false) {
 if (!global.settingJSON) global.settingJSON = { ...defaults };
 
 // Express middleware: refresh settings (respecting the TTL) before handling.
+//
+// Cron routes are skipped: they authenticate with CRON_SECRET first and then load settings themselves, so an
+// unauthenticated request to /cron/* performs no database access at all.
+const CRON_PATH = /^\/(?:api\/)?cron(?:\/|$)/i;
+
 function settingsMiddleware(req, res, next) {
+  const path = String(req.originalUrl || req.url || "").split("?")[0];
+  if (CRON_PATH.test(path)) return next();
   loadSettings().finally(() => next());
 }
 

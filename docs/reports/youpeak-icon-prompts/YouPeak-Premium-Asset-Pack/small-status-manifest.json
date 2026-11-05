@@ -1,0 +1,102 @@
+[
+  {
+    "filename": "notif_announcement.png",
+    "role": "small notification variant",
+    "source": "campaign_outlined"
+  },
+  {
+    "filename": "notif_bell.png",
+    "role": "small notification variant",
+    "source": "notifications_none_outlined"
+  },
+  {
+    "filename": "notif_live_now.png",
+    "role": "small notification variant",
+    "source": "sensors_outlined"
+  },
+  {
+    "filename": "notif_new_comment.png",
+    "role": "small notification variant",
+    "source": "chat_bubble_outline_outlined"
+  },
+  {
+    "filename": "notif_new_like.png",
+    "role": "small notification variant",
+    "source": "thumb_up_off_alt_outlined"
+  },
+  {
+    "filename": "notif_new_subscriber.png",
+    "role": "small notification variant",
+    "source": "person_add_outlined"
+  },
+  {
+    "filename": "notif_payment_success.png",
+    "role": "small notification variant",
+    "source": "credit_card_outlined"
+  },
+  {
+    "filename": "notif_reminder.png",
+    "role": "small notification variant",
+    "source": "event_available_outlined"
+  },
+  {
+    "filename": "notif_security.png",
+    "role": "small notification variant",
+    "source": "verified_user_outlined"
+  },
+  {
+    "filename": "notif_update.png",
+    "role": "small notification variant",
+    "source": "system_update_outlined"
+  },
+  {
+    "filename": "notif_warning.png",
+    "role": "small notification variant",
+    "source": "warning_amber_outlined"
+  },
+  {
+    "filename": "notif_withdrawal_sent.png",
+    "role": "small notification variant",
+    "source": "account_balance_outlined"
+  },
+  {
+    "filename": "verified_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "premium_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "paid_video_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "live_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "new_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "top_creator_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "partner_district_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  },
+  {
+    "filename": "partner_digital_badge.png",
+    "role": "small status badge variant",
+    "source": "authored flat badge geometry / Material Icons glyph where applicable"
+  }
+]

@@ -61,6 +61,7 @@ route.use("/setting", AdminMiddleware, CheckScope, setting);
 route.use("/withdraw", AdminMiddleware, CheckScope, withdraw);
 route.use("/file", AdminMiddleware, CheckScope, file);
 route.use("/video", AdminMiddleware, CheckScope, video);
+route.use("/mediaAudit", AdminMiddleware, CheckScope, require("./mediaAudit.route"));
 route.use("/videoComment", AdminMiddleware, CheckScope, videoComment);
 route.use("/report", AdminMiddleware, CheckScope, report);
 route.use("/advertise", AdminMiddleware, CheckScope, advertise);
@@ -90,6 +91,7 @@ route.use("/partnerPortal", AdminMiddleware, CheckScope, partnerPortal);
 route.use("/digitalPartner", AdminMiddleware, CheckScope, digitalPartner);
 route.use("/franchisePortal", AdminMiddleware, CheckScope, franchisePortal);
 route.use("/platformConfig", AdminMiddleware, CheckScope, require("./platformConfig.route"));
+route.use("/adCredits", AdminMiddleware, CheckScope, require("./adCredits.route"));
 route.use("/", admin);
 
 module.exports = route;

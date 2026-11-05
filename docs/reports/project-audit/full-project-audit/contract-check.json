@@ -1,0 +1,195 @@
+[
+ {
+  "app": "youpeak/lib/core/localization/localization_service.dart",
+  "endpoint": "client/translation/harvestActiveLanguages",
+  "unreadByServer": [
+   "languageCode"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/core/localization/localization_service.dart",
+  "endpoint": "client/translation/harvestTranslation",
+  "unreadByServer": [
+   "status"
+  ],
+  "requiredButNotSent": [
+   "module"
+  ]
+ },
+ {
+  "app": "youpeak/lib/core/payment/payment_api.dart",
+  "endpoint": "client/payment/createOrder",
+  "unreadByServer": [
+   "userId",
+   "purpose",
+   "gateway",
+   "tierId",
+   "coinPlanId",
+   "premiumPlanId",
+   "videoId",
+   "planName",
+   "status",
+   "orderId",
+   "paymentId",
+   "signature"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/bites/api/preview_shorts_api.dart",
+  "endpoint": "client/video/getShorts",
+  "unreadByServer": [
+   "videoId"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/channel/api/channel_home_api.dart",
+  "endpoint": "client/user/detailsOfChannel",
+  "unreadByServer": [
+   "playListId"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/channel/api/channel_home_api.dart",
+  "endpoint": "client/user/getPlayListVideos",
+  "unreadByServer": [
+   "userId"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/channel/api/channel_playlist_api.dart",
+  "endpoint": "client/user/playListsOfChannel",
+  "unreadByServer": [
+   "userId"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/channel/api/create_channel_api.dart",
+  "endpoint": "client/user/update",
+  "unreadByServer": [
+   "fullName",
+   "channelType",
+   "descriptionOfChannel",
+   "isChannel"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/channel/api/get_channel_video_api.dart",
+  "endpoint": "client/user/videosOfChannel",
+  "unreadByServer": [
+   "userId"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/coins/api/purchase_coin_plan_api.dart",
+  "endpoint": "client/coinplan/createCoinPlanHistory",
+  "unreadByServer": [],
+  "requiredButNotSent": [
+   "orderId",
+   "paymentId",
+   "signature"
+  ]
+ },
+ {
+  "app": "youpeak/lib/features/edit_video/api/edit_video_api.dart",
+  "endpoint": "client/video/modifyVideo",
+  "unreadByServer": [
+   "title",
+   "description"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/home/api/fetch_all_video_api.dart",
+  "endpoint": "client/video/videosOfHome",
+  "unreadByServer": [],
+  "requiredButNotSent": [
+   "type",
+   "seed"
+  ]
+ },
+ {
+  "app": "youpeak/lib/features/home/api/fetch_new_video_api.dart",
+  "endpoint": "client/video/videosOfHome",
+  "unreadByServer": [],
+  "requiredButNotSent": [
+   "type",
+   "seed"
+  ]
+ },
+ {
+  "app": "youpeak/lib/features/home/api/fetch_popular_video_api.dart",
+  "endpoint": "client/video/videosOfHome",
+  "unreadByServer": [],
+  "requiredButNotSent": [
+   "type",
+   "seed"
+  ]
+ },
+ {
+  "app": "youpeak/lib/features/home/api/fetch_public_live_api.dart",
+  "endpoint": "client/video/videosOfHome",
+  "unreadByServer": [],
+  "requiredButNotSent": [
+   "type",
+   "seed"
+  ]
+ },
+ {
+  "app": "youpeak/lib/features/monetization/api/video_engagement_reward_api.dart",
+  "endpoint": "client/user/handleEngagementVideoWatchReward",
+  "unreadByServer": [
+   "videoId"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/profile/api/edit_profile_api.dart",
+  "endpoint": "client/user/updateProfile",
+  "unreadByServer": [
+   "email"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/referral/api/get_referral_history_api.dart",
+  "endpoint": "client/user/loadReferralHistoryByUser",
+  "unreadByServer": [
+   "startDate",
+   "endDate"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/rewards/api/earn_coin_from_check_in_api.dart",
+  "endpoint": "client/dailyCoinReward/handleDailyCheckInReward",
+  "unreadByServer": [
+   "dailyRewardCoin"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/upload/api/upload_video_api.dart",
+  "endpoint": "client/video/createVideo",
+  "unreadByServer": [
+   "channelType"
+  ],
+  "requiredButNotSent": []
+ },
+ {
+  "app": "youpeak/lib/features/wallet/api/get_wallet_history_api.dart",
+  "endpoint": "client/user/fetchWalletHistoryByUser",
+  "unreadByServer": [
+   "startDate",
+   "endDate"
+  ],
+  "requiredButNotSent": []
+ }
+]

@@ -1,5 +1,7 @@
 const db = require("../../util/connection");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+const { stripCredentials } = require("../../util/safeUser");
 
 const toBool = (v) => v === true || v === "true";
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
@@ -17,7 +19,8 @@ exports.fakeUser = async (req, res) => {
       fullName,
       nickName,
       email,
-      password: password || crypto.randomBytes(12).toString("hex"),
+      // F-19: bcrypt only (this used to store the password in plain text)
+      passwordHash: bcrypt.hashSync(String(password || crypto.randomBytes(12).toString("hex")), 10),
       // gender/mobileNumber/age/image/country/ipAddress/social links: the
       // create-fake-user form collects all of these, but only
       // fullName/nickName/email/password/channelName ever reached storage —
@@ -151,7 +154,9 @@ exports.isBlock = async (req, res) => {
 exports.updatePassword = async (req, res) => {
   try {
     const { userId, newPassword } = req.body;
-    await db.update("users", userId, { password: newPassword });
+    if (!userId || !newPassword) return res.status(200).json({ status: false, message: "userId and newPassword are required." });
+    // F-19: bcrypt only (this used to store the new password in plain text)
+    await db.update("users", userId, { passwordHash: bcrypt.hashSync(String(newPassword), 10), password: null });
     return res.status(200).json({ status: true, message: "Password updated successfully" });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -190,7 +195,7 @@ exports.getProfile = async (req, res) => {
   try {
     const { userId } = req.query;
     const user = await db.findById("users", userId);
-    return res.status(200).json({ status: true, message: "Success", user });
+    return res.status(200).json({ status: true, message: "Success", user: stripCredentials(user) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -243,7 +248,7 @@ exports.getUsers = async (req, res) => {
     const total = users.length;
     const paginated = users.slice((start - 1) * limit, start * limit);
 
-    return res.status(200).json({ status: true, message: "Success", total, users: paginated });
+    return res.status(200).json({ status: true, message: "Success", total, users: paginated.map(stripCredentials) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -255,7 +260,7 @@ exports.getUsers = async (req, res) => {
 exports.getUsersAddByAdminForChannel = async (req, res) => {
   try {
     let users = await db.find("users", { isAddByAdmin: true });
-    return res.status(200).json({ status: true, message: "Success", total: users.length, users });
+    return res.status(200).json({ status: true, message: "Success", total: users.length, users: users.map(stripCredentials) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }

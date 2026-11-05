@@ -1,33 +1,10 @@
-//express
-const express = require("express");
-const route = express.Router();
-
-//s3multer
+const route = require("express").Router();
 const upload = require("../../util/uploadMiddleware");
-
-//checkAccessWithSecretKey
-const checkAccessWithSecretKey = require("../../checkAccess");
-
-//controller
-const FileController = require("../../controllers/admin/file.controller");
-
-//upload content to digital ocean storage
-route.post(
-  "/upload-file",
-  function (request, response, next) {
-    upload(request, response, function (error) {
-      if (error) {
-        console.log("error in file ", error);
-      } else {
-        console.log("File uploaded successfully.");
-        next();
-      }
-    });
-  },
-  checkAccessWithSecretKey(),
-  FileController.uploadContent
-);
-
-route.post("/cloudflare-stream-url", checkAccessWithSecretKey(), FileController.getCloudflareStreamUploadUrl);
-
+const checkAccess = require("../../checkAccess");
+const files = require("../../controllers/admin/file.controller");
+// Parent router checks admin JWT and scope before this shared-key gate.
+route.use(checkAccess());
+route.post("/upload-file", upload, files.uploadContent);
+route.post("/direct-upload-url", files.getDirectUploadUrl);
+route.post("/cloudflare-stream-url", files.getCloudflareStreamUploadUrl);
 module.exports = route;

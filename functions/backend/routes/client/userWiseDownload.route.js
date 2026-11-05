@@ -1,6 +1,7 @@
 //express
 const express = require("express");
 const route = express.Router();
+const bindAppUser = require("../../middleware/bindAppUser.middleware");
 
 const checkAccessWithSecretKey = require("../../checkAccess");
 
@@ -8,9 +9,9 @@ const checkAccessWithSecretKey = require("../../checkAccess");
 const UserWiseDownloadController = require("../../controllers/client/userWiseDownload.controller");
 
 //when user view the video create watchHistory for history
-route.post("/downloadVideoHistory", checkAccessWithSecretKey(), UserWiseDownloadController.downloadVideoHistory);
+route.post("/downloadVideoHistory", bindAppUser(), UserWiseDownloadController.downloadVideoHistory);
 
 //get user wise watchHistory
-route.get("/getdownloadVideoHistory", checkAccessWithSecretKey(), UserWiseDownloadController.getdownloadVideoHistory);
+route.get("/getdownloadVideoHistory", bindAppUser(), UserWiseDownloadController.getdownloadVideoHistory);
 
 module.exports = route;

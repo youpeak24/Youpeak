@@ -22,6 +22,16 @@ module.exports = function validateEnv() {
     console.warn("⚠️  Missing recommended env vars:", missingRecommended.join(", "));
   }
 
+  // Razorpay can also be configured from Admin Panel > Settings > Payment (the
+  // settings doc isn't readable this early), so this is a heads-up, not a failure.
+  if (isProd) {
+    const rp = ["RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRET", "RAZORPAY_WEBHOOK_SECRET"].filter((k) => !String(process.env[k] || "").trim());
+    if (rp.length) console.warn("⚠️  Razorpay env vars not set:", rp.join(", "), "(set them, or save the keys in the admin panel)");
+    const id = String(process.env.RAZORPAY_KEY_ID || "").trim();
+    if (id && !/^rzp_(test|live)_/.test(id)) console.warn("⚠️  RAZORPAY_KEY_ID should start with rzp_test_ or rzp_live_");
+    if (/^rzp_test_/.test(id) && process.env.NODE_ENV === "production") console.warn("⚠️  Razorpay is in TEST mode in production - no real money will be collected.");
+  }
+
   if (missingRequired.length) {
     const msg = `Missing required env vars: ${missingRequired.join(", ")}`;
     if (isProd) {

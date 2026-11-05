@@ -1,0 +1,70 @@
+[
+ {
+  "width": 1920,
+  "semanticsBeforeInteraction": {
+   "placeholder": true,
+   "semanticsNodes": 0,
+   "glassPane": true
+  },
+  "clickAt": [
+   1580,
+   1046
+  ],
+  "semanticsAfter": {
+   "semanticsNodes": 0
+  }
+ },
+ {
+  "width": 1366,
+  "semanticsBeforeInteraction": {
+   "placeholder": true,
+   "semanticsNodes": 0,
+   "glassPane": true
+  },
+  "clickAt": [
+   1124,
+   734
+  ],
+  "semanticsAfter": {
+   "semanticsNodes": 0
+  }
+ },
+ {
+  "width": 768,
+  "semanticsBeforeInteraction": {
+   "placeholder": true,
+   "semanticsNodes": 0,
+   "glassPane": true
+  },
+  "clickAt": [
+   384,
+   990
+  ],
+  "semanticsAfter": {
+   "semanticsNodes": 0
+  }
+ },
+ {
+  "width": 390,
+  "semanticsBeforeInteraction": {
+   "placeholder": true,
+   "semanticsNodes": 0,
+   "glassPane": true
+  },
+  "clickAt": [
+   195,
+   810
+  ],
+  "semanticsAfter": {
+   "semanticsNodes": 0
+  }
+ },
+ {
+  "deepLink": "/privacy",
+  "finalUrl": "https://www.youpeak.app/privacy"
+ },
+ {
+  "deepLink": "/terms",
+  "finalUrl": "https://www.youpeak.app/terms"
+ }
+]

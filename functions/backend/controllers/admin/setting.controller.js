@@ -1,6 +1,30 @@
 const db = require("../../util/connection");
 const { publishSystemConfigs } = require("../../util/systemConfig.service");
 
+// Razorpay secrets are write-only from the admin panel: the browser gets a
+// "…Set" flag instead of the value, and a blank / masked field on save keeps
+// the stored secret rather than wiping it.
+const WRITE_ONLY_SECRETS = ["razorSecretKey", "razorpayWebhookSecret"];
+function hideSecrets(setting) {
+  if (!setting) return setting;
+  const out = { ...(typeof setting.toObject === "function" ? setting.toObject() : setting) };
+  for (const k of WRITE_ONLY_SECRETS) {
+    out[`${k}Set`] = Boolean(out[k]);
+    delete out[k];
+  }
+  return out;
+}
+// The admin form shows the switches the app will actually apply, including
+// the defaults for a settings doc saved before the switch existed.
+const SWITCH_DEFAULTS = ["razorPaySwitch", "razorpayWebEnabled", "razorpayIosEnabled"];
+function withSwitchDefaults(setting) {
+  const defaults = require("../../setting");
+  const out = { ...setting };
+  for (const k of SWITCH_DEFAULTS) if (out[k] === undefined || out[k] === null) out[k] = defaults[k];
+  return out;
+}
+const isMasked = (v) => v == null || String(v).trim() === "" || /^[*•…]+$/.test(String(v).trim());
+
 // Get Settings / index
 exports.get = async (req, res) => {
   try {
@@ -8,7 +32,7 @@ exports.get = async (req, res) => {
     if (!setting) {
       setting = await db.create("settings", {
         appName: "YouPeak",
-        appLogo: "https://youpeak-9ff65.web.app/logo.png",
+        appLogo: "/logo.png",
         privacyPolicyLink: "https://youpeak-9ff65.web.app",
         termsOfServiceLink: "https://youpeak-9ff65.web.app",
         currencySymbol: "$",
@@ -19,7 +43,7 @@ exports.get = async (req, res) => {
         isStripe: true,
       }, "default_settings");
     }
-    return res.status(200).json({ status: true, message: "Success", setting });
+    return res.status(200).json({ status: true, message: "Success", setting: hideSecrets(withSwitchDefaults(setting)) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -30,16 +54,22 @@ exports.index = exports.get;
 // Update Settings
 exports.update = async (req, res) => {
   try {
+    const patch = { ...(req.body || {}) };
+    for (const k of WRITE_ONLY_SECRETS) {
+      if (k in patch && isMasked(patch[k])) delete patch[k];
+      else if (k in patch) patch[k] = String(patch[k]).trim();
+    }
+    if ("razorPayId" in patch) patch.razorPayId = String(patch.razorPayId || "").trim();
     let setting = await db.findOne("settings", {});
     let updated;
     if (setting) {
-      updated = await db.update("settings", setting._id || setting.id, req.body);
+      updated = await db.update("settings", setting._id || setting.id, patch);
     } else {
-      updated = await db.create("settings", req.body, "default_settings");
+      updated = await db.create("settings", patch, "default_settings");
     }
     try { await require("../../util/loadSettings").loadSettings(true); } catch (e) { global.settingJSON = updated; }
     await publishSystemConfigs(); // the app's live config (system_configs/*)
-    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: global.settingJSON });
+    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: hideSecrets(global.settingJSON) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -60,7 +90,7 @@ exports.handleSwitch = async (req, res) => {
     const updated = await db.update("settings", setting._id || setting.id, updateData);
     try { await require("../../util/loadSettings").loadSettings(true); } catch (e) { global.settingJSON = updated; }
     await publishSystemConfigs(); // the app's live config (system_configs/*)
-    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: global.settingJSON });
+    return res.status(200).json({ status: true, message: "Setting updated successfully", setting: hideSecrets(global.settingJSON) });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }

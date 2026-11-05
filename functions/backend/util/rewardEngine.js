@@ -27,6 +27,7 @@
 const db = require("./connection");
 const { generateHistoryUniqueId } = require("./generateHistoryUniqueId");
 const { taskLockState, lockMessage } = require("./taskSecurity.service");
+const { accessGateFor } = require("./accessGate");
 
 // Actions a person can't repeat faster than settings.minSecondsBetweenRewardActions.
 const PACED_KINDS = new Set(["like", "dislike", "comment", "ad"]);
@@ -49,13 +50,14 @@ const num = (v, d) => {
   return Number.isFinite(n) && n >= 0 ? n : d;
 };
 
-// YYYY-MM-DD in Asia/Kolkata (server "day" for resets)
-function todayStr() {
-  return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-    .toISOString()
-    .slice(0, 10);
+// YYYY-MM-DD in Asia/Kolkata — the business day for every daily counter and
+// cap. Computed with Intl, so the host's own timezone never matters (the old
+// toLocaleString → Date → toISOString round-trip was a day off between
+// 00:00 and 05:30 IST on any host not running in UTC).
+const IST_DATE = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" });
+function todayStr(now = new Date()) {
+  return IST_DATE.format(now);
 }
-
 // Per-tier like/comment/dislike caps from the T&C tier table, keyed by tier.level
 const TIER_ENGAGEMENT_CAPS = {
   1: { likes: 5, comments: 2 },   // Free
@@ -65,25 +67,38 @@ const TIER_ENGAGEMENT_CAPS = {
   5: { likes: 60, comments: 30 }, // Platinum
 };
 
+// Start the user's new business day — in a transaction, and only if the
+// stored day is still the old one. A plain write here raced with rewards: a
+// request that read the user before midnight could zero counters another
+// request had already credited for the new day.
 async function ensureDailyReset(user) {
   const t = todayStr();
   if (user.lastActivityDate === t) return user;
-  const reset = {
-    dailyEarningCoinsToday: 0,
-    dailyAdCountToday: 0,
-    dailyCheckInsToday: 0,
-    dailyLikesToday: 0,
-    dailyCommentsToday: 0,
-    dailyDislikesToday: 0,
-    dailyVideoWatchesToday: 0,
-    totalCurrentWatchTime: 0,
-    lastActivityDate: t,
-  };
-  await db.update("users", user._id || user.id, reset);
-  Object.assign(user, reset);
+  const fs = db.getDb();
+  const ref = fs.collection("users").doc(String(user._id || user.id));
+  const fresh = await db.withTimeout(fs.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists) return null;
+    const d = snap.data();
+    if (d.lastActivityDate === t) return d; // another request already started the day
+    const reset = {
+      dailyEarningCoinsToday: 0,
+      dailyAdCountToday: 0,
+      dailyCheckInsToday: 0,
+      dailyLikesToday: 0,
+      dailyCommentsToday: 0,
+      dailyDislikesToday: 0,
+      dailyVideoWatchesToday: 0,
+      totalCurrentWatchTime: 0,
+      lastActivityDate: t,
+      updatedAt: new Date().toISOString(),
+    };
+    tx.update(ref, reset);
+    return { ...d, ...reset };
+  }));
+  if (fresh) Object.assign(user, fresh);
   return user;
 }
-
 async function getLimits(user) {
   const s = global.settingJSON || {};
   const limits = {
@@ -226,6 +241,77 @@ async function getCreatorRevenueShare(user) {
   };
 }
 
+const DAILY_RESET_FIELDS = [
+  "dailyEarningCoinsToday", "dailyAdCountToday", "dailyCheckInsToday", "dailyLikesToday",
+  "dailyCommentsToday", "dailyDislikesToday", "dailyVideoWatchesToday", "totalCurrentWatchTime",
+];
+
+/**
+ * One Firestore transaction for a reward: re-read the user, enforce pacing,
+ * the per-day action count and the daily coin cap against the CURRENT values,
+ * then create the ledger row (histories/{historyId}) and write the new
+ * balances. A history id that already exists aborts the whole transaction, so
+ * a per-video reward can't be paid twice either.
+ *
+ * @returns {Promise<{ok:true, credited:number, user:object} | {ok:false, reason:string, user?:object}>}
+ */
+async function creditWithinCaps({ id, historyId, kind, countField, maxCount, minGapSeconds, gross, bucketField, limits, history }) {
+  const firestore = db.getDb();
+  if (!firestore) throw new Error("Firestore is not initialised");
+  const userRef = firestore.collection("users").doc(String(id));
+  const histRef = firestore.collection("histories").doc(String(historyId));
+
+  try {
+    return await db.withTimeout(
+      firestore.runTransaction(async (tx) => {
+        const snap = await tx.get(userRef);
+        if (!snap.exists) return { ok: false, reason: "USER_NOT_FOUND" };
+        const u = { _id: snap.id, id: snap.id, ...snap.data() };
+        const now = Date.now();
+        const today = todayStr();
+
+        // A request that crosses midnight starts the new day's counters.
+        const update = {};
+        if (u.lastActivityDate !== today) {
+          for (const f of DAILY_RESET_FIELDS) { update[f] = 0; u[f] = 0; }
+          update.lastActivityDate = today;
+        }
+
+        const lastActionAt = Number(u.lastRewardActionAt) || 0;
+        if (PACED_KINDS.has(kind) && minGapSeconds > 0 && lastActionAt && now - lastActionAt < minGapSeconds * 1000) {
+          return { ok: false, reason: "TOO_FAST", user: u };
+        }
+        const count = countField ? Number(u[countField]) || 0 : 0;
+        if (countField && maxCount != null && count >= maxCount) return { ok: false, reason: "COUNT_LIMIT", user: u };
+        const earned = Number(u.dailyEarningCoinsToday) || 0;
+        const room = limits.dailyEarningCapInCoins - earned;
+        if (room <= 0) return { ok: false, reason: "EARNING_CAP", user: u };
+
+        const credited = Math.max(0, Math.min(gross, room));
+        if (credited > 0) {
+          const nowIso = new Date(now).toISOString();
+          tx.create(histRef, JSON.parse(JSON.stringify({
+            ...history, coin: credited, date: nowIso, _id: String(historyId), id: String(historyId),
+            createdAt: nowIso, updatedAt: nowIso,
+          })));
+          update.coin = (Number(u.coin) || 0) + credited;
+          update.totalRewardCoin = (Number(u.totalRewardCoin) || 0) + credited;
+          update.dailyEarningCoinsToday = earned + credited;
+          if (bucketField) update[bucketField] = (Number(u[bucketField]) || 0) + credited;
+        }
+        if (countField) update[countField] = count + 1;
+        update.lastRewardActionAt = now;
+        update.updatedAt = new Date(now).toISOString();
+        tx.update(userRef, update);
+        return { ok: true, credited, user: { ...u, ...update } };
+      })
+    );
+  } catch (err) {
+    if (err && (err.code === 6 || /ALREADY_EXISTS/i.test(err.message || ""))) return { ok: false, reason: "ALREADY_REWARDED" };
+    throw err;
+  }
+}
+
 /**
  * Credit a reward for one engagement action, enforcing the count cap and the
  * daily coin cap. Loads + resets the user itself.
@@ -241,6 +327,14 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
   const user = await db.findById("users", userId);
   if (!user) return { ok: false, reason: "USER_NOT_FOUND", credited: 0, message: "User not found." };
   if (user.isBlock) return { ok: false, reason: "USER_BLOCKED", credited: 0, message: "You are blocked by the admin." };
+
+  // Web-portal activation (Integration Guide step 4): while a joining fee or
+  // a chosen membership is unpaid, coin earning stays closed — enforced here,
+  // not only by the app's lock screen.
+  const gate = accessGateFor(user);
+  if (gate.locked) {
+    return { ok: false, reason: "ACCESS_LOCKED", credited: 0, message: "Complete your activation payment on the YouPeak web portal to start earning.", accessGate: gate };
+  }
 
   await ensureDailyReset(user);
   const limits = await getLimits(user);
@@ -270,8 +364,9 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
 
   // Fast pre-check — cheap early exit with an accurate message. The REAL
   // atomic gate against a double-tap or a retried request landing twice is
-  // the createOnce() call below, keyed deterministically so two concurrent
-  // requests for the same (user, video, action) can never both win.
+  // creditWithinCaps() below, which creates this deterministic history id in
+  // the same transaction as the credit, so two concurrent requests for the
+  // same (user, video, action) can never both win.
   const historyId = dedupeVideoId
     ? `hist_dedupe_${id}_${dedupeVideoId}_${historyType}`
     : `hist_${id}_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
@@ -308,7 +403,6 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
 
   const baseCoins = fixedCoins != null ? Number(fixedCoins) : (limits.reward[kind] || 0);
   const gross = Math.max(0, Math.round(baseCoins * (limits.coinMultiplier || 1)));
-  const credited = Math.min(gross, room);
 
   const bucketField = {
     ad: "adsRewardCoin",
@@ -319,36 +413,32 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
     engagementWatch: "engagementRewardCoin",
   }[kind];
 
-  if (credited > 0) {
-    const claim = await db.createOnce("histories", historyId, {
-      userId: id,
-      uniqueId: await generateHistoryUniqueId(),
-      videoId: dedupeVideoId || null,
-      coin: credited,
-      type: historyType,
-      date: new Date().toISOString(),
-      ...(meta || {}),
-    });
-    if (!claim.created) {
-      // A concurrent request already claimed this exact (user, video,
-      // action) a moment ago — do not credit again.
-      return {
-        ok: false, reason: "ALREADY_REWARDED", credited: 0, limits,
-        message: "Already rewarded for this video.",
-        counts: snapshotCounts(user),
-      };
-    }
+  // The checks above are a fast path on a snapshot. The real gate is this
+  // transaction: it re-reads the user, re-applies the count cap, the coin
+  // cap and the pacing rule, and writes the ledger row and the balance
+  // together. Before, a burst of parallel ad calls each passed the snapshot
+  // checks and each got credited, past the 20-ad and daily-coin caps.
+  const uniqueId = await generateHistoryUniqueId();
+  const tx = await creditWithinCaps({
+    id, historyId, kind, countField, maxCount, minGapSeconds, gross, bucketField,
+    limits, history: { userId: id, uniqueId, videoId: dedupeVideoId || null, type: historyType, ...(meta || {}) },
+  });
+  if (!tx.ok) {
+    const messages = {
+      ALREADY_REWARDED: "Already rewarded for this video.",
+      TOO_FAST: "Slow down — rewards are paused for a moment.",
+      COUNT_LIMIT: `Daily limit of ${maxCount} reached for today.`,
+      EARNING_CAP: `Daily earning cap of ${limits.dailyEarningCapInCoins} coins reached for today.`,
+      USER_NOT_FOUND: "User not found.",
+    };
+    return {
+      ok: false, reason: tx.reason, credited: 0, limits,
+      message: messages[tx.reason] || "Reward not credited.",
+      counts: snapshotCounts(tx.user || user),
+    };
   }
-
-  const incFields = {
-    coin: credited,
-    totalRewardCoin: credited,
-    dailyEarningCoinsToday: credited,
-  };
-  if (bucketField) incFields[bucketField] = credited;
-  if (countField) incFields[countField] = 1;
-
-  const updatedUser = await db.incrementFields("users", id, incFields, { lastRewardActionAt: Date.now() });
+  const credited = tx.credited;
+  const updatedUser = tx.user;
 
   if (credited > 0) {
     // Tasker Onboarding Commission (YP-TC): whoever referred this tasker
@@ -359,7 +449,7 @@ async function creditReward({ userId, kind, historyType, countField, capField, f
     await creditTaskerReferralCommission(id, credited).catch(() => {});
   }
 
-  const merged = updatedUser || { ...user, ...incFields };
+  const merged = updatedUser;
   return {
     ok: true,
     reason: credited < gross ? "PARTIAL_CAP" : "OK",
@@ -383,31 +473,44 @@ async function reverseReward({ userId, videoId, historyType, countField }) {
   if (!userId) return { ok: false, reversed: 0 };
   const user = await db.findById("users", userId);
   if (!user) return { ok: false, reversed: 0 };
-  const id = user._id || user.id;
+  const id = String(user._id || user.id);
 
   const hist = await db.findOne("histories", { userId: id, videoId, type: historyType });
   if (!hist) return { ok: false, reversed: 0 };
 
-  // Atomic claim — two concurrent reversals of the SAME history record (a
-  // double-tapped "unlike", or a retried request) must only subtract the
-  // coins once, not once per call.
-  const claim = await db.claimOnce("histories", hist._id || hist.id, "reversed");
-  if (!claim.claimed) return { ok: false, reversed: 0 };
-
-  const amt = Math.max(0, Number(hist.coin) || 0);
-  const deltas = {
-    coin: -amt,
-    engagementRewardCoin: -amt,
-    totalRewardCoin: -amt,
-    dailyEarningCoinsToday: -amt,
-  };
-  if (countField) deltas[countField] = -1;
-
-  await db.incrementFields("users", id, deltas);
-  await db.delete("histories", hist._id || hist.id);
-  return { ok: true, reversed: amt };
+  // One transaction: two concurrent reversals of the same history row (a
+  // double-tapped "unlike", a retried request) subtract once — the second
+  // finds the row gone. The balance never goes below zero: if the coins were
+  // already spent, only what is left is taken back (shortfall reported).
+  // Today's counters are only adjusted for a reward earned today.
+  const fs = db.getDb();
+  const histRef = fs.collection("histories").doc(String(hist._id || hist.id));
+  const userRef = fs.collection("users").doc(id);
+  const today = todayStr();
+  return db.withTimeout(fs.runTransaction(async (tx) => {
+    const [hs, us] = await Promise.all([tx.get(histRef), tx.get(userRef)]);
+    if (!hs.exists || !us.exists) return { ok: false, reversed: 0 };
+    const h = hs.data();
+    const u = us.data();
+    const amt = Math.max(0, Number(h.coin) || 0);
+    const balance = Math.max(0, Number(u.coin) || 0);
+    const taken = Math.min(amt, balance);
+    const earnedToday = u.lastActivityDate === today && todayStr(new Date(h.date || h.createdAt || 0)) === today;
+    const update = {
+      coin: balance - taken,
+      engagementRewardCoin: Math.max(0, (Number(u.engagementRewardCoin) || 0) - amt),
+      totalRewardCoin: Math.max(0, (Number(u.totalRewardCoin) || 0) - amt),
+      updatedAt: new Date().toISOString(),
+    };
+    if (earnedToday) {
+      update.dailyEarningCoinsToday = Math.max(0, (Number(u.dailyEarningCoinsToday) || 0) - amt);
+      if (countField) update[countField] = Math.max(0, (Number(u[countField]) || 0) - 1);
+    }
+    tx.update(userRef, update);
+    tx.delete(histRef);
+    return { ok: true, reversed: taken, shortfall: amt - taken };
+  }));
 }
-
 // Not reusing revenueSplit.service's resolveReferrer here: that module
 // requires this one (for getCreatorRevenueShare), so requiring it back would
 // create a circular dependency. Small enough to duplicate.

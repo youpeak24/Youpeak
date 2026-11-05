@@ -32,6 +32,7 @@ const {
 } = require("./rewardEngine");
 const referralService = require("./referral.service");
 const { taskLockState } = require("./taskSecurity.service");
+const { accessGateFor } = require("./accessGate");
 
 const num = (v, d) => {
   const n = Number(v);
@@ -42,8 +43,16 @@ const num = (v, d) => {
  * Atomically credit up to `requestedSeconds` of watch time, bounded by
  * `maxSeconds` and by the wall-clock time since the user's last claim. The
  * first claim ever only starts the clock and credits nothing.
+ *
+ * With `playback` ({ videoId, positionSeconds } from a heartbeat), a report
+ * for the same video as the previous one is also bounded by how far the
+ * playback position moved forward since then: a player that says "playing" while its
+ * position stands still (a browser paused the media element behind the
+ * app's back) earns nothing. The position is client-reported, so this stops
+ * stalled playback from an honest client, not a forged one — the wall clock
+ * above is what bounds a forged client.
  */
-async function claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVideoWatch = false } = {}) {
+async function claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVideoWatch = false, playback = null } = {}) {
   const firestore = db.getDb();
   if (!firestore) throw new Error("Firestore is not initialised");
   const ref = firestore.collection("users").doc(String(userId));
@@ -59,7 +68,17 @@ async function claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVi
       const last = num(u.watchClaimAt, 0);
       const elapsed = last > 0 ? Math.max(0, (now - last) / 1000) : 0;
 
-      const creditedSeconds = Math.min(requested, elapsed, cap);
+      let creditedSeconds = Math.min(requested, elapsed, cap);
+      const pos = playback ? num(playback.positionSeconds, NaN) : NaN;
+      const prevPos = u.watchPosition || null;
+      if (playback && Number.isFinite(pos) && prevPos && prevPos.videoId === String(playback.videoId)) {
+        const moved = pos - num(prevPos.seconds, 0);
+        // Forward but less than claimed (frozen or crawling position): pay
+        // only what the position covered, plus 1 s of sampling slack. A
+        // backward jump is a seek back or a loop restart (Bites loop) — the
+        // app already drops that second, and the wall clock still bounds it.
+        if (moved >= 0) creditedSeconds = Math.min(creditedSeconds, moved + 1);
+      }
       let carry = Math.max(0, num(u.watchSecondsCarry, 0)) + creditedSeconds;
       const creditedMinutes = Math.floor(carry / 60);
       carry -= creditedMinutes * 60;
@@ -68,6 +87,7 @@ async function claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVi
       const prevTotalMinutes = num(u.totalWatchTime, 0);
       const update = {
         watchClaimAt: now,
+        ...(playback && Number.isFinite(pos) ? { watchPosition: { videoId: String(playback.videoId), seconds: pos } } : {}),
         watchSecondsCarry: Number(carry.toFixed(3)),
         updatedAt: new Date(now).toISOString(),
       };
@@ -100,7 +120,7 @@ async function claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVi
  * @returns {Promise<object>} ok:false + reason "SECURITY_LOCK" | "USER_NOT_FOUND"
  *   when nothing could be credited; otherwise the progress snapshot.
  */
-async function recordWatchProgress(user, requestedSeconds, { maxSeconds, countVideoWatch = false } = {}) {
+async function recordWatchProgress(user, requestedSeconds, { maxSeconds, countVideoWatch = false, playback = null } = {}) {
   const userId = String(user._id || user.id);
   await ensureDailyReset(user);
   const limits = await getLimits(user);
@@ -109,8 +129,13 @@ async function recordWatchProgress(user, requestedSeconds, { maxSeconds, countVi
   if (lock.locked) {
     return { ok: false, reason: "SECURITY_LOCK", lock, limits };
   }
+  // Unpaid web-portal activation: no watch credit, and so no 2-hour bonus,
+  // Stage 2 referral or free level-up (same gate as rewardEngine.creditReward).
+  if (accessGateFor(user).locked) {
+    return { ok: false, reason: "ACCESS_LOCKED", limits, message: "Complete your activation payment on the YouPeak web portal to start earning." };
+  }
 
-  const claim = await claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVideoWatch });
+  const claim = await claimWatchSeconds(userId, requestedSeconds, { maxSeconds, countVideoWatch, playback });
   if (!claim) return { ok: false, reason: "USER_NOT_FOUND", limits };
 
   const milestoneMin = limits.minWatchMinutesForEngagementReward;
@@ -118,28 +143,37 @@ async function recordWatchProgress(user, requestedSeconds, { maxSeconds, countVi
 
   let milestoneCoins = 0;
   if (milestoneReached) {
-    const room = limits.dailyEarningCapInCoins - claim.dailyEarningCoinsToday;
-    milestoneCoins = Math.max(0, Math.min(limits.reward.engagementWatch, room));
-    if (milestoneCoins > 0) {
-      // Once per day per user — the same key both older endpoints used, so
-      // no combination of routes can pay the bonus twice.
-      const created = await db.createOnce("histories", `hist_dedupe_${userId}_${todayStr()}_watchMilestone`, {
-        userId,
-        uniqueId: await generateHistoryUniqueId(),
-        coin: milestoneCoins,
-        type: HISTORY_TYPE.WATCH_TIME_MILESTONE,
-        date: new Date().toISOString(),
-      });
-      if (created.created) {
-        await db.incrementFields("users", userId, {
-          coin: milestoneCoins,
-          engagementRewardCoin: milestoneCoins,
-          totalRewardCoin: milestoneCoins,
-          dailyEarningCoinsToday: milestoneCoins,
+    // Once per business day per user (the same history id both older
+    // endpoints used), capped by the daily coin cap re-read inside the same
+    // transaction that writes the credit — a concurrent reward can't push the
+    // day past the cap, and a retry can't pay the bonus twice.
+    const fs = db.getDb();
+    const userRef = fs.collection("users").doc(userId);
+    const day = todayStr();
+    const histRef = fs.collection("histories").doc(`hist_dedupe_${userId}_${day}_watchMilestone`);
+    const uniqueId = await generateHistoryUniqueId();
+    try {
+      milestoneCoins = await db.withTimeout(fs.runTransaction(async (tx) => {
+        const [hs, us] = await Promise.all([tx.get(histRef), tx.get(userRef)]);
+        if (hs.exists || !us.exists) return 0;
+        const u = us.data();
+        const earned = u.lastActivityDate === day ? Number(u.dailyEarningCoinsToday) || 0 : 0;
+        const coins = Math.max(0, Math.min(limits.reward.engagementWatch, limits.dailyEarningCapInCoins - earned));
+        if (coins <= 0) return 0;
+        const now = new Date().toISOString();
+        tx.create(histRef, { _id: histRef.id, id: histRef.id, userId, uniqueId, coin: coins, type: HISTORY_TYPE.WATCH_TIME_MILESTONE, date: now, createdAt: now, updatedAt: now });
+        tx.update(userRef, {
+          coin: (Number(u.coin) || 0) + coins,
+          engagementRewardCoin: (Number(u.engagementRewardCoin) || 0) + coins,
+          totalRewardCoin: (Number(u.totalRewardCoin) || 0) + coins,
+          dailyEarningCoinsToday: earned + coins,
+          updatedAt: now,
         });
-      } else {
-        milestoneCoins = 0;
-      }
+        return coins;
+      }));
+    } catch (err) {
+      if (!(err.code === 6 || /ALREADY_EXISTS/i.test(err.message || ""))) throw err;
+      milestoneCoins = 0;
     }
   }
 

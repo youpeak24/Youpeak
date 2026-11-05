@@ -1,0 +1,10 @@
+{
+  "BUILD_PROFILE": "development",
+  "API_BASE_URL": "http://10.0.2.2:5055/",
+  "APP_DOMAIN": "youpeak.app",
+  "API_SECRET_KEY": "youpeak-local-dev-key",
+  "USE_LOCAL_DEV": "false",
+  "FIRESTORE_EMULATOR": "",
+  "AUTH_EMULATOR": ""
+}
+

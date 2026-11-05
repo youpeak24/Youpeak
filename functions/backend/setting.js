@@ -92,6 +92,12 @@ module.exports = {
   // after legal sign-off to gate earning/withdrawal behind a one-time fee.
   joiningFeeINR: 0,
   paymentGateway: "razorpay",         // razorpay | cashfree | phonepe
+  // Per-platform Razorpay checkout switches (Admin Panel > Settings > Payment).
+  // Android + web are on by default so checkout appears as soon as a key is
+  // configured; iOS stays off (store billing rules) until the admin opts in.
+  razorPaySwitch: true,
+  razorpayWebEnabled: true,
+  razorpayIosEnabled: false,
 
   // ── Digital Partner Program (TRS) ──
   // One-time license; on payment the user gets isDigitalPartner=true,
@@ -153,23 +159,26 @@ module.exports = {
   },
   // Creator Growth & Video Promotion rate card. Names are the keys existing
   // campaigns and payment transactions reference — rename with care.
+  // DOC-20260826-WA0214 "Creator Growth & Video Promotion" rate card. `id` is
+  // the stable key orders use; impressions are ESTIMATES (util/promotion.service.js).
   promotionPlans: [
-    { name: "Starter Plan", priceINR: 49, impressionsMin: 2000, impressionsMax: 2500, durationDays: 1, isActive: true },
-    { name: "Basic Plan", priceINR: 99, impressionsMin: 3000, impressionsMax: 3500, durationDays: 2, isActive: true },
-    { name: "Pro Starter", priceINR: 199, impressionsMin: 3000, impressionsMax: 5000, durationDays: 2, isActive: true },
-    { name: "Boost Plan", priceINR: 249, impressionsMin: 3000, impressionsMax: 8000, durationDays: 4, isActive: true },
-    { name: "Weekly Mega", priceINR: 1000, impressionsMin: 50000, impressionsMax: 75000, durationDays: 7, isActive: true },
-    { name: "Monthly Pro", priceINR: 3000, impressionsMin: 200000, impressionsMax: 250000, durationDays: 30, isActive: true },
+    { id: "starter_plan", name: "Starter Plan", priceINR: 49, impressionsMin: 2000, impressionsMax: 2500, durationDays: 1, targeting: "Global", category: "Daily", isActive: true },
+    { id: "basic_plan", name: "Basic Plan", priceINR: 99, impressionsMin: 3000, impressionsMax: 3500, durationDays: 2, targeting: "Global", category: "Daily", isActive: true },
+    { id: "pro_starter", name: "Pro Starter", priceINR: 199, impressionsMin: 3000, impressionsMax: 5000, durationDays: 2, targeting: "Global", category: "Daily", isActive: true },
+    { id: "boost_plan", name: "Boost Plan", priceINR: 249, impressionsMin: 3000, impressionsMax: 8000, durationDays: 4, targeting: "Global", category: "Daily", isActive: true },
+    { id: "weekly_mega_plan", name: "Weekly Mega Plan", priceINR: 1000, impressionsMin: 50000, impressionsMax: 75000, durationDays: 7, targeting: "Global", category: "Weekly", isActive: true },
+    { id: "monthly_pro_plan", name: "Monthly Pro Plan", priceINR: 3000, impressionsMin: 200000, impressionsMax: 250000, durationDays: 30, targeting: "Global", category: "Monthly", isActive: true },
   ],
-  // In-app ad credit top-ups. `credits` is the total received, bonus included
-  // (100 = 98.34 + 1.66 bonus); bonusPercent is the label shown on the card.
+  // In-app ad credit top-ups. `credits` is the total received (base + bonus);
+  // `baseCredits` and `bonusCredits` are explicit 2-decimal/quantized values;
+  // `id` is the stable pack identifier used by client checkout orders.
   adCreditPacks: [
-    { name: "100 Credits", credits: 100, bonusPercent: 2, priceINR: 160, isActive: true },
-    { name: "330 Credits", credits: 330, bonusPercent: 0, priceINR: 520, isActive: true },
-    { name: "660 Credits", credits: 660, bonusPercent: 0, priceINR: 1050, isActive: true },
-    { name: "1320 Credits", credits: 1320, bonusPercent: 0, priceINR: 2150, isActive: true },
-    { name: "3500 Credits", credits: 3500, bonusPercent: 6, priceINR: 5500, isActive: true },
-    { name: "7500 Credits", credits: 7500, bonusPercent: 14, priceINR: 11100, isActive: true },
+    { id: "pack_100", name: "100 Credits", credits: 100, baseCredits: 98.04, bonusCredits: 1.96, bonusPercent: 2, priceINR: 160, validityDays: 730, isActive: true },
+    { id: "pack_330", name: "330 Credits", credits: 330, baseCredits: 330, bonusCredits: 0, bonusPercent: 0, priceINR: 520, validityDays: 730, isActive: true },
+    { id: "pack_660", name: "660 Credits", credits: 660, baseCredits: 660, bonusCredits: 0, bonusPercent: 0, priceINR: 1050, validityDays: 730, isActive: true },
+    { id: "pack_1320", name: "1320 Credits", credits: 1320, baseCredits: 1320, bonusCredits: 0, bonusPercent: 0, priceINR: 2150, validityDays: 730, isActive: true },
+    { id: "pack_3500", name: "3500 Credits", credits: 3500, baseCredits: 3301.89, bonusCredits: 198.11, bonusPercent: 6, priceINR: 5500, validityDays: 730, isActive: true },
+    { id: "pack_7500", name: "7500 Credits", credits: 7500, baseCredits: 6578.95, bonusCredits: 921.05, bonusPercent: 14, priceINR: 11100, validityDays: 730, isActive: true },
   ],
   adCreditValidityDays: 730,
   // District Partner commission chart V4 (Trichy territory) — video unlocks
@@ -242,9 +251,12 @@ module.exports = {
   blockTasksOnEmulator: true,
   blockTasksOnRootedDevice: true,
   oneTaskerAccountPerDevice: true,
-  // Browsers expose none of the device signals above, so web tasking is off
-  // unless an admin turns it on.
-  allowWebTasking: false,
+  // Earning on the website (product requirement). Browsers expose none of
+  // the device signals above, so web eligibility is the verified sign-in,
+  // the server's datacenter/VPN IP check and the same account-level caps;
+  // rewarded ads stay app-only (taskSecurity.adRewardRefusal). Admins can
+  // switch web earning off here.
+  allowWebTasking: true,
   // Reward actions closer together than this are treated as automated.
   minSecondsBetweenRewardActions: 3,
 

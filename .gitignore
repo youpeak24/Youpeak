@@ -29,8 +29,11 @@ dist/
 *.aab
 *.ipa
 **/Pods/
-youpeak/.flutter-plugins
-youpeak/.flutter-plugins-dependencies
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+# Cloudflare / editor-local state
+.wrangler/
 
 # Media / test artifacts
 temp_test_video.mp4

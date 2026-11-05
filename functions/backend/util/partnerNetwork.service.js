@@ -425,8 +425,10 @@ async function updatePartner({ userId, agencyScopeId = null, fullName, mobileNum
       user.partnerCreatedByAgencyId &&
       (!agencyScopeId || String(user.partnerCreatedByAgencyId) === String(agencyScopeId));
     if (ownsAppAccount) {
-      const { encryptAppPassword } = require("../controllers/client/userFirestore.controller");
-      await db.update("users", userId, { password: encryptAppPassword(newPassword) });
+      // bcrypt only (F-19); login reads passwordHash first, so a legacy
+      // cryptr value written here would be ignored after migration.
+      const { hashPassword } = require("../controllers/client/userFirestore.controller");
+      await db.update("users", userId, { passwordHash: await hashPassword(newPassword), password: null });
       passwordChanged.app = true;
     }
   }

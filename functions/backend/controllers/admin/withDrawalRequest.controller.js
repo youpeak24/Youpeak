@@ -12,6 +12,19 @@ const admin = require("../../util/privateKey");
 
 //firestore connection (atomic claim + balance spend)
 const db = require("../../util/connection");
+const { payoutHoldReason } = require("../../util/payoutHold");
+const { settleWithdrawal, releaseWithdrawal, WithdrawalRefused } = require("../../util/withdrawalLedger");
+
+// Push notification to the requester; a delivery failure never fails the action.
+async function notifyUser(user, title, body) {
+  if (!user || !user.fcmToken) return;
+  try {
+    const adminInstance = await admin;
+    await adminInstance.messaging().send({ token: user.fcmToken, notification: { title, body } });
+  } catch (error) {
+    console.log("Error sending message:", error.message);
+  }
+}
 
 exports.index = async (req, res) => {
   try {
@@ -136,6 +149,27 @@ exports.acceptWithdrawalRequest = async (req, res) => {
       return res.status(200).json({ status: false, message: "you are blocked by admin!" });
     }
 
+    // A fraud hold / partner suspension that started after the request blocks approval too.
+    const hold = payoutHoldReason(user);
+    if (hold) return res.status(200).json({ status: false, code: "PAYOUT_ON_HOLD", message: hold });
+
+    // Requests made since Phase 2 hold their amount in reservedEarningAmount
+    // (util/withdrawalLedger.js): approval consumes the reservation in one
+    // transaction and can't run twice.
+    if (request.reserved === true) {
+      try {
+        await settleWithdrawal(request._id || request.id, {
+          adminId: req.admin ? String(req.admin._id || req.admin.id) : null,
+          payoutReference: req.query.payoutReference ? String(req.query.payoutReference).trim().slice(0, 64) : null,
+        });
+      } catch (e) {
+        if (e instanceof WithdrawalRefused) return res.status(200).json({ status: false, code: e.code, message: e.message });
+        throw e;
+      }
+      await notifyUser(user, "🔔 Withdrawal Request Accepted! 🔔", "Good news! Your withdrawal request has been accepted and is being processed. Thank you for using our service!");
+      return res.status(200).json({ status: true, message: "Withdrawal request accepted and paid to particular user.", request: { ...(request.toObject ? request.toObject() : request), status: 2 } });
+    }
+
     const requestAmount = parseFloat(request.requestAmount || 0);
     if (requestAmount <= 0) {
       console.log("🔴 VALIDATION: insufficient balance");
@@ -156,6 +190,16 @@ exports.acceptWithdrawalRequest = async (req, res) => {
       return res.status(200).json({ status: false, message: "Withdrawal request already accepted by the admin." });
     }
 
+    // Debit BEFORE marking the request paid, and refuse if it fails. This
+    // used to mark it paid, respond, and only then debit — on Vercel the work
+    // after the response can be cut off, and a failed debit was only logged,
+    // so the request showed as paid while the balance stayed withdrawable.
+    const spend = await db.spendBalance("users", String(user._id), "totalEarningAmount", requestAmount);
+    if (!spend.ok) {
+      await db.update("withDrawRequests", request._id || request.id, { accepted: false });
+      return res.status(200).json({ status: false, message: "User does not have enough balance to withdraw this amount." });
+    }
+
     const paymentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
     await db.update("withDrawRequests", request._id || request.id, { status: 2, paymentDate });
 
@@ -164,13 +208,6 @@ exports.acceptWithdrawalRequest = async (req, res) => {
       message: "Withdrawal request accepted and paid to particular user.",
       request: { ...(request.toObject ? request.toObject() : request), status: 2, paymentDate },
     });
-
-    // Atomic guarded debit — refuses (no write) rather than driving the
-    // balance negative if it's somehow short by the time this runs.
-    const spend = await db.spendBalance("users", String(user._id), "totalEarningAmount", requestAmount);
-    if (!spend.ok) {
-      console.error(`acceptWithdrawalRequest: totalEarningAmount debit failed for user ${user._id}, request ${request._id || request.id}: ${spend.reason}`);
-    }
 
     if (user.fcmToken && user.fcmToken !== null) {
       const payload = {
@@ -229,11 +266,20 @@ exports.declineWithdrawalRequest = async (req, res) => {
       return res.status(200).json({ status: false, message: "you are blocked by admin!" });
     }
 
-    res.status(200).json({
-      status: true,
-      message: "Withdrawal Request has been declined by the admin.",
-    });
+    // Reserved request (Phase 2): the reservation returns to the available
+    // balance exactly once, in the same transaction that marks it declined.
+    if (request.reserved === true) {
+      try {
+        await releaseWithdrawal(request._id || request.id, { reason: req.query.reason, adminId: req.admin ? String(req.admin._id || req.admin.id) : null });
+      } catch (e) {
+        if (e instanceof WithdrawalRefused) return res.status(200).json({ status: false, code: e.code, message: e.message });
+        throw e;
+      }
+      await notifyUser(user, "🔔 Withdrawal Request Declined! 🔔", "We're sorry, but your withdrawal request has been declined. Please contact support for more information.");
+      return res.status(200).json({ status: true, message: "Withdrawal Request has been declined by the admin." });
+    }
 
+    // Write before responding: work after the response can be cut off on Vercel.
     await WithdrawRequest.updateOne(
       { _id: request._id },
       {
@@ -245,26 +291,11 @@ exports.declineWithdrawalRequest = async (req, res) => {
       },
     );
 
-    if (user.fcmToken && user.fcmToken !== null) {
-      const payload = {
-        token: user?.fcmToken,
-        notification: {
-          title: "🔔 Withdrawal Request Declined! 🔔",
-          body: "We're sorry, but your withdrawal request has been declined. Please contact support for more information.",
-        },
-      };
-
-      const adminPromise = await admin;
-      adminPromise
-        .messaging()
-        .send(payload)
-        .then(async (response) => {
-          console.log("Successfully sent with response: ", response);
-        })
-        .catch((error) => {
-          console.log("Error sending message:      ", error);
-        });
-    }
+    await notifyUser(user, "🔔 Withdrawal Request Declined! 🔔", "We're sorry, but your withdrawal request has been declined. Please contact support for more information.");
+    return res.status(200).json({
+      status: true,
+      message: "Withdrawal Request has been declined by the admin.",
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });

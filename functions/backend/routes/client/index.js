@@ -43,6 +43,12 @@ const peakBoost = require("./peakBoost.route");
 const tasker = require("./tasker.route");
 const security = require("./security.route");
 const payout = require("./payout.route");
+const adCredits = require("./adCredits.route");
+
+// F-27: coin-locked videos' playback URLs only reach viewers who may play them.
+route.use(require("../../middleware/withholdLockedPlayback"));
+// P-01: credentials, push tokens, device ids and others' contact details never leave the client API.
+route.use(require("../../middleware/stripSensitiveFields"));
 
 //exports client's route.js
 route.use("/user", user);
@@ -85,5 +91,6 @@ route.use("/peakBoost", peakBoost);
 route.use("/tasker", tasker);
 route.use("/security", security);
 route.use("/payout", payout);
+route.use("/adCredits", adCredits);
 
 module.exports = route;

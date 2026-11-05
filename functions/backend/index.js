@@ -154,47 +154,10 @@ ${downloadLink ? `<a class="btn secondary" href="${esc(downloadLink)}">Download 
 </body></html>`);
 });
 
-// Cloudflare R2 Video Stream Proxy Route (with Range support for video players).
-// Legacy path for raw MP4 objects still in R2 — new uploads use Cloudflare Stream.
-const { GetObjectCommand } = require("@aws-sdk/client-s3");
-const cloudflareStorage = require("./util/cloudflareStorage.service");
+app.get(["/uploads/videos/:filename", "/uploads/shorts/:filename", "/uploads/bites/:filename", "/videos/:filename", "/video/stream/:filename"], require("./controllers/client/mediaDelivery.controller").redirect);
 
-app.get(["/uploads/videos/:filename", "/uploads/Videos/:filename", "/videos/:filename", "/video/stream/:filename"], async (req, res, next) => {
-  try {
-    if (!cloudflareStorage.isConfigured()) return next();
-    const filename = req.params.filename;
-    const r2Key = filename.includes("/") ? filename : `videos/${filename}`;
-    const range = req.headers.range;
-
-    const cmdInput = { Bucket: cloudflareStorage.r2BucketName, Key: r2Key };
-    if (range) cmdInput.Range = range;
-
-    const cmd = new GetObjectCommand(cmdInput);
-    const r2Res = await cloudflareStorage.getS3Client().send(cmd);
-
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
-
-    if (range && r2Res.ContentRange) {
-      res.status(206);
-      res.setHeader("Content-Range", r2Res.ContentRange);
-      res.setHeader("Accept-Ranges", "bytes");
-    } else {
-      res.status(200);
-    }
-
-    res.setHeader("Content-Type", r2Res.ContentType || "video/mp4");
-    if (r2Res.ContentLength) {
-      res.setHeader("Content-Length", r2Res.ContentLength);
-    }
-
-    r2Res.Body.pipe(res);
-  } catch (err) {
-    next();
-  }
-});
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Never advertise ephemeral serverless files as persistent application media.
+if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Global Express Error Handler to catch all unhandled errors and return JSON

@@ -13,6 +13,8 @@
 const fs = require("fs");
 const path = require("path");
 const admin = require("./firebaseAdmin");
+const { randomUUID } = require("crypto");
+const { getDownloadURL } = require("firebase-admin/storage");
 
 function bucketName() {
   const s = global.settingJSON || {};
@@ -36,7 +38,7 @@ function isConfigured() {
  * @returns {Promise<string|null>} public HTTPS URL
  */
 async function uploadImage(localPath, folder, fileName, contentType) {
-  if (!localPath || !fs.existsSync(localPath)) return null;
+  if (!localPath || !fs.existsSync(localPath)) throw new Error("Asset file is missing.");
   const bkt = admin.storage().bucket(bucketName());
   const safeFolder = String(folder || "misc").replace(/[^a-zA-Z0-9/_-]/g, "");
   const destination = `public/${safeFolder}/${fileName || path.basename(localPath)}`;
@@ -44,20 +46,27 @@ async function uploadImage(localPath, folder, fileName, contentType) {
   await bkt.upload(localPath, {
     destination,
     resumable: false,
-    metadata: { contentType: contentType || undefined, cacheControl: "public, max-age=31536000" },
+    metadata: { contentType: contentType || undefined, cacheControl: "public, max-age=31536000", metadata: { firebaseStorageDownloadTokens: randomUUID() } },
   });
-  try { await bkt.file(destination).makePublic(); } catch (e) { /* uniform bucket-level access */ }
-
-  return `https://storage.googleapis.com/${bucketName()}/${destination}`;
+  // Storage rules do not make a GCS URL public; token download URLs work
+  // without per-object ACLs, including uniform bucket-level access.
+  return getDownloadURL(bkt.file(destination));
 }
 
 async function deleteByUrl(url) {
   try {
-    if (!url || !url.includes("storage.googleapis.com")) return false;
+    if (!url) return false;
     const bkt = admin.storage().bucket(bucketName());
-    const prefix = `https://storage.googleapis.com/${bucketName()}/`;
-    if (!url.startsWith(prefix)) return false;
-    await bkt.file(decodeURIComponent(url.slice(prefix.length))).delete();
+    const parsed = new URL(url);
+    const prefix = `/v0/b/${bucketName()}/o/`;
+    let object;
+    if (parsed.hostname === "firebasestorage.googleapis.com" && parsed.pathname.startsWith(prefix)) {
+      object = decodeURIComponent(parsed.pathname.slice(prefix.length));
+    } else if (parsed.hostname === "storage.googleapis.com" && parsed.pathname.startsWith(`/${bucketName()}/`)) {
+      object = decodeURIComponent(parsed.pathname.slice(bucketName().length + 2));
+    } else return false;
+    if (!object.startsWith("public/")) return false;
+    await bkt.file(object).delete();
     return true;
   } catch (e) {
     console.error("imageStorage.deleteByUrl:", e.message);

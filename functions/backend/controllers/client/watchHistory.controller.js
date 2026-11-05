@@ -1,4 +1,6 @@
 const WatchHistory = require("../../models/watchHistory.model");
+const visibility = require("../../util/videoVisibility");
+const viewLedger = require("../../util/viewLedger.service");
 
 //import model
 const User = require("../../models/user.model");
@@ -11,189 +13,62 @@ const mongoose = require("../../util/mongooseShim");
 //generateHistoryUniqueId
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 
-//when user view video create video's watchHistory
+// Pay a video's creator for a viewer's newly verified watch time (WH-1).
+// Shared by createWatchHistory (older app versions) and the heartbeat.
+async function payCreatorForViewing({ userId, video }) {
+  const earningPerHour = Number((global.settingJSON || {}).earningPerHour) || 0;
+  const settled = await viewLedger.settleCreatorEarning({ userId, video, earningPerHour });
+  if (!settled.ok || !(settled.earnings > 0)) return settled;
+  const owner = await User.findOne({ _id: String(video.userId), isActive: true }).lean();
+  if (!owner) return { ...settled, ok: false, reason: "OWNER_NOT_FOUND" };
+  if (owner.isMonetization) {
+    await User.updateOne({ _id: owner._id }, { $inc: { totalWithdrawableAmount: settled.earnings, totalEarningAmount: settled.earnings } });
+    await WalletHistory.create({
+      userId: owner._id,
+      uniqueId: await generateHistoryUniqueId(),
+      type: 1,
+      amount: settled.earnings,
+      totalWatchTimeInHours: settled.seconds / 3600,
+      date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+    });
+  } else {
+    // Monetization off: the earning is held on the account, as before.
+    await User.updateOne({ _id: owner._id }, { $inc: { totalWithdrawableAmount: settled.earnings } });
+  }
+  return settled;
+}
+exports.payCreatorForViewing = payCreatorForViewing;
+
+// Older app versions call this when playback pauses after 40% of a video.
+// It used to credit the creator again on every call from the playhead the
+// client reported, and answered before anything was saved (WH-1). Earnings
+// now come only from the server's verified viewing record (viewLedger), each
+// verified second once, saved before this answers; the client's numbers are
+// ignored.
 exports.createWatchHistory = async (req, res) => {
   try {
-    console.log("📥 createWatchHistory API CALLED");
-    console.log("📩 Query Params:", req.query);
-
-    const { userId, videoId, videoUserId, videoChannelId, currentWatchTime } = req.query || {};
-
-    if (!userId || !videoId || !videoUserId || !videoChannelId || !currentWatchTime) {
-      console.log("❌ Missing required params");
+    const { userId, videoId } = req.query || {};
+    if (!userId || !videoId) {
       return res.status(200).json({ status: false, message: "Invalid details." });
     }
 
-    if (!settingJSON?.earningPerHour) {
-      console.log("❌ earningPerHour missing in settings");
-      return res.status(200).json({
-        status: false,
-        message: "earningPerHour not configured!",
-      });
-    }
-
-    const watchTime = Number(currentWatchTime);
-    console.log("⏱ Incoming Watch Time:", watchTime);
-
-    const [viewer, owner, video, existingHistory] = await Promise.all([
+    const [viewer, video] = await Promise.all([
       User.findOne({ _id: userId, isActive: true }).lean(),
-      User.findOne({ _id: videoUserId, isActive: true }).lean(),
-      Video.findOne({
-        _id: videoId,
-        userId: videoUserId,
-        channelId: videoChannelId,
-        isActive: true,
-      }).lean(),
-      WatchHistory.findOne({ userId, videoId }),
+      Video.findOne({ _id: videoId, isActive: true }).lean(),
     ]);
-
-    if (!viewer) {
-      console.log("❌ Viewer not found");
-      return res.status(200).json({ status: false, message: "User not found!" });
-    }
-
-    if (viewer.isBlock) {
-      console.log("🚫 Viewer is blocked");
-      return res.status(200).json({ status: false, message: "You are blocked!" });
-    }
-
-    if (!owner || !video) {
-      console.log("❌ Video or owner not found");
+    if (!viewer) return res.status(200).json({ status: false, message: "User not found!" });
+    if (viewer.isBlock) return res.status(200).json({ status: false, message: "You are blocked!" });
+    if (!video || !visibility.canView(video, userId)) {
       return res.status(200).json({ status: false, message: "Video or owner not found!" });
     }
 
-    const videoDuration = Number(video.videoTime);
-    console.log("🎬 Video Duration:", videoDuration);
-
-    if (watchTime > videoDuration) {
-      console.log("❌ Watch time greater than allowed duration");
-      return res.status(200).json({
-        status: false,
-        message: "Invalid watch time.",
-      });
-    }
-
-    const currentStoredTime = existingHistory?.totalWatchTime || 0;
-    console.log("📊 Current Stored Watch Time:", currentStoredTime);
-
-    if (currentStoredTime >= videoDuration) {
-      console.log("⛔ Watch already completed");
-      return res.status(200).json({
-        status: false,
-        message: "Watch already completed.",
-      });
-    }
-
-    // Early response
-    res.status(200).json({
+    const settled = await payCreatorForViewing({ userId, video });
+    return res.status(200).json({
       status: true,
       message: "Watch history processed.",
+      credited: settled.ok ? settled.earnings : 0,
+      reason: settled.ok ? undefined : settled.reason,
     });
-
-    const newTime = Math.min(watchTime, videoDuration);
-    console.log("🆕 New Watch Time (after limit):", newTime);
-
-    if (newTime <= currentStoredTime) {
-      console.log("🔁 Duplicate or lower watch time → Ignored");
-      return;
-    }
-
-    const incrementTime = newTime - currentStoredTime;
-    console.log("➕ Increment Time:", incrementTime);
-
-    if (userId.toString() === videoUserId.toString()) {
-      console.log("⚠️ Self watch detected → No earning → No view");
-      return;
-    }
-
-    const durationLimit = videoDuration * 0.4;
-    const viewThreshold = durationLimit;
-
-    console.log("🎯 View Threshold:", viewThreshold);
-
-    if (newTime < viewThreshold) {
-      console.log("⛔ Not eligible for earning (below threshold)");
-      return;
-    }
-
-    console.log("✅ Eligible for earning");
-
-    const earningPerHour = settingJSON.earningPerHour;
-    const watchTimeInHours = incrementTime / 3600;
-
-    let totalEarnings = Number((watchTimeInHours * earningPerHour).toFixed(4));
-    console.log("💰 Raw Earnings:", totalEarnings);
-
-    const maxPossibleEarning = Number(((videoDuration / 3600) * earningPerHour).toFixed(4));
-    const alreadyEarned = existingHistory?.totalWithdrawableAmount || 0;
-
-    console.log("💵 Already Earned:", alreadyEarned);
-    console.log("💵 Max Possible:", maxPossibleEarning);
-
-    if (alreadyEarned >= maxPossibleEarning) {
-      console.log("⛔ Max earning reached");
-      totalEarnings = 0;
-    } else if (alreadyEarned + totalEarnings > maxPossibleEarning) {
-      totalEarnings = maxPossibleEarning - alreadyEarned;
-      console.log("⚖ Adjusted earning to max cap:", totalEarnings);
-    }
-
-    console.log("💸 Final Earnings:", totalEarnings);
-
-    const updates = [];
-
-    if (!owner.isMonetization && totalEarnings > 0) {
-      console.log("🔴 Monetization OFF → Holding earning");
-      updates.push(User.updateOne({ _id: videoUserId }, { $inc: { totalWithdrawableAmount: totalEarnings } }));
-    }
-
-    if (owner.isMonetization && totalEarnings > 0) {
-      console.log("🟢 Monetization ON → Wallet entry");
-
-      const uniqueId = await generateHistoryUniqueId();
-
-      updates.push(
-        User.updateOne(
-          { _id: videoUserId },
-          {
-            $inc: {
-              totalWithdrawableAmount: totalEarnings,
-              totalEarningAmount: totalEarnings,
-            },
-          },
-        ),
-        WalletHistory.create({
-          userId: videoUserId,
-          uniqueId,
-          type: 1,
-          amount: totalEarnings,
-          totalWatchTimeInHours: watchTimeInHours,
-          date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-        }),
-      );
-    }
-
-    updates.push(
-      WatchHistory.updateOne(
-        { userId, videoId },
-        {
-          $set: {
-            videoChannelId: video.channelId,
-            videoUserId: video.userId,
-            totalWatchTime: newTime,
-            videoDuration,
-          },
-          $inc: {
-            totalWithdrawableAmount: totalEarnings,
-          },
-        },
-        { upsert: true },
-      ),
-    );
-
-    await Promise.all(updates);
-
-    console.log("✅ Database updated successfully");
   } catch (error) {
     console.error("❌ createWatchHistory Error:", error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
@@ -230,6 +105,8 @@ exports.getWatchHistory = async (req, res) => {
                   $expr: { $eq: ["$_id", "$$videoId"] },
                 },
               },
+              // F-12: a video made private / held / taken down since it was watched drops out.
+              { $match: visibility.savedItemMatch() },
               {
                 $project: {
                   _id: 1,

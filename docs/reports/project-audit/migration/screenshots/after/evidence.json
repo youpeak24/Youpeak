@@ -1,0 +1,559 @@
+{
+ "label": "after",
+ "pages": {
+  "02-library": {
+   "nav": "Library",
+   "sizes": {
+    "390": {
+     "labels": [
+      "History\nView All",
+      "Your Videos",
+      "Playlists",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "History\nView All",
+      "Your Videos",
+      "Playlists",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "History",
+      "View All",
+      "Videos you watch will appear here.",
+      "Your Videos",
+      "Playlists",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "History",
+      "View All",
+      "Videos you watch will appear here.",
+      "Your Videos",
+      "Playlists",
+      "New Playlist",
+      "Watch Later",
+      "My Playlist"
+     ],
+     "videos": []
+    }
+   }
+  },
+  "03-bites": {
+   "nav": "Bites",
+   "sizes": {
+    "390": {
+     "labels": [
+      "12\n0\n0\n1\nLocal test Bite B (portrait 9:16)\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)",
+      "Subscribe",
+      "9.85k\n80\n0\n2.10k\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-portrait-b.webm",
+       "paused": false,
+       "muted": false,
+       "t": 3.85,
+       "vw": 360,
+       "vh": 640,
+       "fit": "contain",
+       "box": [
+        -24,
+        0,
+        439,
+        780
+       ]
+      }
+     ]
+    },
+    "768": {
+     "labels": [
+      "12\n0\n0\n1\nLocal test Bite B (portrait 9:16)\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)",
+      "Subscribe",
+      "9.85k\n80\n0\n2.10k\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts,#CodingHacks,#MobileDev\nSuper Admin (Master)",
+      "Home",
+      "Bites",
+      "Subscription",
+      "Library"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-portrait-b.webm",
+       "paused": false,
+       "muted": false,
+       "t": 1.74,
+       "vw": 360,
+       "vh": 640,
+       "fit": "contain",
+       "box": [
+        0,
+        -210,
+        768,
+        1365
+       ]
+      }
+     ]
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "Epic Sunset Live Stream Recap 🌅✨\n#Shorts #Nature #4K\n6.42k\n19\n0\n1.43k",
+      "Pause",
+      "Mute",
+      "Subscribe",
+      "Like",
+      "Dislike",
+      "Comments",
+      "Share",
+      "More Option",
+      "Super Admin (Master)\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts #CodingHacks #MobileDev\n9.85k\n80\n0\n2.10k"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-landscape.webm",
+       "paused": false,
+       "muted": false,
+       "t": 0.7,
+       "vw": 640,
+       "vh": 360,
+       "fit": "contain",
+       "box": [
+        555,
+        270,
+        405,
+        228
+       ]
+      }
+     ]
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "Epic Sunset Live Stream Recap 🌅✨\n#Shorts #Nature #4K\n6.42k\n19\n0\n1.43k",
+      "Pause",
+      "Mute",
+      "Subscribe",
+      "Like",
+      "Dislike",
+      "Comments",
+      "Share",
+      "More Option",
+      "Super Admin (Master)\nFast Mobile Dev Hacks You Need to Know! 🚀\n#Shorts #CodingHacks #MobileDev\n9.85k\n80\n0\n2.10k"
+     ],
+     "videos": [
+      {
+       "src": "fixture-bite-landscape.webm",
+       "paused": false,
+       "muted": false,
+       "t": 4.57,
+       "vw": 640,
+       "vh": 360,
+       "fit": "contain",
+       "box": [
+        755,
+        383,
+        560,
+        315
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "04-search": {
+   "nav": "Search",
+   "sizes": {
+    "390": {
+     "labels": [
+      "Search",
+      "Search History",
+      "Clear All",
+      "Data not found !!"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "Search",
+      "Search History",
+      "Clear All",
+      "Data not found !!"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "Search History",
+      "Clear All",
+      "Data not found !!"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "Search History",
+      "Clear All",
+      "Data not found !!"
+     ],
+     "videos": []
+    }
+   }
+  },
+  "05-notifications": {
+   "nav": "Notifications",
+   "sizes": {
+    "390": {
+     "labels": [
+      "No notifications yet."
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "No notifications yet."
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "No notifications yet."
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "No notifications yet."
+     ],
+     "videos": []
+    }
+   }
+  },
+  "06-profile": {
+   "nav": "Profile",
+   "sizes": {
+    "390": {
+     "labels": [
+      "0",
+      "Local Test Viewer",
+      "viewer@youpeak.test",
+      "My Balance : 0$",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "0",
+      "Local Test Viewer",
+      "viewer@youpeak.test",
+      "My Balance : 0$",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "0",
+      "Local Test Viewer",
+      "viewer@youpeak.test",
+      "My Balance : 0$",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "0",
+      "Local Test Viewer",
+      "viewer@youpeak.test",
+      "My Balance : 0$",
+      "Turn on Incognito",
+      "Create Your Channel",
+      "Manage Subscription",
+      "Get YouPeak Premium\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Buy Coin Subscription\nEnjoy watching Full-HD videos, without restrictions and without ads",
+      "Earn Rewards",
+      "My Wallet",
+      "Time Watched",
+      "Monetization",
+      "Creator VIP Pass",
+      "Promote Video",
+      "Settings",
+      "Help Center",
+      "Logout",
+      "Delete Account"
+     ],
+     "videos": []
+    }
+   }
+  },
+  "07-tasker": {
+   "nav": "Tasker",
+   "sizes": {
+    "390": {
+     "labels": [
+      "Back",
+      "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00",
+      "Today's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left",
+      "Tasks and rewards are available in the YouPeak mobile app only.",
+      "Check again",
+      "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+      "0",
+      "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks"
+     ],
+     "videos": []
+    },
+    "768": {
+     "labels": [
+      "Back",
+      "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00",
+      "Today's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left",
+      "Tasks and rewards are available in the YouPeak mobile app only.",
+      "Check again",
+      "Lifetime Watch Hours\n0.0 / 50 hrs\nProgress to next level\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up. 0 percent",
+      "0",
+      "Daily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks"
+     ],
+     "videos": []
+    },
+    "1366": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "Back",
+      "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left\nTasks and rewards are available in the YouPeak mobile app only.\nLifetime Watch Hours\n0.0 / 50 hrs\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up.\nDaily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "0",
+      "Check again",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks",
+      "Progress to next level 0 percent"
+     ],
+     "videos": []
+    },
+    "1920": {
+     "labels": [
+      "Home",
+      "YouPeak",
+      "Create",
+      "Bites",
+      "Subscription",
+      "Library",
+      "Search",
+      "Notifications",
+      "Tasker",
+      "Profile",
+      "Back",
+      "★ FREE\nFree Tasker\nNext: Level 1 Tasker\n0\n₹0.00\nToday's Cap\n1,000 coins\n+500 boost included\nToday's Earned\n0 coins\n₹0.00 · 1,000 left\nTasks and rewards are available in the YouPeak mobile app only.\nLifetime Watch Hours\n0.0 / 50 hrs\n0.0% to Level 1 Tasker — free at 50 hrs. Hours never reset when you level up.\nDaily Action Limits\nVideo Ads\n0/20\nLikes\n0/5\nComments\n0/2\nWatch Time\n+500 bonus\n0/120 min",
+      "0",
+      "Check again",
+      "Withdraw",
+      "Starter Pass",
+      "Watch ads & do tasks",
+      "Progress to next level 0 percent"
+     ],
+     "videos": []
+    }
+   }
+  }
+ },
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+  "OPTIONS https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA3LefltA4wG0htRi1mJM8rGYIjdNoeqjM"
+ ],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT"
+ ],
+ "failed": [
+  "GET https://accounts.google.com/gsi/client net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET http://127.0.0.1:8095/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects%2Fyoupeak-9ff65%2Fdatabases%2F(default)&RID=rpc&SID=hm7U8Fqbul6JU41zM net::ERR_ABORTED",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "GET http://127.0.0.1:5056/fixture-bite-portrait-a.webm net::ERR_ABORTED"
+ ],
+ "loginLandedOn": []
+}

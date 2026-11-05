@@ -16,9 +16,37 @@ const LikeHistoryOfVideoComment = require("../../models/likeHistoryOfVideoCommen
 const PlayList = require("../../models/playList.model");
 const VideoUnlock = require("../../models/videoUnlock.model");
 const PlaybackSession = require("../../models/playbackSession.model");
+const visibility = require("../../util/videoVisibility");
+const uploadGrants = require("../../util/uploadGrants");
+
+// Clean up a file the caller just uploaded, after a failed publish/update.
+// Only the caller's OWN, still-unpublished upload is deleted: the video file
+// by its upload grant, an image by its upload record (app_assets/<file>
+// .uploadedBy). These handlers used to delete whatever videoUrl/videoImage the
+// request named, so any signed-in user could delete another user's media (F-28).
+async function discardOwnUpload(req, url, remove = deleteMediaByUrl) {
+  try {
+    if (!url || !req.appUserId) return;
+    const media = require("../../util/mediaPolicy").videoLocation(url, require("../../util/cloudflareStorage.service")._cfg());
+    if (media) {
+      const ref = media.storageProvider === "stream" ? media.streamUid : uploadGrants.r2KeyFromUrl(media.videoUrl);
+      const owned = await uploadGrants.verifyOwnedUpload({ provider: media.storageProvider, ref, ownerId: req.appUserId });
+      if (owned.ok && owned.grant && !owned.grant.usedByVideoId) await remove(url);
+      return;
+    }
+    const fileName = decodeURIComponent(String(url).split("?")[0].split("/").pop() || "").split("/").pop();
+    const record = fileName ? await db.findById("app_assets", fileName).catch(() => null) : null;
+    if (record && String(record.uploadedBy || "") === String(req.appUserId)) await remove(url);
+  } catch (e) {
+    console.error("discardOwnUpload:", e.message);
+  }
+}
+
 
 //deleteFromStorage
 const { deleteFromStorage } = require("../../util/storageHelper");
+// R2 and Firebase Storage deletes (storageHelper only knows the legacy hosts).
+const { deleteMediaByUrl } = require("../../util/mediaCleanup");
 
 //private key
 const admin = require("../../util/privateKey");
@@ -43,6 +71,11 @@ const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId"
 
 //reward engine (daily caps + coin crediting)
 const rewardEngine = require("../../util/rewardEngine");
+const engagement = require("../../util/engagement.service");
+const scheduledPublish = require("../../util/scheduledPublish");
+
+// User search text matched literally (never compiled as a regular expression).
+const escapeRegex = (s) => String(s || "").trim().slice(0, 100).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 //firestore connection (direct doc updates)
 const db = require("../../util/connection");
@@ -79,7 +112,7 @@ exports.unlockPrivateVideo = async (req, res) => {
         videoPrivacyType: 2, // private
         isActive: true,
       })
-        .select("_id userId")
+        .select("_id userId videoUrl visibilityType scheduleType moderationStatus isCopyrightFlagged isActive")
         .lean(),
     ]);
 
@@ -100,6 +133,12 @@ exports.unlockPrivateVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "You cannot unlock your own private video." });
     }
 
+    // Only a video this viewer could otherwise open can be bought (not
+    // private/held/rejected/copyright-flagged — util/videoVisibility.js).
+    if (!visibility.canView(video, userId)) {
+      return res.status(200).json({ status: false, message: "Private video not found." });
+    }
+
     const [alreadyUnlocked, videoOwner] = await Promise.all([
       VideoUnlock.exists({
         userId: userObjectId,
@@ -117,6 +156,7 @@ exports.unlockPrivateVideo = async (req, res) => {
         status: false,
         message: "Video already unlocked.",
         isUnlocked: true,
+        videoUrl: video.videoUrl || null,
       });
     }
 
@@ -131,53 +171,64 @@ exports.unlockPrivateVideo = async (req, res) => {
     // double-tap, or a script firing them in parallel) could both read the
     // same starting balance and both pass a "balance >= cost" check before
     // either write lands, giving the buyer two unlocks for the price of one.
-    const spend = await db.spendBalance("users", userId, "coin", unlockCost);
-    if (!spend.ok) {
+    // Phase 2: the unlock record (deterministic id), the buyer's debit, the
+    // buyer's history row and the revenue settlement (creator/referrer credits,
+    // ledger row with the platform share, District Partner commission) commit
+    // in ONE transaction. Two parallel unlocks can't both charge (the record's
+    // create() conflicts), and a failure can't leave the buyer charged with no
+    // unlock or the creator unpaid. A copyright-flagged / under-review video
+    // earns nothing for the creator: the platform keeps the full amount, on the ledger.
+    const unlockId = `unlock_${String(userId)}_${String(videoId)}`;
+    const monetizable = moderation.isMonetizable(video);
+    const plan = await revenueSplit.planRevenue({
+      sourceType: "videoUnlock",
+      grossCoins: unlockCost,
+      creatorId: monetizable ? String(video.userId) : null,
+      buyerId: String(userId),
+      referrerOf: "creator",
+      videoId: String(videoId),
+      agencyContext: { state: user.state || "", district: user.district || "", userId: String(userId) },
+      ledgerId: `rev_${unlockId}`,
+      meta: { unlockId, demonetised: !monetizable },
+    });
+    const historyUniqueId = await generateHistoryUniqueId();
+    const fsdb = db.getDb();
+    const unlockRef = fsdb.collection(db.normalizeCollectionName("VideoUnlock")).doc(unlockId);
+    const buyerRef = fsdb.collection("users").doc(String(userId));
+    let outcome;
+    try {
+      outcome = await db.withTimeout(fsdb.runTransaction(async (tx) => {
+        const [unlockSnap, buyerSnap] = await Promise.all([tx.get(unlockRef), tx.get(buyerRef)]);
+        if (unlockSnap.exists) return "ALREADY";
+        const balance = Number(buyerSnap.exists ? buyerSnap.data().coin : 0) || 0;
+        if (balance < unlockCost) return "INSUFFICIENT";
+        const now = new Date().toISOString();
+        tx.update(buyerRef, { coin: balance - unlockCost, updatedAt: now });
+        tx.create(unlockRef, { _id: unlockId, id: unlockId, userId: String(userId), videoId: String(videoId), videoOwnerId: String(video.userId), unlockCost, unlockedAt: now, createdAt: now });
+        const hid = `${unlockId}_paid`;
+        tx.create(fsdb.collection("histories").doc(hid), { _id: hid, id: hid, otherUserId: String(userId), videoId: String(videoId), uniqueId: historyUniqueId, coin: -unlockCost, type: 9, date: now, createdAt: now });
+        revenueSplit.applyRevenuePlan(tx, plan);
+        return "OK";
+      }));
+    } catch (err) {
+      if (err.code === 6 || /ALREADY_EXISTS/i.test(err.message || "")) outcome = "ALREADY";
+      else throw err;
+    }
+    if (outcome === "ALREADY") {
+      return res.status(200).json({ status: false, message: "Video already unlocked.", isUnlocked: true, videoUrl: video.videoUrl || null });
+    }
+    if (outcome === "INSUFFICIENT") {
       return res.status(200).json({ status: false, message: "Insufficient coin balance." });
     }
-
-    // 1. record the unlock (balance is already debited above)
-    await VideoUnlock.create({
-      userId: String(userId),
-      videoId: String(videoId),
-      videoOwnerId: String(video.userId),
-      unlockCost,
-      unlockedAt: new Date().toISOString(),
-    });
-    await History.create({
-      otherUserId: String(userId),
-      videoId: String(videoId),
-      uniqueId: await generateHistoryUniqueId(),
-      coin: -unlockCost,
-      type: 9,
-      date: new Date().toISOString(),
-    });
-
-    // 2. split the unlock revenue — but a copyright-flagged / under-review video
-    // earns nothing for the creator; the platform holds the full amount.
-    let settlement;
-    if (moderation.isMonetizable(video)) {
-      settlement = await revenueSplit.settleRevenue({
-        sourceType: "videoUnlock",
-        grossCoins: unlockCost,
-        creatorId: String(video.userId),
-        buyerId: String(userId),
-        referrerOf: "creator",
-        videoId: String(videoId),
-        agencyContext: {
-          state: user.state || "",
-          district: user.district || "",
-          userId: String(userId),
-        },
-      });
-    } else {
-      settlement = { creatorCoins: 0, referrerCoins: 0, platformCoins: unlockCost, demonetised: true };
-    }
+    const settlement = { creatorCoins: plan.creatorCoins, referrerCoins: plan.referrerCoins, platformCoins: plan.platformCoins };
 
     res.status(200).json({
       status: true,
       message: "Video unlocked successfully.",
       isUnlocked: true,
+      // Feeds withhold a locked video's URL (middleware/withholdLockedPlayback.js);
+      // the buyer gets it here.
+      videoUrl: video.videoUrl || null,
       revenueSplit: {
         creatorCoins: settlement.creatorCoins,
         referrerCoins: settlement.referrerCoins,
@@ -231,18 +282,28 @@ exports.unlockPrivateVideo = async (req, res) => {
 //channel name verify when upload viodeo or shorts
 exports.verifyChannelname = async (req, res) => {
   try {
-    if (!req.body.fullName) {
-      return res.status(200).json({ status: false, message: "Invalid input. Please provide valid details!" });
+    const channelService = require("../../util/channel.service");
+    // Query string first: browsers drop the body of a GET request.
+    const name = channelService.normalizeName(req.query?.fullName ?? req.body?.fullName);
+    if (!name) {
+      return res.status(200).json({ status: false, code: "CHANNEL_NAME_REQUIRED", message: "Enter a channel name." });
+    }
+    if (name.length < channelService.NAME_MIN || name.length > channelService.NAME_MAX) {
+      return res.status(200).json({ status: false, code: "CHANNEL_NAME_INVALID", message: "Enter a channel name between " + channelService.NAME_MIN + " and " + channelService.NAME_MAX + " characters." });
     }
 
-    //Check if the new channelName is different from the current one
-    const isDuplicateFullName = await User.findOne({ fullName: req.body.fullName.trim() });
-
-    if (isDuplicateFullName) {
-      return res.status(200).json({ status: false, message: "This channel name is already taken. Please try another one." });
-    } else {
-      return res.status(200).json({ status: true, message: "This channel name is available. You may proceed to use it." });
+    // A name the caller already owns (their own profile name, or the name they
+    // reserved) is available to them.
+    const callerId = req.appUserId ? String(req.appUserId) : "";
+    const [sameName, reserved] = await Promise.all([
+      db.find("users", { fullName: name }),
+      db.findById("channelNames", channelService.nameKey(name)).catch(() => null),
+    ]);
+    const takenByOther = sameName.some((u) => String(u._id || u.id) !== callerId) || (reserved && String(reserved.ownerId) !== callerId);
+    if (takenByOther) {
+      return res.status(200).json({ status: false, code: "CHANNEL_NAME_TAKEN", message: "This channel name is already taken. Please try another one." });
     }
+    return res.status(200).json({ status: true, message: "This channel name is available. You may proceed to use it." });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });
@@ -251,7 +312,56 @@ exports.verifyChannelname = async (req, res) => {
 
 //upload (normal videos or shorts) by the user
 exports.createVideo = async (req, res) => {
+  // Held while this request publishes its upload; given back if it fails.
+  let heldClaim = null;
+  let heldRef = null;
+  let heldProvider = null;
   try {
+    const mediaPolicy = require("../../util/mediaPolicy");
+    const media = mediaPolicy.videoLocation(req.body?.videoUrl, require("../../util/cloudflareStorage.service")._cfg());
+    if (!media) return res.status(400).json({ status: false, code: "INVALID_VIDEO_PROVIDER", message: "Upload videos and bites to the configured Cloudflare storage first." });
+    // A Cloudflare URL isn't proof of ownership: the caller must hold the
+    // unused, unexpired grant issued when they uploaded it (util/uploadGrants.js),
+    // and an R2 object must really exist.
+    const mediaRef = media.storageProvider === "stream" ? media.streamUid : uploadGrants.r2KeyFromUrl(media.videoUrl);
+
+    // Publishing is idempotent: a retry after a lost reply (or a second tap)
+    // for an upload this caller already published gets that video back, not
+    // an error and not a duplicate.
+    const publishedAlready = async () => {
+      const existing = await uploadGrants.publishedVideoFor({ provider: media.storageProvider, ref: mediaRef, ownerId: req.appUserId });
+      if (!existing) return false;
+      res.status(200).json({ status: true, alreadyPublished: true, message: "This video is already published.", video: existing, underReview: existing.moderationStatus === "pending_review" });
+      return true;
+    };
+    if (await publishedAlready()) return;
+
+    const ownership = await uploadGrants.verifyOwnedUpload({ provider: media.storageProvider, ref: mediaRef, ownerId: req.appUserId });
+    if (!ownership.ok) {
+      // A parallel request for the same upload may have finished in the meantime.
+      if (ownership.code === "UPLOAD_ALREADY_USED" && (await publishedAlready())) return;
+      return res.status(403).json({ status: false, code: ownership.code, message: ownership.message });
+    }
+    if (media.storageProvider === "r2") {
+      const stored = await uploadGrants.r2ObjectInfo(mediaRef);
+      if (stored && (!stored.exists || stored.size <= 0)) {
+        return res.status(409).json({ status: false, code: "UPLOAD_INCOMPLETE", message: "The upload hasn't finished. Please upload the video again." });
+      }
+      if (stored && stored.size > mediaPolicy.MAX_VIDEO_BYTES) {
+        await discardOwnUpload(req, req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoImage);
+        return res.status(413).json({ status: false, code: "UPLOAD_TOO_LARGE", message: "This video is larger than the allowed size." });
+      }
+    }
+    // Two requests racing on one upload: only one may create the video.
+    const claim = await uploadGrants.claimGrant({ provider: media.storageProvider, ref: mediaRef, ownerId: req.appUserId });
+    if (!claim.ok) {
+      if (claim.code === "UPLOAD_ALREADY_USED" && (await publishedAlready())) return;
+      return res.status(claim.code === "UPLOAD_IN_PROGRESS" ? 409 : 403).json({ status: false, code: claim.code, message: claim.message });
+    }
+    heldClaim = claim.claimId;
+    heldRef = mediaRef;
+    heldProvider = media.storageProvider;
     if (
       !req.body.title ||
       //!req.body.description ||
@@ -272,36 +382,52 @@ exports.createVideo = async (req, res) => {
       !req.body.videoImage
     ) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "Oops ! Invalid details!" });
     }
 
-    if (req.body.scheduleType == 1 && !req.body.scheduleTime) {
-      if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
-      }
+    // A scheduled publish needs a valid future time (with its timezone); it
+    // stays owner-only until then (util/scheduledPublish).
+    let scheduledAt = null;
+    if (req.body.scheduleType == 1) {
+      const parsed = scheduledPublish.parseScheduleTime(req.body.scheduleTime);
+      if (!parsed.ok) {
+        if (req.body.videoImage) {
+          await discardOwnUpload(req, req.body.videoImage);
+        }
 
-      if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
-      }
+        if (req.body.videoUrl) {
+          await discardOwnUpload(req, req.body.videoUrl);
+        }
 
-      return res.status(200).json({ status: false, message: "scheduleTime must be required!" });
+        return res.status(200).json({ status: false, code: parsed.code, message: parsed.message });
+      }
+      scheduledAt = parsed.iso;
+    }
+    // Upload form choices are stored as numbers and must be in range.
+    for (const [field, max] of [["visibilityType", 3], ["audienceType", 3], ["commentType", 4], ["videoPrivacyType", 2]]) {
+      const n = Number(req.body[field]);
+      if (!Number.isInteger(n) || n < 1 || n > max) {
+        if (req.body.videoImage) await discardOwnUpload(req, req.body.videoImage);
+        if (req.body.videoUrl) await discardOwnUpload(req, req.body.videoUrl);
+        return res.status(200).json({ status: false, code: "INVALID_OPTION", message: `${field} is not a valid choice.` });
+      }
     }
 
     if (req.body.videoType == 2) {
       if (settingJSON.durationOfShorts < parseInt(req.body.videoTime)) {
         if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
+          await discardOwnUpload(req, req.body.videoImage);
         }
 
         if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
+          await discardOwnUpload(req, req.body.videoUrl);
         }
         return res.status(200).json({ status: false, message: "your duration of Shorts greater than decided by admin!" });
       }
@@ -311,11 +437,11 @@ exports.createVideo = async (req, res) => {
       var soundList = await SoundList.findById(req?.body?.soundListId);
       if (!soundList) {
         if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
+          await discardOwnUpload(req, req.body.videoImage);
         }
 
         if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
+          await discardOwnUpload(req, req.body.videoUrl);
         }
 
         return res.status(200).json({ status: false, message: "soundList does not found!" });
@@ -333,22 +459,22 @@ exports.createVideo = async (req, res) => {
 
     if (!user || user.isAddByAdmin === true) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
       return res.status(200).json({ status: false, message: "user does not found!" });
     }
 
     if (user.isBlock) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "you are blocked by admin!" });
@@ -364,11 +490,11 @@ exports.createVideo = async (req, res) => {
         const isDuplicateFullName = await User.findOne({ fullName: req.body.fullName.trim() });
         if (isDuplicateFullName) {
           if (req.body.videoImage) {
-            await deleteFromStorage(req.body.videoImage);
+            await discardOwnUpload(req, req.body.videoImage);
           }
 
           if (req.body.videoUrl) {
-            await deleteFromStorage(req.body.videoUrl);
+            await discardOwnUpload(req, req.body.videoUrl);
           }
 
           return res.status(200).json({ status: false, message: "The provided channelName is already in use. Please choose a different one." });
@@ -377,13 +503,18 @@ exports.createVideo = async (req, res) => {
         user.fullName = req.body.fullName ? req.body.fullName.trim() : user.fullName; //channelName
       }
 
-      user.channelId = uuid.v4();
+      // The channel is the owner's own profile (channelId === userId): the channel
+      // page, subscriptions and monetisation all look the channel up by that id.
+      user.channelId = String(user._id || user.id);
       user.isChannel = true;
       user.channelType = parseInt(req?.body?.channelType) || 1;
       user.subscriptionCost = 10;
       user.videoUnlockCost = 10;
 
       user.descriptionOfChannel = req.body.descriptionOfChannel ? req.body.descriptionOfChannel : user.descriptionOfChannel;
+      // Most accounts never had this object (only a channel setup writes it): an
+      // unguarded write here made the first upload of such an account a 500.
+      if (!user.socialMediaLinks || typeof user.socialMediaLinks !== "object") user.socialMediaLinks = {};
       user.socialMediaLinks.instagramLink = req.body.instagramLink ? req.body.instagramLink : user.socialMediaLinks.instagramLink;
       user.socialMediaLinks.facebookLink = req.body.facebookLink ? req.body.facebookLink : user.socialMediaLinks.facebookLink;
       user.socialMediaLinks.twitterLink = req.body.twitterLink ? req.body.twitterLink : user.socialMediaLinks.twitterLink;
@@ -399,26 +530,26 @@ exports.createVideo = async (req, res) => {
       channel = await User.findOne({ channelId: user.channelId });
       if (!channel) {
         if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
+          await discardOwnUpload(req, req.body.videoImage);
         }
 
         if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
+          await discardOwnUpload(req, req.body.videoUrl);
         }
 
-        return res.status(200).json({ status: false, message: "Channel does not found!" });
+        return res.status(404).json({ status: false, code: "CHANNEL_NOT_FOUND", message: "Channel does not found!" });
       }
 
       if (user.channelId !== req.body.channelId) {
         if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
+          await discardOwnUpload(req, req.body.videoImage);
         }
 
         if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
+          await discardOwnUpload(req, req.body.videoUrl);
         }
 
-        return res.status(200).json({ status: false, message: "Video has been uploaded only by own channelId." });
+        return res.status(403).json({ status: false, code: "CHANNEL_NOT_OWNED", message: "Video has been uploaded only by own channelId." });
       }
 
       video.channelId = channel.channelId;
@@ -428,16 +559,16 @@ exports.createVideo = async (req, res) => {
       video.scheduleType = req?.body?.scheduleType;
 
       if (req?.body?.scheduleType == 1) {
-        video.scheduleTime = moment(req?.body?.scheduleTime).toISOString(); //e.g."2023-07-11T18:00:00.000Z"
+        video.scheduleTime = scheduledAt; // UTC ISO, e.g. "2023-07-11T18:00:00.000Z"
       } else if (req?.body?.scheduleType == 2) {
         video.scheduleTime = "";
       } else {
         if (req.body.videoImage) {
-          await deleteFromStorage(req.body.videoImage);
+          await discardOwnUpload(req, req.body.videoImage);
         }
 
         if (req.body.videoUrl) {
-          await deleteFromStorage(req.body.videoUrl);
+          await discardOwnUpload(req, req.body.videoUrl);
         }
 
         return res.status(200).json({ status: false, message: "scheduleType must be passed valid!" });
@@ -452,28 +583,24 @@ exports.createVideo = async (req, res) => {
     video.videoImage = req?.body?.videoImage;
 
     // ── Cloudflare Stream metadata (set when the app used direct upload) ──
-    if (req.body.streamUid) {
-      video.streamUid = req.body.streamUid;
+    if (media.streamUid) {
+      video.streamUid = media.streamUid;
       video.storageProvider = "stream";
-      video.rawVideoUrl = req.body.rawVideoUrl || null;
-      const pb = videoPipeline.playbackUrls(req.body.streamUid);
-      video.hlsUrl = req.body.hlsUrl || pb.hlsUrl;
+      video.rawVideoUrl = null;
+      const pb = videoPipeline.playbackUrls(media.streamUid);
+      video.hlsUrl = pb.hlsUrl;
       video.dashUrl = pb.dashUrl;
       video.videoUrl = video.hlsUrl; // the app plays videoUrl
-      video.streamStatus = req.body.streamStatus || "inprogress";
-    } else if (/\.m3u8($|\?)/i.test(String(req.body.videoUrl || ""))) {
-      video.storageProvider = "stream";
-      video.hlsUrl = req.body.videoUrl;
-      video.streamStatus = "ready";
+      video.streamStatus = "inprogress";
     } else {
-      video.storageProvider = req.body.storageProvider || "r2";
+      video.storageProvider = "r2";
       video.rawVideoUrl = req.body.videoUrl;
       video.streamStatus = "r2";
     }
-    video.visibilityType = req?.body?.visibilityType;
-    video.audienceType = req?.body?.audienceType;
-    video.commentType = req?.body?.commentType;
-    video.scheduleType = req?.body?.scheduleType;
+    video.visibilityType = Number(req.body.visibilityType);
+    video.audienceType = Number(req.body.audienceType);
+    video.commentType = Number(req.body.commentType);
+    video.scheduleType = Number(req.body.scheduleType);
     video.videoPrivacyType = parseInt(req?.body?.videoPrivacyType);
 
     video.location = req?.body?.location ? String(req.body.location).toLowerCase() : "";
@@ -498,6 +625,7 @@ exports.createVideo = async (req, res) => {
     await db.update("users", user._id || user.id, userChanges);
     const savedVideo = await video.save();
     const newVideoId = savedVideo._id || savedVideo.id || video._id;
+    await uploadGrants.markGrantUsed({ provider: media.storageProvider, ref: mediaRef, videoId: newVideoId }).catch((e) => console.error("markGrantUsed:", e.message));
 
     // Content moderation — keyword-screen the metadata (transcript is added later
     // by the worker); may push the video to pending_review.
@@ -561,60 +689,25 @@ exports.createVideo = async (req, res) => {
       }
     }
 
-    //if user subscribed that channel then send notification to that users
-    console.log("req.body.channelId: ", req.body.channelId);
-
-    const channelSubscribedByUsers = await UserWiseSubscription.find({
-      channelId: req.body.channelId.toString(),
-      userId: { $ne: user._id },
-    }).distinct("userId");
-
-    console.log("channelSubscribedByUsers:", channelSubscribedByUsers);
-
-    await Promise.all(
-      channelSubscribedByUsers.map(async (userId) => {
-        const user = await User.findById(userId);
-
-        if (user._id.toString() !== req.body.userId.toString()) {
-          if (user.fcmToken) {
-            const payload = {
-              token: user.fcmToken,
-              notification: {
-                title: "🔔 New Video Alert! 🔔",
-                body: "Hey there! We're excited to share our latest video. Don't miss out Click here to watch the video now!",
-              },
-            };
-
-            const adminPromise = await admin;
-            adminPromise
-              .messaging()
-              .send(payload)
-              .then(async (response) => {
-                console.log("Successfully sent with response: ", response);
-
-                const notification = new Notification();
-                notification.title = "🔔 New Video Alert! 🔔";
-                notification.message = "Hey there! We're excited to share our latest video. Don't miss out Click here to watch the video now!";
-                notification.userId = user?._id;
-                notification.videoId = video?._id;
-                notification.channelImage = channel?.image || "";
-                notification.videoImage = video?.videoImage;
-                await notification.save();
-              })
-              .catch((error) => {
-                console.log("Error sending message:      ", error);
-              });
-          }
-        }
-      }),
-    );
+    // Subscribers: an in-app notification for each (and a push where they
+    // have a token) — only when the video is publicly listed now; a scheduled
+    // one is announced when it goes live (util/videoNotifications).
+    await require("../../util/videoNotifications").notifySubscribersOfNewVideo(data || video, { admin });
   } catch (error) {
+    // After the success response nothing may be cleaned up or sent again:
+    // the video is published (a second send also crashed the process).
+    if (res.headersSent) {
+      console.error("createVideo post-response step failed:", error.message);
+      return;
+    }
+    // Let the app's retry take the upload again.
+    await uploadGrants.releaseClaim({ provider: heldProvider, ref: heldRef, claimId: heldClaim }).catch(() => {});
     if (req.body.videoImage) {
-      await deleteFromStorage(req.body.videoImage);
+      await discardOwnUpload(req, req.body.videoImage);
     }
 
     if (req.body.videoUrl) {
-      await deleteFromStorage(req.body.videoUrl);
+      await discardOwnUpload(req, req.body.videoUrl);
     }
 
     console.log(error);
@@ -702,7 +795,7 @@ exports.shortsOfUser = async (req, res) => {
           from: "videocomments",
           localField: "_id",
           foreignField: "videoId",
-          pipeline: [{ $match: { recursiveCommentId: null } }],
+          pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
           as: "totalComments",
         },
       },
@@ -751,6 +844,7 @@ exports.shortsOfUser = async (req, res) => {
         $addFields: {
           isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
           isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+          storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
         },
       },
       {
@@ -793,7 +887,10 @@ exports.shortsOfUser = async (req, res) => {
           createdAt: 1,
           channelType: "$channel.channelType",
           subscriptionCost: "$channel.subscriptionCost",
-          videoUnlockCost: "$channel.videoUnlockCost",
+          // Free videos have no price, whatever the channel charges for its paid ones
+          // (issue: free uploads were listed as "Premium Exclusive").
+          videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+          isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
           channelName: "$channel.fullName",
           channelImage: "$channel.image",
           totalComments: { $size: "$totalComments" },
@@ -889,7 +986,7 @@ exports.getShorts = async (req, res) => {
                 from: "videocomments",
                 localField: "_id",
                 foreignField: "videoId",
-                pipeline: [{ $match: { recursiveCommentId: null } }],
+                pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
                 as: "totalComments",
               },
             },
@@ -943,6 +1040,7 @@ exports.getShorts = async (req, res) => {
                 isUnlocked: {
                   $cond: [hasUser, { $gt: [{ $size: "$unlockData" }, 0] }, false],
                 },
+                storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                 isSubscribed: {
                   $cond: [hasUser, { $gt: [{ $size: "$subscription" }, 0] }, false],
                 },
@@ -992,7 +1090,10 @@ exports.getShorts = async (req, res) => {
                 createdAt: 1,
                 channelType: "$channel.channelType",
                 subscriptionCost: "$channel.subscriptionCost",
-                videoUnlockCost: "$channel.videoUnlockCost",
+                // Free videos have no price, whatever the channel charges for its paid ones
+                // (issue: free uploads were listed as "Premium Exclusive").
+                videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                 channelName: "$channel.fullName",
                 channelImage: "$channel.image",
                 totalComments: { $size: "$totalComments" },
@@ -1045,11 +1146,16 @@ exports.getVideos = async (req, res) => {
     const limit = req.query.limit ? parseInt(req.query.limit) : 50;
 
     if (!req.query.userId) {
-      const db = require("../../util/connection");
-      let allVideos = await db.find("videos", {});
-      let normalVideos = allVideos.filter((v) => Number(v.videoType) === 1 || String(v._id).startsWith("video_"));
-      if (normalVideos.length === 0) normalVideos = allVideos;
-      return res.status(200).json({ status: true, message: "Retrieve videos for the user.", videos: normalVideos });
+      // Anonymous browsing: public, published, unmoderated-OK normal videos only
+      // (this used to return the whole videos collection — private, deleted,
+      // held and copyright-flagged records included).
+      const publicVideos = await Video.aggregate([
+        { $match: { ...visibility.publicListingMatch(), videoType: 1 } },
+        { $sort: { createdAt: -1 } },
+        { $skip: (start - 1) * limit },
+        { $limit: limit },
+      ]);
+      return res.status(200).json({ status: true, message: "Retrieve videos for the user.", videos: publicVideos.map(visibility.stripInternal) });
     }
 
     let now = dayjs();
@@ -1065,6 +1171,8 @@ exports.getVideos = async (req, res) => {
             videoType: 1,
             scheduleType: 2,
             visibilityType: 1,
+            moderationStatus: { $nin: ["pending_review", "rejected"] },
+            isCopyrightFlagged: { $ne: true },
           },
         },
         {
@@ -1121,6 +1229,7 @@ exports.getVideos = async (req, res) => {
             isSaveToWatchLater: { $gt: [{ $size: "$isSaveToWatchLater" }, 0] },
             isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
             isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+            storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
           },
         },
         {
@@ -1161,7 +1270,10 @@ exports.getVideos = async (req, res) => {
             views: { $size: "$views" },
             channelType: "$channel.channelType",
             subscriptionCost: "$channel.subscriptionCost",
-            videoUnlockCost: "$channel.videoUnlockCost",
+            // Free videos have no price, whatever the channel charges for its paid ones
+            // (issue: free uploads were listed as "Premium Exclusive").
+            videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+            isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
             channelName: "$channel.fullName",
             channelImage: "$channel.image",
             isSaveToWatchLater: 1,
@@ -1282,8 +1394,7 @@ exports.channeldetailsOfShorts = async (req, res) => {
           $match: {
             channelId: channel.channelId,
             videoType: 2,
-            scheduleType: 2,
-            visibilityType: 1,
+            ...visibility.publicListingMatch(),
           },
         },
         {
@@ -1493,6 +1604,7 @@ exports.videosOfHome = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -1533,7 +1645,10 @@ exports.videosOfHome = async (req, res) => {
                     views: { $size: "$views" },
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     isSubscribed: 1,
@@ -1666,7 +1781,7 @@ exports.videosOfHome = async (req, res) => {
                     from: "videocomments",
                     localField: "_id",
                     foreignField: "videoId",
-                    pipeline: [{ $match: { recursiveCommentId: null } }],
+                    pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
                     as: "totalComments",
                   },
                 },
@@ -1728,6 +1843,7 @@ exports.videosOfHome = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -1774,7 +1890,10 @@ exports.videosOfHome = async (req, res) => {
                     channelImage: "$channel.image",
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     totalComments: { $size: "$totalComments" },
                     isSubscribed: 1,
                     isSaveToWatchLater: 1,
@@ -1899,6 +2018,7 @@ exports.videosOfHome = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -1939,7 +2059,10 @@ exports.videosOfHome = async (req, res) => {
                     views: { $size: "$views" },
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     isSubscribed: 1,
@@ -2062,7 +2185,7 @@ exports.videosOfHome = async (req, res) => {
                     from: "videocomments",
                     localField: "_id",
                     foreignField: "videoId",
-                    pipeline: [{ $match: { recursiveCommentId: null } }],
+                    pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
                     as: "totalComments",
                   },
                 },
@@ -2117,6 +2240,7 @@ exports.videosOfHome = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -2162,7 +2286,10 @@ exports.videosOfHome = async (req, res) => {
                     channelImage: "$channel.image",
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     totalComments: { $size: "$totalComments" },
                     isSubscribed: 1,
                     isSaveToWatchLater: 1,
@@ -2286,6 +2413,7 @@ exports.videosOfHome = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -2327,7 +2455,10 @@ exports.videosOfHome = async (req, res) => {
                     views: { $size: "$views" },
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     isSubscribed: 1,
@@ -2441,7 +2572,7 @@ exports.videosOfHome = async (req, res) => {
                     from: "videocomments",
                     localField: "_id",
                     foreignField: "videoId",
-                    pipeline: [{ $match: { recursiveCommentId: null } }],
+                    pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
                     as: "totalComments",
                   },
                 },
@@ -2503,6 +2634,7 @@ exports.videosOfHome = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -2546,7 +2678,10 @@ exports.videosOfHome = async (req, res) => {
                     createdAt: 1,
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     totalComments: 1,
@@ -2662,14 +2797,16 @@ exports.detailsOfVideo = async (req, res) => {
 
     const [user, video, data] = await Promise.all([
       User.findOne({ _id: userId, isActive: true }),
-      Video.findOne({ _id: videoId, videoType: videoType, isActive: true, scheduleType: 2, visibilityType: 1 }),
+      // F-12 (Phase 2): load the active video; whether this viewer may open it
+      // (public/unlisted + published + not held/flagged, or their own) is
+      // decided by visibility.canView() below.
+      Video.findOne({ _id: videoId, videoType: videoType, isActive: true }),
       Video.aggregate([
         {
           $match: {
             _id: videoId,
             videoType: videoType,
-            scheduleType: 2,
-            visibilityType: 1,
+            isActive: true,
           },
         },
         {
@@ -2688,7 +2825,7 @@ exports.detailsOfVideo = async (req, res) => {
             from: "videocomments",
             localField: "_id",
             foreignField: "videoId",
-            pipeline: [{ $match: { recursiveCommentId: null } }],
+            pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
             as: "totalComments",
           },
         },
@@ -2755,6 +2892,7 @@ exports.detailsOfVideo = async (req, res) => {
             isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
             isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
             isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+            storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
           },
         },
         {
@@ -2798,7 +2936,10 @@ exports.detailsOfVideo = async (req, res) => {
             createdAt: 1,
             channelType: "$channel.channelType",
             subscriptionCost: "$channel.subscriptionCost",
-            videoUnlockCost: "$channel.videoUnlockCost",
+            // Free videos have no price, whatever the channel charges for its paid ones
+            // (issue: free uploads were listed as "Premium Exclusive").
+            videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+            isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
             channelName: "$channel.fullName",
             channelImage: "$channel.image",
             totalComments: { $size: "$totalComments" },
@@ -2871,14 +3012,17 @@ exports.detailsOfVideo = async (req, res) => {
       return res.status(200).json({ status: false, message: "you are blocked by admin." });
     }
 
-    if (!video) {
+    // One policy for opening a video by id (util/videoVisibility.js): public or
+    // unlisted, published, not held/rejected/flagged — or the viewer's own.
+    // Answers "not found" either way so private ids aren't confirmed.
+    if (!video || !data[0] || !visibility.canView(video, req.query.userId)) {
       return res.status(200).json({ status: false, message: "video does not found." });
     }
 
     return res.status(200).json({
       status: true,
       message: "Retrive particular video's details for user.",
-      detailsOfVideo: data[0],
+      detailsOfVideo: visibility.stripInternal(data[0]),
     });
   } catch (error) {
     console.log(error);
@@ -2907,166 +3051,61 @@ exports.likeOrDislikeOfVideo = async (req, res) => {
 
     console.log("🔍 Fetching user, video & history");
 
-    const [user, video, existingHistory] = await Promise.all([
-      User.findOne({ _id: userId, isActive: true }),
-      Video.findById(videoId),
-      // one like/dislike record per (user, video)
-      LikeHistoryOfVideo.findOne({ userId, videoId }),
-    ]);
-
-    console.log("👤 User:", user?._id);
-    console.log("🎬 Video:", video?._id);
-    console.log("📜 Existing History:", existingHistory?.likeOrDislike || "none");
-
+    const [user, target] = await Promise.all([User.findOne({ _id: userId, isActive: true }), Video.findById(videoId)]);
     if (!user) return res.status(200).json({ status: false, message: "user does not found!" });
     if (user.isBlock) return res.status(200).json({ status: false, message: "you are blocked by admin!" });
-    if (!video) return res.status(200).json({ status: false, message: "video does not found!" });
+    if (!target || !visibility.canView(target, userId)) return res.status(200).json({ status: false, message: "video does not found!" });
 
-    let like = Number(video.like) || 0;
-    let dislike = Number(video.dislike) || 0;
-    const setCounts = () => db.update("videos", videoId, { like, dislike });
-    const current = existingHistory?.likeOrDislike || null;
+    // One transaction moves the viewer's record and the video's counters
+    // together (engagement.service): no lost updates between users, no
+    // duplicate records from a double tap, and a repeated request is a no-op.
+    const t = await engagement.setLikeState({ userId, videoId, action: likeOrDislike });
+    if (!t.ok) return res.status(200).json({ status: false, message: "video does not found!" });
+    const { before, after, like, dislike } = t;
 
-    /* ===================== LIKE REMOVE ===================== */
-    if (likeOrDislike === "likeremove") {
-      if (current === "like") {
-        like = Math.max(0, like - 1);
-        await setCounts();
-        await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" });
-        const rev = await rewardEngine.reverseReward({
-          userId, videoId,
-          historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
-          countField: "dailyLikesToday",
-        });
-        if (rev.reversed) console.log("💰 Like coins reversed:", rev.reversed);
-      }
-      return res.status(200).json({ status: true, message: "Like removed successfully", isLike: false, like, dislike });
+    // Rewards follow the transition (server-decided, once per video, capped).
+    if (before === "like" && after !== "like") {
+      const rev = await rewardEngine.reverseReward({ userId, videoId, historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE, countField: "dailyLikesToday" });
+      if (rev.reversed) console.log("💰 Like coins reversed:", rev.reversed);
     }
-
-    /* ===================== DISLIKE REMOVE ===================== */
-    if (likeOrDislike === "dislikeremove") {
-      if (current === "dislike") {
-        dislike = Math.max(0, dislike - 1);
-        await setCounts();
-        await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" });
-        const rev = await rewardEngine.reverseReward({
-          userId, videoId,
-          historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
-          countField: "dailyDislikesToday",
-        });
-        if (rev.reversed) console.log("💰 Dislike coins reversed:", rev.reversed);
-      }
-      return res.status(200).json({ status: true, message: "Dislike removed successfully", isLike: false, like, dislike });
+    if (before === "dislike" && after !== "dislike") {
+      const rev = await rewardEngine.reverseReward({ userId, videoId, historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE, countField: "dailyDislikesToday" });
+      if (rev.reversed) console.log("💰 Dislike coins reversed:", rev.reversed);
     }
-
-    /* ===================== LIKE ===================== */
-    if (likeOrDislike === "like") {
-      if (current === "like") {
-        return res.status(200).json({ status: true, message: "Already liked", isLike: true, like, dislike });
-      }
-
-      like += 1;
-      if (current === "dislike") {
-        dislike = Math.max(0, dislike - 1);
-        await rewardEngine.reverseReward({
-          userId, videoId,
-          historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
-          countField: "dailyDislikesToday",
-        });
-      }
-
-      await setCounts();
-      await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "dislike" });
-      await LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "like" });
-
-      // Coins: server-decided, once per video, capped by maxLikesPerDay + daily earning cap.
-      const likeReward = await rewardEngine.creditReward({
-        userId,
-        kind: "like",
-        historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
-        countField: "dailyLikesToday",
-        capField: "maxLikesPerDay",
-        dedupeVideoId: videoId,
-        meta: { videoId },
-      });
-      const coinsEarned = likeReward.ok ? likeReward.credited : 0;
-      console.log("💰 Like reward:", coinsEarned, likeReward.reason, "→", user?.fullName);
-
+    let coinsEarned = 0, rewardStatus;
+    if (after === "like" && before !== "like") {
+      const r = await rewardEngine.creditReward({ userId, kind: "like", historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE, countField: "dailyLikesToday", capField: "maxLikesPerDay", dedupeVideoId: videoId, meta: { videoId } });
+      coinsEarned = r.ok ? r.credited : 0; rewardStatus = r.reason;
       if (user.fcmToken && coinsEarned > 0) {
         try {
-          admin.messaging().send({
-            token: user.fcmToken,
-            notification: { title: "👍 You've Earned Coins!", body: `You earned ${coinsEarned} coins for liking a video 🎬💰` },
-            data: { type: "ENGAGEMENT_LIKING_REWARD" },
-          }).catch(() => {});
+          admin.messaging().send({ token: user.fcmToken, notification: { title: "👍 You've Earned Coins!", body: `You earned ${coinsEarned} coins for liking a video 🎬💰` }, data: { type: "ENGAGEMENT_LIKING_REWARD" } }).catch(() => {});
         } catch (e) {}
       }
-
       try {
-        const videoUser = await User.findById(video.userId);
+        const videoUser = t.ownerId && t.ownerId !== String(userId) ? await User.findById(t.ownerId) : null;
         if (videoUser?.fcmToken) {
-          admin.messaging().send({
-            token: videoUser.fcmToken,
-            notification: { title: "🌟 New Like!", body: "Someone liked your video 👍🎥" },
-            data: { type: "VIDEO_LIKING_NOTIFICATION" },
-          }).catch(() => {});
+          admin.messaging().send({ token: videoUser.fcmToken, notification: { title: "🌟 New Like!", body: "Someone liked your video 👍🎥" }, data: { type: "VIDEO_LIKING_NOTIFICATION" } }).catch(() => {});
         }
       } catch (e) {}
-
-      return res.status(200).json({
-        status: true,
-        message: "Video liked successfully",
-        isLike: true,
-        like,
-        dislike,
-        coinsEarned,
-        rewardStatus: likeReward.reason,
-      });
     }
-
-    /* ===================== DISLIKE ===================== */
-    if (likeOrDislike === "dislike") {
-      if (current === "dislike") {
-        return res.status(200).json({ status: true, message: "Already disliked", isLike: false, like, dislike });
-      }
-
-      dislike += 1;
-      if (current === "like") {
-        like = Math.max(0, like - 1);
-        await rewardEngine.reverseReward({
-          userId, videoId,
-          historyType: rewardEngine.HISTORY_TYPE.VIDEO_LIKE,
-          countField: "dailyLikesToday",
-        });
-      }
-
-      await setCounts();
-      await LikeHistoryOfVideo.deleteOne({ userId, videoId, likeOrDislike: "like" });
-      await LikeHistoryOfVideo.create({ userId, videoId, channelId: video.channelId, likeOrDislike: "dislike" });
-
+    if (after === "dislike" && before !== "dislike") {
       // Dislike reward (YP-TC-2026-FINAL: 2 coins; set dislikeVideoRewardCoins=0 in settings to disable)
-      const dislikeReward = await rewardEngine.creditReward({
-        userId,
-        kind: "dislike",
-        historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE,
-        countField: "dailyDislikesToday",
-        capField: "maxDislikesPerDay",
-        dedupeVideoId: videoId,
-        meta: { videoId },
-      });
-      const coinsEarned = dislikeReward.ok ? dislikeReward.credited : 0;
-      console.log("✅ Dislike completed. Reward:", coinsEarned, dislikeReward.reason);
-
-      return res.status(200).json({
-        status: true,
-        message: "Video disliked successfully",
-        isLike: false,
-        like,
-        dislike,
-        coinsEarned,
-        rewardStatus: dislikeReward.reason,
-      });
+      const r = await rewardEngine.creditReward({ userId, kind: "dislike", historyType: rewardEngine.HISTORY_TYPE.VIDEO_DISLIKE, countField: "dailyDislikesToday", capField: "maxDislikesPerDay", dedupeVideoId: videoId, meta: { videoId } });
+      coinsEarned = r.ok ? r.credited : 0; rewardStatus = r.reason;
     }
+
+    const messages = { like: "Video liked successfully", dislike: "Video disliked successfully", likeremove: "Like removed successfully", dislikeremove: "Dislike removed successfully" };
+    return res.status(200).json({
+      status: true,
+      message: before === after && (likeOrDislike === "like" || likeOrDislike === "dislike") ? `Already ${likeOrDislike}d` : messages[likeOrDislike],
+      isLike: after === "like",
+      isDislike: after === "dislike",
+      like,
+      dislike,
+      changed: before !== after,
+      coinsEarned,
+      rewardStatus,
+    });
   } catch (error) {
     console.error("API ERROR:", error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
@@ -3105,8 +3144,7 @@ exports.getAllLikeThis = async (req, res) => {
         $match: {
           _id: { $ne: currentVideo._id },
           videoType: { $eq: currentVideo.videoType },
-          scheduleType: 2,
-          visibilityType: 1,
+          ...visibility.publicListingMatch(),
           hashTag: { $in: hashTags },
         },
       },
@@ -3182,6 +3220,7 @@ exports.getAllLikeThis = async (req, res) => {
                 isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                 isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                 isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
               },
             },
             {
@@ -3254,7 +3293,10 @@ exports.getAllLikeThis = async (req, res) => {
                   image: "$owner.image",
                   channelId: "$owner.channelId",
                   subscriptionCost: "$owner.subscriptionCost",
-                  videoUnlockCost: "$owner.videoUnlockCost",
+                  // Free videos have no price, whatever the channel charges for its paid ones
+                  // (issue: free uploads were listed as "Premium Exclusive").
+                  videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$owner.videoUnlockCost", 0] },
+                  isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                   channelType: "$owner.channelType",
                 },
                 totalViews: 1,
@@ -3305,7 +3347,7 @@ exports.search = async (req, res) => {
             visibilityType: 1,
             moderationStatus: { $nin: ["pending_review", "rejected"] },
             isCopyrightFlagged: { $ne: true },
-            $or: [{ title: { $regex: req.body.searchString?.trim(), $options: "i" } }, { description: { $regex: req.body.searchString?.trim(), $options: "i" } }],
+            $or: [{ title: { $regex: escapeRegex(req.body.searchString), $options: "i" } }, { description: { $regex: escapeRegex(req.body.searchString), $options: "i" } }],
           },
         },
         {
@@ -3359,6 +3401,7 @@ exports.search = async (req, res) => {
             isSaveToWatchLater: { $gt: [{ $size: "$isSaveToWatchLater" }, 0] },
             isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
             isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+            storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
           },
         },
         {
@@ -3396,7 +3439,10 @@ exports.search = async (req, res) => {
             createdAt: 1,
             channelType: "$channel.channelType",
             subscriptionCost: "$channel.subscriptionCost",
-            videoUnlockCost: "$channel.videoUnlockCost",
+            // Free videos have no price, whatever the channel charges for its paid ones
+            // (issue: free uploads were listed as "Premium Exclusive").
+            videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+            isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
             channelName: "$channel.fullName",
             channelImage: "$channel.image",
             isSubscribed: 1,
@@ -3529,12 +3575,10 @@ exports.searchShorts = async (req, res) => {
           $match: {
             $and: [
               {
-                $or: [{ title: { $regex: req.body.searchString?.trim(), $options: "i" } }, { description: { $regex: req.body.searchString?.trim(), $options: "i" } }],
+                $or: [{ title: { $regex: escapeRegex(req.body.searchString), $options: "i" } }, { description: { $regex: escapeRegex(req.body.searchString), $options: "i" } }],
               },
-              { isActive: true },
               { videoType: 2 },
-              { scheduleType: 2 },
-              { visibilityType: 2 },
+              visibility.publicListingMatch(),
             ],
           },
         },
@@ -3589,6 +3633,7 @@ exports.searchShorts = async (req, res) => {
             isSaveToWatchLater: { $gt: [{ $size: "$isSaveToWatchLater" }, 0] },
             isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
             isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+            storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
           },
         },
         {
@@ -3625,7 +3670,10 @@ exports.searchShorts = async (req, res) => {
             createdAt: 1,
             channelType: "$channel.channelType",
             subscriptionCost: "$channel.subscriptionCost",
-            videoUnlockCost: "$channel.videoUnlockCost",
+            // Free videos have no price, whatever the channel charges for its paid ones
+            // (issue: free uploads were listed as "Premium Exclusive").
+            videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+            isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
             channelName: "$channel.fullName",
             channelImage: "$channel.image",
             isSubscribed: 1,
@@ -3704,25 +3752,34 @@ exports.searchShorts = async (req, res) => {
 //type wise searching (All OR videos OR shorts)
 exports.searchChannelVideoShortsByUser = async (req, res) => {
   try {
-    const { start = 1, limit = 10 } = req.query || {};
+    const start = Math.max(1, Number((req.query || {}).start) || 1);
+    const limit = Math.min(50, Math.max(1, Number((req.query || {}).limit) || 10));
 
-    if (!req.query.searchString) {
-      return res.status(200).json({ status: false, message: "Oops ! Invalid details!" });
+    // Whitespace-only is "no query" (the client shows its empty state).
+    const rawSearch = String(req.query.searchString || "").trim().replace(/\s+/g, " ").slice(0, 100);
+    if (!rawSearch) {
+      return res.status(200).json({ status: false, code: "EMPTY_QUERY", message: "Oops ! Invalid details!" });
     }
 
     let now = dayjs();
-    const type = req.query.type.trim().toLowerCase() || "all";
-    const searchString = req.query.searchString.trim();
+    const type = String(req.query.type || "all").trim().toLowerCase() || "all";
+    // Matched literally: "C++", "(", "?" and the like used to be compiled as a
+    // regular expression (errors, or catastrophic backtracking on crafted input).
+    const searchString = escapeRegex(rawSearch);
     const userId = req.query.userId ? new mongoose.Types.ObjectId(req.query.userId) : null;
-    const skip = (Number(start) - 1) * Number(limit);
+    const skip = (Math.max(1, Number(start) || 1) - 1) * Math.min(50, Math.max(1, Number(limit) || 10));
 
     if (type === "all") {
       const [user, channel, videos, shorts, historyEntry] = await Promise.all([
         userId ? User.findOne({ _id: userId, isActive: true }).select("_id isBlock").lean() : Promise.resolve(null),
         User.aggregate([
           {
+            // Channels only (an account without a channel isn't searchable),
+            // and not deactivated or blocked ones.
             $match: {
-              channelId: { $ne: null },
+              isChannel: true,
+              isActive: true,
+              isBlock: { $ne: true },
               fullName: { $regex: searchString, $options: "i" },
             },
           },
@@ -3858,6 +3915,7 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -3894,7 +3952,10 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     videoPrivacyType: 1,
                     createdAt: 1,
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelType: "$channel.channelType",
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
@@ -4031,6 +4092,7 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -4068,7 +4130,10 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     createdAt: 1,
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     isSubscribed: 1,
@@ -4165,10 +4230,8 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                 {
                   $or: [{ title: { $regex: searchString, $options: "i" } }, { description: { $regex: searchString, $options: "i" } }],
                 },
-                { isActive: true },
                 { videoType: 1 },
-                { scheduleType: 2 },
-                { visibilityType: 2 },
+                visibility.publicListingMatch(),
               ],
             },
           },
@@ -4237,6 +4300,7 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -4273,7 +4337,10 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     createdAt: 1,
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     isSubscribed: 1,
@@ -4364,10 +4431,8 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                 {
                   $or: [{ title: { $regex: searchString, $options: "i" } }, { description: { $regex: searchString, $options: "i" } }],
                 },
-                { isActive: true },
                 { videoType: 2 },
-                { scheduleType: 2 },
-                { visibilityType: 2 },
+                visibility.publicListingMatch(),
               ],
             },
           },
@@ -4436,6 +4501,7 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     isSaveToWatchLater: { $gt: [{ $size: { $ifNull: ["$isSaveToWatchLater", []] } }, 0] },
                     isSubscribed: { $gt: [{ $size: { $ifNull: ["$subscription", []] } }, 0] },
                     isUnlocked: { $gt: [{ $size: { $ifNull: ["$unlockData", []] } }, 0] },
+                    storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   },
                 },
                 {
@@ -4472,7 +4538,10 @@ exports.searchChannelVideoShortsByUser = async (req, res) => {
                     createdAt: 1,
                     channelType: "$channel.channelType",
                     subscriptionCost: "$channel.subscriptionCost",
-                    videoUnlockCost: "$channel.videoUnlockCost",
+                    // Free videos have no price, whatever the channel charges for its paid ones
+                    // (issue: free uploads were listed as "Premium Exclusive").
+                    videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+                    isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
                     channelName: "$channel.fullName",
                     channelImage: "$channel.image",
                     isSubscribed: 1,
@@ -4600,13 +4669,25 @@ exports.clearAllSearchHistory = async (req, res) => {
 //update (normal videos or shorts) by user
 exports.modifyVideo = async (req, res) => {
   try {
+    const replacement = req.body?.videoUrl ? require("../../util/mediaPolicy").videoLocation(req.body.videoUrl, require("../../util/cloudflareStorage.service")._cfg()) : null;
+    if (req.body?.videoUrl && !replacement) return res.status(400).json({ status: false, code: "INVALID_VIDEO_PROVIDER", message: "Upload replacement videos to Cloudflare first." });
+    let replacementRef = null;
+    if (replacement) {
+      // Same ownership rule as createVideo (util/uploadGrants.js).
+      replacementRef = replacement.storageProvider === "stream" ? replacement.streamUid : uploadGrants.r2KeyFromUrl(replacement.videoUrl);
+      const owned = await uploadGrants.verifyOwnedUpload({ provider: replacement.storageProvider, ref: replacementRef, ownerId: req.appUserId, allowVideoId: req.query.videoId });
+      if (!owned.ok) return res.status(403).json({ status: false, code: owned.code, message: owned.message });
+      if (replacement.storageProvider === "r2" && (await uploadGrants.r2ObjectExists(replacementRef)) === false) {
+        return res.status(409).json({ status: false, code: "UPLOAD_INCOMPLETE", message: "The upload hasn't finished. Please upload the video again." });
+      }
+    }
     if (!req.query.videoId || !req.query.userId || !req.query.channelId || !req.query.videoType) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "OOps ! Invalid details!" });
@@ -4619,11 +4700,11 @@ exports.modifyVideo = async (req, res) => {
 
     if (!user) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "User does not found!" });
@@ -4631,11 +4712,11 @@ exports.modifyVideo = async (req, res) => {
 
     if (user.isBlock) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "you are blocked by admin!" });
@@ -4644,11 +4725,11 @@ exports.modifyVideo = async (req, res) => {
     const channel = await User.findOne({ channelId: user.channelId });
     if (!channel) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "channel does not found!" });
@@ -4656,23 +4737,23 @@ exports.modifyVideo = async (req, res) => {
 
     if (user.channelId !== req.query.channelId) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
-      return res.status(200).json({ status: false, message: "video has been updated only by own channelId." });
+      return res.status(403).json({ status: false, code: "CHANNEL_NOT_OWNED", message: "video has been updated only by own channelId." });
     }
 
     if (!video) {
       if (req.body.videoImage) {
-        await deleteFromStorage(req.body.videoImage);
+        await discardOwnUpload(req, req.body.videoImage);
       }
 
       if (req.body.videoUrl) {
-        await deleteFromStorage(req.body.videoUrl);
+        await discardOwnUpload(req, req.body.videoUrl);
       }
 
       return res.status(200).json({ status: false, message: "video does not found!" });
@@ -4692,14 +4773,31 @@ exports.modifyVideo = async (req, res) => {
       changes.videoTime = b.videoTime;
     }
 
-    if (b.visibilityType) changes.visibilityType = b.visibilityType;
-    if (b.audienceType) changes.audienceType = b.audienceType;
-    if (b.commentType) changes.commentType = b.commentType;
+    for (const [field, max] of [["visibilityType", 3], ["audienceType", 3], ["commentType", 4]]) {
+      if (b[field] === undefined || b[field] === null || b[field] === "") continue;
+      const n = Number(b[field]);
+      if (!Number.isInteger(n) || n < 1 || n > max) {
+        if (b.videoImage) await deleteFromStorage(b.videoImage);
+        if (b.videoUrl) await deleteFromStorage(b.videoUrl);
+        return res.status(200).json({ status: false, code: "INVALID_OPTION", message: `${field} is not a valid choice.` });
+      }
+      changes[field] = n;
+    }
 
     if (b.scheduleType) {
-      changes.scheduleType = b.scheduleType;
-      if (b.scheduleType == 1) changes.scheduleTime = b.scheduleTime ? moment(b.scheduleTime).toISOString() : (video.scheduleTime || "");
-      else if (b.scheduleType == 2) changes.scheduleTime = "";
+      changes.scheduleType = Number(b.scheduleType);
+      if (b.scheduleType == 1) {
+        // A new time must be a valid future time; keeping the stored one is allowed.
+        if (b.scheduleTime) {
+          const parsed = scheduledPublish.parseScheduleTime(b.scheduleTime);
+          if (!parsed.ok) {
+            if (b.videoImage) await deleteFromStorage(b.videoImage);
+            if (b.videoUrl) await deleteFromStorage(b.videoUrl);
+            return res.status(200).json({ status: false, code: parsed.code, message: parsed.message });
+          }
+          changes.scheduleTime = parsed.iso;
+        } else changes.scheduleTime = video.scheduleTime || "";
+      } else if (b.scheduleType == 2) changes.scheduleTime = "";
       else {
         if (b.videoImage) await deleteFromStorage(b.videoImage);
         if (b.videoUrl) await deleteFromStorage(b.videoUrl);
@@ -4720,29 +4818,32 @@ exports.modifyVideo = async (req, res) => {
       if (video.videoImage) await deleteFromStorage(video.videoImage);
       changes.videoImage = b.videoImage;
     }
-    if (b.videoUrl && b.videoUrl !== video.videoUrl) {
+    const replacingFile = !!(b.videoUrl && b.videoUrl !== video.videoUrl);
+    if (replacingFile) {
+      Object.assign(changes, { streamUid: null, hlsUrl: null, dashUrl: null, rawVideoUrl: null }, replacement);
+    }
+
+    await db.update("videos", video._id || video.id, changes);
+
+    // Old media goes only after the record points at the new file — deleting
+    // first left the video pointing at nothing when the update failed.
+    if (replacingFile) {
+      await uploadGrants.markGrantUsed({ provider: replacement.storageProvider, ref: replacementRef, videoId: video._id || video.id }).catch(() => {});
       if (video.streamUid && video.streamUid !== b.streamUid) {
         try { await videoPipeline.deleteVideo(video.streamUid); } catch (e) { /* ignore */ }
       } else if (video.videoUrl) {
         await deleteFromStorage(video.videoUrl);
       }
-      changes.videoUrl = b.videoUrl;
-      if (b.streamUid) {
-        const pb = videoPipeline.playbackUrls(b.streamUid);
-        Object.assign(changes, { streamUid: b.streamUid, hlsUrl: pb.hlsUrl, dashUrl: pb.dashUrl, videoUrl: pb.hlsUrl, streamStatus: "inprogress", storageProvider: "stream" });
-      }
     }
-
-    await db.update("videos", video._id || video.id, changes);
 
     return res.status(200).json({ status: true, message: "Video has been updated!" });
   } catch (error) {
     if (req.body.videoImage) {
-      await deleteFromStorage(req.body.videoImage);
+      await discardOwnUpload(req, req.body.videoImage);
     }
 
     if (req.body.videoUrl) {
-      await deleteFromStorage(req.body.videoUrl);
+      await discardOwnUpload(req, req.body.videoUrl);
     }
     console.log(error);
     return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
@@ -4756,27 +4857,24 @@ exports.deleteVideoRecord = async (req, res) => {
       return res.status(200).json({ status: false, message: "videoId must be required!" });
     }
 
-    const videoIds = req.query.videoId.split(",");
+    const videoIds = [...new Set(req.query.videoId.split(",").map((x) => x.trim()).filter(Boolean))];
 
-    const videos = await Video.find({ _id: { $in: videoIds } }).lean();
+    // Only the caller's own videos (requireOwner checks the first id; this
+    // checks every one).
+    const videos = (await Video.find({ _id: { $in: videoIds } }).lean())
+      .filter((v) => String(v.userId?._id || v.userId || "") === String(req.appUserId));
 
     if (!videos.length) {
       return res.status(200).json({ status: false, message: "No videos found with the provided IDs." });
     }
 
-    res.status(200).json({
-      status: true,
-      message: "Video has been deleted by the admin.",
-    });
-
+    // Delete first, answer after: on serverless, work after the response may
+    // never run (the video used to stay listed while the app said "deleted").
     await Promise.all(
       videos.map(async (video) => {
-        if (video.videoImage) {
-          await deleteFromStorage(video.videoImage);
-        }
-
-        if (video.videoUrl) {
-          await deleteFromStorage(video.videoUrl);
+        // R2 / Firebase Storage objects (deleteFromStorage skipped those).
+        for (const url of [video.videoImage, video.rawVideoUrl || video.videoUrl]) {
+          if (url) await deleteMediaByUrl(url).catch((e) => console.error("delete media:", e.message));
         }
 
         const comments = await VideoComment.find({ videoId: video._id }).select("_id").lean();
@@ -4796,6 +4894,12 @@ exports.deleteVideoRecord = async (req, res) => {
         ]);
       }),
     );
+
+    return res.status(200).json({
+      status: true,
+      message: videos.length === 1 ? "Video deleted." : `${videos.length} videos deleted.`,
+      deleted: videos.map((v) => String(v._id)),
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, error: error.message || "Internal Server Error" });
@@ -4910,17 +5014,21 @@ exports.getVideoList = async (req, res) => {
   try {
     const start = req.query.start ? parseInt(req.query.start) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 50;
-    const search = req.query.search?.trim() || "";
+    const search = escapeRegex(req.query.search || ""); // matched literally
 
     const userId = req?.query?.userId || null;
 
     const pipeline = [
       {
+        // F-12 (Phase 2): add moderation/copyright guards so held and flagged
+        // videos are excluded from the public video list.
         $match: {
           isActive: true,
           videoType: 1,
           scheduleType: 2,
           visibilityType: 1,
+          moderationStatus: { $nin: visibility.HIDDEN_MODERATION },
+          isCopyrightFlagged: { $ne: true },
         },
       },
       {
@@ -4982,6 +5090,7 @@ exports.getVideoList = async (req, res) => {
           $addFields: {
             isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
             isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+            storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
           },
         },
       );
@@ -5116,7 +5225,7 @@ exports.getUserVideos = async (req, res) => {
                   from: "videocomments",
                   localField: "_id",
                   foreignField: "videoId",
-                  pipeline: [{ $match: { recursiveCommentId: null } }],
+                  pipeline: [{ $match: { recursiveCommentId: null, status: { $ne: "held" } } }], // held-for-review comments are not public
                   as: "totalComments",
                 },
               },
@@ -5149,6 +5258,7 @@ exports.getUserVideos = async (req, res) => {
               {
                 $addFields: {
                   isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+                  storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
                   totalComments: { $size: "$totalComments" },
                   views: { $size: "$views" },
                 },
@@ -5220,11 +5330,11 @@ exports.streamWebhook = async (req, res) => {
       console.warn("stream webhook rejected:", parsed.reason);
       return res.status(400).json({ status: false, message: parsed.reason });
     }
-    res.status(200).json({ status: true });
-
-    if (!parsed.uid) return;
+    if (!parsed.uid) return res.status(400).json({ status: false });
     const video = await Video.findOne({ streamUid: parsed.uid });
-    if (!video) return;
+    if (!video) return res.status(200).json({ status: true });
+    // An old queued callback must not replace a ready state.
+    if (video.streamStatus === "ready" && !parsed.ready) return res.status(200).json({ status: true });
 
     const updates = {
       streamStatus: parsed.state || (parsed.ready ? "ready" : "inprogress"),
@@ -5235,10 +5345,11 @@ exports.streamWebhook = async (req, res) => {
       updates.videoUrl = parsed.hlsUrl;            // the app plays videoUrl
       updates.videoDuration = Math.round(parsed.duration || 0);
       if (parsed.duration) updates.videoTime = Math.round(parsed.duration);
-      if (parsed.thumbnail) updates.videoImage = parsed.thumbnail;
+      // Keep the creator-uploaded thumbnail on Firebase; Stream thumbnails
+      // must not silently move non-video assets to a different provider.
     }
     await db.update("videos", video._id || video.id, updates);
-    console.log(`🎬 Stream ${parsed.uid} → ${updates.streamStatus}`);
+    return res.status(200).json({ status: true });
   } catch (error) {
     console.error("streamWebhook error:", error.message);
     if (!res.headersSent) res.status(500).json({ status: false });
@@ -5264,7 +5375,6 @@ exports.getStreamStatus = async (req, res) => {
         hlsUrl: s.hlsUrl, dashUrl: s.dashUrl, videoUrl: s.hlsUrl,
         videoDuration: Math.round(s.duration || 0),
         videoTime: Math.round(s.duration || video.videoTime || 0),
-        videoImage: s.thumbnail || video.videoImage,
       });
     } else {
       await db.update("videos", video._id || video.id, { streamStatus: s.state || "inprogress" });
@@ -5281,3 +5391,5 @@ exports.getStreamStatus = async (req, res) => {
     return res.status(200).json({ status: false, message: error.message });
   }
 };
+
+exports._internal = { discardOwnUpload };

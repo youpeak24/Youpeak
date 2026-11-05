@@ -1,0 +1,490 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  emulators:[22m[39m It seems that you are running multiple instances of the emulator suite for project demo-youpeak-audit. This may result in unexpected behavior.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 06[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 06-rewards-and-history.cjs
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 176.648 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  totalEarningAmount: 0,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194060267,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:20.267Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 135.930 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 164.884 ms - 89[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 172.131 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  totalEarningAmount: 0.02,
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194063976,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:23.976Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 140.826 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 134.365 ms - 89[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 191.665 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  totalEarningAmount: 0.04,
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194067660,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:27.660Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 107.298 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 152.239 ms - 89[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 158.692 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  totalEarningAmount: 0.06,
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194071292,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:31.292Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 137.134 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 149.730 ms - 89[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 143.537 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  totalEarningAmount: 0.08,
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194074958,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:34.958Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 106.384 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 147.113 ms - 89[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 124.936 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  totalEarningAmount: 0.1,
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194078560,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:38.560Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 122.832 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 148.475 ms - 89[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'like', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: none
+💰 Like reward: 2 OK → rw_user
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=like [32m200[0m 141.512 ms - 123[0m
+user coinToAmountConverter:  ModelConstructor {
+  _id: 'rw_user',
+  id: 'rw_user',
+  fullName: 'rw_user',
+  email: 'rw_user@test.local',
+  isActive: true,
+  isBlock: false,
+  loginRewardCoin: 0,
+  isNewUser: false,
+  lastActivityDate: '2026-10-05',
+  taskAttestation: {
+    at: '2026-10-05T09:54:19.909Z',
+    signals: {
+      platform: 'android',
+      deviceId: 'present',
+      isPhysicalDevice: true
+    },
+    deviceConflict: false
+  },
+  createdAt: '2026-10-05T09:54:19.909Z',
+  totalEarningAmount: 0.12000000000000001,
+  engagementRewardCoin: 2,
+  dailyLikesToday: 1,
+  lastRewardActionAt: 1791194082196,
+  totalRewardCoin: 2,
+  dailyEarningCoinsToday: 2,
+  coin: 2,
+  updatedAt: '2026-10-05T09:54:42.196Z'
+}
+Coin → Amount conversion (2 decimal points): 0.02
+[0mGET /client/withdrawalRequest/coinToAmountConverter?coin=2 [32m200[0m 107.032 ms - 78[0m
+🔔 likeOrDislikeOfVideo API called
+➡️ Request Query: { videoId: 'rw_vid', likeOrDislike: 'likeremove', userId: 'rw_user' }
+🔍 Fetching user, video & history
+👤 User: rw_user
+🎬 Video: rw_vid
+📜 Existing History: like
+[0mPOST /client/video/likeOrDislikeOfVideo?videoId=rw_vid&likeOrDislike=likeremove [32m200[0m 146.865 ms - 89[0m
+FAIL 06-rewards-and-history:RW-01 free-tier like cap (5/day, 10 coins) cannot be exceeded by like → convert → unlike cycles
+     14 coins (₹0.14) earned from 7 like cycles and converted to cash although the daily like cap is 5 likes = 10 coins; dailyLikesToday=0, dailyEarningCoinsToday=0
+📥 createWatchHistory API CALLED
+📩 Query Params: {
+  videoId: 'wh_vid',
+  videoUserId: 'wh_creator',
+  videoChannelId: 'wh_ch',
+  currentWatchTime: '3600',
+  userId: 'wh_viewer'
+}
+⏱ Incoming Watch Time: 3600
+🎬 Video Duration: 3600
+📊 Current Stored Watch Time: 0
+🆕 New Watch Time (after limit): 3600
+➕ Increment Time: 3600
+🎯 View Threshold: 1440
+✅ Eligible for earning
+💰 Raw Earnings: 2
+💵 Already Earned: 0
+💵 Max Possible: 2
+💸 Final Earnings: 2
+🟢 Monetization ON → Wallet entry
+[0mPOST /client/watchHistory/createWatchHistory?videoId=wh_vid&videoUserId=wh_creator&videoChannelId=wh_ch&currentWatchTime=3600 [32m200[0m 52.658 ms - 52[0m
+✅ Database updated successfully
+📥 createWatchHistory API CALLED
+📩 Query Params: {
+  videoId: 'wh_vid',
+  videoUserId: 'wh_creator',
+  videoChannelId: 'wh_ch',
+  currentWatchTime: '3600',
+  userId: 'wh_viewer'
+}
+⏱ Incoming Watch Time: 3600
+🎬 Video Duration: 3600
+📊 Current Stored Watch Time: 0
+🆕 New Watch Time (after limit): 3600
+➕ Increment Time: 3600
+🎯 View Threshold: 1440
+✅ Eligible for earning
+💰 Raw Earnings: 2
+💵 Already Earned: 0
+💵 Max Possible: 2
+💸 Final Earnings: 2
+🟢 Monetization ON → Wallet entry
+[0mPOST /client/watchHistory/createWatchHistory?videoId=wh_vid&videoUserId=wh_creator&videoChannelId=wh_ch&currentWatchTime=3600 [32m200[0m 53.340 ms - 52[0m
+✅ Database updated successfully
+📥 createWatchHistory API CALLED
+📩 Query Params: {
+  videoId: 'wh_vid',
+  videoUserId: 'wh_creator',
+  videoChannelId: 'wh_ch',
+  currentWatchTime: '3600',
+  userId: 'wh_viewer'
+}
+⏱ Incoming Watch Time: 3600
+🎬 Video Duration: 3600
+📊 Current Stored Watch Time: 0
+🆕 New Watch Time (after limit): 3600
+➕ Increment Time: 3600
+🎯 View Threshold: 1440
+✅ Eligible for earning
+💰 Raw Earnings: 2
+💵 Already Earned: 0
+💵 Max Possible: 2
+💸 Final Earnings: 2
+🟢 Monetization ON → Wallet entry
+[0mPOST /client/watchHistory/createWatchHistory?videoId=wh_vid&videoUserId=wh_creator&videoChannelId=wh_ch&currentWatchTime=3600 [32m200[0m 51.220 ms - 52[0m
+✅ Database updated successfully
+📥 createWatchHistory API CALLED
+📩 Query Params: {
+  videoId: 'wh_vid',
+  videoUserId: 'wh_creator',
+  videoChannelId: 'wh_ch',
+  currentWatchTime: '3600',
+  userId: 'wh_viewer'
+}
+⏱ Incoming Watch Time: 3600
+🎬 Video Duration: 3600
+📊 Current Stored Watch Time: 0
+🆕 New Watch Time (after limit): 3600
+➕ Increment Time: 3600
+🎯 View Threshold: 1440
+✅ Eligible for earning
+💰 Raw Earnings: 2
+💵 Already Earned: 0
+💵 Max Possible: 2
+💸 Final Earnings: 2
+🟢 Monetization ON → Wallet entry
+[0mPOST /client/watchHistory/createWatchHistory?videoId=wh_vid&videoUserId=wh_creator&videoChannelId=wh_ch&currentWatchTime=3600 [32m200[0m 50.165 ms - 52[0m
+✅ Database updated successfully
+📥 createWatchHistory API CALLED
+📩 Query Params: {
+  videoId: 'wh_vid',
+  videoUserId: 'wh_creator',
+  videoChannelId: 'wh_ch',
+  currentWatchTime: '3600',
+  userId: 'wh_viewer'
+}
+⏱ Incoming Watch Time: 3600
+🎬 Video Duration: 3600
+📊 Current Stored Watch Time: 0
+🆕 New Watch Time (after limit): 3600
+➕ Increment Time: 3600
+🎯 View Threshold: 1440
+✅ Eligible for earning
+💰 Raw Earnings: 2
+💵 Already Earned: 0
+💵 Max Possible: 2
+💸 Final Earnings: 2
+🟢 Monetization ON → Wallet entry
+[0mPOST /client/watchHistory/createWatchHistory?videoId=wh_vid&videoUserId=wh_creator&videoChannelId=wh_ch&currentWatchTime=3600 [32m200[0m 38.967 ms - 52[0m
+✅ Database updated successfully
+FAIL 06-rewards-and-history:RW-02 createWatchHistory credits the creator at most once per (viewer, video)
+     creator credited ₹10 for one 1-hour video watched by one viewer (5 identical calls); watch-history rows stored=0
+[0mPOST /client/playbackSession/syncPlayback [32m200[0m 67.605 ms - 59[0m
+[0mPOST /client/playbackSession/syncPlayback [32m200[0m 59.454 ms - 59[0m
+[0mPOST /client/playbackSession/syncPlayback [32m200[0m 66.731 ms - 59[0m
+[0mGET /client/playbackSession/getMyWatchHistory?start=1&limit=10 [32m200[0m 55.902 ms - 85[0m
+FAIL 06-rewards-and-history:RW-03 syncPlayback upserts one resumable row per (user, video)
+     3 syncs stored 3 rows (userId present on 0); getMyWatchHistory returned 0 item(s)
+[0mPOST /client/videoComment/createComment [32m200[0m 172.760 ms - 385[0m
+TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at getPath (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:131:12)
+    at E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:235:16
+    at Array.map (<anonymous>)
+    at applyLookup (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:234:18)
+    at runPipeline (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:289:17)
+    at runPipeline (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:286:75)
+    at ModelConstructor.aggregate (E:\Legendary One\youpeak\source\functions\backend\util\mongooseShim.js:869:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async exports.getComments (E:\Legendary One\youpeak\source\functions\backend\controllers\client\videoComment.controller.js:289:20)
+[0mGET /client/videoComment/getComments?videoId=pb_vid&commentType=newest&start=1&limit=10 [31m500[0m 73.148 ms - 84[0m
+FAIL 06-rewards-and-history:RW-04 GET videoComment/getComments returns the comments of a video
+     createComment=true; getComments HTTP 500 status=false msg="Cannot read properties of undefined (reading 'indexOf')" items=0
+[0mGET /client/video/videosOfHome?type=all&start=1&limit=50 [32m200[0m 81.772 ms - 1756[0m
+FAIL 06-rewards-and-history:RW-05 home feed type=all lists videos newest-first or shuffled, not strictly oldest-first by id
+     feed order = hf_v0,hf_v1,hf_v2,hf_v3 (identical to ascending _id order → randomisation seed has no effect; newest videos are last)
+[0mGET /client/video/videosOfHome?type=popular&start=1&limit=50 [32m200[0m 91.790 ms - 1744[0m
+FAIL 06-rewards-and-history:RW-06 videosOfHome type=popular ranks by view count
+     status=true; popular feed sorts on the lookup ARRAY "views" (`$sort:{views:-1}` before `$size`), not on a count
+
+AUDIT RESULT 0/6 expectations met (6 defects demonstrated)
+[32m[1m+ [22m[39m Script exited successfully (code 0)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+exit=0

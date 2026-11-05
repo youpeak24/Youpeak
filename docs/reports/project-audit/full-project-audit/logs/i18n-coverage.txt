@@ -1,0 +1,28 @@
+AppStrings entries: 504 | English map entries: 512
+┌─────────┬─────────┬─────────┬───────────────────┬───────────────────────┐
+│ (index) │ lang    │ entries │ appStringsMissing │ identicalToEnglishPct │
+├─────────┼─────────┼─────────┼───────────────────┼───────────────────────┤
+│ 0       │ 'ar'    │ 392     │ 126               │ 1                     │
+│ 1       │ 'bn'    │ 396     │ 122               │ 1                     │
+│ 2       │ 'de'    │ 396     │ 122               │ 5                     │
+│ 3       │ 'en'    │ 512     │ 9                 │ 100                   │
+│ 4       │ 'es'    │ 396     │ 122               │ 2                     │
+│ 5       │ 'fr'    │ 396     │ 122               │ 2                     │
+│ 6       │ 'hi'    │ 396     │ 122               │ 1                     │
+│ 7       │ 'id'    │ 396     │ 122               │ 2                     │
+│ 8       │ 'it'    │ 396     │ 122               │ 2                     │
+│ 9       │ 'ja'    │ 396     │ 122               │ 0                     │
+│ 10      │ 'ko'    │ 396     │ 122               │ 0                     │
+│ 11      │ 'mr'    │ 396     │ 122               │ 1                     │
+│ 12      │ 'pt'    │ 396     │ 122               │ 2                     │
+│ 13      │ 'ru'    │ 396     │ 122               │ 1                     │
+│ 14      │ 'sw'    │ 396     │ 122               │ 2                     │
+│ 15      │ 'ta'    │ 396     │ 122               │ 1                     │
+│ 16      │ 'te'    │ 396     │ 122               │ 1                     │
+│ 17      │ 'tr'    │ 396     │ 122               │ 2                     │
+│ 18      │ 'ur'    │ 396     │ 122               │ 0                     │
+│ 19      │ 'zh_cn' │ 396     │ 122               │ 1                     │
+└─────────┴─────────┴─────────┴───────────────────┴───────────────────────┘
+AppStrings keys with no English text (render as the raw key): 9 Yes, Clear, All, Pay Pal, Pay Stack, cash Free, Dismiss, You are blocked by the admin !!, Account Blocked, https://api.stripe.com/v1/payment_intents
+AppStrings.* referenced but not defined: viaSMS, viaEmail, isShowWaterMark, waterMarkIcon, waterMarkSize, currencySymbol, currencyCode, recentlyAdded, likedVideos, myFavoriteSongs, backgroundDownloads, watchOnTV, communityGuidelines, captions, accessibility, notInterested, dontRecommendChannel, stripeTestPublicKey
+hard-coded English literals in Text()/toast calls under features/: 128 in 36 files

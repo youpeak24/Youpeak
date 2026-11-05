@@ -3,7 +3,7 @@
  *
  * Flow:
  *   1. app asks for a one-time direct-upload URL  -> createDirectUpload()
- *   2. app PUTs the raw file straight to Cloudflare (never through our server)
+ *   2. app POSTs multipart data to Cloudflare's direct upload URL
  *   3. Cloudflare transcodes to HLS/DASH; a webhook (or getStatus poll) marks
  *      the video ready with hlsUrl / duration / thumbnail
  *
@@ -153,6 +153,8 @@ function verifyWebhook({ rawBody, headers }) {
   const ts = parts.time;
   const sig = parts.sig1;
   if (!ts || !sig) return { valid: false, reason: "bad_header" };
+  if (!/^\d+$/.test(ts) || !/^[a-f0-9]{64}$/i.test(sig)) return { valid: false, reason: "bad_header" };
+  if (Math.abs(Date.now() / 1000 - Number(ts)) > 300) return { valid: false, reason: "expired_signature" };
 
   const expected = crypto.createHmac("sha256", c.webhookSecret).update(`${ts}.${raw}`).digest("hex");
   const ok = expected.length === sig.length && crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig));
@@ -161,6 +163,7 @@ function verifyWebhook({ rawBody, headers }) {
   let body;
   try { body = JSON.parse(raw); } catch (e) { return { valid: false, reason: "bad_json" }; }
   const uid = body.uid;
+  if (typeof uid !== "string" || !/^[a-f0-9]{32}$/i.test(uid)) return { valid: false, reason: "bad_uid" };
   const state = body.status && body.status.state;
   return {
     valid: true,

@@ -1,0 +1,118 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "mobile": false,
+  "checks": {
+    "videoElement": {
+      "paused": true,
+      "t": 5.96547,
+      "d": 5.96547,
+      "muted": false,
+      "volume": 1,
+      "rect": [
+        257,
+        24.000001907348633,
+        1213,
+        682.3125
+      ],
+      "pe": "none"
+    },
+    "togglePlay": {
+      "before": true,
+      "after": false,
+      "toggled": true
+    },
+    "skip10": {
+      "t1": 1.499975,
+      "t2": 5.96547,
+      "moved": 4.465495
+    },
+    "mute": {
+      "paused": true,
+      "t": 5.96547,
+      "d": 5.96547,
+      "muted": true,
+      "volume": 0,
+      "rect": [
+        257,
+        24.000001907348633,
+        1213,
+        682.3125
+      ],
+      "pe": "none"
+    }
+  },
+  "labels": [
+    "Home",
+    "YouPeak",
+    "Create",
+    "Bites",
+    "Subscription",
+    "Library",
+    "Search",
+    "Notifications",
+    "Tasker",
+    "Profile",
+    "Seek\nVolume\n0:05 / 0:05 0:05 of 0:05",
+    "Replay",
+    "Play (k)",
+    "Back 10 seconds (←)",
+    "Forward 10 seconds (→)",
+    "Next video",
+    "Mute (m)",
+    "Playback speed\n1x",
+    "Full screen (f)",
+    "Data not found !!",
+    "0 Views · 56 years ago",
+    "Super Admin (Master)\n0 Subscribes",
+    "Subscribe",
+    "Like\n1.42k",
+    "Dislike\n12",
+    "Share a link to this video\nShare",
+    "Save to Watch Later\nSave",
+    "Downloads are available in the YouPeak Android app\nDownloads",
+    "Peak Boost this creator\nPeak Boost",
+    "Report this video\nReport",
+    "#YouPeak  #Tech  #Trending  #Creator\nDiscover incredible videos, shorts, live streams, and earn rewards on YouPeak!\nShow more",
+    "Comments · 0",
+    "View all",
+    "Add a Comments...",
+    "Post comment"
+  ],
+  "labels2": [
+    "Seek\nVolume\n0:05 / 0:05 0:05 of 0:05",
+    "Replay",
+    "Play (k)",
+    "Back 10 seconds (←)",
+    "Forward 10 seconds (→)",
+    "Mute (m)",
+    "Playback speed\n1x",
+    "Full screen (f)"
+  ],
+  "consoleErrors": [
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+  ],
+  "failed": [
+    "GET https://accounts.google.com/gsi/client net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET http://127.0.0.1:8095/google.firestore.v1.Firestore/Listen/channel?VER=8&database=projects%2Fyoupeak-9ff65%2Fdatabases%2F(default)&RID=rpc&SID=ET3ao_Y-CfmeyN4Kf net::ERR_ABORTED",
+    "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://accounts.google.com/gsi/client net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector",
+    "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80 net::ERR_BLOCKED_BY_CLIENT.Inspector"
+  ]
+}

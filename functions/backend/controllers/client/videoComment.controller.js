@@ -26,6 +26,17 @@ const moderation = require("../../util/moderation.service");
 //day.js
 const dayjs = require("dayjs");
 
+const crypto = require("crypto");
+const db = require("../../util/connection");
+const visibility = require("../../util/videoVisibility");
+
+// Upload form "Comments" policy (videos.commentType, 1-based):
+// 1 allow all · 2 disabled · 3 hold potentially inappropriate (the keyword
+// screen below refuses those) · 4 hold all for review.
+const COMMENTS_DISABLED = 2;
+const HOLD_ALL_FOR_REVIEW = 4;
+const MAX_COMMENT_LENGTH = 1000;
+
 //create user wise comment for video
 exports.createComment = async (req, res) => {
   try {
@@ -41,6 +52,9 @@ exports.createComment = async (req, res) => {
       Video.findById(videoId).lean(),
       VideoComment.exists({ userId, videoId }),
     ]);
+    if (commentText.length > MAX_COMMENT_LENGTH) {
+      return res.status(200).json({ status: false, code: "COMMENT_TOO_LONG", message: `Comments can be at most ${MAX_COMMENT_LENGTH} characters.` });
+    }
 
     if (!user) {
       return res.status(200).json({
@@ -56,16 +70,19 @@ exports.createComment = async (req, res) => {
       });
     }
 
-    if (!video) {
+    if (!video || !visibility.canView(video, userId)) {
       return res.status(200).json({
         status: false,
         message: "Video not found!",
       });
     }
 
-    if (video.commentType === 2) {
+    // The upload form stores the comment policy as a number or a numeric
+    // string; compare numerically (=== 2 missed "2" and let comments through).
+    if (Number(video.commentType) === COMMENTS_DISABLED) {
       return res.status(200).json({
         status: false,
+        code: "COMMENTS_DISABLED",
         message: "Comments are disabled for this video.",
       });
     }
@@ -79,13 +96,43 @@ exports.createComment = async (req, res) => {
       });
     }
 
-    const videoComment = await VideoComment.create({
-      userId,
-      videoId,
-      channelId: video.channelId,
+    // "Hold all comments for review": a viewer's comment is stored but shown
+    // only to its author and the video's owner.
+    const held = Number(video.commentType) === HOLD_ALL_FOR_REVIEW && String(video.userId) !== String(userId);
+    const fields = {
+      userId: String(userId),
+      videoId: String(videoId),
+      channelId: video.channelId || null,
       videoType: video.videoType,
       commentText,
-    });
+      recursiveCommentId: null,
+      like: 0,
+      dislike: 0,
+      totalReplies: 0,
+      ...(held ? { status: "held" } : {}),
+    };
+
+    // Idempotent create: a retry or double tap carrying the same requestId
+    // returns the first comment instead of posting it twice. Older apps
+    // without a requestId get the same text within 30 s de-duplicated.
+    const requestId = String(req.body.requestId || "").trim().slice(0, 64);
+    let videoComment;
+    if (requestId) {
+      const id = "vc_" + crypto.createHash("sha1").update(`${userId}|${videoId}|${requestId}`).digest("hex").slice(0, 28);
+      const once = await db.createOnce("VideoComment", id, fields);
+      if (!once.created) {
+        const existing = await VideoComment.findById(id).lean();
+        return res.status(200).json({ status: true, duplicate: true, message: "Comment added successfully.", data: existing, coinsEarned: 0, rewardStatus: "DUPLICATE", held: existing?.status === "held" });
+      }
+      videoComment = once.doc;
+    } else {
+      const recent = (await VideoComment.find({ userId: String(userId), videoId: String(videoId) }).lean())
+        .find((c) => c.commentText === commentText && Date.now() - new Date(c.createdAt).getTime() < 30000);
+      if (recent) {
+        return res.status(200).json({ status: true, duplicate: true, message: "Comment added successfully.", data: recent, coinsEarned: 0, rewardStatus: "DUPLICATE", held: recent.status === "held" });
+      }
+      videoComment = await VideoComment.create(fields);
+    }
 
     // Reward only on the user's FIRST comment for this video, and only within
     // the daily comment cap + daily earning cap. Server decides the amount.
@@ -120,8 +167,9 @@ exports.createComment = async (req, res) => {
 
     return res.status(200).json({
       status: true,
-      message: "Comment added successfully.",
+      message: held ? "Your comment will appear after the creator reviews it." : "Comment added successfully.",
       data: videoComment,
+      held,
       coinsEarned,
       rewardStatus,
     });
@@ -286,14 +334,24 @@ exports.getComments = async (req, res) => {
       return res.status(200).json({ status: false, message: "commentType must be passed valid!" });
     }
 
+    const video = await Video.findById(req.query.videoId).lean();
+    const viewerId = req.appUserId || null;
+    if (!video || !visibility.canView(video, viewerId)) {
+      return res.status(200).json({ status: false, message: "Video not found!" });
+    }
+    const isOwner = !!viewerId && String(video.userId) === String(viewerId);
+    // Held comments are visible to their author and to the video's owner only.
+    const heldFilter = isOwner ? {} : { $or: [{ status: { $ne: "held" } }, ...(viewerId ? [{ userId: String(viewerId) }] : [])] };
+
     const result = await VideoComment.aggregate([
       {
-        $match: { videoId: videoObjectId, recursiveCommentId: null },
+        $match: { videoId: videoObjectId, recursiveCommentId: null, ...heldFilter },
       },
       {
         $facet: {
           videoComment: [
-            { $sort: sortStage },
+            // Ties (same reply/like count) fall back to newest first, so pages are stable.
+            { $sort: { ...sortStage, createdAt: -1 } },
             { $skip: skip },
             { $limit: limit },
             {
@@ -334,6 +392,7 @@ exports.getComments = async (req, res) => {
             {
               $project: {
                 userId: "$user._id",
+                status: 1, // "held" (hold-for-review) is shown to its author and the owner
                 fullName: "$user.fullName",
                 userImage: "$user.image",
                 channelId: "$user.channelId",
@@ -467,13 +526,19 @@ exports.getComments = async (req, res) => {
       },
     ]);
 
-    const videoComment = result[0].videoComment;
+    const videoComment = result[0].videoComment.map((c) => ({
+      ...c,
+      isHeld: c.status === "held",
+      // Management actions the server will accept from this viewer.
+      canDelete: !!viewerId && (String(c.userId?._id || c.userId) === String(viewerId) || isOwner),
+    }));
     const total = result[0].totalCount[0]?.total || 0;
 
     return res.status(200).json({
       status: true,
       message: "finally, get commentType wise all comments for particular video!",
       total,
+      commentsDisabled: Number(video.commentType) === COMMENTS_DISABLED,
       videoComment,
     });
   } catch (error) {
@@ -507,8 +572,14 @@ exports.createCommentReply = async (req, res) => {
       return res.status(200).json({ status: false, message: "video does not found!!" });
     }
 
-    if (!videoCommentAlreadyExist) {
+    if (!videoCommentAlreadyExist || String(videoCommentAlreadyExist.videoId) !== String(video._id) || !visibility.canView(video, req.body.userId)) {
       return res.status(200).json({ status: false, message: "videoComment does not found!" });
+    }
+    if (Number(video.commentType) === COMMENTS_DISABLED) {
+      return res.status(200).json({ status: false, code: "COMMENTS_DISABLED", message: "Comments are disabled for this video." });
+    }
+    if (!req.body.commentText.trim() || req.body.commentText.trim().length > MAX_COMMENT_LENGTH) {
+      return res.status(200).json({ status: false, code: "COMMENT_INVALID", message: `Replies must be 1–${MAX_COMMENT_LENGTH} characters.` });
     }
 
     const replyText = req.body.commentText?.trim();
@@ -528,9 +599,9 @@ exports.createCommentReply = async (req, res) => {
     videoComment.commentText = replyText;
     videoComment.recursiveCommentId = videoCommentAlreadyExist._id;
 
-    videoCommentAlreadyExist.totalReplies += 1;
-
-    await Promise.all([videoComment.save(), videoCommentAlreadyExist.save()]);
+    await videoComment.save();
+    // Atomic counter (two replies at once used to overwrite each other's +1).
+    await VideoComment.updateOne({ _id: videoCommentAlreadyExist._id }, { $inc: { totalReplies: 1 } });
 
     return res.status(200).json({ status: true, message: "Comment reply given by user for that video!", videoComment });
   } catch (error) {
@@ -680,5 +751,39 @@ exports.repliesOfVideoComment = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+// Delete a comment (or reply): its author, or the owner of the video it is on.
+// A top-level comment takes its replies and their like records with it.
+exports.deleteComment = async (req, res) => {
+  try {
+    const userId = req.appUserId;
+    const commentId = String(req.query.commentId || req.body?.commentId || "");
+    if (!userId || !commentId) return res.status(200).json({ status: false, message: "Oops ! Invalid details!!" });
+
+    const comment = await VideoComment.findById(commentId).lean();
+    if (!comment) return res.status(200).json({ status: true, message: "Comment already deleted.", deleted: false });
+    const video = await Video.findById(comment.videoId).lean();
+    const isAuthor = String(comment.userId) === String(userId);
+    const isVideoOwner = !!video && String(video.userId) === String(userId);
+    if (!isAuthor && !isVideoOwner) {
+      return res.status(403).json({ status: false, code: "NOT_ALLOWED", message: "You can only delete your own comments or comments on your videos." });
+    }
+
+    const replies = comment.recursiveCommentId ? [] : await VideoComment.find({ recursiveCommentId: String(comment._id) }).lean();
+    const ids = [String(comment._id), ...replies.map((r) => String(r._id))];
+    await LikeHistoryOfVideoComment.deleteMany({ videoCommentId: { $in: ids } });
+    await VideoComment.deleteMany({ _id: { $in: ids } });
+    if (comment.recursiveCommentId) {
+      const parent = await VideoComment.findById(String(comment.recursiveCommentId)).lean();
+      if (parent && Number(parent.totalReplies) > 0) {
+        await VideoComment.updateOne({ _id: parent._id }, { $inc: { totalReplies: -1 } });
+      }
+    }
+    return res.status(200).json({ status: true, message: "Comment deleted.", deleted: true, deletedCount: ids.length });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: false, message: error.message || "Internal Server Error" });
   }
 };

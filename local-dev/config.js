@@ -17,7 +17,10 @@ module.exports = {
   FRONTEND_PORT: 3055,
   BACKEND_PORT: 5055,
   FIRESTORE_PORT: 8095,
+  AUTH_PORT: 9095,
   EMULATOR_UI_PORT: 4005,
+  // Serves local-dev/fixtures (labelled test videos) to the local web app.
+  FIXTURE_PORT: 5056,
 
   // Local-only values; they protect nothing real.
   SECRET_KEY: "youpeak-local-dev-key",
@@ -29,6 +32,8 @@ module.exports = {
     district: { email: "district@youpeak.test", label: "District Partner (Franchise)" },
     partner: { email: "partner@youpeak.test", label: "Digital Partner" },
   },
+  // App (viewer) login for the Flutter web app, email + password.
+  APP_USER: { id: "local_app_user", email: "viewer@youpeak.test", label: "App viewer (Flutter web)" },
   AGENCY_ID: "agency_trichy_01",
   PARTNER_USER_ID: "user_103",
 };

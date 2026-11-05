@@ -1,4 +1,5 @@
 const UserWiseDownload = require("../../models/userWiseDownload.model");
+const visibility = require("../../util/videoVisibility");
 
 //import model
 const User = require("../../models/user.model");
@@ -83,6 +84,8 @@ exports.getdownloadVideoHistory = async (req, res) => {
             from: "videos",
             localField: "videoId",
             foreignField: "_id",
+            // F-12: a video made private / held / taken down since it was saved drops out.
+            pipeline: [{ $match: visibility.savedItemMatch() }],
             as: "video",
           },
         },

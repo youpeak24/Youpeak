@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "",
+  "installCommand": "",
+  "rewrites": [
+    { "source": "/.well-known/assetlinks.json", "destination": "https://api.youpeak.app/.well-known/assetlinks.json" },
+    { "source": "/.well-known/apple-app-site-association", "destination": "https://api.youpeak.app/.well-known/apple-app-site-association" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

@@ -1,6 +1,7 @@
 //express
 const express = require("express");
 const route = express.Router();
+const bindAppUser = require("../../middleware/bindAppUser.middleware");
 
 const checkAccessWithSecretKey = require("../../checkAccess");
 
@@ -8,9 +9,9 @@ const checkAccessWithSecretKey = require("../../checkAccess");
 const SaveToWatchController = require("../../controllers/client/saveToWatchLater.controller");
 
 //user wise add video to saveToWatchLater
-route.post("/addVideoToWatchLater", checkAccessWithSecretKey(), SaveToWatchController.addVideoToWatchLater);
+route.post("/addVideoToWatchLater", bindAppUser(), SaveToWatchController.addVideoToWatchLater);
 
 //get all saveToWatchLater videos for that user
-route.get("/getSaveToWatchLater", checkAccessWithSecretKey(), SaveToWatchController.getSaveToWatchLater);
+route.get("/getSaveToWatchLater", bindAppUser(), SaveToWatchController.getSaveToWatchLater);
 
 module.exports = route;

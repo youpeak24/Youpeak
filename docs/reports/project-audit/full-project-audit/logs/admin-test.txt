@@ -1,0 +1,17 @@
+
+> admin@0.1.0 test
+> react-scripts test --watchAll=false
+
+PASS src/util/apiError.test.js
+  describeApiError
+    √ uses the server's message when the server answered (3 ms)
+    √ names the unreachable API instead of a bare 'Network Error' (1 ms)
+    √ reports timeouts as such
+    √ falls back for empty errors (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        4.017 s
+Ran all test suites.
+exit=0

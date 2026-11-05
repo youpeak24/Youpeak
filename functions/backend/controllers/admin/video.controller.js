@@ -7,6 +7,8 @@ const firebaseSyncService = require("../../util/firebaseSync.service");
 // upload (normal videos or shorts) by the admin
 exports.uploadVideo = async (req, res) => {
   try {
+    const media = require("../../util/mediaPolicy").videoLocation(req.body?.videoUrl, require("../../util/cloudflareStorage.service")._cfg());
+    if (!media) return res.status(400).json({ status: false, code: "INVALID_VIDEO_PROVIDER", message: "Upload videos and bites to the configured Cloudflare storage first." });
     if (
       !req.body.title ||
       !req.body.description ||
@@ -56,6 +58,7 @@ exports.uploadVideo = async (req, res) => {
       audienceType: Number(req.body.audienceType),
       commentType: Number(req.body.commentType),
       videoUrl: req.body.videoUrl,
+      ...media,
       videoImage: req.body.videoImage,
       isAddByAdmin: true,
       scheduleType: Number(req.body.scheduleType),

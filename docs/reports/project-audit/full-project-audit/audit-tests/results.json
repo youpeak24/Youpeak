@@ -1,0 +1,19 @@
+{
+  "ranAt": "2026-10-06T12:08:30.190Z",
+  "results": [
+    {
+      "id": "10-xss-sink:XSS-01",
+      "name": "a franchise login cannot create a partner whose email contains HTML markup",
+      "ok": false,
+      "ms": 623,
+      "error": "server accepted the markup email: {\"status\":true,\"message\":\"Digital Partner created. A new app account was created — they can log in to the app and the partner panel with this email and password.\",\"partner\":{\"userId\":\"1791288509701\",\""
+    },
+    {
+      "id": "10-xss-sink:XSS-02",
+      "name": "the credentials returned to the Super Admin for a partner never contain unescaped markup",
+      "ok": false,
+      "ms": 159,
+      "error": "portalCredentials.email returned verbatim: <img/src=x/onerror=alert(document.domain)>@a.bc"
+    }
+  ]
+}

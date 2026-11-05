@@ -1,0 +1,14 @@
+{
+  "name": "YouPeak",
+  "short_name": "YouPeak",
+  "description": "YouPeak video rewards and creator platform information.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "/assets/favicon_180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/assets/favicon_512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

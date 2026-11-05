@@ -1,4 +1,5 @@
 const PlaybackSession = require("../../models/playbackSession.model");
+const visibility = require("../../util/videoVisibility");
 
 //import model
 const User = require("../../models/user.model");
@@ -86,6 +87,8 @@ exports.getMyWatchHistory = async (req, res) => {
           localField: "videoId",
           foreignField: "_id",
           pipeline: [
+            // F-12: a video made private / held / taken down since it was saved drops out.
+            { $match: visibility.savedItemMatch() },
             {
               $project: {
                 _id: 1,
@@ -163,6 +166,7 @@ exports.getMyWatchHistory = async (req, res) => {
         $addFields: {
           isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
           isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+          storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
         },
       },
       {

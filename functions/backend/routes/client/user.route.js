@@ -1,6 +1,8 @@
 //express
 const express = require("express");
 const route = express.Router();
+const optionalAppUser = require("../../middleware/optionalAppUser.middleware");
+const bindAppUser = require("../../middleware/bindAppUser.middleware");
 
 const checkAccessWithSecretKey = require("../../checkAccess");
 
@@ -17,57 +19,57 @@ route.post("/login", checkAccessWithSecretKey(), FirestoreUserCtrl.store);
 route.post("/checkUser", checkAccessWithSecretKey(), FirestoreUserCtrl.checkUser);
 
 // get user profile who login  ← FIRESTORE
-route.get("/profile", checkAccessWithSecretKey(), FirestoreUserCtrl.getProfile);
+route.get("/profile", bindAppUser(), FirestoreUserCtrl.getProfile);
 
 // update profile of the user (when user login or signUp)  ← FIRESTORE
-route.patch("/updateProfile", checkAccessWithSecretKey(), FirestoreUserCtrl.updateProfile);
+route.patch("/updateProfile", bindAppUser(), FirestoreUserCtrl.updateProfile);
 
 //check referral code is valid and apply referral code by user
-route.patch("/validateAndApplyReferralCode", checkAccessWithSecretKey(), UserController.validateAndApplyReferralCode);
+route.patch("/validateAndApplyReferralCode", bindAppUser(), UserController.validateAndApplyReferralCode);
 
 //earn coin from watching ad
-route.patch("/handleAdWatchReward", checkAccessWithSecretKey(), UserController.handleAdWatchReward);
+route.patch("/handleAdWatchReward", bindAppUser(), UserController.handleAdWatchReward);
 
 //earn coin from engagement video reward
-route.patch("/handleEngagementVideoWatchReward", checkAccessWithSecretKey(), UserController.handleEngagementVideoWatchReward);
+route.patch("/handleEngagementVideoWatchReward", bindAppUser(), UserController.handleEngagementVideoWatchReward);
 
 //update details of the channel (create your channel button)
-route.patch("/update", checkAccessWithSecretKey(), UserController.update);
+route.patch("/update", bindAppUser(), UserController.update);
 
 //update password
-route.patch("/updatePassword", checkAccessWithSecretKey(), UserController.updatePassword);
+route.patch("/updatePassword", bindAppUser(), UserController.updatePassword);
 
 //set password
 route.post("/setPassword", checkAccessWithSecretKey(), UserController.setPassword);
 
 //get particular channel's details (home page)
-route.get("/detailsOfChannel", checkAccessWithSecretKey(), UserController.detailsOfChannel);
+route.get("/detailsOfChannel", optionalAppUser(), UserController.detailsOfChannel);
 
 //get particular's channel's videoType wise videos (videos, shorts) (your videos)
-route.get("/videosOfChannel", checkAccessWithSecretKey(), UserController.videosOfChannel);
+route.get("/videosOfChannel", optionalAppUser(), UserController.videosOfChannel);
 
 //get particular's channel's playLists
-route.get("/playListsOfChannel", checkAccessWithSecretKey(), UserController.playListsOfChannel);
+route.get("/playListsOfChannel", optionalAppUser(), UserController.playListsOfChannel);
 
 //get particular playList's videos
-route.get("/getPlayListVideos", checkAccessWithSecretKey(), UserController.getPlayListVideos);
+route.get("/getPlayListVideos", optionalAppUser(), UserController.getPlayListVideos);
 
 //get particular channel's about
-route.get("/aboutOfChannel", checkAccessWithSecretKey(), UserController.aboutOfChannel);
+route.get("/aboutOfChannel", optionalAppUser(), UserController.aboutOfChannel);
 
 //search channel for user
-route.post("/searchChannel", checkAccessWithSecretKey(), UserController.searchChannel);
+route.post("/searchChannel", optionalAppUser(), UserController.searchChannel);
 
 //delete user account
-route.delete("/deleteUserAccount", checkAccessWithSecretKey(), UserController.deleteUserAccount);
+route.delete("/deleteUserAccount", bindAppUser(), UserController.deleteUserAccount);
 
 //get referral history of particular user
-route.get("/loadReferralHistoryByUser", checkAccessWithSecretKey(), UserController.loadReferralHistoryByUser);
+route.get("/loadReferralHistoryByUser", bindAppUser(), UserController.loadReferralHistoryByUser);
 
 //get coin history of particular user
-route.get("/retriveCoinHistoryByUser", checkAccessWithSecretKey(), UserController.retriveCoinHistoryByUser);
+route.get("/retriveCoinHistoryByUser", bindAppUser(), UserController.retriveCoinHistoryByUser);
 
 //get wallet history of particular user
-route.get("/fetchWalletHistoryByUser", checkAccessWithSecretKey(), UserController.fetchWalletHistoryByUser);
+route.get("/fetchWalletHistoryByUser", bindAppUser(), UserController.fetchWalletHistoryByUser);
 
 module.exports = route;

@@ -1,0 +1,415 @@
+{
+  "label": "after (fixed build)",
+  "mobile": false,
+  "results": [
+    {
+      "name": "N1 entry: Back from the first screen returns to the earlier page",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "entry",
+          "where": "app",
+          "screen": "onboarding",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Watch interesting videos from around the world",
+            "Next"
+          ]
+        },
+        {
+          "action": "Back",
+          "where": "external",
+          "screen": "external-page",
+          "hist": null,
+          "labels": []
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    },
+    {
+      "name": "N2 sign-in screen: Back is not trapped by an exit dialog",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "sign-in screen",
+          "where": "app",
+          "screen": "lets-you-in",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Let’s you in",
+            "Continue with phone",
+            "Continue with Google",
+            "or",
+            "Sign in with password",
+            "Don't have an account? Sign up"
+          ]
+        },
+        {
+          "action": "Back",
+          "where": "external",
+          "screen": "external-page",
+          "hist": null,
+          "labels": []
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    },
+    {
+      "name": "N3 sign-in screen -> password page: Back returns to the sign-in screen, then to the earlier page",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "password page",
+          "where": "app",
+          "screen": "login",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Login to Your Account",
+            "Email",
+            "Password",
+            "Remember me",
+            "Sign in",
+            "Forgot the password?",
+            "or continue with",
+            "Continue with Google"
+          ]
+        },
+        {
+          "action": "Back",
+          "where": "app",
+          "screen": "lets-you-in",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Let’s you in",
+            "Continue with phone",
+            "Continue with Google",
+            "or",
+            "Sign in with password",
+            "Don't have an account? Sign up"
+          ]
+        },
+        {
+          "action": "Forward",
+          "where": "app",
+          "screen": "lets-you-in",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Let’s you in",
+            "Continue with phone",
+            "Continue with Google",
+            "or",
+            "Sign in with password",
+            "Don't have an account? Sign up"
+          ]
+        },
+        {
+          "action": "Back again",
+          "where": "external",
+          "screen": "external-page",
+          "hist": null,
+          "labels": []
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    },
+    {
+      "name": "N4 sign-in screen -> sign up -> sign in link: Back always returns to the sign-in options",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "sign up page",
+          "where": "app",
+          "screen": "signup",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Create Your Account",
+            "Email",
+            "Password",
+            "Conform Password",
+            "Sign up",
+            "or continue with",
+            "Continue with Google",
+            "Already have an account? Sign in"
+          ]
+        },
+        {
+          "action": "Back",
+          "where": "app",
+          "screen": "lets-you-in",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Let’s you in",
+            "Continue with phone",
+            "Continue with Google",
+            "or",
+            "Sign in with password",
+            "Don't have an account? Sign up"
+          ]
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    },
+    {
+      "name": "N5 sign-in screen -> phone: Back returns to the sign-in options",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "phone page",
+          "where": "app",
+          "screen": "phone",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Back",
+            "Sign in with your phone",
+            "We'll text you a one-time code. Standard SMS rates may apply.",
+            "+",
+            "Code",
+            "Mobile number",
+            "Send code"
+          ]
+        },
+        {
+          "action": "Back",
+          "where": "app",
+          "screen": "lets-you-in",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Let’s you in",
+            "Continue with phone",
+            "Continue with Google",
+            "or",
+            "Sign in with password",
+            "Don't have an account? Sign up"
+          ]
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    },
+    {
+      "name": "N6 signed in: Back keeps the session; Forward and refresh return to Home, not sign-in",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "signed in",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        },
+        {
+          "action": "Back at Home",
+          "where": "external",
+          "screen": "external-page",
+          "hist": null,
+          "labels": []
+        },
+        {
+          "action": "Forward into the app",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        },
+        {
+          "action": "refresh",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    },
+    {
+      "name": "N7 signed in: Back from an inner page returns to Home without logging out",
+      "ok": true,
+      "notes": [],
+      "steps": [
+        {
+          "action": "Home",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        },
+        {
+          "action": "Tasker tab/page",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        },
+        {
+          "action": "Back",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        },
+        {
+          "action": "refresh after Back",
+          "where": "app",
+          "screen": "app-home",
+          "hist": {
+            "href": "http://127.0.0.1:5100/",
+            "len": 4,
+            "state": "{\"flutter\":true}"
+          },
+          "labels": [
+            "Home",
+            "YouPeak",
+            "Create",
+            "Bites",
+            "Subscription",
+            "Library",
+            "Search",
+            "Notifications"
+          ]
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+      ]
+    }
+  ]
+}

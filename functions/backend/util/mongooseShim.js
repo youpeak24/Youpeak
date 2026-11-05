@@ -1,4 +1,5 @@
 const firestoreDb = require("./firestoreDb.service");
+const { matchesQuery } = require("./queryMatcher");
 
 // ── Mongo-style update operators, applied in JS (Firestore shim has no atomic ops) ──
 // Supports $set, $inc, $mul, $push, $addToSet, $pull, $unset, and bare fields.
@@ -43,7 +44,12 @@ function buildUpdatePayload(existing, updateData) {
   if (updateData && updateData.$pull) {
     for (const [k, v] of Object.entries(updateData.$pull)) {
       const arr = Array.isArray(existing[k]) ? existing[k] : [];
-      out[k] = arr.filter((x) => JSON.stringify(x) !== JSON.stringify(v));
+      // `{ $in: [...] }` and other conditions remove every matching element
+      // (comparing the condition object itself as JSON removed nothing).
+      const isCond = v && typeof v === "object" && !Array.isArray(v) && Object.keys(v).length > 0 && Object.keys(v).every((kk) => kk.startsWith("$"));
+      out[k] = isCond
+        ? arr.filter((x) => !matchesQuery({ el: x }, { el: v }))
+        : arr.filter((x) => JSON.stringify(x) !== JSON.stringify(v) && !(x != null && v != null && typeof x !== "object" && String(x) === String(v && v._id != null ? v._id : v)));
     }
   }
   if (updateData && updateData.$unset) {
@@ -118,7 +124,8 @@ function matchStage(rows, cond) {
             } catch (e) { /* bad regex -> no match */ return false; }
           }
         }
-      } else if (!looseEq(val, v)) {
+      } else if (v === null ? val != null : !looseEq(val, v)) {
+        // Mongo: `{ field: null }` matches null AND a missing field.
         return false;
       }
     }
@@ -153,6 +160,8 @@ function evalExpr(expr, doc, vars) {
   }
   if (Array.isArray(expr)) return expr.map((e) => evalExpr(e, doc, vars));
   if (typeof expr !== "object") return expr;
+  if (expr instanceof Date) return expr;
+  if (expr instanceof ObjectId) return String(expr);
 
   const keys = Object.keys(expr);
   const opKey = keys.find((k) => k.startsWith("$"));
@@ -164,7 +173,16 @@ function evalExpr(expr, doc, vars) {
   }
   const a = expr[opKey];
   const E = (x) => evalExpr(x, doc, vars);
-  const num = (x) => { const n = Number(E(x)); return Number.isFinite(n) ? n : 0; };
+  // Dates are stored as ISO strings in Firestore: date math ($subtract with
+  // $NOW for "3 hours ago") must read them as times, not as 0 (which made
+  // every feed say "56 years ago").
+  const num = (x) => {
+    const v = E(x);
+    if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T/.test(v)) { const t = Date.parse(v); return Number.isFinite(t) ? t : 0; }
+    if (v && typeof v === "object" && typeof v.toDate === "function") return v.toDate().getTime();
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
   const arr = (x) => { const v = E(x); return Array.isArray(v) ? v : []; };
   switch (opKey) {
     case "$literal": return a;
@@ -227,17 +245,29 @@ function evalExpr(expr, doc, vars) {
   }
 }
 
-function applyLookup(results, stage, foreign) {
-  const { from, localField, foreignField, as, pipeline: sub } = stage.$lookup;
+function applyLookup(results, stage, foreign, vars = null) {
+  const { from, localField, foreignField, as, pipeline: sub, let: letSpec } = stage.$lookup;
   const key = firestoreDb.normalizeCollectionName(from);
   const frows = foreign[key] || foreign[from] || [];
   return results.map((r) => {
-    const lv = getPath(r, localField);
-    let matches = frows.filter((fr) => {
-      const fv = getPath(fr, foreignField);
-      return Array.isArray(lv) ? lv.some((x) => looseEq(x, fv)) : looseEq(lv, fv);
-    });
-    if (Array.isArray(sub) && sub.length) matches = runPipeline(matches, sub, foreign);
+    // Equality join when localField/foreignField are given; the `let` +
+    // `pipeline` form (correlated sub-query, $vars in $expr) runs the
+    // sub-pipeline over the whole foreign set with this row's variables.
+    // (That form crashed here — e.g. every comments list with a comment.)
+    let matches = frows;
+    if (localField && foreignField) {
+      const lv = getPath(r, localField);
+      matches = frows.filter((fr) => {
+        const fv = getPath(fr, foreignField);
+        return Array.isArray(lv) ? lv.some((x) => looseEq(x, fv)) : looseEq(lv, fv);
+      });
+    }
+    let rowVars = vars;
+    if (letSpec && typeof letSpec === "object") {
+      rowVars = { ...(vars || {}) };
+      for (const [name, expr] of Object.entries(letSpec)) rowVars[name] = evalExpr(expr, r, vars);
+    }
+    if (Array.isArray(sub) && sub.length) matches = runPipeline(matches, sub, foreign, rowVars);
     return { ...r, [as]: matches };
   });
 }
@@ -261,10 +291,14 @@ function applyUnwind(results, stage) {
   return out;
 }
 
-function runPipeline(rows, pipeline, foreign = {}) {
+function runPipeline(rows, pipeline, foreign = {}, vars = null) {
   let results = Array.isArray(rows) ? rows.slice() : [];
   for (const stage of pipeline || []) {
-    if (stage.$match) results = matchStage(results, stage.$match);
+    if (stage.$match) {
+      const { $expr, ...rest } = stage.$match;
+      if ($expr !== undefined) results = results.filter((r) => Boolean(evalExpr($expr, r, vars)));
+      results = matchStage(results, rest);
+    }
     else if (stage.$sort) {
       const keys = Object.keys(stage.$sort);
       results.sort((a, b) => {
@@ -283,10 +317,10 @@ function runPipeline(rows, pipeline, foreign = {}) {
     else if (stage.$count) results = [{ [stage.$count]: results.length }];
     else if (stage.$facet) {
       const out = {};
-      for (const [name, sub] of Object.entries(stage.$facet)) out[name] = runPipeline(results, sub, foreign);
+      for (const [name, sub] of Object.entries(stage.$facet)) out[name] = runPipeline(results, sub, foreign, vars);
       results = [out];
     } else if (stage.$lookup) {
-      results = applyLookup(results, stage, foreign);
+      results = applyLookup(results, stage, foreign, vars);
     } else if (stage.$unwind) {
       results = applyUnwind(results, stage);
     } else if (stage.$addFields || stage.$set) {
@@ -696,8 +730,23 @@ function withSchemaDefaults(schema, data) {
   }
 }
 
+// Top-level schema fields declared as arrays (`videoId: [{ type: ... }]`).
+function schemaArrayFields(schema) {
+  const def = schema && schema.definition;
+  if (!def || typeof def !== "object") return [];
+  return Object.keys(def).filter((k) => Array.isArray(def[k]) || (def[k] && Array.isArray(def[k].type)));
+}
+
+// A bulk delete/update with no effective condition (e.g. `{ userId: undefined }`
+// from a missing parameter) would touch the whole collection: refuse it.
+function assertHasConditions(query, op) {
+  const has = query && typeof query === "object" && Object.keys(query).some((k) => query[k] !== undefined);
+  if (!has) throw new Error(`${op} refused: empty filter would affect every document`);
+}
+
 function createFirestoreModel(modelName, schema) {
   const collectionName = firestoreDb.normalizeCollectionName(modelName);
+  firestoreDb.registerArrayFields(collectionName, schemaArrayFields(schema));
 
   function ModelConstructor(data = {}) {
     Object.assign(this, data);
@@ -774,10 +823,10 @@ function createFirestoreModel(modelName, schema) {
   }
 
   ModelConstructor.updateOne = async function (query = {}, updateData = {}) {
-    const directId = query._id || query.id;
-    const existing = directId
-      ? await firestoreDb.findById(collectionName, directId)
-      : await firestoreDb.findOne(collectionName, query);
+    // findOne evaluates the WHOLE filter (equality on every field and every
+    // operator). Fetching by id alone and only checking operator guards let
+    // `updateOne({ _id, userId: me })` modify a document owned by someone else.
+    const existing = await firestoreDb.findOne(collectionName, query);
 
     if (!existing) return { matchedCount: 0, modifiedCount: 0, acknowledged: true };
     if (!matchesQueryGuards(existing, query)) {
@@ -789,6 +838,7 @@ function createFirestoreModel(modelName, schema) {
   };
 
   ModelConstructor.updateMany = async function (query = {}, updateData = {}) {
+    assertHasConditions(query, "updateMany");
     const items = await firestoreDb.find(collectionName, query);
     let modified = 0;
     for (const item of items) {
@@ -846,6 +896,7 @@ function createFirestoreModel(modelName, schema) {
   };
 
   ModelConstructor.deleteMany = async function (query) {
+    assertHasConditions(query, "deleteMany");
     const items = await firestoreDb.find(collectionName, query);
     for (const item of items) {
       await firestoreDb.delete(collectionName, item._id || item.id);

@@ -2,7 +2,8 @@
 const db = require("./connection");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const { recordAgencyCommission } = require("./revenueCommission.service");
+const { planAgencyCommission } = require("./revenueCommission.service");
+const firebaseAdmin = require("./firebaseAdmin");
 const { resolveAgency } = require("./geofence.service");
 
 const num = (v, d = 0) => (Number.isFinite(Number(v)) ? Number(v) : d);
@@ -39,6 +40,7 @@ async function grantDigitalPartnerLicense({
   agencyId = null,
   portalPassword = null,
   feeRecordedByAdminId = null,
+  effectKey = null,
 }) {
   const amount = num(amountInr);
   const buyer = await db.findById("users", userId);
@@ -46,62 +48,71 @@ async function grantDigitalPartnerLicense({
   const owningAgencyId =
     agencyId || (await resolveAgency({ state: buyer?.state || "", district: buyer?.district || "" })) || null;
 
-  await db.update("users", userId, {
-    isDigitalPartner: true,
-    partnerStatus: "ACTIVE",
-    agencyId: owningAgencyId,
-    partnerSince: buyer?.partnerSince && buyer?.isDigitalPartner ? buyer.partnerSince : new Date().toISOString(),
-  });
-
+  // Activation, Ad Credits top-up and the franchise commission commit in ONE
+  // transaction with an idempotency marker (licenseGrants/<effectKey>), so a
+  // retried payment callback can't top the credits up twice and a crash can't
+  // leave a partner active without credits (Phase 2, F-22).
+  const key = effectKey || `dpl_${paymentTransactionId || `manual_${userId}_${Date.now()}`}`;
+  const fs = db.getDb();
+  const profileCol = db.normalizeCollectionName("PartnerProfile");
   const existing = await db.findOne("PartnerProfile", { userId });
-  let adCreditsBalance = amount;
-  if (existing) {
-    const updated = await db.incrementFields(
-      "PartnerProfile",
-      existing._id || existing.id,
-      { adCreditsBalance: amount, adCreditsGranted: amount, licenseFeePaid: amount },
-      { paymentTransactionId, agencyId: owningAgencyId, activatedAt: new Date().toISOString() }
-    );
-    adCreditsBalance = updated?.adCreditsBalance ?? (existing.adCreditsBalance || 0) + amount;
-  } else {
-    await db.create("PartnerProfile", {
+  const profileRef = fs.collection(profileCol).doc(existing ? String(existing._id || existing.id) : `pp_${userId}`);
+  const markerRef = fs.collection("licenseGrants").doc(key);
+
+  let commissionPlan = null;
+  const rate = num((global.settingJSON || {}).districtPartnerRates?.digitalPartnerLicense, 20);
+  if (rate > 0 && amount > 0) {
+    // District Franchise override on the licence fee (V4 chart "Digital
+    // Partner" line, districtPartnerRates.digitalPartnerLicense).
+    commissionPlan = await planAgencyCommission({
+      agencyId: owningAgencyId || undefined,
+      sourceType: "DIGITAL_PARTNER_LICENSE",
+      grossAmount: amount,
+      ratePercentage: rate,
+      state: buyer?.state || "",
+      district: buyer?.district || "",
       userId,
-      agencyId: owningAgencyId,
-      licenseFeePaid: amount,
-      paymentTransactionId,
-      adCreditsBalance: amount,
-      adCreditsGranted: amount,
-      activatedAt: new Date().toISOString(),
-      totalReferrals: 0,
-      totalEarnings: 0,
-    });
+      id: `agc_${key}`,
+      extra: {
+        partnerUserId: String(userId),
+        verificationStatus: feeRecordedByAdminId ? "UNVERIFIED" : "VERIFIED",
+        recordedByAdminId: feeRecordedByAdminId || null,
+        paymentTransactionId,
+      },
+    }).catch((e) => { console.error("Digital Partner licence commission plan failed:", e.message); return null; });
   }
 
-  // District Franchise override on the licence fee (V4 chart "Digital
-  // Partner" line, districtPartnerRates.digitalPartnerLicense).
-  let commission = null;
-  try {
-    const rate = num((global.settingJSON || {}).districtPartnerRates?.digitalPartnerLicense, 20);
-    if (rate > 0 && amount > 0) {
-      commission = await recordAgencyCommission({
-        agencyId: owningAgencyId || undefined,
-        sourceType: "DIGITAL_PARTNER_LICENSE",
-        grossAmount: amount,
-        ratePercentage: rate,
-        state: buyer?.state || "",
-        district: buyer?.district || "",
-        userId,
-        extra: {
-          partnerUserId: String(userId),
-          verificationStatus: feeRecordedByAdminId ? "UNVERIFIED" : "VERIFIED",
-          recordedByAdminId: feeRecordedByAdminId || null,
-          paymentTransactionId,
-        },
+  const granted = await db.withTimeout(fs.runTransaction(async (tx) => {
+    const [marker, profileSnap] = await Promise.all([tx.get(markerRef), tx.get(profileRef)]);
+    if (marker.exists) return { replayed: true, adCreditsBalance: Number(profileSnap.data()?.adCreditsBalance) || 0, commission: null };
+    const now = new Date().toISOString();
+    tx.set(fs.collection("users").doc(String(userId)), {
+      isDigitalPartner: true,
+      partnerStatus: "ACTIVE",
+      agencyId: owningAgencyId,
+      partnerSince: buyer?.partnerSince && buyer?.isDigitalPartner ? buyer.partnerSince : now,
+      updatedAt: now,
+    }, { merge: true });
+    const before = profileSnap.exists ? Number(profileSnap.data().adCreditsBalance) || 0 : 0;
+    if (profileSnap.exists) {
+      tx.update(profileRef, {
+        adCreditsBalance: firebaseAdmin.firestore.FieldValue.increment(amount),
+        adCreditsGranted: firebaseAdmin.firestore.FieldValue.increment(amount),
+        licenseFeePaid: firebaseAdmin.firestore.FieldValue.increment(amount),
+        paymentTransactionId, agencyId: owningAgencyId, activatedAt: now, updatedAt: now,
+      });
+    } else {
+      tx.create(profileRef, {
+        _id: profileRef.id, id: profileRef.id, userId, agencyId: owningAgencyId, licenseFeePaid: amount, paymentTransactionId,
+        adCreditsBalance: amount, adCreditsGranted: amount, activatedAt: now, totalReferrals: 0, totalEarnings: 0, createdAt: now, updatedAt: now,
       });
     }
-  } catch (e) {
-    console.error("Digital Partner licence commission failed:", e.message);
-  }
+    if (commissionPlan) tx.create(fs.collection(db.normalizeCollectionName("agencyCommissions")).doc(commissionPlan.id), commissionPlan.doc);
+    tx.create(markerRef, { _id: key, userId: String(userId), amountInr: amount, paymentTransactionId, commission: commissionPlan ? commissionPlan.id : null, createdAt: now });
+    return { replayed: false, adCreditsBalance: before + amount, commission: commissionPlan ? commissionPlan.doc : null };
+  }));
+  const adCreditsBalance = granted.adCreditsBalance;
+  const commission = granted.commission;
 
   let portalCredentials = null;
   try {

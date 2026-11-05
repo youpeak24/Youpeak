@@ -1,0 +1,187 @@
+00:00 +0: loading E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart
+00:00 +0: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ApiProblem each failure class is distinguished and says something different
+00:00 +1: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ApiProblem diagnostics carry status and code only
+00:00 +2: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ApiProblem upload: a 403 from our API is a permission refusal, not an ended session; 401 is
+00:00 +3: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService owner → found, with the server's channel id
+00:00 +4: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService no channel → NoChannel (isChannel false, or no channel id)
+00:00 +5: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService no session on the device → auth required (nothing is sent)
+00:00 +6: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService expired token: refreshed once and retried — an owner is not told to sign in
+00:00 +7: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService server keeps refusing the session → auth required (expired)
+00:00 +8: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService 403 → denied (not auth, not 'no channel'); blocked account → denied
+00:00 +9: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelLookupService network failure, server error and an unreadable reply are 'unavailable' — never 'no channel'
+00:00 +10: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: splash: when is a signed-in user signed out? only when the server says the account can't continue
+00:00 +11: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: splash: when is a signed-in user signed out? a slow or failed connection never signs anyone out (it would wipe their local data)
+00:00 +12: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelHomeApi.fetch returns the model on success and the problem on failure; the page is handed back
+00:00 +13: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: ChannelHomeApi.fetch a channel that does not exist says so (not a generic failure)
+00:00 +14: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: putFileToStorage (Android streaming PUT) (setUpAll)
+00:00 +14: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: putFileToStorage (Android streaming PUT) streams the file with the right headers and reports progress up to 1
+00:01 +15: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: putFileToStorage (Android streaming PUT) a storage refusal comes back with its status and body for classification
+00:01 +16: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: putFileToStorage (Android streaming PUT) unreachable storage is a network error; a missing or empty file is a read error
+00:03 +17: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: putFileToStorage (Android streaming PUT) cancelling mid-transfer aborts it (not reported as a network error)
+00:06 +18: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:06 +18: E:/Legendary One/youpeak/source/youpeak/test/core/android_upload_channel_test.dart: UploadVideoController preview a preview that can't start keeps the form (no navigation), flags it, and a missing length blocks upload with a reason
+Loading ffmpeg-kit-flutter.
+00:06 +19: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:08 +20: E:/Legendary One/youpeak/source/youpeak/test/core/build_config_test.dart: evaluateBuildConfig a correct production build has no problems
+00:08 +21: E:/Legendary One/youpeak/source/youpeak/test/core/build_config_test.dart: evaluateBuildConfig a correct production build has no problems
+00:08 +22: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: an expired token is refreshed once and the call retried
+00:08 +23: E:/Legendary One/youpeak/source/youpeak/test/core/build_config_test.dart: evaluateBuildConfig a release build with no BUILD_PROFILE is refused (what a plain `flutter build apk --release` produces)
+00:08 +24: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: no session -> AUTH_REQUIRED without calling the server
+00:08 +25: E:/Legendary One/youpeak/source/youpeak/test/core/build_config_test.dart: evaluateBuildConfig a production build with no client key is refused: every request would be 401
+00:08 +26: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: network failure -> NETWORK_ERROR
+00:08 +27: E:/Legendary One/youpeak/source/youpeak/test/core/build_config_test.dart: evaluateBuildConfig keys that are obviously not the client key are refused, and the value is never echoed
+00:08 +28: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +29: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +30: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +31: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +32: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +33: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +34: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +35: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +36: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: a sign-in token that never arrives ends in NETWORK_TIMEOUT, not endless loading
+00:08 +37: E:/Legendary One/youpeak/source/youpeak/test/core/desktop_shell_layout_test.dart: ShellPageContent caps a page at its readable width beside the sidebar
+00:10 +38: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: no session: AUTH_REQUIRED before any request is sent
+00:10 +39: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: no session: AUTH_REQUIRED before any request is sent
+00:10 +40: E:/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: no session: AUTH_REQUIRED before any request is sent
+00:12 +41: E:/Legendary One/youpeak/source/youpeak/test/core/local_emulators_test.dart: unset switch: no emulator (every production build)
+00:12 +42: E:/Legendary One/youpeak/source/youpeak/test/core/local_emulators_test.dart: loopback emulator with a local API is used
+00:12 +43: E:/Legendary One/youpeak/source/youpeak/test/core/local_emulators_test.dart: a build talking to the production API ignores the switch
+00:12 +44: E:/Legendary One/youpeak/source/youpeak/test/core/local_emulators_test.dart: non-loopback or malformed addresses are ignored
+00:14 +45: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: VPN interface names Android tunnels
+00:14 +46: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: VPN interface names iOS utun interfaces are the system's own, not a VPN
+00:14 +47: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: local lock reasons clean phone -> no reasons
+00:14 +48: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: local lock reasons each signal maps to its reason
+00:14 +49: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: local lock reasons web: nothing is decided locally — the server's attestation decides, even when web earning is off
+00:14 +50: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: local lock reasons a browser's attestation carries no device claims
+00:14 +51: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: local lock reasons admin switches turn rules off
+00:14 +52: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: local lock reasons messages match the first reason
+00:14 +53: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: ActionCadenceMonitor (bot filter) refuses actions closer than the minimum gap
+00:14 +54: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: ActionCadenceMonitor (bot filter) machine-regular spacing is flagged and cools down
+00:14 +55: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: ActionCadenceMonitor (bot filter) human, irregular spacing is fine
+00:14 +56: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector clean Android: no su paths, release-keys
+00:14 +57: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector rooted Android: su binary, Magisk or test-keys
+00:14 +58: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector iOS: jailbreak paths or a write outside the sandbox
+00:14 +59: E:/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector a probe that throws counts as absent
+00:15 +60: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: (setUpAll)
+00:15 +60: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:16 +61: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:16 +62: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:16 +63: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:16 +64: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:16 +65: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:16 +66: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +67: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +68: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +69: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +70: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +71: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +72: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +73: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +74: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +75: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:17 +76: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:18 +77: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:18 +78: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:18 +79: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:18 +80: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:18 +81: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: root page on Android: asks before exiting; Cancel keeps the app, Exit closes it
+00:18 +82: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: a page opened on top of another is simply popped (Sign up opened from Sign in)
+00:18 +83: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: main tabs: Back from another tab returns to Home first
+00:18 +84: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: switchAuthPage replaces the page when it is on top of others and pushes when it is the root
+00:19 +85: E:/Legendary One/youpeak/source/youpeak/test/core/root_back_test.dart: (tearDownAll)
+00:19 +85: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: bitesFrameSize is 9:16 and fits the available height (1920x1080 beside the sidebar)
+00:20 +86: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: bitesFrameSize 1366x768: height-bound, still leaves room for the action column
+00:20 +87: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: bitesFrameSize very tall windows are capped at a readable width
+00:20 +88: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: bitesVideoFit portrait sources fill the frame
+00:20 +89: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: bitesVideoFit landscape and square sources are letterboxed, not cropped
+00:20 +90: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: bitesVideoFit unknown size is shown whole
+00:20 +91: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: WheelGestureGate one inertial trackpad swipe (events every 16 ms for 1.5 s) turns one page
+00:20 +92: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: WheelGestureGate stalls of up to 300 ms inside one swipe (busy browser) still count as one gesture
+00:20 +93: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: WheelGestureGate two separate wheel flicks turn two pages
+00:20 +94: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: WheelGestureGate a new gesture right after a turn waits for the minimum interval
+00:20 +95: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: TurnAwareScrollPhysics refuses user scrolling only while a turn animates, also under page snapping
+00:20 +96: E:/Legendary One/youpeak/source/youpeak/test/features/bites_desktop_test.dart: TurnAwareScrollPhysics PageTurnGuard is engaged for the animation and released after it, even on error
+00:21 +97: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) progress = lifetime hours / next target x 100
+00:21 +98: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) hours are cumulative: after reaching Level 1 at 50 h, 50 of 100 h = 50%
+00:21 +99: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) clamped to 0-100; top level is 100%
+00:21 +100: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) dashboard JSON parses into the view model
+00:21 +101: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) free tier badge and missing sections are tolerated
+00:21 +102: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) custom boost range 100 – 1,000,000 coins
+00:21 +103: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) affordability
+00:21 +104: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) request ids are fresh 16-char hex idempotency keys
+00:21 +105: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) toast text
+00:21 +106: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) Trust Hook: ₹100 on the first payout, ₹500 after
+00:21 +107: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) amount checks
+00:21 +108: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) UPI / bank details
+00:21 +109: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) request body is normalised the way the server expects
+00:21 +110: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Digital Partner links (youpeak.app/<CODE>) 8-char codes are recognised and upper-cased
+00:21 +111: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Digital Partner links (youpeak.app/<CODE>) routes and other paths are not codes
+00:21 +112: E:/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Phone number formatting Indian numbers need exactly 10 digits
+00:22 +113: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Video details model numbers stored as text and numeric ids do not make the page unreadable
+00:22 +114: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Your videos status label public free video has no label
+00:22 +115: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Your videos status label private / unlisted / paid / under review
+00:22 +116: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Your videos status label scheduled shows its time
+00:22 +117: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Your videos status label views given as text still parse
+00:22 +118: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Daily check-in calendar from the server India-time today / past flags and checked-in-today are read
+00:22 +119: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Daily check-in calendar from the server older API without the calendar leaves the flags null (device-date fallback)
+00:22 +120: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Notifications read state isRead, type and videoType are read from the server
+00:22 +121: E:/Legendary One/youpeak/source/youpeak/test/features/functionality_fixes_test.dart: Notifications read state a record without isRead is unread
+00:23 +122: E:/Legendary One/youpeak/source/youpeak/test/features/google_sign_in_flow_test.dart: closing the Google window is a quiet cancel, not an error
+00:23 +123: E:/Legendary One/youpeak/source/youpeak/test/features/google_sign_in_flow_test.dart: the deployed failure (unauthorized-domain) gets a specific message
+00:23 +124: E:/Legendary One/youpeak/source/youpeak/test/features/google_sign_in_flow_test.dart: blocked popups, disabled provider, network and account conflicts are explained
+00:23 +125: E:/Legendary One/youpeak/source/youpeak/test/features/google_sign_in_flow_test.dart: anything else falls back to the generic failure message
+00:23 +126: E:/Legendary One/youpeak/source/youpeak/test/features/google_sign_in_flow_test.dart: no attempt is running at start
+00:24 +127: E:/Legendary One/youpeak/source/youpeak/test/features/sign_up_model_test.dart: a login response with age "" parses (age unknown)
+00:24 +128: E:/Legendary One/youpeak/source/youpeak/test/features/sign_up_model_test.dart: numeric and numeric-string ages are kept
+00:25 +129: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: NETWORK_ERROR: shown at once as an error, not retried behind a spinner
+00:26 +130: E:/Legendary One/youpeak/source/youpeak/test/features/video_promotion_test.dart: (setUpAll)
+00:26 +130: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:26 +131: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:26 +132: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:26 +133: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:26 +134: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:26 +135: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +136: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +137: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +138: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +139: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +140: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +141: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +142: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +143: E:/Legendary One/youpeak/source/youpeak/test/features/tasker_dashboard_state_test.dart: AUTH_REQUIRED: shown at once as an error, not retried behind a spinner
+00:27 +144: E:/Legendary One/youpeak/source/youpeak/test/features/video_promotion_test.dart: Promote video pages hub at 390px: Peak Boost vs promotion, real campaigns, plans, honest comparison
+00:30 +145: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:30 +146: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:30 +147: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +148: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +149: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +150: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +151: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +152: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +153: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +154: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the no-refund notice
+00:31 +155: E:/Legendary One/youpeak/source/youpeak/test/features/video_promotion_test.dart: Promote video pages flow at 390px: ineligible video explained → plan details → review with the server price
+00:31 +156: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet not enough coins: CTA becomes 'Insufficient Balance • Get Coins' and routes to tasks
+00:32 +157: E:/Legendary One/youpeak/source/youpeak/test/features/video_promotion_test.dart: Promote video pages flow at 1366px: ineligible video explained → plan details → review with the server price
+00:32 +158: E:/Legendary One/youpeak/source/youpeak/test/features/video_promotion_test.dart: Promote video pages flow at 1366px: ineligible video explained → plan details → review with the server price
+00:32 +159: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet custom boost is validated against 100 – 1,000,000
+00:32 +160: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet custom boost is validated against 100 – 1,000,000
+00:33 +161: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet custom boost is validated against 100 – 1,000,000
+00:33 +162: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet a server refusal is shown and the balance corrected
+00:33 +163: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet timeout, but the boost went through: status is checked and the sheet closes with the receipt (no second boost)
+00:33 +164: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet timeout and the server has no record: says nothing was taken, retry reuses the same request id
+00:33 +165: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet timeout and the status can't be reached: says it's unconfirmed and that retrying won't charge twice
+00:34 +166: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody level, caps, lifetime progress, checklist, milestone and dual buttons
+00:34 +167: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody cap reached shows the spec's banner
+00:34 +168: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody a VPN lock shows the reason with a re-check
+00:34 +169: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody a lock in the loaded snapshot is dropped once the server clears this session
+00:34 +170: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody the snapshot's lock shows until this session's own check answers
+00:34 +171: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody web earning switched off: explained, no Check again loop
+00:35 +172: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: WithdrawalModal first payout: ₹100 trust hook, amount validated before sending
+00:35 +173: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: WithdrawalModal later payouts use the ₹500 standard minimum
+00:35 +174: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskLockedView explains the lock and retries without looping
+00:35 +175: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskLockedView offers no re-check when re-checking can't help
+00:35 +176: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: bot cooldown says when earning resumes
+00:35 +177: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskLockedView fits a short, narrow window without overflow
+00:36 +178: E:/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: (tearDownAll)
+00:36 +178: All tests passed!

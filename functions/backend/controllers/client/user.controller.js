@@ -6,16 +6,27 @@
 "use strict";
 
 const db = require("../../util/connection");
+const visibility = require("../../util/videoVisibility");
+const channelService = require("../../util/channel.service");
+const { stripCredentials, publicChannel } = require("../../util/safeUser");
 const Cryptr = require("cryptr");
-// TODO(step-4): migrate user passwords to bcrypt (verify-and-rehash on login).
-// Key is overridable so it can be rotated once that migration exists.
+const bcrypt = require("bcryptjs");
+// Legacy key — used only for reading pre-migration passwords (F-19).
 const cryptr = new Cryptr(process.env.USER_PW_SECRET || "myTotallySecretKey");
+const BCRYPT_ROUNDS = 10;
+
+// F-19: verify plain against bcrypt hash or legacy cryptr ciphertext.
+async function verifyOldPassword(plain, stored) {
+  if (!stored) return false;
+  if (stored.startsWith("$2")) return bcrypt.compare(plain, stored);
+  try { return cryptr.decrypt(stored) === plain; } catch { return false; }
+}
 const { generateUniqueId } = require("../../util/generateUniqueId");
 const { generateReferralCode } = require("../../util/generateReferralCode");
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 const rewardEngine = require("../../util/rewardEngine");
 const watchLedger = require("../../util/watchLedger.service");
-const { lockMessage } = require("../../util/taskSecurity.service");
+const { lockMessage, adRewardRefusal } = require("../../util/taskSecurity.service");
 const referralService = require("../../util/referral.service");
 
 // ─── Re-export everything from the Firestore controller ──────────────────────
@@ -61,6 +72,10 @@ exports.handleAdWatchReward = async (req, res) => {
   try {
     const userId = req.query.userId || req.body.userId;
     const { coinEarnedFromAd, adId } = req.body;
+
+    // Rewarded ads are app-only: no web ad flow the server can verify.
+    const refusal = adRewardRefusal(req);
+    if (refusal) return res.status(200).json({ status: false, code: refusal.code, message: refusal.message });
 
     const result = await rewardEngine.creditReward({
       userId,
@@ -120,7 +135,7 @@ exports.handleEngagementVideoWatchReward = async (req, res) => {
       return res.status(200).json({
         status: false,
         code: progress.reason,
-        message: progress.reason === "SECURITY_LOCK" ? lockMessage(progress.lock.reasons) : "User not found.",
+        message: progress.reason === "SECURITY_LOCK" ? lockMessage(progress.lock.reasons) : progress.message || "User not found.",
       });
     }
 
@@ -148,29 +163,63 @@ exports.handleEngagementVideoWatchReward = async (req, res) => {
 // ─── Update Channel ───────────────────────────────────────────────────────────
 exports.update = async (req, res) => {
   try {
+    // bindAppUser() has already replaced userId with the signed-in user.
     const userId = req.query.userId;
     if (!userId) return res.status(200).json({ status: false, message: "userId is required." });
+
+    // "Create your channel": validated, idempotent and name-safe in one
+    // transaction (util/channel.service.js). The channel is the caller's own
+    // profile, so ownership comes from the verified token, not from the body.
+    if (req.body && req.body.isChannel === true) {
+      const created = await channelService.createChannel(userId, req.body);
+      // Input problems answer 200 + status:false like the rest of this API: the
+      // published app builds only read the message from a 200 response.
+      if (!created.ok) return res.status(created.status === 400 || created.status === 409 ? 200 : created.status).json({ status: false, code: created.code, message: created.message });
+      return res.status(200).json({
+        status: true,
+        code: created.alreadyExists ? "CHANNEL_EXISTS" : "CHANNEL_CREATED",
+        message: created.alreadyExists ? "You already have a channel." : "Channel created successfully.",
+        alreadyExists: created.alreadyExists,
+        channelId: created.user.channelId,
+        user: created.user,
+      });
+    }
 
     const user = await db.findById("users", userId);
     if (!user) return res.status(200).json({ status: false, message: "User not found." });
 
     const updates = {};
-    const allowedFields = ["fullName","nickName","image","gender","age","mobileNumber","country","descriptionOfChannel","channelType","subscriptionCost","videoUnlockCost","isChannel"];
+    const allowedFields = ["fullName","nickName","image","gender","age","mobileNumber","country","descriptionOfChannel","channelType","subscriptionCost","videoUnlockCost"];
     allowedFields.forEach(field => { if (req.body[field] !== undefined) updates[field] = req.body[field]; });
+    // The app sends form values as strings; the channel model reads numbers.
+    if (updates.channelType !== undefined) {
+      const channelType = Number(updates.channelType);
+      if (channelType !== 1 && channelType !== 2) return res.status(200).json({ status: false, code: "CHANNEL_TYPE_INVALID", message: "Choose a public or a private channel." });
+      updates.channelType = channelType;
+    }
+    for (const field of ["subscriptionCost", "videoUnlockCost"]) {
+      if (updates[field] === undefined) continue;
+      const amount = Number(updates[field]);
+      if (!Number.isFinite(amount) || amount < 0) return res.status(200).json({ status: false, code: "COST_INVALID", message: "Enter a valid amount." });
+      updates[field] = amount;
+    }
+    if (updates.fullName !== undefined) {
+      const name = channelService.normalizeName(updates.fullName);
+      if (name.length < channelService.NAME_MIN || name.length > channelService.NAME_MAX) {
+        return res.status(200).json({ status: false, code: "CHANNEL_NAME_INVALID", message: "Enter a channel name between " + channelService.NAME_MIN + " and " + channelService.NAME_MAX + " characters." });
+      }
+      if (name !== user.fullName) {
+        const duplicate = await db.findOne("users", { fullName: name });
+        if (duplicate && String(duplicate._id || duplicate.id) !== String(userId)) {
+          return res.status(200).json({ status: false, code: "CHANNEL_NAME_TAKEN", message: "The provided channelName is already in use. Please choose a different one." });
+        }
+      }
+      updates.fullName = name;
+    }
     updates.updatedAt = new Date().toISOString();
 
-    // channelId is never generated anywhere else in the codebase, and every
-    // other query that uses it (videosOfChannel, subscriptions, monetization)
-    // treats it as the channel owner's own userId — videos are saved with
-    // userId: <uploader's own id>, never a separate channel id. So on first
-    // becoming a channel, self-reference it; without this the app's own
-    // "isChannel && channelId != null" gate could never pass for a real user.
-    if (updates.isChannel === true && !user.channelId) {
-      updates.channelId = userId;
-    }
-
     const updatedUser = await db.update("users", userId, updates);
-    return res.status(200).json({ status: true, message: "User updated successfully.", user: updatedUser });
+    return res.status(200).json({ status: true, message: "User updated successfully.", user: stripCredentials(updatedUser) });
   } catch (error) {
     console.error("update error:", error);
     return res.status(500).json({ status: false, message: error.message });
@@ -185,12 +234,13 @@ exports.updatePassword = async (req, res) => {
     const user = await db.findById("users", userId);
     if (!user) return res.status(200).json({ status: false, message: "User not found." });
 
-    let decrypted = "";
-    try { decrypted = cryptr.decrypt(user.password || ""); } catch {}
-    if (decrypted !== oldPassword) {
+    // F-19: accept both bcrypt hash (passwordHash) and legacy cryptr (password)
+    const stored = user.passwordHash || user.password || "";
+    const ok = await verifyOldPassword(oldPassword, stored);
+    if (!ok) {
       return res.status(200).json({ status: false, message: "Old password doesn't match." });
     }
-    await db.update("users", userId, { password: cryptr.encrypt(newPassword) });
+    await db.update("users", userId, { passwordHash: await bcrypt.hash(newPassword, BCRYPT_ROUNDS), password: null });
     return res.status(200).json({ status: true, message: "Password updated." });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -198,11 +248,34 @@ exports.updatePassword = async (req, res) => {
 };
 
 // ─── Set Password ─────────────────────────────────────────────────────────────
+// Forgot-password reset. Authorised only by a just-verified email OTP
+// (client/otp.controller.js verify sets passwordResetGrantUntil) — it used to
+// take ?userId with nothing else, so anyone could set any account's password
+// and then sign in as that user. The app sends { email, newPassword, confirmPassword }.
 exports.setPassword = async (req, res) => {
   try {
-    const userId = req.query.userId;
-    const { newPassword } = req.body;
-    await db.update("users", userId, { password: cryptr.encrypt(newPassword), loginType: 4 });
+    const email = String((req.body && req.body.email) || "").trim();
+    const { newPassword, confirmPassword } = req.body || {};
+    if (!email || !newPassword) {
+      return res.status(200).json({ status: false, message: "Email and new password are required." });
+    }
+    if (confirmPassword !== undefined && confirmPassword !== newPassword) {
+      return res.status(200).json({ status: false, message: "Passwords do not match." });
+    }
+
+    const user = await db.findOne("users", { email });
+    const grantUntil = user && user.passwordResetGrantUntil ? Date.parse(user.passwordResetGrantUntil) : 0;
+    if (!user || !(grantUntil > Date.now())) {
+      return res.status(200).json({ status: false, message: "Please verify the OTP sent to your email first." });
+    }
+
+    await db.update("users", user._id || user.id, {
+      // F-19: write bcrypt hash, never cryptr or plaintext
+      passwordHash: await bcrypt.hash(newPassword, BCRYPT_ROUNDS),
+      password: null,
+      loginType: 4,
+      passwordResetGrantUntil: null,
+    });
     return res.status(200).json({ status: true, message: "Password set successfully." });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -223,20 +296,28 @@ exports.setPassword = async (req, res) => {
 exports.detailsOfChannel = async (req, res) => {
   try {
     const { channelId, userId, start = 1, limit = 20 } = req.query;
-    if (!channelId) return res.status(200).json({ status: false, message: "channelId is required." });
+    if (!channelId) return res.status(200).json({ status: false, code: "CHANNEL_ID_REQUIRED", message: "channelId is required." });
 
     const channel = await db.findById("users", channelId);
-    if (!channel) return res.status(200).json({ status: false, message: "Channel not found." });
+    if (!channel) return res.status(200).json({ status: false, code: "CHANNEL_NOT_FOUND", message: "Channel not found." });
 
     const [subscribers, videos] = await Promise.all([
       db.find("userWiseSubscriptions", { channelId }),
       db.find("videos", { userId: channelId, isActive: true }),
     ]);
+    // F-12: the public sees only listable videos; the verified owner sees all
+    // of their own active ones (util/videoVisibility.js).
+    const visibleVideos = visibility.filterListable(videos, req.appUserId, { includeOwn: true });
     const isSubscribed = userId ? subscribers.some((s) => s.userId === userId) : false;
 
     const startNum = Math.max(Number(start) || 1, 1);
     const limitNum = Number(limit) || 20;
-    const paginated = videos.slice((startNum - 1) * limitNum, startNum * limitNum);
+    const paginated = visibleVideos.slice((startNum - 1) * limitNum, startNum * limitNum);
+
+    // The app's channel model reads these as int: older profiles stored them as strings.
+    const channelType = Number(channel.channelType) === 2 ? 2 : 1;
+    const subscriptionCost = Math.max(0, Math.round(Number(channel.subscriptionCost) || 0));
+    const videoUnlockCost = Math.max(0, Math.round(Number(channel.videoUnlockCost) || 0));
 
     const detailsOfChannel = paginated.map((v) => ({
       _id: v._id || v.id,
@@ -248,9 +329,9 @@ exports.detailsOfChannel = async (req, res) => {
       videoImage: v.videoImage,
       videoPrivacyType: v.videoPrivacyType,
       createdAt: v.createdAt,
-      channelType: channel.channelType,
-      subscriptionCost: channel.subscriptionCost,
-      videoUnlockCost: channel.videoUnlockCost,
+      channelType,
+      subscriptionCost,
+      videoUnlockCost,
       views: v.views || v.totalViews || 0,
       isSubscribed,
       isSaveToWatchLater: false,
@@ -262,9 +343,9 @@ exports.detailsOfChannel = async (req, res) => {
       message: "Success",
       channelName: channel.fullName || "",
       channelImage: channel.image || "",
-      channelType: channel.channelType,
-      subscriptionCost: channel.subscriptionCost,
-      videoUnlockCost: channel.videoUnlockCost,
+      channelType,
+      subscriptionCost,
+      videoUnlockCost,
       totalSubscribers: subscribers.length,
       totalVideosOfChannel: videos.length,
       isSubscribed,
@@ -279,28 +360,106 @@ exports.detailsOfChannel = async (req, res) => {
 exports.videosOfChannel = async (req, res) => {
   try {
     const { channelId, videoType, start = 0, limit = 20 } = req.query;
-    if (!channelId) return res.status(200).json({ status: false, message: "channelId is required." });
+    if (!channelId) return res.status(200).json({ status: false, code: "CHANNEL_ID_REQUIRED", message: "channelId is required." });
 
     let query = { userId: channelId, isActive: true };
     if (videoType) query.videoType = Number(videoType);
 
-    const videos = await db.find("videos", query);
-    const paginated = videos.slice(Number(start), Number(start) + Number(limit));
-    return res.status(200).json({ status: true, message: "Success", video: paginated, total: videos.length });
+    const videos = visibility.filterListable(await db.find("videos", query), req.appUserId, { includeOwn: true })
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+    const { from, size } = pageOf(start, limit);
+    const owner = await db.findById("users", channelId).catch(() => null);
+    const isOwner = !!req.appUserId && String(req.appUserId) === String(channelId);
+    const subscribed = !isOwner && req.appUserId
+      ? (await db.find("UserWiseSubscription", { userId: String(req.appUserId), channelId: String(channelId) })).length > 0
+      : false;
+    const page = await Promise.all(videos.slice(from, from + size).map(async (v) => {
+      const id = String(v._id || v.id);
+      const views = await db.countDocuments("WatchHistory", { videoId: id });
+      const paid = Number(v.videoPrivacyType) === 2;
+      return {
+        ...visibility.stripInternal(v),
+        _id: id,
+        views,
+        time: relativeTime(v.createdAt),
+        channelType: owner ? Number(owner.channelType) || 1 : 1,
+        subscriptionCost: owner ? Number(owner.subscriptionCost) || 0 : 0,
+        // Per video: free videos have no price (issue 4).
+        videoUnlockCost: paid && owner ? Number(owner.videoUnlockCost) || 0 : 0,
+        isSubscribed: subscribed,
+        // Owner-only status shown on "Your videos".
+        ...(isOwner ? {
+          visibilityType: Number(v.visibilityType) || 1,
+          scheduleType: Number(v.scheduleType) || 2,
+          scheduleTime: v.scheduleTime || "",
+          moderationStatus: v.moderationStatus || "",
+        } : { visibilityType: undefined, scheduleType: undefined, scheduleTime: undefined, moderationStatus: undefined }),
+      };
+    }));
+    // `videosTypeWiseOfChannel` is what the app parses ("Your videos" and the
+    // channel's Videos/Bites tabs were empty with only `video`).
+    return res.status(200).json({ status: true, message: "Success", videosTypeWiseOfChannel: page, video: page, total: videos.length });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
 };
 
+function relativeTime(iso, now = Date.now()) {
+  const t = Date.parse(iso || "");
+  if (!Number.isFinite(t)) return "";
+  const min = Math.floor(Math.max(0, now - t) / 60000);
+  if (min < 1) return "Just now";
+  if (min < 60) return `${min} minute${min === 1 ? "" : "s"} ago`;
+  const h = Math.floor(min / 60);
+  if (h < 24) return `${h} hour${h === 1 ? "" : "s"} ago`;
+  const d = Math.floor(h / 24);
+  if (d < 30) return `${d} day${d === 1 ? "" : "s"} ago`;
+  const mo = Math.floor(d / 30);
+  if (mo < 12) return `${mo} month${mo === 1 ? "" : "s"} ago`;
+  const y = Math.floor(d / 365);
+  return `${y} year${y === 1 ? "" : "s"} ago`;
+}
+
+// The app sends 1-based page numbers (start=1, 2, …) with a page size; these
+// lists used start as an item offset, so page 1 skipped the first item and
+// pages overlapped. start 0 or 1 is the first page.
+function pageOf(start, limit) {
+  const size = Math.min(100, Math.max(1, Number(limit) || 20));
+  const page = Math.max(1, Number(start) || 1);
+  return { from: (page - 1) * size, size };
+}
+
 // ─── PlayLists of Channel ─────────────────────────────────────────────────────
 exports.playListsOfChannel = async (req, res) => {
   try {
     const { channelId, start = 0, limit = 20 } = req.query;
-    if (!channelId) return res.status(200).json({ status: false, message: "channelId is required." });
+    if (!channelId) return res.status(200).json({ status: false, code: "CHANNEL_ID_REQUIRED", message: "channelId is required." });
 
-    const playlists = await db.find("playLists", { userId: channelId });
-    const paginated = playlists.slice(Number(start), Number(start) + Number(limit));
-    return res.status(200).json({ status: true, message: "Success", playList: paginated, total: playlists.length });
+    // PLAYLIST_TYPE: 1 private, 2 public — private playlists only for their verified owner.
+    const isOwner = !!req.appUserId && String(req.appUserId) === String(channelId);
+    const playlists = (await db.find("playLists", { userId: channelId }))
+      .filter((p) => isOwner || Number(p.playListType) === 2)
+      .sort((a, b) => String(b.createdAt || "").localeCompare(String(a.createdAt || "")));
+    const { from, size } = pageOf(start, limit);
+    const owner = await db.findById("users", channelId).catch(() => null);
+    // Each card shows its first viewable video and the count of viewable ones.
+    const page = await Promise.all(playlists.slice(from, from + size).map(async (p) => {
+      const ids = (p.videoId || []).map((v) => String((v && (v._id || v)) || "")).filter(Boolean);
+      const loaded = (await Promise.all(ids.map((id) => db.findById("videos", id).catch(() => null)))).filter(Boolean);
+      const viewable = visibility.filterListable(loaded, req.appUserId, { includeOwn: true });
+      const first = viewable[0] || null;
+      return {
+        _id: String(p._id || p.id), channelId: p.channelId || channelId, userId: String(p.userId || ""),
+        playListName: p.playListName || "", playListType: Number(p.playListType) || 1,
+        channelName: owner ? owner.fullName || "" : "", channelType: owner ? Number(owner.channelType) || 1 : 1,
+        createdAt: p.createdAt || null, updatedAt: p.updatedAt || null,
+        videoImage: first ? first.videoImage || "" : "", videoId: first ? String(first._id || first.id) : "",
+        totalVideo: viewable.length,
+      };
+    }));
+    // `playListsOfChannel` is what the app parses (it used to get `playList`
+    // only, so "My Playlist" was always empty); `playList` kept for others.
+    return res.status(200).json({ status: true, message: "Success", playListsOfChannel: page, playList: page, total: playlists.length });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -312,8 +471,21 @@ exports.getPlayListVideos = async (req, res) => {
     const { playListId, start = 0, limit = 20 } = req.query;
     if (!playListId) return res.status(200).json({ status: false, message: "playListId is required." });
 
-    const videos = await db.find("videos", { playListId });
-    const paginated = videos.slice(Number(start), Number(start) + Number(limit));
+    // Videos live in the playlist's videoId array (videos never carry a
+    // playListId, so this endpoint used to return nothing). Private playlists
+    // are visible to their verified owner only; each video is filtered by
+    // util/videoVisibility.js.
+    const playList = await db.findById("playLists", playListId);
+    const ownerId = String((playList && (playList.userId?._id || playList.userId)) || "");
+    const isOwner = !!req.appUserId && ownerId === String(req.appUserId);
+    if (!playList || (Number(playList.playListType) !== 2 && !isOwner)) {
+      return res.status(200).json({ status: false, message: "Playlist not found." });
+    }
+    const ids = (playList.videoId || []).map((v) => String((v && (v._id || v)) || "")).filter(Boolean);
+    const loaded = await Promise.all(ids.map((id) => db.findById("videos", id).catch(() => null)));
+    const videos = visibility.filterListable(loaded.filter(Boolean), req.appUserId, { includeOwn: true });
+    const { from, size } = pageOf(start, limit);
+    const paginated = videos.slice(from, from + size).map(visibility.stripInternal);
     return res.status(200).json({ status: true, message: "Success", video: paginated, total: videos.length });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
@@ -324,12 +496,22 @@ exports.getPlayListVideos = async (req, res) => {
 exports.aboutOfChannel = async (req, res) => {
   try {
     const { channelId } = req.query;
-    if (!channelId) return res.status(200).json({ status: false, message: "channelId is required." });
+    if (!channelId) return res.status(200).json({ status: false, code: "CHANNEL_ID_REQUIRED", message: "channelId is required." });
 
-    const channel = await db.findById("users", channelId);
-    if (!channel) return res.status(200).json({ status: false, message: "Channel not found." });
+    const user = await db.findById("users", channelId);
+    if (!user || user.isActive === false) return res.status(200).json({ status: false, code: "CHANNEL_NOT_FOUND", message: "Channel not found." });
 
-    return res.status(200).json({ status: true, message: "Success", channel });
+    // Public fields only (P-01: this returned the whole user document —
+    // password hash, e-mail, push token, device id — to anyone with the key).
+    const channel = publicChannel(user);
+    // Views of the channel's publicly listed videos (bounded by the channel).
+    const videos = await db.find("videos", { userId: String(user._id || user.id) });
+    const totalViewsOfthatChannelVideos = visibility.filterListable(videos, null)
+      .reduce((sum, v) => sum + (Number(v.views) || 0), 0);
+    channel.date = channel.date || channel.createdAt || "";
+
+    // `aboutOfChannel` is the shape the app's About tab parses.
+    return res.status(200).json({ status: true, message: "Success", channel, aboutOfChannel: { channel, totalViewsOfthatChannelVideos } });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
@@ -341,13 +523,18 @@ exports.searchChannel = async (req, res) => {
     const { searchString, start = 0, limit = 20 } = req.body;
     if (!searchString) return res.status(200).json({ status: true, message: "Success", channel: [], total: 0 });
 
-    const allUsers = await db.find("users", { isActive: true });
-    const lower = searchString.toLowerCase();
-    const matched = allUsers.filter(u =>
-      (u.fullName || "").toLowerCase().includes(lower) ||
-      (u.nickName || "").toLowerCase().includes(lower)
+    const lower = String(searchString).trim().toLowerCase().slice(0, 100);
+    if (!lower) return res.status(200).json({ status: true, message: "Success", channel: [], total: 0 });
+    // Channels only (not every account), public fields only (P-01).
+    const channels = await db.find("users", { isChannel: true, isActive: true });
+    const matched = channels.filter(u =>
+      u.isBlock !== true &&
+      ((u.fullName || "").toLowerCase().includes(lower) ||
+      (u.nickName || "").toLowerCase().includes(lower))
     );
-    const paginated = matched.slice(Number(start), Number(start) + Number(limit));
+    const from = Math.max(0, Number(start) || 0);
+    const size = Math.min(50, Math.max(1, Number(limit) || 20));
+    const paginated = matched.slice(from, from + size).map(publicChannel);
     return res.status(200).json({ status: true, message: "Success", channel: paginated, total: matched.length });
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });

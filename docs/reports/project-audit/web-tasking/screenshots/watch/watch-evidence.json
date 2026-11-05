@@ -1,0 +1,120 @@
+{
+ "results": [
+  {
+   "name": "A: visible playback earns watch time",
+   "ok": true,
+   "detail": {
+    "creditedSeconds": 42,
+    "wallSeconds": 65,
+    "heartbeats": 6,
+    "video": [
+     {
+      "paused": false,
+      "muted": false,
+      "volume": 1,
+      "t": 1.1
+     }
+    ]
+   }
+  },
+  {
+   "name": "A: never more than wall-clock time",
+   "ok": true,
+   "detail": {
+    "creditedSeconds": 42,
+    "wallSeconds": 65
+   }
+  },
+  {
+   "name": "B: hidden tab earns nothing",
+   "ok": true,
+   "detail": {
+    "visibilityState": "hidden",
+    "creditedSeconds": 0,
+    "wallSeconds": 45,
+    "video": [
+     {
+      "paused": true,
+      "muted": false,
+      "volume": 1,
+      "t": 1.1
+     }
+    ]
+   }
+  },
+  {
+   "name": "C: paused playback earns nothing",
+   "ok": true,
+   "detail": {
+    "creditedSeconds": 0,
+    "video": [
+     {
+      "paused": true,
+      "muted": false,
+      "volume": 1,
+      "t": 4
+     }
+    ]
+   }
+  },
+  {
+   "name": "D: lock page shown while web earning is off",
+   "ok": true
+  },
+  {
+   "name": "D: unlocks by itself after it is switched back on (no tap)",
+   "ok": true,
+   "detail": {
+    "afterSeconds": 45
+   }
+  }
+ ],
+ "videoAtOpen": [
+  {
+   "paused": true,
+   "muted": false,
+   "volume": 1,
+   "t": 6
+  }
+ ],
+ "playerNote": "fixture clip looped in the page (test-only); audible, 1x",
+ "videoAfterPlay": [
+  {
+   "paused": false,
+   "muted": false,
+   "volume": 1,
+   "t": 1.9
+  }
+ ],
+ "videoDuringA": [
+  {
+   "paused": false,
+   "muted": false,
+   "volume": 1,
+   "t": 1.1
+  }
+ ],
+ "hiddenState": "hidden",
+ "videoDuringB": [
+  {
+   "paused": true,
+   "muted": false,
+   "volume": 1,
+   "t": 1.1
+  }
+ ],
+ "channelLabels": [],
+ "blocked": [
+  "GET https://accounts.google.com/gsi/client",
+  "GET https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+  "GET https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+  "OPTIONS https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyA3LefltA4wG0htRi1mJM8rGYIjdNoeqjM"
+ ],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+  "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT",
+  "Null check operator used on a null value",
+  "    at bUW.$0 (http://127.0.0.1:5101/main.dart.js:171329:3)\n    at at.ik (http://127.0.0.1:5101/main.dart.js:143722:20)\n    at tear_off.<anonymous> (http://127.0.0.1:5101/main.dart.js:4751:79)\n    at Xu.B (http://127.0.0.1:5101/main.dart.js:143714:5)\n    at ms.ik (http://127.0.0.1:5101/main.dart.js:126492:21)\n    at ms.lk (http://127.0.0.1:5101/main.dart.js:126465:9)\n    at ms.lk (http://127.0.0.1",
+  "Another exception was thrown: Instance of 'minified:n2<void>'"
+ ]
+}

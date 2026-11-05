@@ -21,6 +21,8 @@ const { getLimits } = require("../../util/rewardEngine");
 const { taskerLadderPosition, coinsPerInr } = require("../../util/systemConfig.service");
 const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId");
 const { payoutCapInr } = require("./tasker.controller");
+const { payoutHoldReason } = require("../../util/payoutHold");
+const { reserveWithdrawal, WithdrawalRefused } = require("../../util/withdrawalLedger");
 
 const UPI_ID = /^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9.-]{1,63}$/;
 const IFSC = /^[A-Z]{4}0[A-Z0-9]{6}$/;
@@ -60,6 +62,9 @@ exports.requestPayout = async (req, res) => {
     const s = global.settingJSON || {};
     const rate = coinsPerInr(s);
 
+    const hold = payoutHoldReason(user);
+    if (hold) return fail(res, "PAYOUT_ON_HOLD", hold);
+
     const amount = Math.floor(Number((req.body || {}).amountInr));
     if (!Number.isFinite(amount) || amount <= 0) return fail(res, "INVALID_AMOUNT", "Enter an amount in rupees.");
 
@@ -90,44 +95,35 @@ exports.requestPayout = async (req, res) => {
       }
     }
 
-    // Pay from withdrawable ₹ first, then convert the shortfall from coins.
-    const withdrawable = Number(user.totalEarningAmount) || 0;
-    let convertedCoins = 0;
-    if (amount > withdrawable) {
-      const shortfallInr = amount - withdrawable;
-      convertedCoins = Math.ceil(shortfallInr * rate);
-      const spend = await db.spendBalance("users", userId, "coin", convertedCoins);
-      if (!spend.ok) {
-        const available = Math.floor(withdrawable + (Number(spend.before) || 0) / rate);
-        return fail(res, "INSUFFICIENT_BALANCE", `You can withdraw up to ₹${available.toLocaleString("en-IN")}.`, { availableInr: available });
-      }
-      const creditedInr = Number((convertedCoins / rate).toFixed(2));
-      await db.incrementFields("users", userId, { totalEarningAmount: creditedInr });
-      await db.create("walletHistories", {
+    // Reserve atomically (util/withdrawalLedger.js): any coin → ₹ shortfall
+    // conversion, available → reserved and the PENDING request commit in one
+    // transaction with the per-user pending lock, so two simultaneous requests
+    // can't both be created or reserve the same balance.
+    let reserved;
+    try {
+      reserved = await reserveWithdrawal({
         userId,
-        uniqueId: await generateHistoryUniqueId(),
-        coin: convertedCoins,
-        amount: creditedInr,
-        type: 2,
-        date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+        amountInr: amount,
+        convertShortfall: true,
+        coinsPerInr: rate,
+        conversionHistory: { uniqueId: await generateHistoryUniqueId(), date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }) },
+        request: {
+          channelId: user.channelId || "",
+          channelName: user.fullName || "",
+          paymentGateway: payout.gateway,
+          paymentDetails: payout.details,
+          uniqueId: await generateHistoryUniqueId(),
+          requestDate: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+          paymentDate: "",
+          source: "tasker_app",
+        },
       });
+    } catch (e) {
+      if (e instanceof WithdrawalRefused) return fail(res, e.code, e.message, e.extra);
+      throw e;
     }
-
-    const request = await db.create("withDrawRequests", {
-      userId,
-      channelId: user.channelId || "",
-      channelName: user.fullName || "",
-      requestAmount: amount,
-      paymentGateway: payout.gateway,
-      paymentDetails: payout.details,
-      status: 1,
-      accepted: false,
-      reason: "",
-      uniqueId: await generateHistoryUniqueId(),
-      requestDate: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-      paymentDate: "",
-      source: "tasker_app",
-    });
+    const request = reserved.request;
+    const convertedCoins = reserved.convertedCoins;
 
     return res.status(200).json({
       status: true,

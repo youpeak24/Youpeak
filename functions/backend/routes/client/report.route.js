@@ -1,6 +1,7 @@
 //express
 const express = require("express");
 const route = express.Router();
+const bindAppUser = require("../../middleware/bindAppUser.middleware");
 
 const checkAccessWithSecretKey = require("../../checkAccess");
 
@@ -8,6 +9,6 @@ const checkAccessWithSecretKey = require("../../checkAccess");
 const ReportController = require("../../controllers/client/report.controller");
 
 //when user report the video
-route.post("/reportToVideo", checkAccessWithSecretKey(), ReportController.reportToVideo);
+route.post("/reportToVideo", bindAppUser(), ReportController.reportToVideo);
 
 module.exports = route;

@@ -9,6 +9,8 @@
 "use strict";
 
 const db = require("../../util/connection");
+const LikeHistoryOfVideo = require("../../models/likeHistoryOfVideo.model");
+const VideoComment = require("../../models/videoComment.model");
 const {
   HISTORY_TYPE,
   ensureDailyReset,
@@ -17,19 +19,37 @@ const {
   snapshotCounts,
 } = require("../../util/rewardEngine");
 const { recordWatchProgress } = require("../../util/watchLedger.service");
-const { lockMessage } = require("../../util/taskSecurity.service");
+const { lockMessage, adRewardRefusal } = require("../../util/taskSecurity.service");
+
+// The app credits likes and comments where they happen
+// (video.controller likeOrDislikeOfVideo, videoComment.controller
+// createComment). These two older endpoints used to pay on request alone —
+// no proof of a like/comment and no per-video dedupe — so up to the daily
+// cap could be claimed by calling them repeatedly. They now pay only for a
+// real like/comment by this user on that video, under the same per-video
+// dedupe key as the main path, so a video can never pay twice.
+async function provenEngagement(kind, userId, videoId) {
+  if (!videoId) return false;
+  if (kind === "like") return !!(await LikeHistoryOfVideo.findOne({ userId: String(userId), videoId: String(videoId), likeOrDislike: "like" }));
+  return !!(await VideoComment.findOne({ userId: String(userId), videoId: String(videoId) }));
+}
+
+const NOT_PROVEN = (kind) => ({ status: false, code: "ENGAGEMENT_NOT_FOUND", message: `No ${kind} found for this video.` });
 
 // 1. Reward Video Like
 exports.rewardVideoLike = async (req, res) => {
   try {
     const userId = (req.body && req.body.userId) || req.query.userId;
+    const videoId = String((req.body && req.body.videoId) || "");
+    if (!(await provenEngagement("like", userId, videoId))) return res.status(200).json(NOT_PROVEN("like"));
     const result = await creditReward({
       userId,
       kind: "like",
       historyType: HISTORY_TYPE.VIDEO_LIKE,
       countField: "dailyLikesToday",
       capField: "maxLikesPerDay",
-      meta: { videoId: (req.body && req.body.videoId) || "" },
+      dedupeVideoId: videoId,
+      meta: { videoId },
     });
     return res.status(200).json(shapeRewardResponse(result, { likes: true }));
   } catch (error) {
@@ -42,13 +62,16 @@ exports.rewardVideoLike = async (req, res) => {
 exports.rewardVideoComment = async (req, res) => {
   try {
     const userId = (req.body && req.body.userId) || req.query.userId;
+    const videoId = String((req.body && req.body.videoId) || "");
+    if (!(await provenEngagement("comment", userId, videoId))) return res.status(200).json(NOT_PROVEN("comment"));
     const result = await creditReward({
       userId,
       kind: "comment",
       historyType: HISTORY_TYPE.VIDEO_COMMENT,
       countField: "dailyCommentsToday",
       capField: "maxCommentsPerDay",
-      meta: { videoId: (req.body && req.body.videoId) || "" },
+      dedupeVideoId: videoId,
+      meta: { videoId },
     });
     return res.status(200).json(shapeRewardResponse(result, { comments: true }));
   } catch (error) {
@@ -60,6 +83,8 @@ exports.rewardVideoComment = async (req, res) => {
 // 3. Reward Ad Watch (max 20 / day, all tiers)
 exports.rewardAdWatch = async (req, res) => {
   try {
+    const refusal = adRewardRefusal(req);
+    if (refusal) return res.status(200).json({ status: false, code: refusal.code, message: refusal.message });
     const userId = (req.body && req.body.userId) || req.query.userId;
     const result = await creditReward({
       userId,
@@ -135,7 +160,7 @@ exports.checkWatchTimeMilestone = async (req, res) => {
       return res.status(200).json({
         status: false,
         code: progress.reason,
-        message: progress.reason === "SECURITY_LOCK" ? lockMessage(progress.lock.reasons) : "User blocked or not found!",
+        message: progress.reason === "SECURITY_LOCK" ? lockMessage(progress.lock.reasons) : progress.message || "User blocked or not found!",
       });
     }
 

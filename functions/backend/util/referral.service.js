@@ -30,6 +30,7 @@ const db = require("./connection");
 const { generateHistoryUniqueId } = require("./generateHistoryUniqueId");
 const { HISTORY_TYPE, todayStr } = require("./rewardEngine");
 const { isLikelyVpnOrProxy } = require("./vpnDetection.service");
+const { payoutHoldReason } = require("./payoutHold");
 
 let evaluateFraudRisk = async () => null;
 try {
@@ -62,6 +63,42 @@ async function addPending(userId, coins) {
   if (!u) return null;
   await db.incrementFields("users", u._id || u.id, { pendingReferralCoin: coins });
   return u;
+}
+
+// TRS §4 Auto-Suspension: when a Digital Partner's flagged referrals reach
+// settings.partnerAutoSuspendFlaggedReferrals (default 3), or one comes from a
+// VPN/proxy (Peak Partner Terms §2: "immediate partner account suspension"),
+// set partnerStatus SUSPENDED. That freezes their payouts (util/payoutHold.js,
+// releaseHeldReferrals) until an admin or their franchise reinstates them.
+async function suspendPartnerIfNeeded(referrer, flaggedReason, referralId) {
+  if (!referrer || !referrer.isDigitalPartner || referrer.partnerStatus === "SUSPENDED") return false;
+  const referrerId = String(referrer._id || referrer.id);
+  const threshold = Math.max(1, Number((global.settingJSON || {}).partnerAutoSuspendFlaggedReferrals) || 3);
+
+  let trigger = null;
+  if (flaggedReason === "VPN_PROXY_USAGE") {
+    trigger = "a referred signup came from a VPN/proxy network";
+  } else {
+    const flagged = (await db.find("referralHistories", { referrerId }))
+      .filter((r) => r.status === "FLAGGED_SUSPICIOUS").length;
+    if (flagged >= threshold) trigger = `${flagged} flagged referrals (threshold ${threshold})`;
+  }
+  if (!trigger) return false;
+
+  await db.update("users", referrerId, {
+    partnerStatus: "SUSPENDED",
+    partnerSuspendedAt: new Date().toISOString(),
+    partnerSuspensionReason: `Auto-suspended: ${trigger}.`,
+  });
+  await db.create("fraudAlerts", {
+    userId: referrerId,
+    riskType: "SUSPICIOUS_REFERRAL_FARMING",
+    riskScore: 90,
+    details: `Digital Partner auto-suspended (${trigger}); latest referral ${referralId}. Payouts frozen pending review.`,
+    actionTaken: "PARTNER_SUSPENDED",
+    createdAt: new Date().toISOString(),
+  });
+  return true;
 }
 
 // ── Stage 1: apply a referral code ───────────────────────────────────────────
@@ -133,6 +170,11 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
   }
 
   const now = Date.now();
+  // Stage 2 counts "within 7 days of signing up" (TRS Module C, Peak Partner
+  // Terms) — from the referred account's registration, not from when the
+  // code happened to be applied.
+  const registeredAt = Date.parse(user.createdAt || "");
+  const windowStart = Number.isFinite(registeredAt) && registeredAt <= now ? registeredAt : now;
   const record = {
     _id: `ref_${now}_${Math.floor(Math.random() * 1e6)}`,
     referrerId,
@@ -148,7 +190,7 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
     stage1Released: false,
     stage2Completed: false,
     stage2RewardCoins: 0,
-    stage2DeadlineAt: new Date(now + c.stage2WindowDays * 86400e3).toISOString(),
+    stage2DeadlineAt: new Date(windowStart + c.stage2WindowDays * 86400e3).toISOString(),
     stage2Released: false,
     totalRewardCoinsGiven: 0,
     status: flaggedReason ? "FLAGGED_SUSPICIOUS" : "STAGE1_DONE",
@@ -166,12 +208,13 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
 
   if (flaggedReason) {
     try {
-      // Map this function's internal reason codes onto FraudAlert's actual
-      // riskType enum — was always hardcoded to SUSPICIOUS_REFERRAL_FARMING
-      // regardless of flaggedReason, which silently downgraded VPN_PROXY_USAGE
-      // to a soft, reviewable flag instead of the hard auto-block it needs.
+      // The VPN/proxy signal here is the REFERRED user's signup IP. The
+      // permanent account block for VPN use (YP-TC §4.2, riskType
+      // VPN_PROXY_USAGE) is for a user doing tasks on a VPN — applying it to
+      // the referrer let anyone get a partner permanently banned by signing
+      // up with their code over a VPN. For referral fraud the TRS §4 action is
+      // a partner suspension pending admin review (suspendPartnerIfNeeded).
       const riskTypeByReason = {
-        VPN_PROXY_USAGE: "VPN_PROXY_USAGE",
         MULTIPLE_SAME_IP: "MULTIPLE_ACCOUNTS_SAME_IP",
         DAILY_CAP_EXCEEDED: "EXCEEDED_DAILY_LIMIT_VELOCITY",
       };
@@ -182,6 +225,11 @@ async function applyReferralCode({ referredUserId, referralCode, ipAddress = "" 
         ipAddress,
       });
     } catch (e) { /* ignore */ }
+    try {
+      await suspendPartnerIfNeeded(referrer, flaggedReason, record._id);
+    } catch (e) {
+      console.error("partner auto-suspension check failed:", e.message);
+    }
     return {
       ok: true,
       flagged: true,
@@ -274,9 +322,25 @@ async function releaseHeldReferrals() {
   const records = await db.find("referralHistories", { stage1Completed: true });
   let released = 0;
   let releasedCoins = 0;
+  let held = 0;
+  // A suspended / restricted / blocked referrer's rewards stay pending
+  // (frozen) and are released on a later run once they're reinstated.
+  const holdByReferrer = new Map();
+  const referrerOnHold = async (referrerId) => {
+    if (!holdByReferrer.has(referrerId)) {
+      const u = await db.findById("users", referrerId).catch(() => null);
+      holdByReferrer.set(referrerId, !u || u.isBlock === true || !!payoutHoldReason(u));
+    }
+    return holdByReferrer.get(referrerId);
+  };
 
   for (const rec of records) {
     if (rec.status === "FLAGGED_SUSPICIOUS") continue;
+    const due = ["stage1", "stage2"].some((stage) =>
+      rec[`${stage}Completed`] && !rec[`${stage}Released`] && Number(rec[`${stage}RewardCoins`]) > 0 &&
+      rec[`${stage}HeldUntil`] && now >= new Date(rec[`${stage}HeldUntil`]).getTime());
+    if (!due) continue;
+    if (await referrerOnHold(String(rec.referrerId))) { held++; continue; }
 
     for (const stage of ["stage1", "stage2"]) {
       const done = rec[`${stage}Completed`];
@@ -323,24 +387,51 @@ async function releaseHeldReferrals() {
       releasedCoins += move;
     }
   }
-  return { checked: records.length, released, releasedCoins };
+  return { checked: records.length, released, releasedCoins, heldForReview: held };
 }
 
 // ── YP-TC §1.5: paid-tier referral bonus (10% of the pass price) ────────────
-async function handlePaidTierReferral({ buyerId, tierPriceInr, tierName = "" }) {
+//
+// Read-only plan, so payment fulfilment can commit the bonus atomically with
+// its idempotency marker (controllers/client/payment.controller.js).
+//
+// F-15 (V9 §1.5): "Free Taskers earn a fixed bonus of 250 Coins per
+// registered referral" and "members on active paid tiers (Level 1 to Level 4)
+// earn a 10% Direct Referral Bonus based on the Starter Pass paid by their
+// introduced member". So for a TASKER pass the 10% goes only to a referrer on
+// Level 1-4; a Free Tasker referrer already got the flat 250 at signup. Creator
+// VIP pass referrals are not defined in the spec and keep their existing rule.
+async function planPaidTierReferral({ buyerId, tierPriceInr, tierName = "", tierType = "" }) {
   const price = Number(tierPriceInr) || 0;
-  if (!buyerId || price <= 0) return { ok: false };
+  if (!buyerId || price <= 0) return null;
 
   const buyer = await db.findById("users", buyerId);
   const referrerId = buyer && buyer.referrerId ? String(buyer.referrerId) : null;
-  if (!referrerId) return { ok: false };
+  if (!referrerId) return null;
 
   const referrer = await db.findById("users", referrerId);
-  if (!referrer || referrer.isBlock) return { ok: false };
+  if (!referrer || referrer.isBlock) return null;
+
+  if (String(tierType).toUpperCase() === "TASKER") {
+    const referrerTier = referrer.membershipTierId ? await db.findById("membershipTiers", referrer.membershipTierId).catch(() => null) : null;
+    const level = referrerTier && referrerTier.tierType === "TASKER" ? Number(referrerTier.level) || 1 : 1;
+    if (level < 2) return null; // Free Tasker referrer
+  }
 
   const c = cfg();
   const bonusCoins = Math.round((price * c.paidTierPct) / 100 / 0.01); // % of INR -> coins
-  if (bonusCoins <= 0) return { ok: false };
+  if (bonusCoins <= 0) return null;
+  return {
+    referrerId, bonusCoins, percentage: c.paidTierPct, uniqueId: await generateHistoryUniqueId(),
+    note: `Paid-tier referral (${c.paidTierPct}% of ${tierName || "pass"} ₹${price})`,
+  };
+}
+
+async function handlePaidTierReferral({ buyerId, tierPriceInr, tierName = "", tierType = "" }) {
+  const plan = await planPaidTierReferral({ buyerId, tierPriceInr, tierName, tierType });
+  if (!plan) return { ok: false };
+  const { referrerId, bonusCoins } = plan;
+  const c = cfg();
 
   await db.incrementFields("users", referrerId, {
     coin: bonusCoins,
@@ -350,11 +441,11 @@ async function handlePaidTierReferral({ buyerId, tierPriceInr, tierName = "" }) 
   });
   await db.create("histories", {
     userId: referrerId,
-    uniqueId: await generateHistoryUniqueId(),
+    uniqueId: plan.uniqueId,
     coin: bonusCoins,
     type: HISTORY_TYPE.STAGE2_REFERRAL,
     date: new Date().toISOString(),
-    note: `Paid-tier referral (${c.paidTierPct}% of ${tierName || "pass"} ₹${price})`,
+    note: plan.note,
   });
   return { ok: true, bonusCoins, percentage: c.paidTierPct };
 }
@@ -364,5 +455,6 @@ module.exports = {
   completeStage2,
   releaseHeldReferrals,
   handlePaidTierReferral,
+  planPaidTierReferral,
   cfg,
 };

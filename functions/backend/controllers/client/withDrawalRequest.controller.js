@@ -17,6 +17,9 @@ const { generateHistoryUniqueId } = require("../../util/generateHistoryUniqueId"
 //firestore connection (atomic balance spend — see spendBalance())
 const db = require("../../util/connection");
 
+const { payoutHoldReason } = require("../../util/payoutHold");
+const { reserveWithdrawal, WithdrawalRefused } = require("../../util/withdrawalLedger");
+
 //get setting details
 exports.fetchSettingDetails = async (req, res) => {
   try {
@@ -196,7 +199,7 @@ exports.createWithdrawRequest = async (req, res) => {
     }
 
     const [user, existingRequest, priorAcceptedRequest, uniqueId] = await Promise.all([
-      User.findOne({ _id: userId, isActive: true }, "totalEarningAmount isBlock channelId fullName fcmToken").lean(),
+      User.findOne({ _id: userId, isActive: true }, "totalEarningAmount isBlock channelId fullName fcmToken isDigitalPartner partnerStatus isRestricted").lean(),
       WithDrawRequest.findOne({
         userId,
         status: { $in: [1, 3] }, // pending or declined
@@ -211,6 +214,11 @@ exports.createWithdrawRequest = async (req, res) => {
 
     if (user.isBlock) {
       return res.status(200).json({ status: false, message: "You are blocked by admin!" });
+    }
+
+    const hold = payoutHoldReason(user);
+    if (hold) {
+      return res.status(200).json({ status: false, code: "PAYOUT_ON_HOLD", message: hold });
     }
 
     if (amount > user.totalEarningAmount) {
@@ -246,16 +254,29 @@ exports.createWithdrawRequest = async (req, res) => {
 
     const cleanedPaymentDetails = paymentDetails.map((d) => d.replace(/\[|\]/g, ""));
 
-    const newRequest = await WithDrawRequest.create({
-      userId,
-      channelId: user.channelId,
-      channelName: user.fullName,
-      requestAmount: amount,
-      paymentGateway: paymentGateway.trim(),
-      paymentDetails: cleanedPaymentDetails,
-      uniqueId,
-      requestDate: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
-    });
+    // Reserve atomically (util/withdrawalLedger.js): available → reserved and
+    // the PENDING request in one transaction with the per-user pending lock.
+    let newRequest;
+    try {
+      ({ request: newRequest } = await reserveWithdrawal({
+        userId,
+        amountInr: amount,
+        request: {
+          channelId: user.channelId || "",
+          channelName: user.fullName || "",
+          paymentGateway: paymentGateway.trim(),
+          paymentDetails: cleanedPaymentDetails,
+          uniqueId,
+          requestDate: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+        },
+      }));
+    } catch (e) {
+      if (e instanceof WithdrawalRefused) {
+        const message = e.code === "PENDING_EXISTS" ? "Withdrawal request already sent." : e.code === "INSUFFICIENT_BALANCE" ? "Insufficient funds." : e.message;
+        return res.status(200).json({ status: false, code: e.code, message });
+      }
+      throw e;
+    }
 
     res.status(200).json({
       status: true,

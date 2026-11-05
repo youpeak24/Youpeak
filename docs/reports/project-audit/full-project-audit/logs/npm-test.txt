@@ -1,0 +1,41 @@
+
+> youpeak-platform@1.0.0 test
+> node --test tests/*.test.cjs
+
+✔ domain liveness never calls the backend or claims dependency readiness (15.0113ms)
+✔ normal API traffic still reaches the backend (6.7675ms)
+✔ a plain local start with the live key file on disk is refused (2.4096ms)
+✔ with no credentials at all the default project is live, so it is refused (0.5228ms)
+✔ the emulator alone is not enough: the project must be a demo-* project (0.7028ms)
+✔ a demo project without the emulator is refused (Firestore would go to Google) (2.1496ms)
+✔ explicit production or override starts are allowed (0.7622ms)
+✔ project resolution follows firebaseAdmin order: env account, key files, env ids (2.478ms)
+✔ public delivery rejects unsigned S3 endpoints, credentials and non-HTTPS URLs (6.0544ms)
+✔ external demo media cannot masquerade as Cloudflare by provider label (203.293ms)
+✔ video uploads persist in Cloudflare, metadata in Firebase, and clean staging (168.7397ms)
+✔ images persist in Firebase, including metadata, and never go to R2 (6.9354ms)
+✔ Firebase outage fails honestly instead of returning local or R2 fallback (6.5933ms)
+✔ R2 outage cannot return a successful local video URL (5.0244ms)
+✔ metadata persistence failure is not reported as upload success (5.5901ms)
+✔ invalid multipart form still cleans its temporary file (2.1912ms)
+✔ R2 presigning refuses images and unsupported content types (2.7054ms)
+✔ unconfigured Stream returns an error rather than a mock upload (216.1063ms)
+✔ Firebase URL uses a download token without relying on public object ACLs (47.0084ms)
+✔ legacy playback redirects to Cloudflare rather than proxying bytes (6.5575ms)
+✔ legacy private R2 playback uses a fresh short-lived Cloudflare URL (3.7185ms)
+✔ signed Stream webhook rejects stale/replayed and malformed events (757.1234ms)
+✔ client upload authorization runs before multipart or signing handlers (752.7926ms)
+✔ oversized multipart upload returns 413 instead of hanging (466.4142ms)
+✔ Stream acknowledges only after Firebase persistence and preserves Firebase thumbnail (27.4901ms)
+✔ Stream persistence failure returns retryable 500 (11.3424ms)
+✔ Captured payment with a missing order is retryable, not acknowledged as settled (5.068ms)
+✔ Payment response follows the persistent idempotency check (3.9653ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4024.8106
+exit=0

@@ -1,0 +1,292 @@
+[
+  {
+    "Path": "functions/backend/types/tiers.js",
+    "Sha256": "B51DF64F84F690C576FE7386B804DBEAA8E30706D93C42E0543EF0657D00CDA9",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/setting.js",
+    "Sha256": "C3C271720369C4AAC3FA0F3CA302B0BFEF242E99BFC8DCBFA37491203EC2741D",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/rewardEngine.js",
+    "Sha256": "5AFD97C066B15AA02A5E9DA8E8BE5602D06D710A8434E496A9BD20C70826E6B0",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/watchLedger.service.js",
+    "Sha256": "F95C79D1CD54D655BEC7B4C3F00A0EDCBE879C9390EAB3133229E9E555A65818",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/referral.service.js",
+    "Sha256": "30D336289997BAE864A5A7E04720CAACD09BC199DA0735D26E8D8582CEA9A23E",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/partnerNetwork.service.js",
+    "Sha256": "488E36FA2689D9A533BE0C00CC85923B7E1EFCC9DA0A399EA5B09B2C1BA27ABC",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/digitalPartner.service.js",
+    "Sha256": "F84132DB4C3F09FA757A26673F89520FD28265D484D3332D63D7AF42E0FE1EBF",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/payoutHold.js",
+    "Sha256": "6D960A15B8C2D4A3D000D171004425CAA58BC0E8138E922DA547EC627322CB8C",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/payment.service.js",
+    "Sha256": "116EED554160FFEAE9EC518C81344C3A4ABC63879C9DDA18EDB86A522ABEA27F",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/platformConfig.js",
+    "Sha256": "A94175102FF170B7E14BBA9A30BA8800B7B56269A9C1656FAE9AA488654A9008",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/systemConfig.service.js",
+    "Sha256": "587380D3C5CD5D1C35A6397D40A475FC528CC34FD7307B0DD0AD9F7D54D4BD7A",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/revenueSplit.service.js",
+    "Sha256": "774F8687BE52CAB94181D705081900729819DB87167B892203D9F1B3FAFE603F",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/accessGate.js",
+    "Sha256": "55C97A879F436FD609C3E6A9D9BD58D689B0F98C3F493385B62F277402A40204",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/creatorPass.js",
+    "Sha256": "99DA9E75CA75631051B2307057E587DA039240BC92DE948A657BE37A8CBD9C26",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/taskSecurity.service.js",
+    "Sha256": "B21DCCA45129473C7AF35B31B8562BD00ED3FBD0D866B5DBE4E72E0772BAAA64",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/vpnDetection.service.js",
+    "Sha256": "26DC88DDBF2440DD538D8391F48FC0572065EAD28E27EB4E794F0965EE06A672",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/moderation.service.js",
+    "Sha256": "D3B4D3499B009D6BEBA4B2C5B5DC8283FB800CBFE8A76DD2E21305C14E69BCF5",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/copyright.service.js",
+    "Sha256": "0AA8597BECE1112975D3D99CBE19ACAC6C0E9EF6014C78F7734417EE34F0E44F",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/cloudflareStorage.service.js",
+    "Sha256": "E445658DBC551DF5FAB74204256BAC64489EB2EEB044A749310720B28B8A5C59",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/util/videoPipeline.service.js",
+    "Sha256": "F7BB0B2C1612E88AC9AAA8453FD0A58EB651779D2419DA03734FB144C5485066",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/cron.controller.js",
+    "Sha256": "836256872C8C60B970BAC7B6596472AC74D80D3999CC9907F4B7CA82143C348C",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/payment.controller.js",
+    "Sha256": "3037492121ED57AE1B80AD23C95008BFB0E9A795B0A836226B2BCEE2ED31B65E",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/tasker.controller.js",
+    "Sha256": "816976B5B96804DF2F64D6DF4F1E3B1DA9B74C2AC88CF262D3D2D10DF5405DF3",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/payout.controller.js",
+    "Sha256": "CB3702F8A300DB81B7C3B4A64AD34F095E1CBFC105297AC99941F0A910CB16D8",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/withDrawalRequest.controller.js",
+    "Sha256": "2D9AB887098289DE3C83C8E2291E02FE7DD3958398E739E8C83CE9117C09768F",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/partner.controller.js",
+    "Sha256": "3B3675B30CE82B5628835E5E83B90C381B19067780009FFB418479257BFC2F18",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/localBusinessAd.controller.js",
+    "Sha256": "2B6DD7E2F8B60796BDEDE02B4D4776AA4BE1B66B08951A80CF7438024497DF32",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/videoPromotion.controller.js",
+    "Sha256": "5924E17019EC5B2C3B87E07326097D5D2F8CABA87B798D33512CC5671976CD88",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/creatorTier.controller.js",
+    "Sha256": "90458B1D39853D1C5260FEBC225AAC3E003BA3F08192284757916E4C56639975",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/user.controller.js",
+    "Sha256": "00EEEF7CA02F8F0B0EE076D0FB6EC51374964343294375DE5E179489728F2543",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/userFirestore.controller.js",
+    "Sha256": "45E89B6204FA3850722C3B08EC791BFEDA078170C976F987529F5FDB240F6E0C",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/watchSession.controller.js",
+    "Sha256": "E0A389BCCE469C920FDF3000E7B0080455C1DEC4E80B649B33A398E7E49D2B7B",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/video.controller.js",
+    "Sha256": "E0FC079E595ADFFC30A239DE1961954D95E01161A690D7B19C50A865E0D23AD1",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/file.controller.js",
+    "Sha256": "C41ADE8F3E41E1B9FBCA21BE24F881F18C1D9457287314F1BDAEABB4C56B1C75",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/client/grievance.controller.js",
+    "Sha256": "E2E01100D30A8E442A0649CF33FE03831DD1387B2BB41CB2C9484CA3A0D86AB5",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/admin/contentModeration.controller.js",
+    "Sha256": "2A64C969A8CC16A6F8FC68008BFBBCF2445762C222695DAB312F73587CA2DFA2",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/admin/copyrightModeration.controller.js",
+    "Sha256": "36B30260A12F376CBD8A3F98B99FBF0004B805BED150A2057B1F2A53F3816AD6",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/admin/videoPromotion.controller.js",
+    "Sha256": "DF5F85E3524C66C640AD437A30C28FB8848C5728F9D88EBAD2AFDB21BB1FAD19",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/controllers/admin/franchisePortal.controller.js",
+    "Sha256": "607F72C17485A674BC99DBEBDE314545C5422DAEB0273C111A07DC06953E3A42",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/middleware/appUser.middleware.js",
+    "Sha256": "BFF329BCF3548DF13803C0AB5081A74BBFE4C90E99515AB33DEC286D0165103E",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/middleware/bindAppUser.middleware.js",
+    "Sha256": "05197B6CB2E44F50D200F0F6FD37BC56EBB7BC95266A6F96EA03592269CCA216",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/routes/client/user.route.js",
+    "Sha256": "CF6153221C88FE19C8242814068721E676BF574FA67EF8A066A02CDABCCB19BA",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/routes/client/partner.route.js",
+    "Sha256": "87E8358165379EED8799BBD23CC5E77CE408FA67108E06156828FDA6E2735F98",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/routes/client/videoPromotion.route.js",
+    "Sha256": "3F8CED1F7DDC1F3A6F9753C91630CBA6C2D3296D51BBE8C9F22CCE1BFDC9E7B9",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "functions/backend/routes/client/localBusinessAd.route.js",
+    "Sha256": "BFB7970033B9A9D8A8C4A0EDD83570E8E7C5CDD363F1B5C5A0A3AD7533009C4C",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "worker/fingerprintWorker.js",
+    "Sha256": "C4779E87ED610F06ACBF110F03F3EB680053BCC8A3E8ED2E84153571A5B20AB0",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "worker/README.md",
+    "Sha256": "BB2805228FBD4CD8EE7ABFAA28F2F02844D59AE655564B51DCB07C0435B8507B",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/core/membership/membership_portal.dart",
+    "Sha256": "937625B224AA466ADC960D027EB2B4CBE5299C8CB27B19FAFC5E7BB5F6482EBB",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/core/theme/app_color.dart",
+    "Sha256": "6FD38CD6D6DE6358A40F957E50BF2F64287B967C299D3DEAC97C320D4A6E74DA",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/core/deep_link/services/deep_link_services.dart",
+    "Sha256": "5638CC47319FF38A4BBD2ADB0588E62AF3239C111CCF7F8AFD709BF8B9CCC190",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/core/file_upload/direct_upload_video_api.dart",
+    "Sha256": "9CFE8DFA3902ADF4560A5FB1832DFFF6F52220B4EFB7D19D1F57C06061AF1033",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/tasker/presentation/tasker_dashboard_view.dart",
+    "Sha256": "F2665692BB32C9AA5F124C578318AAD8D7FF402B47F9614E3FB9A6F908EA251F",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/tasker/presentation/tasker_dashboard_provider.dart",
+    "Sha256": "3B711495B8E8A3D39DC5B367517D7DF54C73187D4ADE7ABEDE5066644BCEB0F3",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/video_promotion/view/promote_video_view.dart",
+    "Sha256": "F526C073C2BB5FCD7A28BBBB21778C9A3C8803305838B4F7ACB3AD90EE5703A0",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/peak_boost/presentation/peak_boost_bottom_sheet.dart",
+    "Sha256": "E2F72F155C81127D16CB5422A0F8981662769A71C945F91184A3A89296BDC84A",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/peak_boost/data/peak_boost_repository.dart",
+    "Sha256": "A8385D0E93780807D6D2D8A43380FF2DBEF2D1D171A63FD12C9048B15A6CC153",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/home/view/nav_home_page.dart",
+    "Sha256": "B36071DE0AC20D068198D4E200D00D7D8AE6DE90CE6F4E3B4F76BE950E311D7B",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  },
+  {
+    "Path": "youpeak/lib/features/home/widget/premium_videos_shelf.dart",
+    "Sha256": "D489578741CB7D5C9D39F3EFFEA1086B911EC58E24742987882D33484EC8AC84",
+    "Review": "Targeted source evidence: whole file, excerpt or search match as applicable; not whole-project line audit"
+  }
+]

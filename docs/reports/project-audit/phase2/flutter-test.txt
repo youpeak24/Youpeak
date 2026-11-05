@@ -1,0 +1,70 @@
+﻿00:00 +0: loading C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart
+00:00 +0: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: VPN interface names Android tunnels
+00:00 +1: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:00 +2: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:00 +3: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:00 +4: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:00 +5: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:00 +6: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: sends the app key and the Firebase ID token, returns the JSON
+00:00 +7: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: ActionCadenceMonitor (bot filter) refuses actions closer than the minimum gap
+00:00 +8: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: status:false becomes an ApiException carrying the server's code and data
+00:00 +9: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: status:false becomes an ApiException carrying the server's code and data
+00:00 +10: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: status:false becomes an ApiException carrying the server's code and data
+00:00 +11: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector clean Android: no su paths, release-keys
+00:00 +12: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: an expired token is refreshed once and the call retried
+00:00 +13: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: an expired token is refreshed once and the call retried
+00:00 +14: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector iOS: jailbreak paths or a write outside the sandbox
+00:00 +15: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: no session -> AUTH_REQUIRED without calling the server
+00:00 +16: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/security_signals_test.dart: RootDetector a probe that throws counts as absent
+00:00 +17: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/app_api_client_test.dart: network failure -> NETWORK_ERROR
+00:01 +18: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/system_configs_test.dart: SystemConfigs parsing defaults mirror the backend launch values
+00:01 +19: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/system_configs_test.dart: SystemConfigs parsing a published doc replaces its section and is marked live
+00:01 +20: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/system_configs_test.dart: SystemConfigs parsing bad values fall back instead of crashing
+00:01 +21: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/system_configs_test.dart: SystemConfigs parsing tier ladder parses rank, caps and targets
+00:01 +22: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/system_configs_test.dart: SystemConfigs parsing app policy: security switches and heartbeat interval clamp
+00:01 +23: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/core/system_configs_test.dart: SystemConfigsNotifier starts from the offline cache, then follows live Firestore updates
+00:02 +24: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) progress = lifetime hours / next target x 100
+00:02 +25: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) hours are cumulative: after reaching Level 1 at 50 h, 50 of 100 h = 50%
+00:02 +26: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) clamped to 0-100; top level is 100%
+00:02 +27: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) dashboard JSON parses into the view model
+00:02 +28: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Tasker level progress (Module 2) free tier badge and missing sections are tolerated
+00:02 +29: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) custom boost range 100 – 1,000,000 coins
+00:02 +30: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) affordability
+00:02 +31: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) request ids are fresh 16-char hex idempotency keys
+00:02 +32: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Peak Boost validation (Module 4) toast text
+00:02 +33: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) Trust Hook: ₹100 on the first payout, ₹500 after
+00:02 +34: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) amount checks
+00:02 +35: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) UPI / bank details
+00:02 +36: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Withdrawal rules (Module 5) request body is normalised the way the server expects
+00:02 +37: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Digital Partner links (youpeak.app/<CODE>) 8-char codes are recognised and upper-cased
+00:02 +38: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Digital Partner links (youpeak.app/<CODE>) routes and other paths are not codes
+00:02 +39: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/domain_rules_test.dart: Phone number formatting Indian numbers need exactly 10 digits
+00:03 +40: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: counts normal playback second by second
+00:03 +41: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: the first sample only sets the baseline
+00:03 +42: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: muted, paused, buffering, background and >2x don't count
+00:03 +43: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: 2x is allowed (the limit is > 2x)
+00:03 +44: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: skipping ahead or looping back doesn't count that interval
+00:03 +45: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: a long gap (app suspended) counts at most 2 seconds
+00:03 +46: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/features/watch_time_accumulator_test.dart: restore puts back undelivered seconds
+00:04 +47: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: (setUpAll)
+00:04 +47: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +48: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +49: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +50: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +51: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +52: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +53: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +54: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet shows presets, balance and the 80/20 notice
+00:06 +55: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet not enough coins: CTA becomes 'Insufficient Balance • Get Coins' and routes to tasks
+00:07 +56: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet boosting a preset sends coins + an idempotency key and returns the receipt
+00:07 +57: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet custom boost is validated against 100 – 1,000,000
+00:08 +58: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: PeakBoostBottomSheet a server refusal is shown and the balance corrected
+00:08 +59: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody level, caps, lifetime progress, checklist, milestone and dual buttons
+00:08 +60: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody cap reached shows the spec's banner
+00:08 +61: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskerDashboardBody a VPN lock shows the reason with a re-check
+00:09 +62: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: WithdrawalModal first payout: ₹100 trust hook, amount validated before sending
+00:09 +63: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: WithdrawalModal later payouts use the ₹500 standard minimum
+00:09 +64: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: TaskLockedView explains the lock and retries
+00:09 +65: C:/Users/User/Desktop/Legendary One/youpeak/source/youpeak/test/widgets/feature_widgets_test.dart: (tearDownAll)
+00:09 +65: All tests passed!
+EXIT=0

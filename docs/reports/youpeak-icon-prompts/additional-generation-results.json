@@ -1,0 +1,117 @@
+[
+  {
+    "file": "extra_create.png",
+    "name": "Create",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-ed0efc2c-b977-424e-ae97-77befeba2028.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_privacy_policy.png",
+    "name": "Privacy policy",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-c584bd88-48ac-424e-9009-ace8a15278fc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_tasker.png",
+    "name": "Tasker",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-a8385f4e-81aa-4c8f-a703-12cc0a6d4f1d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_referral_history.png",
+    "name": "Referral history",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-a5ad24de-3bb5-4160-a9e0-f5f8d1d9a878.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_payment_history.png",
+    "name": "Payment history",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-7163c2e1-fb11-403a-a0bd-4818b692a847.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_ad_credits.png",
+    "name": "Ad credits",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-a244e851-a9e6-4cf6-a110-73cb52f1b01e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_volume_high.png",
+    "name": "Volume high",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-0ebe357b-9a8a-4ca0-bc8f-c4efa07c65db.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_campaign_analytics.png",
+    "name": "Campaign analytics",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-dd00a983-c7b7-4915-b6dc-142a98add142.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_volume_low.png",
+    "name": "Volume low",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-0ab0d99a-d7b4-4ab5-b407-f7f66867aa24.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_mute.png",
+    "name": "Mute",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-8182b902-f8d1-44c8-9d6d-e411386586ba.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_stop.png",
+    "name": "Stop",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-a5d4a00d-ce97-4e82-b256-952ea8d18165.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_retry.png",
+    "name": "Retry",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-bb3db16f-8e7a-4a4a-bca5-1fff87aa12b4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_external_link.png",
+    "name": "External link",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-a0f033a7-9bcd-46ee-8a53-4a4aade76652.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_copy_link.png",
+    "name": "Copy link",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-5c0fa92a-7aa5-4761-9e8a-47c94a29a557.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_phone_sign_in.png",
+    "name": "Phone sign-in",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-13b7d379-5f6a-43df-8faa-79437dbfce5b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_qr_code.png",
+    "name": "QR code",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-7b66b388-d99b-4788-9843-2adda9fa5c63.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_withdraw_to_bank.png",
+    "name": "Withdraw to bank",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-0bac2c9d-c4a3-4fba-9c48-fc556ed224e6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_device_security.png",
+    "name": "Device security",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-62cb96a5-d3ec-4e7c-b2a0-398e9d325582.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_vpn_restriction.png",
+    "name": "VPN restriction",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-49b7c6fb-0f19-47c1-ab86-b56bc3722d06.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_legal_support.png",
+    "name": "Legal support",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-4f829c0b-f59f-45fc-a884-ab49966b52bd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_pending.png",
+    "name": "Pending",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-6f9de6c6-ff93-40aa-b2c0-5110f175d907.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_access_restricted.png",
+    "name": "Access restricted",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-ac08d3c6-e1d2-45b9-b818-e62f8d622c50.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "file": "extra_support_contact.png",
+    "name": "Support contact",
+    "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-210467d9-3f9f-4190-a55b-5ec3cea40dfc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  }
+]

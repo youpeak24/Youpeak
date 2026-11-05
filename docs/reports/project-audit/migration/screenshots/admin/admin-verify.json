@@ -1,0 +1,78 @@
+{
+ "results": [
+  {
+   "name": "invalid password shows an error and stays on login",
+   "ok": true,
+   "detail": {
+    "url": "http://localhost:3055/login",
+    "toasts": [
+     "Invalid email or password."
+    ]
+   }
+  },
+  {
+   "name": "valid sign-in opens the dashboard",
+   "ok": true,
+   "detail": {
+    "url": "http://localhost:3055/admin/mainDashboard",
+    "toasts": [
+     "Login Successfully!"
+    ],
+    "session": {
+     "token": true,
+     "isAuth": "true"
+    }
+   }
+  },
+  {
+   "name": "session survives a page refresh",
+   "ok": true,
+   "detail": {
+    "url": "http://localhost:3055/admin/mainDashboard"
+   }
+  },
+  {
+   "name": "sign-out returns to login and clears the session",
+   "ok": true,
+   "detail": {
+    "path": "/",
+    "token": null
+   }
+  },
+  {
+   "name": "dashboard URL without a session redirects to login",
+   "ok": true,
+   "detail": {
+    "url": "http://localhost:3055/login"
+   }
+  },
+  {
+   "name": "sign-in again after sign-out (same tab) works",
+   "ok": true,
+   "detail": {
+    "url": "http://localhost:3055/admin/mainDashboard",
+    "toasts": [
+     "Login Successfully!"
+    ]
+   }
+  },
+  {
+   "name": "unreachable backend shows which API could not be reached",
+   "ok": true,
+   "detail": {
+    "toasts": [
+     "Cannot reach the API at http://localhost:5001/. Start the isolated local stack with \"node local-dev/start.js\" and sign in at http://localhost:3055."
+    ]
+   }
+  }
+ ],
+ "loginRequests": [
+  "http://localhost:5055/admin/admin/login",
+  "http://localhost:5055/admin/admin/login",
+  "http://localhost:5055/admin/admin/login"
+ ],
+ "blocked": [],
+ "consoleErrors": [
+  "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+ ]
+}

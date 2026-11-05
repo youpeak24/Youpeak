@@ -1,6 +1,7 @@
 //express
 const express = require("express");
 const route = express.Router();
+const bindAppUser = require("../../middleware/bindAppUser.middleware");
 
 const checkAccessWithSecretKey = require("../../checkAccess");
 
@@ -8,12 +9,12 @@ const checkAccessWithSecretKey = require("../../checkAccess");
 const PlayListController = require("../../controllers/client/playLIst.controller");
 
 //user wise new playList
-route.post("/newPlayList", checkAccessWithSecretKey(), PlayListController.newPlayList);
+route.post("/newPlayList", bindAppUser(), PlayListController.newPlayList);
 
 //user wise update playist
-route.patch("/updatePlayList", checkAccessWithSecretKey(), PlayListController.updatePlayList);
+route.patch("/updatePlayList", bindAppUser(), PlayListController.updatePlayList);
 
 //user wise delete playist
-route.delete("/deletePlayList", checkAccessWithSecretKey(), PlayListController.deletePlayList);
+route.delete("/deletePlayList", bindAppUser(), PlayListController.deletePlayList);
 
 module.exports = route;

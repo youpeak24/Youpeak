@@ -1,0 +1,9 @@
+# Admin API authorization, isolated local stack (demo-youpeak-local emulator), 2026-10-03T15:28:20+05:30
+# Tokens are local test tokens and are not recorded.
+GET /admin/user/getUsers, no token             401  {"status":false,"message":"Oops ! You are not authorized."}
+GET /admin/user/getUsers, garbage token        401  {"status":false,"message":"Invalid or expired token. Authorization failed."}
+GET /admin/user/getUsers, app-user Firebase token 401  {"status":false,"message":"Invalid or expired token. Authorization failed."}
+GET /admin/user/getUsers, district admin       403  {"status":false,"message":"This account only has access to the District Franchise portal."}
+GET /admin/user/getUsers, super admin          200  {"status":true,"message":"Success","total":7,"users":[{"_id":"local_app_user","id":"local_app_user",
+GET /admin/franchisePortal/dashboard, district 200  {"status":true,"message":"Franchise dashboard.","agency":{"_id":"agency_trichy_01","id":"agency_tric
+POST /admin/admin/login, wrong password        200  {"status":false,"message":"Invalid email or password."}

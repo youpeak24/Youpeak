@@ -1,0 +1,60 @@
+npm warn EBADENGINE Unsupported engine {
+npm warn EBADENGINE   package: 'superstatic@9.2.0',
+npm warn EBADENGINE   required: { node: '18 || 20 || 22' },
+npm warn EBADENGINE   current: { node: 'v24.18.0', npm: '11.16.0' }
+npm warn EBADENGINE }
+[36m[1mi  emulators:[22m[39m Starting emulators: auth, firestore
+[36m[1mi  emulators:[22m[39m Detected demo project ID "demo-youpeak-audit", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+[33m[1m!  firestore:[22m[39m Cloud Firestore Emulator does not support multiple databases yet.
+[33m[1m!  firestore:[22m[39m Did not find a Cloud Firestore rules file specified in a firebase.json config file.
+[33m[1m!  firestore:[22m[39m The emulator will default to allowing all reads and writes. Learn more about this option: https://firebase.google.com/docs/emulator-suite/install_and_configure#security_rules_configuration.
+[36m[1mi  firestore:[22m[39m Firestore Emulator logging to [1mfirestore-debug.log[22m
+[32m[1m+  firestore:[22m[39m Firestore Emulator UI websocket is running on 9150.
+[36m[1mi [22m[39m Running script: [1mnode reports/project-audit/full-project-audit/audit-tests/run.cjs 09[22m
+⚠️  Missing recommended env vars: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_R2_ACCESS_KEY, CLOUDFLARE_R2_SECRET_KEY, CLOUDFLARE_R2_BUCKET
+🔥 Firebase Admin initialised (service account: test@demo-youpeak-audit.iam.gserviceaccount.com)
+
+=== 09-playlists.cjs
+[0mPOST /client/playlist/newPlayList [32m200[0m 66.479 ms - 58[0m
+[0mPOST /client/playlist/newPlayList [32m200[0m 35.508 ms - 58[0m
+[0mPOST /client/playlist/newPlayList [32m200[0m 82.341 ms - 58[0m
+FAIL 09-playlists:PL-01 a user can create a playlist from one existing video (client/playlist/newPlayList; 3 active videos exist on the platform)
+     ["200 One or more videos not found!","200 One or more videos not found!","200 One or more videos not found!"]
+     + actual - expected
+     
+       [
+     +   '200 One or more videos not found!',
+     +   '200 One or more videos not found!',
+     +   '200 One or more videos not found!'
+     -   true,
+     -   true,
+     -   true
+       ]
+     
+[0mGET /client/user/playListsOfChannel?userId=pl_owner&channelId=pl-channel-uuid-1&start=1&limit=20 [32m200[0m 37.424 ms - 59[0m
+FAIL 09-playlists:PL-02 GET playListsOfChannel with the CHANNEL id (what the app sends) returns the channel's public playlists
+     total=0 playList=0 (expected 3; handler filters playLists by userId == channelId)
+[0mGET /client/user/playListsOfChannel?channelId=pl_owner&start=0&limit=20 [32m200[0m 41.495 ms - 625[0m
+[0mGET /client/user/playListsOfChannel?channelId=pl_owner&start=1&limit=2 [32m200[0m 53.818 ms - 436[0m
+FAIL 09-playlists:PL-03 page 1 (start=1, limit=2) returns the first two playlists, not a slice that skips the first item
+     all[0]=pl_seed_1; page1=2 items, includes first=false (start is used as an array offset, the app sends a page number)
+[0mGET /client/user/detailsOfChannel?channelId=id-chan-uuid-77&userId=id_viewer&start=1&limit=10 [32m200[0m 49.762 ms - 47[0m
+FAIL 09-playlists:ID-01 channel page (detailsOfChannel) opens for a channel whose channelId is a uuid (set by createVideo's first-upload path)
+     status=false message=Channel not found. totalVideosOfChannel=undefined
+[0mGET /client/user/detailsOfChannel?channelId=id_self_owner&userId=id_viewer&start=1&limit=10 [32m200[0m 72.781 ms - 428[0m
+PASS 09-playlists:ID-02 channel page opens for a channel whose channelId equals the owner's user id (set by client/user/update) — control
+[0mGET /client/user/videosOfChannel?channelId=id-chan-uuid-77&userId=id_viewer&start=1&limit=10 [32m200[0m 51.229 ms - 56[0m
+FAIL 09-playlists:ID-03 videosOfChannel lists the videos of a uuid channel
+     total=0
+[0mPOST /client/userWiseSubscription/subscribedUnSubscibed?channelId=id-chan-uuid-77 [32m200[0m 77.633 ms - 87[0m
+PASS 09-playlists:ID-04 subscribing to a uuid channel works and is counted on the channel page
+
+AUDIT RESULT 2/7 expectations met (5 defects demonstrated)
+[32m[1m+ [22m[39m Script exited successfully (code 0)
+[36m[1mi  emulators:[22m[39m Shutting down emulators.
+[36m[1mi  firestore:[22m[39m Stopping Firestore Emulator
+[33m[1m! [22m[39m Firestore Emulator has exited upon receiving signal: SIGINT
+[36m[1mi  auth:[22m[39m Stopping Authentication Emulator
+[36m[1mi  hub:[22m[39m Stopping emulator hub
+[36m[1mi  logging:[22m[39m Stopping Logging Emulator
+exit=0

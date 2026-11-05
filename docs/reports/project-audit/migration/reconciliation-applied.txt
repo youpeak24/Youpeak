@@ -1,0 +1,45 @@
+RECOVERED functions/backend/controllers/admin/mediaAudit.controller.js
+RECOVERED functions/backend/middleware/optionalAppUser.middleware.js
+RECOVERED functions/backend/middleware/withholdLockedPlayback.js
+RECOVERED functions/backend/routes/admin/mediaAudit.route.js
+RECOVERED functions/backend/util/safeUser.js
+RECOVERED functions/backend/util/uploadGrants.js
+RECOVERED functions/backend/util/withdrawalLedger.js
+RECOVERED reports/project-audit/phase2/dart-analysis-phase2.txt
+RECOVERED reports/project-audit/phase2/emulator-results.json
+RECOVERED reports/project-audit/phase2/flutter-test.txt
+RECOVERED reports/project-audit/phase2/flutter-web-build.txt
+RECOVERED reports/project-audit/phase2/node-check.txt
+RECOVERED reports/project-audit/phase2/node-test.txt
+RECOVERED reports/project-audit/phase2/phase2-changed-files.txt
+EVIDENCE  tests/emulator/out/final.log -> reports/project-audit/phase2/historical-emulator-out/final.log
+EVIDENCE  tests/emulator/out/last.log -> reports/project-audit/phase2/historical-emulator-out/last.log
+RECOVERED tests/emulator/suites/02-phase2.cjs
+RECOVERED tests/emulator/suites/03-privacy-auth.cjs
+RECOVERED tests/emulator/suites/04-peakboost.cjs
+RECOVERED tests/emulator/suites/05-payments.cjs
+RECOVERED tests/emulator/suites/06-withdrawals.cjs
+RECOVERED tests/emulator/suites/07-rewards.cjs
+RECOVERED tests/emulator/suites/08-media.cjs
+RECOVERED tests/emulator/suites/09-requirements.cjs
+RECOVERED YOUPEAK_PHASE2_REMEDIATION_REPORT.txt
+SKIPPED-GENERATED firestore-debug.log
+MERGED-C  functions/backend/controllers/admin/withDrawalRequest.controller.js
+MERGED-C  functions/backend/controllers/client/file.controller.js
+MERGED-C  functions/backend/controllers/client/payout.controller.js
+MERGED-C  functions/backend/controllers/client/video.controller.js
+MERGED-C  functions/backend/controllers/client/withDrawalRequest.controller.js
+MERGED-C  functions/backend/routes/admin/index.js
+MERGED-C  functions/backend/util/rewardEngine.js
+MERGED-C  functions/backend/util/watchLedger.service.js
+MERGED-C  reports/project-audit/phase2/REMEDIATION_QUEUE.md
+MERGED-C  reports/project-audit/REVIEW.md
+MERGED-C  reports/project-audit/source-inventory.json
+MERGED-C  reports/project-audit/VALIDATION.md
+SKIPPED-GENERATED tests/emulator/out/results.json
+MERGED-C  tests/media.test.cjs
+MERGED-C  tests/webhooks.test.cjs
+MERGED-C  YOUPEAK_AUDIT_FIX_LOG.txt
+MERGED-C  YOUPEAK_FULL_PROJECT_AUDIT.txt
+MERGED-C  YOUPEAK_REQUIREMENTS_MATRIX.txt
+EVIDENCE  tests/emulator/out/results.json (C) -> reports/project-audit/phase2/historical-emulator-out/results.json

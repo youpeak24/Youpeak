@@ -1,0 +1,1820 @@
+================================================================================
+ YOUPEAK LANDING PAGE — WORLD-CLASS 3D RENDER PROMPTS FOR CHATGPT
+ 88 images · v3 · tuned to force detailed 3D renders (not simplified art)
+================================================================================
+
+WHY v2 CAME OUT "SIMPLIFIED" — AND WHAT v3 CHANGES
+--------------------------------------------------
+1. ChatGPT REWRITES your prompt before it draws. It shortens it and often
+   drops the quality words. v3's master prompt orders it to pass every prompt
+   through WORD FOR WORD.
+2. The first words set the medium. "A 3D icon of..." or "a cute emoji..."
+   tells the model "flat app icon / sticker". v3 starts every prompt with
+   "Ultra-detailed photorealistic 3D product render of...".
+3. "Clay", "cute", "Pixar" and "chunky" push toward toy-like, low-detail
+   art. v3 replaces them with real, physical materials: polished 22-karat
+   gold with a milled edge, frosted borosilicate glass, glossy ceramic glaze,
+   pebbled leather with stitching, anodized aluminium.
+4. v3 names the render pipeline (Cinema 4D + Octane, path tracing,
+   ray-traced reflections, global illumination, subsurface scattering), a
+   real lens (100mm product lens) and a real studio lighting setup.
+5. Every prompt ends with a STRICTLY NOT list that bans flat, vector,
+   cartoon, clip-art, sticker, outline, cel-shading and low-poly.
+
+HOW TO USE THIS FILE
+--------------------
+1. Use ChatGPT with image generation. Start a NEW chat per group (Brand,
+   Hero, Personas, Screens, Icons, Emojis, Illustrations, Backgrounds).
+2. Paste the MASTER PROMPT (section 0) first. Wait for "Ready".
+3. Copy ONE prompt at a time: only the text between  >>>  and  <<<.
+4. STYLE-ANCHOR TRICK (this matters most for consistency):
+   a) Generate icon 5.1 (trophy) first, and regenerate it until it's perfect.
+   b) Download it. In every later chat, upload it with your first prompt and
+      add this line: "Use the attached image as the STYLE REFERENCE: match its
+      render quality, materials, lighting, camera angle and padding exactly."
+5. If a result still looks flat or simplified, use the fix-up phrases in
+   section 10 (the first one is written for exactly that problem).
+6. Sizes to pick in ChatGPT: Square 1024x1024 · Landscape 1536x1024 ·
+   Portrait 1024x1536. Compress afterwards (tinypng.com / squoosh.app) to under
+   200 KB, and save with the exact FILE name into public/assets/ (icons/,
+   emoji/ and bg/ subfolders as marked).
+
+DO NOT GENERATE (trademarks, so download the official files instead):
+   Google Play / App Store badges · Razorpay, UPI, PhonePe, GPay, Paytm logos ·
+   real people's faces · screenshots of other companies' apps
+
+
+================================================================================
+ 0. MASTER PROMPT  (paste FIRST in every new chat)
+================================================================================
+>>>
+You are a senior 3D art director and CGI product-visualisation artist producing
+the full visual asset library for "YouPeak", an Indian watch-and-earn video app
+(users watch videos, earn coins at 100 coins = ₹1, and withdraw real money
+instantly via UPI; creators keep up to 90% of revenue). The website is a clean,
+premium, LIGHT WHITE design.
+
+HOW YOU MUST HANDLE MY PROMPTS
+- Send each prompt I give you to the image generator EXACTLY as written, word
+  for word. Do not summarise, shorten, paraphrase or "simplify" it, and do not
+  add any cartoon, flat or illustrated styling of your own.
+- If a prompt is long, keep all of it. Every detail matters.
+- Do not ask me questions. Just generate.
+
+QUALITY BAR (applies to every image)
+- Photorealistic 3D product-render quality, as if modelled in Cinema 4D or
+  Blender and rendered in Octane/Redshift with path tracing: physically based
+  materials, ray-traced reflections and refractions, soft global
+  illumination, ambient occlusion, subsurface scattering on soft or
+  translucent materials, micro-surface detail, crisp beveled edges that catch
+  highlights. The level of an Apple product shot or an award-winning Behance
+  3D key visual.
+- Real materials only: polished and brushed metals, lacquered ceramic, frosted
+  and clear glass, anodized aluminium, soft leather, satin fabric, glossy
+  resin.
+- Studio lighting: large soft key light from the top-left, white bounce fill
+  from the right, thin rim light, soft realistic contact shadow beneath.
+- Brand palette: emerald #10B981, deep emerald #059669, mint #6EE7B7,
+  violet #8B5CF6, deep violet #7C3AED, gold #F59E0B / #FBBF24, cyan #06B6D4,
+  blue #3B82F6, rose #F43F5E, white #FFFFFF, off-white #F8FAFC. Premium and
+  saturated, never neon.
+- Backgrounds are fully transparent (PNG alpha) unless the prompt says
+  "BACKGROUND IMAGE".
+- No text, letters, numbers, watermarks or logos, ever. The rupee sign ₹
+  embossed on coins is the only allowed glyph. In app-screen mockups, text
+  is shown as soft grey rounded placeholder bars.
+
+STRICTLY FORBIDDEN STYLES: flat illustration, vector art, cartoon drawing,
+clip-art, sticker, doodle, line art, outlines, cel shading, low-poly,
+paper-cut, simplified shapes, children's-book style.
+
+Reply only "Ready".
+<<<
+
+
+================================================================================
+ 1. BRAND  (4 images)
+================================================================================
+
+1.1  APP ICON
+     FILE: app_logo.png · SIZE: 1024x1024 · Transparent
+     USED: navbar, footer, hero phone, download section, social previews
+>>>
+Ultra-detailed 3D render of a premium mobile app icon for "YouPeak", in the
+modern "liquid glass" style of the latest iOS app icons.
+SHAPE: an iOS squircle (continuous-curvature rounded square, corner radius
+about 22% of its width), front-facing with no perspective tilt, filling 84% of
+the canvas, perfectly centered.
+BASE MATERIAL: a thick slab of polished glass, tinted with a smooth diagonal
+gradient from emerald #10B981 (top-left) through teal #0EA5A0 to deep violet
+#7C3AED (bottom-right). The glass has visible thickness: a bright refractive
+bevel along all edges, a soft specular highlight across the top 25%, subtle
+caustic light pooling toward the bottom, and a gentle inner glow.
+SYMBOL: a raised white glyph floating 2mm above the glass: a rounded
+right-pointing play triangle whose top edge rises into a sharp mountain peak,
+like an arrow going up ("watch and rise"). The glyph is frosted white
+porcelain with a soft bevel and a faint shadow cast onto the glass.
+Geometric and balanced, still readable at 32px.
+RENDER: Octane path tracing, ray-traced refraction, soft global illumination,
+8K crisp detail.
+OUTPUT: square 1:1, transparent background outside the squircle.
+STRICTLY NOT: text, the word YouPeak, letters, numbers, extra symbols,
+background scenery, drop-shadow box, flat design, vector, cartoon, clip-art.
+<<<
+
+1.2  LOGO MARK (symbol without the square)
+     FILE: logo_mark.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D product render of a standalone logo symbol, with no
+container: a thick geometric glyph that fuses a rounded right-pointing play
+triangle with an upward mountain peak rising from its top edge.
+MATERIAL: solid polished glass with a smooth internal gradient from emerald
+#10B981 (left) to deep violet #7C3AED (right), refractive beveled edges that
+glow with light, a crisp specular highlight on the upper-left edges, and soft
+caustics. The glyph is about 8% as thick as it is wide.
+CAMERA: front view, very slight 10° tilt to show thickness, centered, filling
+68% of the canvas.
+LIGHT: soft studio key light top-left, white fill right, rim light.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: squares, circles or frames around the glyph, text, letters,
+outlines, glitter, flat vector, cartoon, clip-art.
+<<<
+
+1.3  FAVICON  (intentionally flat, because it must read at 16–32px)
+     FILE: favicon.png · SIZE: 1024x1024 · Transparent
+     (then export 32x32, 180x180 and 512x512)
+>>>
+A precise, pixel-clean favicon mark designed to read at 16–32 pixels. A
+squircle (rounded square) filling 94% of the canvas, straight front view,
+filled with a smooth flat gradient from emerald #10B981 (top-left) to violet
+#7C3AED (bottom-right). In the center, a thick solid white symbol: a rounded
+right-pointing play triangle whose top edge rises into a sharp peak. Very bold
+shapes, maximum contrast, perfectly symmetric margins. No gloss, no shadow, no
+texture.
+OUTPUT: square 1:1, transparent background outside the squircle.
+STRICTLY NOT: text, thin lines, highlights, small details, 3D effects.
+<<<
+
+1.4  SOCIAL SHARE IMAGE  (WhatsApp / X / LinkedIn / Facebook link preview)
+     FILE: og_image.png · SIZE: 1536x1024 (crop to 1200x630) · BACKGROUND IMAGE
+>>>
+BACKGROUND IMAGE. A cinematic, ultra-detailed 3D key visual for a fintech +
+video app launch, landscape.
+BACKDROP: a seamless white studio sweep fading to very pale mint #ECFDF5 on
+the right, with two huge soft light blooms: emerald #10B981 (12% intensity)
+behind the phone and violet #8B5CF6 (10%) in the top-right corner.
+HERO (right half): a premium smartphone with a thin black glass bezel,
+polished aluminium frame and chamfered edges, floating and tilted about 12° to
+the left. Its OLED screen shows an app feed: two rounded video cards with
+vivid pastel cinematic thumbnails and a glossy emerald play button on the top
+card, with realistic screen reflections.
+AROUND IT, at different depths: six polished 22-karat gold coins with milled
+edges and a deeply embossed ₹ sign (the nearest one sharp, the farthest ones
+softly out of focus), a soft pebbled emerald leather wallet with visible
+stitching at the lower-left, and a frosted violet glass speech bubble holding
+a glossy white ceramic heart at the upper-right.
+LIGHT: soft studio key top-left, rim light, realistic contact shadows,
+volumetric softness.
+CAMERA: 85mm, shallow depth of field (f/2.8).
+LAYOUT: the LEFT 45% stays completely empty, clean white space reserved for a
+headline. All objects stay inside the central 1200x630 safe area.
+RENDER: Octane path tracing, PBR materials, 8K detail.
+STRICTLY NOT: text, letters, numbers, logos, UI words, dark background,
+clutter on the left, cropped objects, flat or illustrated style.
+<<<
+
+
+================================================================================
+ 2. HERO SECTION  (8 images)
+================================================================================
+
+2.1  HERO PHONE SCREEN  (fills the big phone in the hero)
+     FILE: hero_screen.png · SIZE: 1024x1536 portrait · Transparent
+     (replaces boarding_1.png)
+>>>
+A high-end 3D character scene render in the quality of a still from a modern
+animated feature film (detailed hair strands, realistic fabric weave,
+subsurface skin scattering, cinematic lighting). Portrait composition that
+will sit inside a phone screen.
+CHARACTER: a cheerful young Indian woman in her early 20s with warm brown skin,
+expressive eyes and glossy dark hair in a loose ponytail, wearing an oversized
+mint-green knit hoodie (visible knit texture), light denim and white sneakers.
+She sits relaxed on a plush lavender #EDE9FE velvet bean bag, holding a
+smartphone and smiling at it.
+IN FRONT OF HER: a large floating video card made of frosted glass with a
+pastel landscape thumbnail and a glossy emerald #10B981 play button. From the
+card, an arc of six polished gold ₹ coins with milled edges streams down into
+a small emerald leather wallet on the floor, the coins showing mirror
+reflections and slight motion blur on the fastest one.
+DETAILS: a frosted violet glass bubble with a white heart and a small mint
+glass thumbs-up bubble floating near her.
+COMPOSITION: character in the lower 60%, video card upper-middle, 8% padding,
+nothing cropped.
+LIGHT: soft key top-left, warm fill, rim light on hair, realistic contact
+shadows.
+OUTPUT: portrait 2:3, fully transparent background.
+STRICTLY NOT: text, letters, numbers, logos, flat illustration, vector,
+simplified cartoon, anime, extra people, background scenery.
+<<<
+
+2.2  FLOATING 3D OBJECTS  (6 images placed around the hero phone)
+     SIZE: 1024x1024 each · Transparent
+
+2.2a FILE: float_coin.png
+>>>
+Ultra-detailed photorealistic 3D product render of a single gold coin
+floating in mid-air, tilted about 30° so both the face and the thick edge are
+visible.
+MATERIAL: polished 22-karat gold (#FBBF24 highlights, #F59E0B mid-tones) with
+a finely milled (reeded) edge, a deeply embossed rupee sign ₹ in the center,
+and a thin raised inner ring. Mirror-like reflections of a softbox on the
+face, micro-polish marks, a crisp bright specular glint on the upper-left rim,
+and a tiny starburst sparkle where light hits the edge.
+LIGHT: large softbox key top-left, white fill right, rim light, soft
+realistic contact shadow far below.
+CAMERA: 100mm macro product lens, centered, the coin fills 58% of the canvas,
+tack-sharp.
+RENDER: Octane path tracing, ray-traced reflections, 8K detail.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: dollar sign, numbers, text, multiple coins, flat, vector,
+cartoon, clip-art, dull brown gold.
+<<<
+
+2.2b FILE: float_coins_stack.png
+>>>
+Ultra-detailed photorealistic 3D product render of a stack of five polished
+22-karat gold coins, stacked slightly irregularly like a real stack, each with
+a milled edge and a deeply embossed ₹ sign. A sixth coin flips in the air just
+above the stack, caught mid-spin at a 60° angle with subtle motion blur on its
+edge. Tiny warm light sparkles glint off the rims. Mirror reflections, fine
+polish marks, realistic weight.
+LIGHT: softbox key top-left, fill right, rim light, soft contact shadow and
+ambient occlusion between the coins.
+CAMERA: 100mm lens, three-quarter angle 30° above, centered, fills 62% of the
+canvas.
+RENDER: Octane path tracing, PBR, 8K detail.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, numbers, dollar signs, paper money, flat, vector,
+cartoon, clip-art.
+<<<
+
+2.2c FILE: float_play.png
+>>>
+Ultra-detailed 3D product render of a physical play button object: a thick
+rounded disc (like a premium puck) made of glossy emerald ceramic with a
+gradient from #10B981 to #059669, with a raised frosted white porcelain
+play triangle on its face. A clear glass rim ring wraps the disc edge and
+catches bright refractive highlights. Soft mint #6EE7B7 inner glow bleeding
+through the glass edge. Tilted 20° toward the camera, floating.
+LIGHT: softbox key top-left, fill right, rim light, soft contact shadow.
+CAMERA: 100mm lens, centered, fills 58% of the canvas.
+RENDER: Octane path tracing, ray-traced reflections and refraction, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: red YouTube colors, logos, text, outlines, flat, vector,
+cartoon, clip-art.
+<<<
+
+2.2d FILE: float_heart.png
+>>>
+Ultra-detailed 3D product render of a speech bubble made of frosted violet
+glass (#8B5CF6 to #7C3AED) with visible thickness, soft internal light
+scattering and a small rounded tail at the bottom-left. Inside it, suspended,
+a plump glossy white ceramic heart with a crisp specular highlight, softly
+refracted through the glass. Floating, tilted 15°.
+LIGHT: softbox key top-left, fill right, bright rim light on the glass edges,
+soft contact shadow.
+CAMERA: 100mm lens, centered, fills 58% of the canvas.
+RENDER: Octane path tracing, refraction, subsurface scattering, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: red heart, Instagram style, text, numbers, flat, vector,
+cartoon, clip-art.
+<<<
+
+2.2e FILE: float_wallet.png
+>>>
+Ultra-detailed photorealistic 3D product render of a compact luxury wallet in
+soft pebbled emerald leather (#10B981 body, deeper #059669 flap), with neat
+tonal stitching, finished edge paint and a small polished gold clasp. The flap
+is slightly open and two polished 22-karat gold ₹ coins with milled edges
+peek out, one tilted. Realistic leather grain, soft sheen, subtle creases.
+LIGHT: softbox key top-left, fill right, rim light, soft contact shadow.
+CAMERA: 100mm lens, three-quarter angle 30° above, centered, fills 62% of the
+canvas.
+RENDER: Octane path tracing, PBR, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: brand names, card logos, paper money, text, flat, vector,
+cartoon, clip-art.
+<<<
+
+2.2f FILE: float_upi_arrow.png
+>>>
+Ultra-detailed 3D render of "instant money transfer": a thick glossy ribbon
+arrow made of translucent emerald-to-cyan glass (#10B981 to #06B6D4) sweeping
+upward in a smooth S-curve from the bottom-left and landing into the screen of
+a small premium smartphone on the right (aluminium frame, black glass bezel,
+glowing emerald screen). A polished gold ₹ coin rides on the arrow near its
+tip, with a faint light trail behind it.
+LIGHT: softbox key top-left, rim light, caustics from the glass arrow, soft
+contact shadow.
+CAMERA: 85mm lens, three-quarter view, centered, fills 70% of the canvas.
+RENDER: Octane path tracing, refraction, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: UPI logo, bank logos, text, numbers, flat, vector, cartoon.
+<<<
+
+2.3  HERO BACKGROUND
+     FILE: bg/hero_bg.jpg · SIZE: 1536x1024 (upscale to 2560x1440) · BACKGROUND IMAGE
+>>>
+BACKGROUND IMAGE, landscape, for the top of a premium light website.
+A photographic, perfectly smooth studio light field on pure white #FFFFFF:
+three enormous, ultra-diffused colored light blooms, as if soft gels lit a
+white cyclorama wall. Pale mint #D1FAE5 at the top-center covering the top
+40%, pale lavender #EDE9FE on the right at mid-height, and pale sky blue
+#DBEAFE in the bottom-left corner. No visible edges anywhere, 16-bit smooth
+gradients. Overlay a barely visible 1px light-grey #E2E8F0 square grid every
+64px that fades out toward the edges. Overall 90% white, airy and expensive.
+STRICTLY NOT: objects, shapes, text, grain, noise, banding, dark areas,
+vignette, strong colors.
+<<<
+
+
+================================================================================
+ 3. "BUILT FOR EVERYONE" TAB ILLUSTRATIONS  (3 images, shown ~300px wide)
+================================================================================
+
+3.1  WATCH & EARN
+     FILE: persona_watch.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D key-visual render illustrating "watch videos, earn money",
+in the quality of an award-winning Behance fintech 3D scene.
+CENTER: a premium smartphone standing upright, rotated 15° left, with a
+polished aluminium frame, black glass bezel and a vivid OLED screen showing a
+cinematic pastel video thumbnail and a glossy emerald #10B981 play button,
+with realistic screen reflections.
+ACTION: five polished 22-karat gold ₹ coins with milled edges burst out of the
+screen in a graceful arc (slight motion blur on the fastest) and drop into an
+open emerald pebbled-leather wallet in front of the phone.
+SATELLITE OBJECTS (floating at different depths, farthest slightly out of
+focus): a mint frosted-glass thumbs-up, a small polished gold trophy, and a
+white ceramic clock with an emerald check badge.
+COLORS: emerald and cyan #06B6D4 dominant, gold coins, white.
+LIGHT: softbox key top-left, fill right, rim light, caustics from glass,
+realistic contact shadows.
+CAMERA: 85mm, three-quarter view, centered, fills 75% of the canvas, shallow
+depth of field.
+RENDER: Octane path tracing, PBR materials, 8K detail.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, numbers, UI words, logos, people, flat illustration,
+vector, cartoon, clip-art, clutter.
+<<<
+
+3.2  CREATE & PROFIT
+     FILE: persona_creator.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D key-visual render illustrating "creators earning money",
+award-winning Behance 3D scene quality.
+CENTER: a compact mirrorless camera in matte black with a polished lens (real
+glass reflections) on a small carbon-fiber tripod, facing a glowing violet
+#8B5CF6 LED ring light on the right that casts soft violet light onto the
+scene.
+LEFT: a smartphone on a brushed-aluminium stand, its screen showing a rising
+bar chart with glowing violet and emerald bars.
+FOREGROUND: a thick pie chart made of clear frosted glass, where one large
+violet glass slice (about 90% of the pie) lifts upward and outward, refracting
+light, with a thin mint rim light.
+FLOATING: three polished gold ₹ coins and one faceted violet gemstone with
+internal refractions.
+COLORS: violet #8B5CF6 and #7C3AED dominant, gold accents, white.
+LIGHT: softbox key top-left, violet practical light from the ring light, rim
+light, realistic contact shadows.
+CAMERA: 85mm, three-quarter view, centered, fills 75% of the canvas, shallow
+depth of field.
+RENDER: Octane path tracing, refraction, PBR, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, numbers, percent signs, logos, YouTube red, people, flat,
+vector, cartoon, clip-art.
+<<<
+
+3.3  REFER & GROW
+     FILE: persona_referral.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D key-visual render illustrating "invite friends and earn".
+CENTER: a large round medallion of glossy amber ceramic (#F59E0B) with a
+polished gold rim, carrying a raised frosted-white porcelain person-bust
+silhouette (head and shoulders, no facial features).
+AROUND IT: four smaller medallions (white ceramic, mint glass, lavender glass,
+light-blue glass), each with a raised bust silhouette, arranged in a diamond
+and connected to the center by thin glowing amber light tubes. Tiny polished
+gold ₹ coins travel along each tube toward the center.
+BOTTOM: a luxury white gift box with a satin amber ribbon and bow, lid
+slightly lifted, warm light and sparkles escaping.
+COLORS: amber #F59E0B and warm orange dominant, gold, white.
+LIGHT: softbox key top-left, glow from the light tubes, rim light, realistic
+contact shadows.
+CAMERA: 85mm, three-quarter view slightly above, centered, fills 75% of the
+canvas.
+RENDER: Octane path tracing, PBR, subsurface glow, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, numbers, facial features, social media logos, flat,
+vector, cartoon, clip-art.
+<<<
+
+
+================================================================================
+ 4. "INSIDE THE APP" PHONE SCREENS  (6 images, shown inside a phone frame)
+================================================================================
+These are app UI designs, so they stay crisp 2D interfaces. Their depth comes
+from layered shadows, glass cards and small 3D-rendered objects inside the
+UI. If ChatGPT writes gibberish words, reply:
+"Replace every piece of text with soft grey rounded placeholder bars; keep
+everything else identical."
+
+4.1  DISCOVERY FEED
+     FILE: screen_feed.png · SIZE: 1024x1536 portrait
+>>>
+A pixel-perfect, high-fidelity mobile app UI design (Dribbble top-shot
+quality, the polish of Apple's own apps), portrait, showing ONLY the screen
+with 40px rounded corners and no phone frame.
+THEME: white #FFFFFF background, iOS-style spacing on an 8px grid, soft
+layered shadows (two-level: tight + diffuse).
+TOP BAR: a small glossy emerald rounded app icon on the left; on the right, a
+gold pill badge holding a tiny photoreal 3D gold coin.
+CHIPS: a row of 4 pill chips; the first filled emerald #10B981 with white
+placeholder, the others light-grey outlined.
+FEED: two large video cards, each with a rounded 16:9 thumbnail showing a
+vivid, cinematic, photographic pastel scene (golden-hour hills; neon city
+street at dusk), a frosted-glass play button overlay, a round avatar, and
+two grey placeholder text bars.
+BOTTOM NAV: a frosted-glass bar with 5 crisp line icons (home, shorts, plus,
+wallet, profile), the home icon emerald with a small dot indicator.
+STRICTLY NOT: real words or letters, brand logos, phone bezel, dark mode,
+sketch, wireframe, low fidelity.
+<<<
+
+4.2  SHORTS / MOBILE FIRST
+     FILE: screen_shorts.png · SIZE: 1024x1536 portrait
+>>>
+A pixel-perfect, high-fidelity mobile app UI design, portrait, ONLY the screen
+with 40px rounded corners and no phone frame: a full-screen vertical short
+video player.
+VIDEO FRAME: a cinematic, ultra-detailed 3D rendered still of a young Indian
+dancer mid-move on a stage lit with violet and mint volumetric light beams and
+floating haze, shallow depth of field.
+RIGHT RAIL: 4 round frosted-glass buttons with crisp white icons (heart,
+comment, share, and a small photoreal gold coin).
+BOTTOM-LEFT: a round avatar with a white ring and two white placeholder bars.
+TOP-CENTER: a floating gold glass "reward toast" pill with a photoreal gold
+coin and a small plus sparkle, sliding in.
+ACCENT: violet #8B5CF6.
+STRICTLY NOT: real words, letters, numbers, TikTok/Instagram/YouTube logos,
+phone bezel, gloomy mood, sketch, low fidelity.
+<<<
+
+4.3  CREATOR STUDIO
+     FILE: screen_studio.png · SIZE: 1024x1536 portrait
+>>>
+A pixel-perfect, high-fidelity mobile "upload video" UI design, portrait, ONLY
+the screen with 40px rounded corners, no phone frame, white #FFFFFF theme,
+8px grid, soft layered shadows.
+TOP: a back chevron and a grey placeholder title bar.
+UPLOAD ZONE: a large rounded card with a dashed blue #3B82F6 border and a pale
+blue #EFF6FF fill, holding a photoreal 3D frosted-glass cloud with a glossy
+blue up-arrow.
+PREVIEW: a video thumbnail card with a cinematic pastel image and a progress
+bar 70% filled with a blue-to-indigo gradient.
+SETTINGS: three rows with grey placeholder bars and iOS toggle switches (two
+on in blue, one off), then a row of 3 rounded hashtag pills.
+CTA: a full-width rounded button with a blue-to-indigo gradient, a soft glow
+shadow and a white upload icon (no text).
+STRICTLY NOT: real words, letters, numbers, logos, phone bezel, dark mode,
+wireframe.
+<<<
+
+4.4  COIN WALLET
+     FILE: screen_wallet.png · SIZE: 1024x1536 portrait
+>>>
+A pixel-perfect, high-fidelity fintech wallet UI design (Revolut / Apple
+Wallet level of polish), portrait, ONLY the screen with 40px rounded corners,
+no phone frame, white #FFFFFF theme, 8px grid.
+BALANCE CARD: a large rounded card with a rich amber #F59E0B to orange
+gradient, a subtle glass sheen, and a photoreal stack of polished gold ₹ coins
+rendered on the right; two white placeholder bars (large and small) on the
+left.
+CONVERSION ROW: a white card showing a tiny photoreal gold coin, a thin arrow,
+and a ₹ sign in an emerald circle.
+TRANSACTIONS: 4 rows, each with a round tinted icon (emerald arrow-up, gold
+coin, violet gift, emerald arrow-up), grey placeholder bars, and a small
+emerald placeholder bar on the right.
+CTA: a full-width emerald #10B981 rounded button with a soft emerald glow and
+a white wallet icon (no text).
+STRICTLY NOT: real words, letters, numbers (except ₹), bank or UPI logos,
+phone bezel, dark mode, wireframe.
+<<<
+
+4.5  REFERRAL NETWORK
+     FILE: screen_referral.png · SIZE: 1024x1536 portrait
+>>>
+A pixel-perfect, high-fidelity referral UI design, portrait, ONLY the screen
+with 40px rounded corners, no phone frame, white #FFFFFF theme, 8px grid.
+HERO CARD: a rounded card with a rose #F43F5E to pink gradient and a glass
+sheen, featuring a photoreal 3D white gift box with a satin gold ribbon
+bursting with light sparkles, plus two white placeholder bars.
+INVITE FIELD: a light-grey rounded input with a placeholder bar and a small
+rose copy-icon button.
+SHARE ROW: 4 round, softly tinted generic share buttons (chat bubble, link,
+paper plane, dots). No brand logos.
+FRIENDS LIST: 4 rows, each with a round avatar (high-quality stylized 3D
+portrait, not a real person), grey placeholder bars, and a small emerald
+check badge or amber clock badge.
+STRICTLY NOT: real words, letters, numbers, WhatsApp/Telegram or any brand
+logos, real faces, phone bezel, dark mode, wireframe.
+<<<
+
+4.6  CREATOR ANALYTICS
+     FILE: screen_analytics.png · SIZE: 1024x1536 portrait
+>>>
+A pixel-perfect, high-fidelity analytics dashboard UI design (Stripe
+Dashboard level of polish), portrait, ONLY the screen with 40px rounded
+corners, no phone frame, white #FFFFFF theme, 8px grid.
+TOP: 3 time-range pills, the middle one filled emerald #10B981.
+MAIN CHART: a white card with a smooth rising area chart, the line in emerald
+with a soft glow, the area filled with an emerald-to-teal gradient fading to
+white, one highlighted data point with a small glass tooltip (placeholder
+bar).
+STAT CARDS: three small cards, each with a round tinted icon (eye in cyan,
+people in violet, photoreal gold coin) and placeholder bars.
+REVENUE CARD: a donut chart with a large emerald segment and a small light-
+grey segment, next to two legend rows with colored dots and placeholder bars.
+STRICTLY NOT: real words, letters, numbers, axis labels, logos, phone bezel,
+dark mode, wireframe.
+<<<
+
+
+================================================================================
+ 5. 3D ICON SET  (43 icons · 1024x1024 · transparent · save in icons/)
+================================================================================
+Every icon ends with the SAME render / light / camera / output block, so the
+whole set matches. Generate 5.1 first and use it as your STYLE ANCHOR (see
+"How to use", step 4).
+
+---------------- STATS BAR (just under the hero) ----------------
+
+5.1  FILE: icon_trophy.png  (250K+ Active Users)  ← STYLE ANCHOR, make this one first
+>>>
+Ultra-detailed photorealistic 3D product render of a trophy cup: a
+polished 22-karat gold cup (#FBBF24 highlights, #F59E0B mid-tones) with two
+elegant loop handles and mirror reflections, on a short square pedestal of
+glossy emerald #10B981 lacquered ceramic with a thin brushed-gold plate on its
+front. A tiny starburst glint on the rim.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels catching light, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding on all sides, tack-sharp.
+OUTPUT: square 1:1, single isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, simplified shapes, text, letters, numbers, logos.
+<<<
+
+5.2  FILE: icon_growth.png  (₹2.4 Cr+ Paid Out)
+>>>
+Ultra-detailed photorealistic 3D product render of a growth chart object:
+three rounded vertical bars of increasing height made of translucent violet
+glass (#8B5CF6 to #7C3AED) with glowing internal light, standing on a thin
+white ceramic base plate; a thick polished violet-chrome arrow curves up from
+the left and points up-right above the tallest bar, refracting through the
+glass.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, crisp micro-bevels,
+8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, single isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, axis labels, text, letters, numbers, logos.
+<<<
+
+5.3  FILE: icon_revenue.png  (Up to 90% Creator Revenue)
+>>>
+Ultra-detailed photorealistic 3D product render of a thick round pie chart
+puck: about 90% of it is one large slice of glossy amber lacquered ceramic
+(#F59E0B) lifted slightly up and outward; the remaining thin slice is matte
+white porcelain. A polished 22-karat gold ₹ coin with a milled edge rests on
+top of the large slice.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, single isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, percent signs, text, letters, numbers, logos.
+<<<
+
+5.4  FILE: icon_instant.png  (Instant UPI Withdrawals)
+>>>
+Ultra-detailed photorealistic 3D product render of a thick lightning bolt made
+of glowing blue-to-cyan glass (#3B82F6 to #06B6D4) with an energized inner
+core, striking diagonally down onto a polished 22-karat gold ₹ coin with a
+milled edge; a small burst of bright white light sparks at the point of
+impact.
+RENDER: Octane path tracing, PBR materials, refraction, emissive glow, soft
+global illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, single isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, UPI logo, text, letters, numbers, logos.
+<<<
+
+---------------- FEATURES GRID ----------------
+
+5.5  FILE: icon_hd_video.png  (HD Video & Shorts)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium display monitor
+on a slim brushed-aluminium stand: thin white ceramic bezel, an edge-to-edge
+glass screen glowing with a cyan-to-blue gradient (#06B6D4 to #3B82F6), and a
+raised frosted-glass play triangle floating just in front of the screen,
+casting a soft cyan glow onto the stand.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, emissive
+screen glow, soft global illumination, ambient occlusion, crisp micro-bevels,
+8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, single isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, "HD" label, text, letters, numbers, logos.
+<<<
+
+5.6  FILE: icon_coins.png  (Real Coin Rewards)
+>>>
+Ultra-detailed photorealistic 3D product render of three polished 22-karat
+gold coins, each with a finely milled edge and a deeply embossed ₹ sign: two
+lying stacked, the third standing on its edge and spinning with subtle motion
+blur on its rim. Mirror reflections, micro-polish marks, a tiny starburst
+glint on top.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, dollar signs, paper money, text, letters, numbers.
+<<<
+
+5.7  FILE: icon_referral.png  (₹200 Referral Engine)
+>>>
+Ultra-detailed photorealistic 3D product render of two round medallions side
+by side, one glossy violet lacquered ceramic (#8B5CF6), one frosted lavender
+glass, each carrying a raised white porcelain head-and-shoulders silhouette
+(no facial features). They are linked by a short glowing violet glass bridge
+with a polished gold ₹ coin resting in the middle.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, crisp micro-bevels,
+8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, facial features, text, letters, numbers, logos.
+<<<
+
+5.8  FILE: icon_upi_cashout.png  (Instant UPI Cashout)
+>>>
+Ultra-detailed photorealistic 3D product render of a miniature cash-out
+scene: on the left a small premium smartphone (aluminium frame, glowing
+emerald #10B981 screen); a polished gold ₹ coin flies out of it along a short
+curved arc of emerald glass; on the right a miniature bank building in white
+marble with an emerald glazed roof and fluted columns.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, UPI or bank logos, text, letters, numbers.
+<<<
+
+5.9  FILE: icon_ppv_lock.png  (Pay-Per-View Content)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium padlock: body of
+glossy rose lacquered ceramic (#F43F5E to pink), polished chrome shackle
+slightly open. Instead of a keyhole, the body carries a raised frosted-white
+porcelain play triangle. A polished gold ₹ coin leans against the base.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, keys, text, letters, numbers, logos.
+<<<
+
+5.10 FILE: icon_legal_shield.png  (Safe & 100% Legal)
+>>>
+Ultra-detailed photorealistic 3D product render of a heraldic shield: face of
+glossy blue enamel (#3B82F6 to #2563EB) set in a polished silver-chrome rim,
+with a thick raised white porcelain check mark on the front. A faint blue
+glow behind it.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, flags, text, letters, numbers, logos.
+<<<
+
+---------------- HOW IT WORKS (4 steps) ----------------
+
+5.11 FILE: icon_step_download.png  (Step 1 · Download the App)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium smartphone
+standing upright (aluminium frame, black glass bezel, glowing emerald #10B981
+screen). A thick glossy emerald glass arrow points straight down into the
+screen, and a soft mint #6EE7B7 light ripple spreads across the glass where
+it lands.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, crisp micro-bevels,
+8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, app store logos, text, letters, numbers.
+<<<
+
+5.12 FILE: icon_step_watch.png  (Step 2 · Watch & Engage)
+>>>
+Ultra-detailed photorealistic 3D product render of a thick round play-button
+puck in glossy violet lacquered ceramic (#8B5CF6 to #7C3AED) with a raised
+frosted-white porcelain play triangle; three small glossy hearts (rose glass,
+violet glass, white porcelain) float up and away from its top-right edge.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, crisp micro-bevels,
+8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, YouTube red, text, letters, numbers, logos.
+<<<
+
+5.13 FILE: icon_step_collect.png  (Step 3 · Collect Coins)
+>>>
+Ultra-detailed photorealistic 3D product render of a horseshoe magnet tilted
+30°: body of glossy amber lacquered metal (#F59E0B), pole tips of polished
+brushed steel. Three polished 22-karat gold ₹ coins fly toward it, with faint
+glowing curved field lines and slight motion blur.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, red magnet, text, letters, numbers, logos.
+<<<
+
+5.14 FILE: icon_step_withdraw.png  (Step 4 · Cash Out to UPI)
+>>>
+Ultra-detailed photorealistic 3D product render: an open wallet of soft
+pebbled blue leather (#3B82F6) with tonal stitching on the left, sending a
+polished gold ₹ coin along a short arc of cyan glass into a small premium
+smartphone on the right, whose glowing blue screen shows a large raised white
+check mark.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, crisp micro-bevels,
+8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, UPI or bank logos, text, letters, numbers.
+<<<
+
+---------------- EARNINGS CALCULATOR ----------------
+
+5.15 FILE: icon_wallet_big.png  (Projected Monthly Income)
+>>>
+Ultra-detailed photorealistic 3D product render of a plump luxury wallet in
+soft pebbled amber leather (#F59E0B body, #FBBF24 flap), neat stitching and a
+polished gold clasp, bursting open with a pile of polished 22-karat gold ₹
+coins spilling out of the top, one coin tumbling off the side with slight
+motion blur, and two tiny light glints.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, paper money, card logos, text, letters, numbers.
+<<<
+
+5.16 FILE: icon_watch_time.png  (Daily Watch Time slider)
+>>>
+Ultra-detailed photorealistic 3D product render of a compact retro-modern TV
+in glossy white lacquer with a rounded cyan-glowing glass screen (#06B6D4)
+showing a raised frosted play triangle; a small round clock in white ceramic
+with a polished steel bezel and cyan hands overlaps its bottom-right corner.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, emissive
+glow, soft global illumination, ambient occlusion, crisp micro-bevels, 8K.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, numbers on the clock, text, letters, logos.
+<<<
+
+5.17 FILE: icon_engagement.png  (Daily Likes & Comments slider)
+>>>
+Ultra-detailed photorealistic 3D product render of a thumbs-up hand sculpture
+in glossy emerald lacquered ceramic (#10B981) with smooth, well-proportioned
+fingers; a small white porcelain comment bubble with three tiny grey dots
+floats at its top-right.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, Facebook logo, text, letters, numbers.
+<<<
+
+5.18 FILE: icon_friends.png  (Friends Invited slider)
+>>>
+Ultra-detailed photorealistic 3D product render of three head-and-shoulders
+bust sculptures grouped like a team photo (no facial features): the front
+center one in glossy violet lacquered ceramic (#8B5CF6), the two behind in
+frosted lavender glass and frosted mint glass, slightly overlapping.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, subsurface scattering, soft global illumination, ambient
+occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, facial features, text, letters, numbers, logos.
+<<<
+
+---------------- PRICING — VIEWER PASS BADGES ----------------
+
+5.19 FILE: tier_free.png  (Free Tasker)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium price tag in
+brushed slate-grey anodized aluminium (#94A3B8 to #64748B) with softly
+chamfered edges, a polished steel grommet hole and a short loop of white waxed
+cord. Understated and clean.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, "FREE" label, text, letters, numbers, logos.
+<<<
+
+5.20 FILE: tier_bronze.png  (Bronze Starter)
+>>>
+Ultra-detailed photorealistic 3D product render of a bronze award medal:
+warm polished bronze (#B45309 to #D97706) with a raised five-point star in the
+center and a finely reeded rim, hanging from a short folded satin ribbon in
+two tones of burnt orange with visible fabric weave.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, the number 3, text, letters, numbers, logos.
+<<<
+
+5.21 FILE: tier_silver.png  (Silver Intermediate · Most Popular)
+>>>
+Ultra-detailed photorealistic 3D product render of a silver award medal:
+mirror-polished sterling silver (#E2E8F0 to #94A3B8) with a raised five-point
+star in the center and a finely reeded rim, hanging from a short folded
+emerald #10B981 satin ribbon with visible fabric weave. A tiny starburst glint
+on the rim.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, the number 2, text, letters, numbers, logos.
+<<<
+
+5.22 FILE: tier_gold.png  (Gold Advanced)
+>>>
+Ultra-detailed photorealistic 3D product render of a royal crown in polished
+22-karat gold (#FBBF24 / #F59E0B) with five rounded points tipped with small
+gold spheres, and a band set with three cabochon gemstones (emerald, violet
+amethyst, cyan topaz) in fine prong settings. Mirror reflections, engraved
+filigree on the band.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and gem
+refraction, soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.23 FILE: tier_platinum.png  (Platinum Regional Pro)
+>>>
+Ultra-detailed photorealistic 3D product render of a large faceted
+amethyst-like gemstone in violet (#8B5CF6 to #7C3AED), classic cushion cut
+with a flat table, clear gem-quality glass with bright internal refractions
+and dispersion, held by a thin polished platinum bezel ring around its girdle.
+RENDER: Octane path tracing, PBR materials, ray-traced refraction with
+dispersion and caustics, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.24 FILE: tier_diamond.png  (Diamond Pass · Special Pass)
+>>>
+Ultra-detailed photorealistic 3D product render of a brilliant-cut diamond,
+flawless clear crystal with an inner cyan-to-blue-to-indigo glow (#06B6D4 →
+#3B82F6 → #6366F1), dozens of crisp facets throwing rainbow dispersion and
+caustic light, three tiny white starburst sparkles around it. The most
+luxurious object of the whole set.
+RENDER: Octane path tracing, spectral rendering with dispersion, caustics,
+ray-traced refraction, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+---------------- PRICING — CREATOR VIP BADGES ----------------
+
+5.25 FILE: vip_classic.png  (Classic · Free)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium film clapperboard
+in brushed slate-grey anodized aluminium (#94A3B8 to #64748B) with a
+matte-white striped clapper arm slightly open on a polished steel hinge.
+Clean, understated, no writing on the board.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, writing on the board, text, letters, numbers.
+<<<
+
+5.26 FILE: vip_starter.png  (Starter VIP Pass · Launch Special)
+>>>
+Ultra-detailed photorealistic 3D product render of an award medal in glossy
+emerald-to-teal enamel (#10B981 to #14B8A6) set in a polished gold rim, with a
+raised frosted-white porcelain play triangle in the center, hanging from a
+short emerald satin ribbon with visible weave. A small gold starburst glint
+says "launch special".
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.27 FILE: vip_silver.png  (Silver VIP)
+>>>
+Ultra-detailed photorealistic 3D product render of a mirror-polished sterling
+silver medal (#E2E8F0 to #94A3B8) with a raised frosted-white porcelain play
+triangle in the center and a finely reeded rim, hanging from a short folded
+blue #3B82F6 satin ribbon with visible fabric weave.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.28 FILE: vip_gold.png  (Gold VIP)
+>>>
+Ultra-detailed photorealistic 3D product render of a royal crown in polished
+22-karat gold (#FBBF24 / #F59E0B) whose central front jewel is a cabochon
+emerald carved with a subtle play-triangle facet; engraved filigree on the
+band and two tiny starburst glints.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and gem
+refraction, soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.29 FILE: vip_platinum.png  (Platinum VIP · Auto-Unlocked)
+>>>
+Ultra-detailed photorealistic 3D product render of a floating crown carved
+from frosted violet crystal (#8B5CF6 to #7C3AED) with polished platinum trim,
+a large faceted violet gemstone at the front throwing internal refractions,
+and three tiny white light sparkles orbiting it. The most prestigious creator
+badge.
+RENDER: Octane path tracing, ray-traced refraction with dispersion and
+caustics, subsurface scattering, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+---------------- SAFETY / COMPLIANCE ----------------
+
+5.30 FILE: icon_36h.png  (36-Hour Response)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium stopwatch: a
+glossy white ceramic case with a polished emerald-anodized (#10B981) bezel and
+crown button, a domed sapphire-glass crystal with realistic reflections over a
+clean white dial with a single emerald hand; a small emerald enamel check
+badge overlaps its bottom-right.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, numbers on the dial, text, letters, logos.
+<<<
+
+5.31 FILE: icon_bank_security.png  (Bank-Grade Security)
+>>>
+Ultra-detailed photorealistic 3D product render of a closed padlock in glossy
+blue anodized aluminium (#3B82F6) with a polished chrome shackle, standing in
+front of a tilted premium white card with a real gold EMV chip and a subtle
+blue holographic stripe.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, card numbers, Visa/Mastercard/RuPay logos, text.
+<<<
+
+5.32 FILE: icon_content_guard.png  (Auto Content Guard)
+>>>
+Ultra-detailed photorealistic 3D product render of a shield in glossy violet
+enamel (#8B5CF6) with a polished silver rim; embedded in its front, a
+translucent glowing brain sculpted from frosted pink-lavender glass with
+delicate luminous neural lines inside, and a few tiny floating light
+particles suggesting AI scanning.
+RENDER: Octane path tracing, PBR materials, subsurface scattering, emissive
+glow, ray-traced refraction, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, anatomical gore, "AI" label, text, letters, numbers.
+<<<
+
+5.33 FILE: icon_grievance.png  (Grievance Officer card)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium clipboard: white
+lacquered board with a polished emerald-anodized (#10B981) clip, holding a
+thick paper sheet with three rows, each with a raised emerald enamel check
+circle and a soft grey line; a small emerald enamel shield badge overlaps the
+bottom-right corner.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, writing on the paper, text, letters, numbers.
+<<<
+
+---------------- FAQ ----------------
+
+5.34 FILE: icon_faq_free.png  (Is YouPeak really free?)
+>>>
+Ultra-detailed photorealistic 3D product render of a premium price tag in
+glossy emerald enamel (#10B981) with softly chamfered edges and a white waxed
+cord loop; its center is cut through with a perfect circular hole lined with a
+polished gold ring (an empty "zero" meaning no cost). A tiny starburst glint.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, digits, "FREE" label, text, letters.
+<<<
+
+5.35 FILE: icon_faq_coins.png  (How does coin conversion work?)
+>>>
+Ultra-detailed photorealistic 3D product render of a polished 22-karat gold ₹
+coin with a milled edge, encircled by two thick curved arrows of translucent
+amber glass (#F59E0B) chasing each other in a loop (an exchange/sync symbol),
+refracting the coin's reflections.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, dollar signs, text, letters, numbers.
+<<<
+
+5.36 FILE: icon_faq_referral.png  (How does the referral system work?)
+>>>
+Ultra-detailed photorealistic 3D product render of two head-and-shoulders bust
+sculptures leaning toward each other (no facial features), one in glossy
+violet lacquered ceramic (#8B5CF6), one in frosted lavender glass, with a
+miniature white gift box tied with a satin gold ribbon and a small glowing
+spark between them.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, facial features, text, letters, numbers.
+<<<
+
+5.37 FILE: icon_faq_vip.png  (What do Creator VIP Passes do?)
+>>>
+Ultra-detailed photorealistic 3D product render of three rounded rising bars
+in translucent blue glass (#3B82F6 to #2563EB) with glowing cores, on a white
+ceramic base plate, with a small polished 22-karat gold crown resting on top
+of the tallest bar.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections and
+refraction, soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, axis labels, text, letters, numbers.
+<<<
+
+5.38 FILE: icon_faq_speed.png  (How fast are withdrawals?)
+>>>
+Ultra-detailed photorealistic 3D product render of a thick lightning bolt made
+of glowing cyan glass (#06B6D4 to #3B82F6) with an energized emissive core,
+tilted forward, with three soft white light-streak trails behind it to the
+left suggesting extreme speed.
+RENDER: Octane path tracing, PBR materials, refraction, emissive glow, soft
+global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.39 FILE: icon_faq_legal.png  (Is this app legal in India?)
+>>>
+Ultra-detailed photorealistic 3D product render of a shield in glossy rose
+enamel (#F43F5E to #EC4899) with a polished silver rim, carrying a miniature
+balanced scale of justice in polished silver mounted on its front.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, flags, government emblems, text, letters, numbers.
+<<<
+
+5.40 FILE: icon_help.png  (Still have questions?)
+>>>
+Ultra-detailed photorealistic 3D product render of a speech bubble made of
+frosted violet glass (#8B5CF6 to #7C3AED) with visible thickness and soft
+internal light scattering, with a bold glossy white porcelain question mark
+set into its front and a small rounded tail at the bottom-left.
+RENDER: Octane path tracing, PBR materials, refraction, subsurface scattering,
+soft global illumination, ambient occlusion, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, any other text or letters, numbers, logos.
+<<<
+
+---------------- HERO NOTIFICATION BADGES ----------------
+
+5.41 FILE: icon_notif_withdrawn.png  ("₹500 Withdrawn!")
+>>>
+Ultra-detailed photorealistic 3D product render of a thick round button in
+glossy emerald enamel (#10B981) with a polished silver rim and a raised white
+porcelain check mark; a polished 22-karat gold ₹ coin with a milled edge peeks
+out from behind its top-right edge.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.42 FILE: icon_notif_coins.png  ("+25 Coins!")
+>>>
+Ultra-detailed photorealistic 3D product render of two polished 22-karat gold ₹
+coins with milled edges, overlapping at an angle, with a small thick plus
+sign in glossy amber enamel (#F59E0B) and two tiny starburst glints at the
+top-right.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated objects on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, text, letters, numbers, logos.
+<<<
+
+5.43 FILE: icon_notif_referral.png  ("+₹100 Referral!")
+>>>
+Ultra-detailed photorealistic 3D product render of a round medallion in glossy
+violet lacquered ceramic (#8B5CF6) with a polished silver rim, carrying a
+raised white porcelain head-and-shoulders silhouette (no facial features),
+with a small white enamel badge holding a violet plus sign at its bottom-right.
+RENDER: Octane path tracing, PBR materials, ray-traced reflections, soft global
+illumination, ambient occlusion, crisp micro-bevels, 8K detail.
+LIGHT: large softbox key top-left, white fill right, thin rim light, soft
+realistic contact shadow directly beneath.
+CAMERA: 100mm product lens, three-quarter hero angle 30° above, centered, 15%
+padding, tack-sharp.
+OUTPUT: square 1:1, isolated object on a fully transparent background.
+STRICTLY NOT: flat illustration, vector, cartoon, clip-art, sticker, outlines,
+cel shading, low-poly, facial features, text, letters, numbers.
+<<<
+
+
+================================================================================
+ 6. 3D EMOJI SET  (15 · 1024x1024 · transparent · save in emoji/)
+================================================================================
+Emojis are rendered as premium collectible designer-toy objects (glossy
+lacquered resin), which gives them real 3D depth instead of a flat sticker
+look. They all end with the same render block.
+
+6.1  FILE: emoji_money_face.png
+>>>
+Ultra-detailed 3D render of a premium collectible emoji object: a perfectly
+round smiley face sculpted in glossy yellow lacquered resin (#FBBF24 to
+#F59E0B) with a wide happy open-mouth smile (glossy dark interior, white
+teeth), rosy blush on the cheeks, and two small polished gold ₹ coins set in
+as eyes. A tiny gold starburst glint near the top.
+RENDER: designer vinyl-toy / lacquered-resin product shot, Octane path
+tracing, subsurface scattering, ray-traced reflections, soft global
+illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft realistic
+contact shadow beneath.
+CAMERA: 85mm, straight-on front view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, dollar signs, text, letters, numbers.
+<<<
+
+6.2  FILE: emoji_money_bag.png
+>>>
+Ultra-detailed 3D render of a plump money bag made of soft beige-gold canvas
+with visible fabric weave and natural folds, cinched at the top with an
+emerald #10B981 satin ribbon bow, a large embossed polished-gold ₹ emblem on
+the front, and two polished gold coins resting at its base.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft realistic
+contact shadow beneath.
+CAMERA: 85mm, front three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, dollar signs, text, letters, numbers.
+<<<
+
+6.3  FILE: emoji_rocket.png
+>>>
+Ultra-detailed 3D render of a sleek, rounded rocket launching diagonally
+up-right: glossy white lacquered body, violet #8B5CF6 anodized nose cone and
+fins, a mint-glass porthole with a polished chrome ring, and a volumetric
+emerald-to-yellow flame plume with soft billowing white smoke clouds below.
+RENDER: designer-toy product shot, Octane path tracing, volumetrics, emissive
+flame, ray-traced reflections, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, warm light from the flame, rim light.
+CAMERA: 85mm, three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, flags, text, letters, numbers, logos.
+<<<
+
+6.4  FILE: emoji_fire.png  (daily streak)
+>>>
+Ultra-detailed 3D render of a stylized flame sculpted from glowing translucent
+resin: smooth rounded tongues of fire, gradient from bright yellow #FBBF24 in
+the core to orange and rose #F43F5E at the tips, strong inner emissive glow,
+subsurface light scattering and a crisp specular highlight.
+RENDER: designer-toy product shot, Octane path tracing, emissive, subsurface
+scattering, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, rim light, warm glow onto a soft contact
+shadow beneath.
+CAMERA: 85mm, front view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, face on the flame, smoke, text, letters, numbers.
+<<<
+
+6.5  FILE: emoji_party.png
+>>>
+Ultra-detailed 3D render of a party popper cone in glossy gold lacquer with
+violet stripes, tilted left, bursting out a joyful spray of metallic foil
+confetti and curly satin streamers in emerald, violet, gold, cyan and rose,
+some pieces with motion blur and bright foil reflections.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, text, letters, numbers.
+<<<
+
+6.6  FILE: emoji_gift.png
+>>>
+Ultra-detailed 3D render of a luxury gift box: matte white textured paper
+wrap, a glossy amber #F59E0B satin ribbon with a big puffy bow, the lid
+lifting slightly with warm golden light and tiny sparkles escaping, and a
+polished gold ₹ coin peeking out from inside.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, volumetric glow, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, gift tags with writing, text, letters, numbers.
+<<<
+
+6.7  FILE: emoji_trophy.png
+>>>
+Ultra-detailed 3D render of a shiny trophy cup in polished 22-karat gold
+(#FBBF24) with two round handles, a raised five-point star on its front,
+mirror reflections, and a short glossy white marble base; two tiny starburst
+glints.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, front three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, engraving, text, letters, numbers.
+<<<
+
+6.8  FILE: emoji_thumbs_up.png
+>>>
+Ultra-detailed 3D render of a thumbs-up hand sculpted in glossy golden-yellow
+lacquered resin (#FBBF24 to #F59E0B), well-proportioned with soft knuckle
+creases, thumb up and fingers gently curled, with subsurface warmth and a
+crisp specular highlight on the thumb.
+RENDER: designer-toy product shot, Octane path tracing, subsurface scattering,
+ray-traced reflections, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, sleeves, realistic human skin, text, letters.
+<<<
+
+6.9  FILE: emoji_heart_eyes.png
+>>>
+Ultra-detailed 3D render of a perfectly round smiley face in glossy yellow
+lacquered resin (#FBBF24 to #F59E0B) with a big happy open smile (glossy dark
+interior, white teeth) and two plump glossy rose-red glass hearts (#F43F5E)
+set in as eyes, soft pink blush on the cheeks.
+RENDER: designer-toy product shot, Octane path tracing, subsurface scattering,
+refraction in the heart eyes, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, straight-on front view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, text, letters, numbers.
+<<<
+
+6.10 FILE: emoji_sparkles.png
+>>>
+Ultra-detailed 3D render of three four-point sparkle stars in polished
+22-karat gold (#FBBF24) with softly rounded points and beveled edges: one
+large at center-left, one medium at top-right, one small at bottom-right, each
+with a soft warm bloom glow.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, bloom, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, front view, centered group, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, five-point stars, text, letters, numbers.
+<<<
+
+6.11 FILE: emoji_clock.png  (watch time)
+>>>
+Ultra-detailed 3D render of a retro twin-bell alarm clock: glossy emerald
+lacquered body (#10B981), two polished gold bells and a gold hammer on top,
+little chrome feet, a domed glass crystal over a clean white dial with two
+emerald hands and four small dots at 12, 3, 6 and 9.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections and refraction, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, front three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, numbers on the dial, text, letters.
+<<<
+
+6.12 FILE: emoji_phone.png
+>>>
+Ultra-detailed 3D render of a premium smartphone standing slightly tilted:
+white ceramic back, polished aluminium frame with chamfered edges, black glass
+bezel, and a glowing OLED screen with an emerald-to-violet gradient and a
+raised frosted-white play triangle floating in front of the glass.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, emissive screen, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, app icons, logos, text, letters.
+<<<
+
+6.13 FILE: emoji_crown.png
+>>>
+Ultra-detailed 3D render of a plump royal crown in polished 22-karat gold
+(#FBBF24) with five rounded points topped with lustrous pearls, and a band set
+with three faceted gemstones (emerald, amethyst violet, ruby rose) throwing
+refractions; engraved filigree on the band.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections and gem refraction, soft global illumination, 8K.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, front three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, text, letters, numbers.
+<<<
+
+6.14 FILE: emoji_check.png
+>>>
+Ultra-detailed 3D render of a thick round button in glossy emerald lacquered
+resin (#10B981) with a polished mint-glass rim (#6EE7B7), with a bold raised
+white porcelain check mark on its face and a crisp specular highlight.
+RENDER: designer-toy product shot, Octane path tracing, subsurface scattering,
+ray-traced reflections and refraction, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, front three-quarter view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, text, letters, numbers.
+<<<
+
+6.15 FILE: emoji_india_flag_heart.png  ("Made in India")
+>>>
+Ultra-detailed 3D render of a plump heart sculpted in glossy lacquered resin
+with three clean horizontal bands: saffron #FF9933 on top, white in the middle
+and India green #138808 at the bottom, with a precise navy-blue 24-spoke
+Ashoka Chakra inlaid in the white band. Smooth, dignified, softly glowing,
+not waving.
+RENDER: designer-toy product shot, Octane path tracing, PBR materials,
+ray-traced reflections, soft global illumination, 8K detail.
+LIGHT: large softbox key top-left, white fill right, rim light, soft contact
+shadow.
+CAMERA: 85mm, front view, centered, fills 72% of the canvas.
+OUTPUT: square 1:1, isolated on a fully transparent background.
+STRICTLY NOT: flat emoji, 2D, vector, cartoon drawing, sticker, outlines, cel
+shading, flagpole, extra symbols, text, letters.
+<<<
+
+
+================================================================================
+ 7. SECTION ILLUSTRATIONS  (4 images)
+================================================================================
+
+7.1  DOWNLOAD SECTION ART  ("Your Money Is Waiting For You")
+     FILE: cta_art.png · SIZE: 1536x1024 landscape · Transparent
+>>>
+Cinematic, ultra-detailed 3D key-visual render (award-winning Behance 3D
+quality), landscape.
+CENTER: a premium smartphone (polished aluminium frame, black glass bezel,
+glowing OLED screen with a big glossy emerald #10B981 play button) rising
+upward at a slight angle as if launching, with a soft mint light bloom and a
+faint light trail beneath it.
+AROUND IT: a joyful explosion radiating outward in a soft oval: 12–15 polished
+22-karat gold ₹ coins with milled edges at varied depths and angles (the
+nearest tack-sharp, the farthest softly out of focus with bokeh), four violet
+glass hearts, emerald and gold starburst glints, and metallic foil confetti in
+emerald, violet, gold and cyan with slight motion blur.
+COMPOSITION: symmetrical, energetic but clean, generous breathing room,
+nothing touching the edges.
+LIGHT: softbox key top-left, rim light, bloom from the screen, realistic
+reflections on the coins.
+CAMERA: 85mm, shallow depth of field (f/2.8).
+RENDER: Octane path tracing, PBR, 8K detail.
+OUTPUT: landscape 3:2, fully transparent background.
+STRICTLY NOT: text, letters, numbers, logos, store badges, paper money, dark
+colors, clutter, cropped objects, flat, vector, cartoon.
+<<<
+
+7.2  PAYOUT RULES ILLUSTRATION
+     FILE: payout_art.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D key-visual render of scheduled payouts, calm and
+trustworthy.
+LEFT: a premium smartphone with a glowing emerald #10B981 screen showing a
+raised white check mark.
+PATH: a glowing emerald glass tube arcs from the phone to the RIGHT, carrying
+two polished gold ₹ coins.
+RIGHT: a miniature bank building in white marble with an emerald glazed roof
+and fluted columns.
+BACK-CENTER: a small premium desk calendar in white ceramic with a violet
+#8B5CF6 anodized header and one date tile marked with a raised emerald check.
+LIGHT: softbox key top-left, rim light, glow from the tube, realistic contact
+shadows.
+CAMERA: 85mm, three-quarter view, centered, fills 75% of the canvas.
+RENDER: Octane path tracing, PBR, ray-traced reflections and refraction, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, letters, numbers on the calendar, bank or UPI logos,
+clutter, flat, vector, cartoon.
+<<<
+
+7.3  SUPPORT / GRIEVANCE ILLUSTRATION
+     FILE: support_art.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D key-visual render of friendly customer support.
+CENTER: a large puffy speech bubble in glossy white lacquered resin, wearing a
+sleek emerald #10B981 headset with a brushed-metal band and soft leather ear
+cushions; two simple glossy dot eyes and a small smile give it a warm,
+helpful character.
+LEFT: a shield in glossy blue enamel (#3B82F6) with a polished silver rim and
+a raised white check mark.
+RIGHT: a small premium stopwatch in white ceramic with an emerald bezel.
+Tiny starburst glints around.
+LIGHT: softbox key top-left, white fill right, rim light, realistic contact
+shadows.
+CAMERA: 85mm, three-quarter view, centered, fills 75% of the canvas.
+RENDER: Octane path tracing, PBR, subsurface scattering, 8K detail.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, letters, numbers, logos, realistic people, clutter, flat,
+vector, cartoon drawing.
+<<<
+
+7.4  EMPTY / 404 STATE  (for future pages)
+     FILE: empty_state.png · SIZE: 1024x1024 · Transparent
+>>>
+Ultra-detailed 3D render of a charming collectible-toy character: a polished
+22-karat gold ₹ coin with small glossy black dot eyes, a curious expression
+and tiny white porcelain arms, holding a large magnifying glass with an
+emerald #10B981 lacquered handle and a real refractive glass lens. It peers at
+an empty white ceramic video card that shows only a faint grey play icon,
+magnified through the lens. Two soft glowing sparkles float nearby.
+LIGHT: softbox key top-left, white fill right, rim light, realistic contact
+shadows.
+CAMERA: 85mm, three-quarter view, centered, fills 70% of the canvas.
+RENDER: designer-toy product shot, Octane path tracing, refraction, PBR, 8K.
+OUTPUT: square 1:1, fully transparent background.
+STRICTLY NOT: text, letters, numbers, "404" digits, logos, sad or dark mood,
+flat, vector, cartoon drawing.
+<<<
+
+
+================================================================================
+ 8. BACKGROUNDS & TEXTURES  (5 images · save in bg/)
+================================================================================
+
+8.1  SOFT GLOW FOR GREY SECTIONS
+     FILE: bg/section_glow.jpg · SIZE: 1536x1024 · BACKGROUND IMAGE
+>>>
+BACKGROUND IMAGE, landscape. A photographic, perfectly smooth studio light
+field on an off-white #F8FAFC cyclorama wall: two enormous, ultra-diffused
+light blooms, pale mint #D1FAE5 in the top-left corner and pale lavender
+#EDE9FE in the bottom-right corner, at very low intensity with no visible
+edges. 16-bit smooth gradients. Overall 95% flat off-white, a whisper of
+color only.
+STRICTLY NOT: objects, shapes, text, grain, noise, banding, patterns, dark
+areas, vignette.
+<<<
+
+8.2  DOWNLOAD SECTION PANEL
+     FILE: bg/cta_bg.jpg · SIZE: 1536x1024 · BACKGROUND IMAGE
+>>>
+BACKGROUND IMAGE, landscape. A luminous, photographic gradient: pure white
+#FFFFFF (top-left) through very pale mint #F0FDF9 (center) to very pale
+lavender #F5F3FF (bottom-right), with 5–6 large, creamy out-of-focus bokeh
+discs, emerald #10B981 and violet #8B5CF6 at 6–10% opacity, mostly in the
+corners, as if shot through an 85mm lens at f/1.4. The center stays calm for
+text. 16-bit smooth.
+STRICTLY NOT: objects, text, grain, noise, hard edges, dark areas, banding.
+<<<
+
+8.3  PRICING BACKGROUND
+     FILE: bg/pricing_bg.jpg · SIZE: 1536x1024 · BACKGROUND IMAGE
+>>>
+BACKGROUND IMAGE, landscape. A pure white #FFFFFF studio wall lit from above
+by one very soft, warm, pale-gold #FEF3C7 light bloom centered at the top
+edge, like gentle morning sunlight through diffusion fabric, fading smoothly
+to white by the middle of the frame. Elegant, premium, 16-bit smooth.
+STRICTLY NOT: objects, text, grain, noise, sun rays, lens flare, banding,
+dark areas.
+<<<
+
+8.4  DOT PATTERN (tileable, intentionally flat)
+     FILE: bg/dots.png · SIZE: 1024x1024 · Transparent
+>>>
+A mathematically precise, perfectly seamless tileable pattern: tiny round dots
+in light grey #CBD5E1, each exactly 3px in diameter, on an exact square grid
+with 24px spacing, covering the whole canvas edge to edge so the tile repeats
+with no visible seams. Flat, crisp, perfectly uniform. Fully transparent
+background between the dots.
+STRICTLY NOT: gradients, shading, 3D effects, randomness, varying dot sizes,
+text, white background.
+<<<
+
+8.5  FLOATING 3D SHAPES OVERLAY
+     FILE: bg/shapes.png · SIZE: 1536x1024 · Transparent
+>>>
+Ultra-detailed 3D render of a sparse, elegant scatter of premium abstract
+objects floating at different depths across a landscape frame: 3 glossy
+emerald lacquered spheres (#10B981), 2 frosted violet glass rounded cubes
+(#8B5CF6), 3 polished 22-karat gold ₹ coins at varied angles, 2 cyan
+translucent glass torus rings (#06B6D4) and 1 clear glass capsule refracting
+light. The nearest objects are tack-sharp; the farthest have creamy
+depth-of-field blur. At least 70% of the frame is empty, with objects near
+the edges and corners and the center kept clear.
+LIGHT: softbox key top-left, rim light, caustics from the glass.
+RENDER: Octane path tracing, PBR, refraction, 8K detail.
+OUTPUT: landscape 3:2, fully transparent background.
+STRICTLY NOT: text, numbers, logos, clutter in the center, dark colors, floor,
+flat, vector, cartoon.
+<<<
+
+
+================================================================================
+ 9. QUALITY CHECKLIST  (check every image before saving)
+================================================================================
+[ ] It looks like a real 3D render: real materials, reflections, depth, soft
+    shadows. Not flat, not vector, not a sticker.
+[ ] No random letters, words or numbers anywhere (zoom in on small details)
+[ ] Background is truly transparent (no white or checkerboard baked in)
+[ ] Colors match the palette: no neon, no muddy brown gold, no dark mood
+[ ] Same light direction (top-left), camera angle and padding as the anchor
+[ ] Subject centered with even padding, nothing cropped
+[ ] Icons still read clearly when shrunk to 64px (squint test)
+[ ] No brand logos (UPI, banks, YouTube, Instagram, Apple, Google...)
+[ ] Saved with the exact file name from this document
+
+
+================================================================================
+ 10. FIX-UP PHRASES  (reply with these in the same chat)
+================================================================================
+STILL LOOKS FLAT / SIMPLIFIED / ILLUSTRATED  (the main fix):
+  "This is too simple and looks like an illustration. Regenerate it as an
+   ultra-detailed photorealistic 3D product render: real physically based
+   materials (polished gold, lacquered ceramic, frosted glass, anodized
+   metal), ray-traced reflections and refractions, soft global illumination,
+   crisp beveled edges catching highlights, fine micro-surface detail, a soft
+   realistic contact shadow, 100mm product lens. Absolutely no flat, vector,
+   cartoon, clip-art or sticker style. Use my original prompt word for word."
+CHATGPT SHORTENED THE PROMPT:
+  "Show me the exact prompt you sent to the image tool. Then regenerate using
+   my prompt verbatim, without removing any detail."
+TEXT APPEARED:
+  "Regenerate the exact same image, but remove every letter, word and number.
+   Keep everything else identical."
+BACKGROUND NOT TRANSPARENT:
+  "Give me the same image as a PNG with a fully transparent alpha background:
+   no white, no checkerboard pattern, no floor."
+STYLE DRIFTED FROM THE SET:
+  "This doesn't match the style reference. Regenerate with exactly the same
+   render quality, materials, lighting direction, camera angle, color
+   saturation and padding as the attached reference image."
+TOO BUSY:
+  "Keep the same render quality, but simplify the composition: fewer
+   elements, one clear hero object, more empty space."
+COLORS TOO NEON:
+  "Keep everything, but make the colors premium and slightly deeper, using
+   the exact hex palette: #10B981, #8B5CF6, #F59E0B, #06B6D4, #3B82F6."
+CROPPED:
+  "Zoom out so the whole object fits with 15% empty padding on every side."
+
+
+================================================================================
+ FILE -> WHERE IT GOES ON THE SITE  (88 images)
+================================================================================
+BRAND (4)
+  app_logo.png, logo_mark.png, favicon.png, og_image.png
+HERO (8)
+  hero_screen.png, float_coin.png, float_coins_stack.png, float_play.png,
+  float_heart.png, float_wallet.png, float_upi_arrow.png, bg/hero_bg.jpg
+BUILT FOR EVERYONE (3)
+  persona_watch.png, persona_creator.png, persona_referral.png
+INSIDE THE APP (6)
+  screen_feed.png, screen_shorts.png, screen_studio.png, screen_wallet.png,
+  screen_referral.png, screen_analytics.png
+ICONS (43) -> icons/
+  Stats 4 · Features 6 · Steps 4 · Calculator 4 · Viewer tiers 6 ·
+  Creator VIP 5 · Compliance 4 · FAQ 7 · Notifications 3
+EMOJIS (15) -> emoji/
+SECTION ART (4)
+  cta_art.png, payout_art.png, support_art.png, empty_state.png
+BACKGROUNDS (5) -> bg/
+  section_glow.jpg, cta_bg.jpg, pricing_bg.jpg, dots.png, shapes.png
+
+When the images are in public/assets/, the site code must be updated to use
+them (it currently draws its icons in code). That is a separate step.

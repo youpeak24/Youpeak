@@ -14,6 +14,8 @@ const fs = require("fs");
 
 //dotenv — load from functions/backend/.env
 require("dotenv").config({ path: path.join(__dirname, ".env") });
+// Never let a plain local start reach the live Firebase project.
+require("./util/localServerGuard")();
 require("./util/validateEnv")();
 
 const express = require("express");

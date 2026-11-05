@@ -1,4 +1,6 @@
 const SaveToWatchLater = require("../../models/saveToWatchLater.model");
+const visibility = require("../../util/videoVisibility");
+const engagement = require("../../util/engagement.service");
 
 //import model
 const User = require("../../models/user.model");
@@ -41,38 +43,23 @@ exports.addVideoToWatchLater = async (req, res) => {
       return res.status(200).json({ status: false, message: "Video not found!" });
     }
 
-    const existing = await SaveToWatchLater.findOne({
-      userId,
-      videoId,
-    })
-      .select("_id")
-      .lean();
-
-    // ❌ REMOVE
-    if (existing) {
-      await SaveToWatchLater.deleteOne({ _id: existing._id });
-
-      console.log(`${logTag} Removed from watch later`, { userId, videoId });
-
-      return res.status(200).json({
-        status: true,
-        message: "Video removed from Watch Later",
-        isSaved: false,
-      });
+    // An explicit `action=add|remove` is idempotent (a retry after a timeout
+    // or a double tap leaves the same state). Without it the endpoint keeps
+    // its old toggle behaviour for app versions that don't send it.
+    const action = String(req.query.action || req.body?.action || "").toLowerCase();
+    if (action && action !== "add" && action !== "remove") {
+      return res.status(200).json({ status: false, message: "action must be add or remove." });
     }
+    const saved = action ? action === "add" : !(await SaveToWatchLater.exists({ userId: String(userId), videoId: String(videoId) }));
+    const r = await engagement.setWatchLater({ userId, videoId, saved });
 
-    // ✅ ADD
-    await SaveToWatchLater.create({
-      userId,
-      videoId,
-    });
-
-    console.log(`${logTag} Added to watch later`, { userId, videoId });
+    console.log(`${logTag} ${saved ? "Added to" : "Removed from"} watch later`, { userId, videoId, changed: r.changed });
 
     return res.status(200).json({
       status: true,
-      message: "Video added to Watch Later",
-      isSaved: true,
+      message: saved ? "Video added to Watch Later" : "Video removed from Watch Later",
+      isSaved: saved,
+      changed: r.changed,
     });
   } catch (error) {
     console.error(`${logTag} Error`, error);
@@ -111,6 +98,8 @@ exports.getSaveToWatchLater = async (req, res) => {
           localField: "videoId",
           foreignField: "_id",
           pipeline: [
+            // F-12: a video made private / held / taken down since it was saved drops out.
+            { $match: visibility.savedItemMatch() },
             {
               $project: {
                 _id: 1,
@@ -172,6 +161,7 @@ exports.getSaveToWatchLater = async (req, res) => {
         $addFields: {
           isSubscribed: { $gt: [{ $size: "$subscription" }, 0] },
           isUnlocked: { $gt: [{ $size: "$unlockData" }, 0] },
+          storedPrivacyType: "$videoPrivacyType", // before the per-viewer recompute below
         },
       },
       {
@@ -209,7 +199,10 @@ exports.getSaveToWatchLater = async (req, res) => {
           channelName: "$channel.fullName",
           channelImage: "$channel.image",
           subscriptionCost: "$channel.subscriptionCost",
-          videoUnlockCost: "$channel.videoUnlockCost",
+          // Free videos have no price, whatever the channel charges for its paid ones
+          // (issue: free uploads were listed as "Premium Exclusive").
+          videoUnlockCost: { $cond: [{ $eq: ["$storedPrivacyType", 2] }, "$channel.videoUnlockCost", 0] },
+          isPaidVideo: { $eq: ["$storedPrivacyType", 2] },
           channelType: "$channel.channelType",
           isSubscribed: 1,
           time: {

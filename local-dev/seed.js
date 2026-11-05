@@ -48,6 +48,36 @@ async function wipe() {
     { method: "DELETE" }
   );
   if (!res.ok) throw new Error(`emulator wipe failed: HTTP ${res.status}`);
+  if (process.env.FIREBASE_AUTH_EMULATOR_HOST) {
+    const auth = await fetch(
+      `http://${process.env.FIREBASE_AUTH_EMULATOR_HOST}/emulator/v1/projects/${cfg.PROJECT_ID}/accounts`,
+      { method: "DELETE" }
+    );
+    if (!auth.ok) throw new Error(`auth emulator wipe failed: HTTP ${auth.status}`);
+  }
+}
+
+// The demo rows in ../DB point at public sample clips labelled as R2/Stream
+// uploads. Locally they play the generated, clearly labelled clips in
+// local-dev/fixtures instead (served by start.js), marked as test fixtures.
+const fixtureUrl = (name) => `http://127.0.0.1:${cfg.FIXTURE_PORT}/${name}`;
+const LOCAL_MEDIA = {
+  short_101: "fixture-bite-portrait-a",
+  short_102: "fixture-bite-landscape",
+  video_101: "fixture-bite-landscape",
+  video_102: "fixture-bite-landscape",
+};
+function useLocalMedia(video, fixture) {
+  Object.assign(video, {
+    videoUrl: fixtureUrl(`${fixture}.webm`),
+    videoImage: fixtureUrl(`${fixture}.jpg`),
+    storageProvider: "local-test-fixture",
+    isTestFixture: true,
+  });
+  delete video.streamUid;
+  delete video.hlsUrl;
+  delete video.dashUrl;
+  return video;
 }
 
 // Settings from the backend's code defaults, with every credential blanked so
@@ -70,9 +100,47 @@ async function seed() {
   const writes = [];
   const put = (col, doc) => writes.push([col, String(doc._id), doc]);
 
-  for (const col of ["adrewards", "advertises", "channels", "currencies", "dailyrewards", "videos"]) {
+  for (const col of ["adrewards", "advertises", "channels", "currencies", "dailyrewards"]) {
     for (const doc of readDemo(col)) put(col, doc);
   }
+  const videos = readDemo("videos");
+  for (const v of videos) put("videos", LOCAL_MEDIA[v._id] ? useLocalMedia(v, LOCAL_MEDIA[v._id]) : v);
+  // A third, portrait Bite so next/previous navigation has somewhere to go.
+  const short = videos.find((v) => v._id === "short_101");
+  if (short) {
+    put("videos", useLocalMedia({
+      ...short,
+      _id: "local_short_103",
+      id: "local_short_103",
+      uniqueVideoId: "VID-LOCAL_SHORT_103",
+      title: "Local test Bite B (portrait 9:16)",
+      description: "Generated local test fixture. #Bites",
+      like: 12, dislike: 0, shareCount: 1, totalViews: 40,
+      createdAt: now(), updatedAt: now(),
+    }, "fixture-bite-portrait-b"));
+  }
+
+  // App (viewer) login for the Flutter web app: email + password (loginType 4).
+  put("users", {
+    _id: cfg.APP_USER.id,
+    id: cfg.APP_USER.id,
+    fullName: "Local Test Viewer",
+    nickName: "Local Viewer",
+    email: cfg.APP_USER.email,
+    loginType: 4,
+    passwordHash: hash(cfg.PASSWORD),
+    identity: "local-dev-browser",
+    fcmToken: "",
+    image: "",
+    coin: 0,
+    isActive: true,
+    isBlock: false,
+    isChannel: false,
+    paymentStatus: true,
+    uniqueId: "LOCAL-VIEWER",
+    referralCode: "LOCALVIEWER",
+    createdAt: now(),
+  });
 
   for (const u of readDemo("users")) {
     delete u.password;

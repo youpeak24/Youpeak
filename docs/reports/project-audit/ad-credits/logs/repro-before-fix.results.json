@@ -1,0 +1,237 @@
+{
+  "ranAt": "2026-10-14T03:38:43.700Z",
+  "suites": [
+    "16-ad-credits-expiry-concurrency.cjs"
+  ],
+  "results": [
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-01",
+      "name": "F-1 empty collection: sweep completes with zero work and no more work",
+      "ok": false,
+      "ms": 90,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- false\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-02",
+      "name": "F-2 no eligible expired lots: non-expiring and future lots are untouched",
+      "ok": false,
+      "ms": 146,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- false\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-03",
+      "name": "F-3 exact batch boundary: batch of 10 over exactly 10 expired lots leaves no more work",
+      "ok": false,
+      "ms": 715,
+      "error": "no work remains after exactly one full batch\n+ actual - expected\n\n+ undefined\n- false\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-04",
+      "name": "F-4 batch boundary + 1: first run reports more work, second finishes with exactly one lot",
+      "ok": false,
+      "ms": 614,
+      "error": "an eleventh eligible lot remains and must be reported\n+ actual - expected\n\n+ undefined\n- true\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-05",
+      "name": "F-5 several batches of expired lots over repeated invocations; no lot lost, none doubled (D-2 cursor chain)",
+      "ok": false,
+      "ms": 13754,
+      "error": "exactly the 300 expired lots were processed once each\n\n275 !== 300\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-06",
+      "name": "F-6 / D-3 600 non-expiring ACTIVE lots ahead of the expired ones cannot starve them (real /cron/daily path)",
+      "ok": false,
+      "ms": 2899,
+      "error": "expired lots were starved: {\"ACTIVE\":612}\n\nundefined !== 12\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-07",
+      "name": "F-7 identical expiry timestamps: stable id tie-break, deterministic order, each lot once",
+      "ok": false,
+      "ms": 796,
+      "error": "lots processed in (expiresAt, id) order, exactly once\n+ actual - expected\n\n+ []\n- [\n-   'lot_t_0000',\n-   'lot_t_0001',\n-   'lot_t_0002',\n-   'lot_t_0003',\n-   'lot_t_0004',\n-   'lot_t_0005',\n-   'lot_t_0006',\n-   'lot_t_0007',\n-   'lot_t_0008',\n-   'lot_t_0009',\n-   'lot_t_0010',\n-   'lot_t_0011',\n-   'lot_t_0012',\n-   'lot_t_0013',\n-   'lot_t_0014',\n-   'lot_t_0015',\n-   'lot_t_0016',\n-   'lot_t_0017',\n-   'lot_t_0018',\n-   'lot_t_0019',\n-   'lot_t_0020',\n-   'lot_t_0021',\n-   'lot_t_0022',\n-   'lot_t_0023',\n-   'lot_t_0024'\n- ]\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-08",
+      "name": "F-8 lots that become eligible between sweeps, and lots inserted before the previous position, are handled by a later sweep",
+      "ok": false,
+      "ms": 106,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ undefined\n- [\n-   'lot_c',\n-   'lot_d'\n- ]\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-09",
+      "name": "F-9 stale/deleted cursor input and a lot deleted mid-sweep never stall the sweep",
+      "ok": true,
+      "ms": 411
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-10",
+      "name": "F-10 crash after partial work, then resume: no duplicate ledger entries, nothing skipped",
+      "ok": true,
+      "ms": 786
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-11",
+      "name": "F-11 repeated invocations and a repeated /cron/daily create no duplicate ledger effects",
+      "ok": true,
+      "ms": 966
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-12",
+      "name": "F-12 four overlapping workers (3 service + 1 HTTP cron) conserve balances and report exact totals",
+      "ok": false,
+      "ms": 4658,
+      "error": "sum of reported units across workers equals committed units\n\n9240 !== 8940\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-13",
+      "name": "F-13 / D-4 transaction retries (real SDK retry after injected ABORTED) do not inflate reported totals",
+      "ok": false,
+      "ms": 11215,
+      "error": "lots counted once even though every callback ran twice\n\n18 !== 9\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-14",
+      "name": "F-14 missing owner / corrupt lot / balance below lot are quarantined for review: no account created, no clamp, no silent loss",
+      "ok": false,
+      "ms": 189,
+      "error": "Units must be a safe integer."
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-15",
+      "name": "D-7 compat balance stays reconciled when a spend happens while an expired lot is still unswept (legacy balance preserved)",
+      "ok": false,
+      "ms": 231,
+      "error": "compat balance 9000 != legacy 2500 + active lots 13000\n\n9000 !== 15500\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-16",
+      "name": "Persistent poison lots (a deterministic failure and a squatted ledger id) cannot starve later expired lots across invocations",
+      "ok": false,
+      "ms": 118,
+      "error": "9 FAILED_PRECONDITION: injected deterministic failure"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-17",
+      "name": "Cron: dedicated expiry route + daily task report committed counts, remaining-work state and no user identifiers",
+      "ok": false,
+      "ms": 101,
+      "error": "Expected values to be strictly equal:\n\n404 !== 200\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:EXP-18",
+      "name": "Cron: time budget stops with resumable progress; other tasks still reported",
+      "ok": false,
+      "ms": 564,
+      "error": "Expected values to be strictly equal:\n\n10 !== 0\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-01",
+      "name": "F-15 concurrent spends never overdraw: 12 x 10.00 against 100.00 -> exactly 10 succeed",
+      "ok": false,
+      "ms": 16869,
+      "error": "The input did not match the regular expression /Insufficient ad credits balance/. Input:\n\n'3 INVALID_ARGUMENT: Transaction is invalid or closed.'\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-02",
+      "name": "F-16 same operation id submitted concurrently debits exactly once",
+      "ok": true,
+      "ms": 3645
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-03",
+      "name": "F-17 reused operation id with changed parameters conflicts (409), including under concurrency",
+      "ok": false,
+      "ms": 9923,
+      "error": "loser gets a conflict, never a second debit"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-04",
+      "name": "F-18 spending racing with expiry preserves accounting (spend at T0 vs sweep at T0+2h on the same lot)",
+      "ok": false,
+      "ms": 12121,
+      "error": "compat balance 3200 != legacy 111 + active lots 3200\n\n3200 !== 3311\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-05",
+      "name": "F-19 valid multi-lot reversal restores original types, expiry and provenance; does not extend validity",
+      "ok": true,
+      "ms": 268
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-06",
+      "name": "F-20 concurrent duplicate reversals restore exactly once",
+      "ok": true,
+      "ms": 3665
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-07",
+      "name": "F-21 / D-5 one expired allocation rejects the whole reversal with EXPIRED_CREDITS_NOT_REVERSIBLE and zero changes (service + admin HTTP)",
+      "ok": false,
+      "ms": 75,
+      "error": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: Cannot reverse debit: one or more deducted lots have expired. Policy decision pending."
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-08",
+      "name": "F-22 expiry boundary: expiresAt == operation time is expired; one millisecond later is reversible",
+      "ok": false,
+      "ms": 112,
+      "error": "Missing expected rejection."
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-09",
+      "name": "Reversal rejects operations without recorded allocations instead of minting a fresh 730-day lot",
+      "ok": false,
+      "ms": 188,
+      "error": "Missing expected rejection."
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SPD-10",
+      "name": "F-23 integer precision / range validation: invalid amounts are refused with zero mutations",
+      "ok": false,
+      "ms": 209,
+      "error": "Missing expected rejection: operationId rev_x must be refused"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SEC-01",
+      "name": "F-24 maintenance refuses anonymous, shared-app-key and wrong-secret callers BEFORE any database access",
+      "ok": false,
+      "ms": 133,
+      "error": "Expected values to be strictly equal:\n\n404 !== 401\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SEC-02",
+      "name": "F-25 admin maintenance: unauthorized roles refused, input validated, limits enforced",
+      "ok": false,
+      "ms": 497,
+      "error": "{\"batchSize\":0} -> 200\n\n200 !== 400\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SEC-03",
+      "name": "F-26 owner wallet + paginated history succeed; cross-user and malformed pagination refused",
+      "ok": false,
+      "ms": 679,
+      "error": "another user's row is not a valid cursor\n\n200 !== 400\n"
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SEC-04",
+      "name": "F-27 public consume stays disabled and mutates nothing",
+      "ok": true,
+      "ms": 298
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SEC-05",
+      "name": "F-28 / F-29 / F-30 verified payment fulfils once under 5 simultaneous webhooks; snapshot survives catalogue edits; wallet reconciles",
+      "ok": true,
+      "ms": 3559
+    },
+    {
+      "id": "16-ad-credits-expiry-concurrency:SEC-06",
+      "name": "Expiry, spend and reversal never touch reward coins, INR or partner balances",
+      "ok": true,
+      "ms": 355
+    }
+  ]
+}

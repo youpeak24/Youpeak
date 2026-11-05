@@ -1,0 +1,39 @@
+
+> youpeak-platform@1.0.0 build
+> npm run build --prefix admin/frontend
+
+
+> admin@0.1.0 build
+> react-scripts build
+
+(node:16336) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Creating an optimized production build...
+[BABEL] Note: The code generator has deoptimised the styling of E:\Legendary One\youpeak\source\admin\frontend\src\assets\images\logo.svg as it exceeds the max of 500KB.
+[BABEL] Note: The code generator has deoptimised the styling of undefined as it exceeds the max of 500KB.
+Compiled successfully.
+
+File sizes after gzip:
+
+  836.37 kB (+329 B)  build\static\js\main.42bd87b9.js
+  31.02 kB (+7 B)     build\static\css\main.1e4135bc.css
+  1.76 kB             build\static\js\453.4a00c3a1.chunk.js
+
+The bundle size is significantly larger than recommended.
+Consider reducing it with code splitting: https://goo.gl/9VhYWB
+You can also analyze the project dependencies: https://goo.gl/LeUzfb
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+exit=0

@@ -1,0 +1,21 @@
+[
+  {
+    "url": "https://www.youpeak.app/tasker",
+    "status": 200,
+    "type": "text/html; charset=utf-8",
+    "flutter": true
+  },
+  {
+    "url": "https://www.youpeak.app/assets/assets/icons/youpeak_wordmark.png",
+    "status": 200,
+    "type": "image/png",
+    "flutter": false
+  },
+  {
+    "url": "https://www.youpeak.app/.well-known/assetlinks.json",
+    "status": 200,
+    "type": "application/json; charset=utf-8",
+    "flutter": false,
+    "validJson": true
+  }
+]

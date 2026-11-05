@@ -1,0 +1,95 @@
+{
+ "url": "https://admin.youpeak.app/",
+ "label": "admin-login",
+ "viewports": [
+  {
+   "width": 1920,
+   "file": "admin-login-1920.png",
+   "iw": 1920,
+   "sw": 1920,
+   "sh": 1080,
+   "title": "",
+   "text": "YouPeak\nADMIN CONSOLE\nControl Center &\nPlatform Management\n\nManage users, live broadcasts, monetization, coin transactions, and app settings for the YouPeak platform.\n\nUser & Content Management\nFinancial Controls & Plans\nReal-time Analytics\nFraud & Security\n\n© 2026 YouPeak. All rights reserved.\n\nSig",
+   "lang": "en",
+   "viewportMeta": "width=device-width,initial-scale=1",
+   "inputsWithoutLabel": 0,
+   "horizontalOverflow": false,
+   "console": [],
+   "log": [
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css. https://admin.youpeak.app/",
+    "warning: Tracking Prevention blocked access to storage for https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css. https://admin.youpeak.app/"
+   ],
+   "failedRequests": [
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  },
+  {
+   "width": 1366,
+   "file": "admin-login-1366.png",
+   "iw": 1366,
+   "sw": 1366,
+   "sh": 768,
+   "title": "",
+   "text": "YouPeak\nADMIN CONSOLE\nControl Center &\nPlatform Management\n\nManage users, live broadcasts, monetization, coin transactions, and app settings for the YouPeak platform.\n\nUser & Content Management\nFinancial Controls & Plans\nReal-time Analytics\nFraud & Security\n\n© 2026 YouPeak. All rights reserved.\n\nSig",
+   "lang": "en",
+   "viewportMeta": "width=device-width,initial-scale=1",
+   "inputsWithoutLabel": 0,
+   "horizontalOverflow": false,
+   "console": [],
+   "log": [
+    "verbose: [DOM] Password field is not contained in a form: (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o https://admin.youpeak.app/"
+   ],
+   "failedRequests": [
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  },
+  {
+   "width": 768,
+   "file": "admin-login-768.png",
+   "iw": 768,
+   "sw": 768,
+   "sh": 1024,
+   "title": "",
+   "text": "YouPeak\nSign in\n\nEnter your credentials to access the admin console.\n\nEmail\nPassword\nForgot password?\nSign in",
+   "lang": "en",
+   "viewportMeta": "width=device-width,initial-scale=1",
+   "inputsWithoutLabel": 0,
+   "horizontalOverflow": false,
+   "console": [],
+   "log": [
+    "verbose: [DOM] Password field is not contained in a form: (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o https://admin.youpeak.app/"
+   ],
+   "failedRequests": [
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  },
+  {
+   "width": 390,
+   "file": "admin-login-390.png",
+   "iw": 390,
+   "sw": 390,
+   "sh": 844,
+   "title": "",
+   "text": "YouPeak\nSign in\n\nEnter your credentials to access the admin console.\n\nEmail\nPassword\nForgot password?\nSign in",
+   "lang": "en",
+   "viewportMeta": "width=device-width,initial-scale=1",
+   "inputsWithoutLabel": 0,
+   "horizontalOverflow": false,
+   "console": [],
+   "log": [
+    "verbose: [DOM] Password field is not contained in a form: (More info: https://www.chromium.org/developers/design-documents/create-amazing-password-forms) %o https://admin.youpeak.app/"
+   ],
+   "failedRequests": [
+    "net::ERR_BLOCKED_BY_ORB"
+   ]
+  }
+ ]
+}

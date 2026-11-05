@@ -6,7 +6,9 @@
     "node": "24.x"
   },
   "scripts": {
-    "build": "npm run build --prefix admin/frontend",
+    "test": "node --test tests/*.test.cjs",
+    "test:emulator": "npx -y firebase-tools@13 emulators:exec --config tests/emulator/firebase.json --only firestore,auth --project demo-youpeak-audit \"node tests/emulator/run.cjs\"",
+    "build": "npm run build --prefix Admin_Panel/frontend",
     "start": "node functions/backend/server.js",
     "dev": "node functions/backend/server.js",
     "check": "node -e \"require('./functions/backend/index.js'); console.log('backend loads OK')\""

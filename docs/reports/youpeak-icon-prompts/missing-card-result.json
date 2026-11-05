@@ -1,0 +1,4 @@
+{
+  "file": "card.png",
+  "hint": "Generated images are saved to C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1 as C:\\Users\\User\\.codex\\generated_images\\01a13de5-8f27-7a70-9bbd-22a6f40a1cf1\\exec-1a564fbc-c0b5-43f9-b539-b562aadf67aa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+}

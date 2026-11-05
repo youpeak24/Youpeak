@@ -1,0 +1,22 @@
+[
+  {
+    "Path": "admin\\frontend\\src\\assets\\images\\MetubeLogo.png",
+    "Sha256": "CD501C13B2F1714B069CB468CB203870FB86357E1D6D7DF528063348790AC788"
+  },
+  {
+    "Path": "admin\\frontend\\src\\assets\\images\\logo2.svg",
+    "Sha256": "854696A459FC2ED72FE7FDA6341C8BBB68EC657E44580EAF15DE41799582E0A1"
+  },
+  {
+    "Path": "admin\\frontend\\public\\MetubeLogo.png",
+    "Sha256": "CD501C13B2F1714B069CB468CB203870FB86357E1D6D7DF528063348790AC788"
+  },
+  {
+    "Path": "temp_test_video.mp4",
+    "Sha256": "0D41EB502CCA3B8F1F685C1F5521A554853BF251B5C9CAE77EC4290EC56AB50F"
+  },
+  {
+    "Path": "firestore-debug.log",
+    "Sha256": "CD6F0CA5DCA51F61B9EF3FDA73F23E145EC68EECA202D85AF57B7C142F30838D"
+  }
+]

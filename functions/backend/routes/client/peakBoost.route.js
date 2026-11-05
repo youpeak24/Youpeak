@@ -7,5 +7,7 @@ const peakBoostController = require("../../controllers/client/peakBoost.controll
 
 // Fan -> creator coin boost (80% creator / 20% platform)
 route.post("/", requireAppUser(), peakBoostController.boost);
+// Outcome of an earlier boost request (checked after a timeout before retrying)
+route.get("/status", requireAppUser(), peakBoostController.status);
 
 module.exports = route;

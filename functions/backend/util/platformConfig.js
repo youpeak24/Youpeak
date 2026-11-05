@@ -115,7 +115,10 @@ const SECTIONS = [
     description: "Paid promotion packages creators can buy for a video. Changes apply to new purchases; running campaigns keep the terms they were bought on.",
     fields: [
       list("promotionPlans", "Plans", [
+        text("id", "Plan id (stable; don't change once sold)"),
         text("name", "Plan name"),
+        text("targeting", "Targeting"),
+        text("category", "Category (Daily / Weekly / Monthly)"),
         int("priceINR", "Price", { unit: "₹", min: 1, max: 10000000 }),
         int("impressionsMin", "Impressions from", { max: 1000000000 }),
         int("impressionsMax", "Impressions to", { max: 1000000000 }),
@@ -126,6 +129,7 @@ const SECTIONS = [
     checks: [
       { type: "listLte", list: "promotionPlans", a: "impressionsMin", b: "impressionsMax", message: "“Impressions from” can't be more than “Impressions to”." },
       { type: "listUnique", list: "promotionPlans", field: "name", message: "Plan names must be unique." },
+      { type: "listUnique", list: "promotionPlans", field: "id", message: "Plan ids must be unique." },
     ],
   },
   {
@@ -171,7 +175,7 @@ const SECTIONS = [
       bool("blockTasksOnEmulator", "Block tasks on emulators"),
       bool("blockTasksOnRootedDevice", "Block tasks on rooted / jailbroken devices"),
       bool("oneTaskerAccountPerDevice", "One Tasker account per device"),
-      bool("allowWebTasking", "Allow tasking from the web app", { help: "Browsers can't report device signals, so web rewards are unverified." }),
+      bool("allowWebTasking", "Allow tasking from the web app", { help: "Web earning checks the signed-in account and the network (no device checks are possible in a browser). Same daily caps as the app; rewarded ads stay app-only." }),
       int("minSecondsBetweenRewardActions", "Minimum gap between reward actions", { unit: "seconds", max: 3600 }),
       int("watchHeartbeatIntervalSeconds", "Watch heartbeat interval", { unit: "seconds", min: 1, max: 300 }),
       int("watchHeartbeatMaxCreditSeconds", "Max watch time credited per heartbeat", { unit: "seconds", min: 1, max: 600 }),
@@ -187,15 +191,20 @@ const SECTIONS = [
     description: "Top-up packages for ad credits. “Credits” is what the buyer receives in total, bonus included.",
     fields: [
       list("adCreditPacks", "Packs", [
+        text("id", "Stable Pack ID"),
         text("name", "Pack name"),
         dec("credits", "Credits (incl. bonus)", { min: 1, max: 100000000, step: 0.01 }),
+        dec("baseCredits", "Base credits", { min: 0, max: 100000000, step: 0.01 }),
+        dec("bonusCredits", "Bonus credits", { min: 0, max: 100000000, step: 0.01 }),
         pct("bonusPercent", "Bonus label"),
         dec("priceINR", "Price", { unit: "₹", min: 1, max: 100000000, step: 0.01 }),
+        int("validityDays", "Validity (days)", { min: 1, max: 3650 }),
         bool("isActive", "On sale"),
       ]),
       int("adCreditValidityDays", "Credit validity", { unit: "days", min: 1, max: 3650 }),
     ],
     checks: [
+      { type: "listUnique", list: "adCreditPacks", field: "id", message: "Pack IDs must be unique." },
       { type: "listUnique", list: "adCreditPacks", field: "name", message: "Pack names must be unique." },
     ],
   },
@@ -334,7 +343,8 @@ function checkFails(c, v) {
     case "listUnique": {
       const seen = new Set();
       for (const it of v[c.list] || []) {
-        const k = String(it[c.field]).trim().toLowerCase();
+        const k = String(it[c.field] ?? "").trim().toLowerCase();
+        if (!k) continue; // blank (e.g. ids on plans saved before ids existed)
         if (seen.has(k)) return c.message;
         seen.add(k);
       }

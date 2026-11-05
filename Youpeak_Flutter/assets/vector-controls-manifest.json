@@ -1,0 +1,1100 @@
+[
+  {
+    "file": "0.png",
+    "source": "description_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "1.png",
+    "source": "visibility_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "2.png",
+    "source": "groups_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "3.png",
+    "source": "event_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "4.png",
+    "source": "mark_chat_read_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "5.png",
+    "source": "location_on_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "9.png",
+    "source": "groups_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Backward10s.png",
+    "source": "replay_10_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Bold3User.png",
+    "source": "groups_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Calendar.png",
+    "source": "event_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Chat.png",
+    "source": "chat_bubble_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Collapse.png",
+    "source": "fullscreen_exit_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Expand.png",
+    "source": "fullscreen_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Forward10s.png",
+    "source": "forward_10_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Next.png",
+    "source": "skip_next_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Paper.png",
+    "source": "description_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Previous.png",
+    "source": "skip_previous_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Subtitle.png",
+    "source": "closed_caption_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "TimeCircle.png",
+    "source": "history_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Timer.png",
+    "source": "timer_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Video.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "Wallet.png",
+    "source": "account_balance_wallet_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "accept.png",
+    "source": "check_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "activity.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "ad_icon.png",
+    "source": "featured_video_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "ad_round.png",
+    "source": "featured_video_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "add.png",
+    "source": "add_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "arrowRightCircle.png",
+    "source": "arrow_circle_right_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "arrow_back.png",
+    "source": "arrow_back_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "arrow_double_right.png",
+    "source": "keyboard_double_arrow_right_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "arrow_down.png",
+    "source": "expand_more_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "arrow_right.png",
+    "source": "chevron_right_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "audio.png",
+    "source": "mic_none_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "beauty.png",
+    "source": "face_retouching_natural_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldArrowDown.png",
+    "source": "expand_more_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldBookmark.png",
+    "source": "bookmark_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldDocument.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldFilter.png",
+    "source": "tune_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldHome.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldPlay.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldShare.png",
+    "source": "share_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldSpeed.png",
+    "source": "speed_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "boldVideo.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "bookmark.png",
+    "source": "bookmark_border_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "camera.png",
+    "source": "photo_camera_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "caption.png",
+    "source": "closed_caption_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "clear_icon.png",
+    "source": "delete_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "closeSquare.png",
+    "source": "close_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "close_icon.png",
+    "source": "close_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "coin.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "coin_icon.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "coin_icon_grey.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "comment.png",
+    "source": "chat_bubble_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "comment_1.png",
+    "source": "chat_bubble_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "convert_icon.png",
+    "source": "currency_exchange_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "copy_icon.png",
+    "source": "content_copy_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "daily_gift_icon.png",
+    "source": "redeem_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "dangerSquare.png",
+    "source": "warning_amber_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "dark_mode.png",
+    "source": "dark_mode_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "date_icon.png",
+    "source": "event_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "delete_account.png",
+    "source": "person_remove_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "dislike_bold.png",
+    "source": "thumb_down_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "dislike_icon.png",
+    "source": "thumb_down_off_alt_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "document.png",
+    "source": "description_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "done.png",
+    "source": "check_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "down_arrow_bold.png",
+    "source": "arrow_downward_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "download.png",
+    "source": "file_download_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "download_1.png",
+    "source": "file_download_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "download_bold.png",
+    "source": "file_download_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "earn_reward_icon.png",
+    "source": "redeem_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "edit.png",
+    "source": "edit_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "editButton.png",
+    "source": "edit_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "effects.png",
+    "source": "auto_awesome_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "email.png",
+    "source": "mail_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "engagement_icon.png",
+    "source": "insights_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "filter.png",
+    "source": "tune_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "fingerPrint.png",
+    "source": "fingerprint_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "flag.png",
+    "source": "outlined_flag_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "flage.png",
+    "source": "outlined_flag_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "flages.png",
+    "source": "outlined_flag_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "flash.png",
+    "source": "flash_on_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "flip.png",
+    "source": "flip_camera_android_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "free.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "gallery.png",
+    "source": "image_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "gift_icon.png",
+    "source": "redeem_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "go_live.png",
+    "source": "sensors_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "green_tick.png",
+    "source": "check_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "heartEffects.png",
+    "source": "face_retouching_natural_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "hide.png",
+    "source": "visibility_off_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "history_icon.png",
+    "source": "history_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "home.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "ic_delete_video.png",
+    "source": "delete_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "ic_edit_video.png",
+    "source": "edit_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "incognito.png",
+    "source": "privacy_tip_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "infoSquare.png",
+    "source": "help_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "king.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "language.png",
+    "source": "language_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "library.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "like.png",
+    "source": "thumb_up_off_alt_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "like_bold.png",
+    "source": "thumb_up_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "live_chat.png",
+    "source": "chat_bubble_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "location.png",
+    "source": "location_on_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "lock.png",
+    "source": "lock_outline_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "lock2.png",
+    "source": "lock_outline_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "logout.png",
+    "source": "logout_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "monetization.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "moreCircle.png",
+    "source": "more_horiz_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "moreSquare.png",
+    "source": "more_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "moreThreeCircle.png",
+    "source": "more_horiz_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "music.png",
+    "source": "music_note_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "notification.png",
+    "source": "notifications_none_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "noty_icon.png",
+    "source": "notifications_none_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "paid.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "password.png",
+    "source": "lock_outline_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "pause.png",
+    "source": "pause_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "play.png",
+    "source": "play_arrow_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "play_video.png",
+    "source": "play_arrow_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "plus.png",
+    "source": "add_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "premium_download.png",
+    "source": "file_download_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "profile.png",
+    "source": "person_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "profileLogo.png",
+    "source": "person_outline_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "promote_video.png",
+    "source": "trending_up_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "puse.png",
+    "source": "pause_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "recording.png",
+    "source": "fiber_manual_record_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "referral_icon.png",
+    "source": "group_add_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "remove.png",
+    "source": "delete_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "reply.png",
+    "source": "reply_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "report.png",
+    "source": "outlined_flag_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "scan.png",
+    "source": "qr_code_scanner_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "search.png",
+    "source": "search_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "send.png",
+    "source": "send_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "set_thumbnail.png",
+    "source": "image_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "setting.png",
+    "source": "settings_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "share_icon.png",
+    "source": "share_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "shieldDone.png",
+    "source": "verified_user_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "show.png",
+    "source": "visibility_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "shuffle.png",
+    "source": "shuffle_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "sound.png",
+    "source": "music_note_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "speed.png",
+    "source": "speed_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "square.png",
+    "source": "check_box_outline_blank_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "subscription_plan.png",
+    "source": "card_membership_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "swap.png",
+    "source": "swap_horiz_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "swape.png",
+    "source": "repeat_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "text_send.png",
+    "source": "send_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "tick.png",
+    "source": "check_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "timeCirclePink.png",
+    "source": "history_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "translate.png",
+    "source": "language_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "trending.png",
+    "source": "trending_up_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "tv.png",
+    "source": "tv_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "up_arrow_bold.png",
+    "source": "arrow_upward_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "upload.png",
+    "source": "file_upload_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "videoBlack.png",
+    "source": "smart_display_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "videoCircle.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "videoDownload.png",
+    "source": "file_download_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "video_charges.png",
+    "source": "custom YouPeak geometric symbol",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "visibility.png",
+    "source": "visibility_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "watch.png",
+    "source": "speed_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "watch_later.png",
+    "source": "bookmark_border_outlined",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "white_tik.png",
+    "source": "check_rounded",
+    "category": "UI glyph",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_create.png",
+    "source": "add_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_tasker.png",
+    "source": "checklist_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_ad_credits.png",
+    "source": "campaign_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_campaign_analytics.png",
+    "source": "insights_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_privacy_policy.png",
+    "source": "policy_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_payment_history.png",
+    "source": "receipt_long_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_referral_history.png",
+    "source": "manage_history_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_volume_high.png",
+    "source": "volume_up_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_volume_low.png",
+    "source": "volume_down_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_mute.png",
+    "source": "volume_off_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_stop.png",
+    "source": "stop_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_retry.png",
+    "source": "refresh_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_external_link.png",
+    "source": "open_in_new_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_copy_link.png",
+    "source": "link_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_phone_sign_in.png",
+    "source": "call_rounded",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_qr_code.png",
+    "source": "qr_code_2_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_withdraw_to_bank.png",
+    "source": "account_balance_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_device_security.png",
+    "source": "phonelink_lock_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_vpn_restriction.png",
+    "source": "gpp_bad_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_legal_support.png",
+    "source": "balance_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_pending.png",
+    "source": "hourglass_empty_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_access_restricted.png",
+    "source": "gpp_bad_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "extra_support_contact.png",
+    "source": "support_agent_outlined",
+    "category": "Additional UI control",
+    "status": "new vector-derived PNG"
+  },
+  {
+    "file": "card.png",
+    "source": "credit_card_outlined",
+    "category": "New file for declared path",
+    "status": "new vector-derived PNG"
+  }
+]
