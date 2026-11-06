@@ -1,4 +1,9 @@
+# YouPeak - https://www.youpeak.org
+# Public marketing, policy and help pages are open to all crawlers.
+# The chat API is a server endpoint, not a page, so it stays out of search.
+
 User-agent: *
 Allow: /
+Disallow: /api/
 
 Sitemap: https://www.youpeak.org/sitemap.xml

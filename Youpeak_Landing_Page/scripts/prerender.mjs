@@ -6,11 +6,33 @@ const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
 const templatePath = path.join(DIST, "index.html");
 const { render } = await import(pathToFileURL(path.join(ROOT, "dist-ssr", "entry-server.js")));
+// Same FAQ data the accordion renders, so FAQPage markup can never drift from visible text.
+const { FAQS } = await import(pathToFileURL(path.join(ROOT, "src", "config", "faqs.js")));
+
+const SITE_URL = "https://www.youpeak.org";
+// Escape "<" so inline JSON can never close its <script> tag.
+const jsonLd = (data) => JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
 
 const template = await fs.readFile(templatePath, "utf8");
 const appHtml = render();
 if (!appHtml.includes("<h1")) throw new Error("Prerendered homepage is missing its H1");
-await fs.writeFile(templatePath, template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`));
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${SITE_URL}/#faq`,
+  inLanguage: "en-IN",
+  mainEntity: FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+const homeHead = template.replace(
+  "</head>",
+  `    <script type="application/ld+json">\n${jsonLd(faqSchema)}\n    </script>\n  </head>`,
+);
+await fs.writeFile(templatePath, homeHead.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`));
 
 const stylesheet = template.match(/<link rel="stylesheet" crossorigin href="([^"]+)">/)?.[1];
 
@@ -118,12 +140,42 @@ const linkifyEmail = (value) => escapeHtml(value).replace(
 
 // Render Trust Pages
 for (const page of pages) {
-  const canonical = `https://www.youpeak.org/${page.slug}`;
+  const canonical = `${SITE_URL}/${page.slug}`;
+  const fullTitle = `${page.title} | YouPeak`;
+  const socialImage = `${SITE_URL}/assets/og_image.jpg`;
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${canonical}#webpage`,
+        url: canonical,
+        name: fullTitle,
+        description: page.summary,
+        inLanguage: "en-IN",
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "YouPeak", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: page.title, item: canonical },
+        ],
+      },
+    ],
+  };
   const html = `<!doctype html>
 <html lang="en-IN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escapeHtml(page.title)} | YouPeak</title>
+<title>${escapeHtml(fullTitle)}</title>
 <meta name="description" content="${escapeHtml(page.summary)}">
 <meta name="robots" content="index, follow"><link rel="canonical" href="${canonical}">
+<meta property="og:type" content="website"><meta property="og:site_name" content="YouPeak"><meta property="og:locale" content="en_IN">
+<meta property="og:url" content="${canonical}"><meta property="og:title" content="${escapeHtml(fullTitle)}"><meta property="og:description" content="${escapeHtml(page.summary)}">
+<meta property="og:image" content="${socialImage}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escapeHtml(fullTitle)}"><meta name="twitter:description" content="${escapeHtml(page.summary)}"><meta name="twitter:image" content="${socialImage}">
+<script type="application/ld+json">
+${jsonLd(pageSchema)}
+</script>
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon_32.png">${stylesheet ? `<link rel="stylesheet" crossorigin href="${stylesheet}">` : ""}
 </head><body class="bg-slate-50 text-slate-900 antialiased"><main class="min-h-screen px-4 py-16 sm:px-6">
 <article class="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm sm:p-12">

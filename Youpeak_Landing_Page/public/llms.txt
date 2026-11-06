@@ -1,0 +1,37 @@
+# YouPeak
+
+> YouPeak is a video rewards and creator monetization platform for users in India. This site (https://www.youpeak.org) publishes YouPeak's advertised plans, earning caps, referral rules, creator revenue shares, withdrawal conditions, grievance contact and policy documents.
+
+Figures on this site are advertised settings and maximum caps, not guaranteed earnings. Paid passes are optional. Binding in-app and creator terms, and the policy pages below, govern actual use.
+
+## Main pages
+
+- [Homepage](https://www.youpeak.org/): overview of video rewards, creator options, the illustrative earnings estimate, plan tiers, FAQ and app availability.
+- [How it works](https://www.youpeak.org/#how-it-works): the steps from watching videos to withdrawing coins.
+- [Earnings calculator](https://www.youpeak.org/#calculator): an illustrative estimate built from the advertised caps and rules.
+- [Plans and passes](https://www.youpeak.org/#tiers): the Free plan and the paid Bronze, Silver, Gold, Platinum and Diamond passes, with their advertised daily and monthly caps.
+- [Frequently asked questions](https://www.youpeak.org/#faq): coin conversion, referral rules, creator pass shares, withdrawal minimums and grievance contact.
+
+## Earnings and payouts
+
+- [Earnings disclosure](https://www.youpeak.org/earnings-disclosure): transparent guidelines on daily caps, referral multipliers and payout terms.
+- [Refund and cancellation policy](https://www.youpeak.org/refund-cancellation): conditions on pass upgrades, ad credit allocation and billing enquiries.
+
+## Policies and rules
+
+- [Terms of service](https://www.youpeak.org/terms): rules and obligations for using the platform, web portal and mobile app.
+- [Privacy policy](https://www.youpeak.org/privacy): how user information and authentication data are collected, used, protected and stored.
+- [Cookie policy](https://www.youpeak.org/cookie-policy): local storage, session cookies and technical identifiers.
+- [Content policy](https://www.youpeak.org/content-policy): creator publishing standards, intellectual property rules and prohibited content.
+
+## Support and complaints
+
+- [Contact directory](https://www.youpeak.org/contact): support, creator partnerships, business enquiries and grievances.
+- [Grievance policy](https://www.youpeak.org/grievance): statutory grievance process under the Information Technology (Intermediary Guidelines) Rules, 2021.
+- Support email: support@youpeak.org
+- Grievance email: grievance@youpeak.org
+
+## Site index
+
+- [Full HTML sitemap](https://www.youpeak.org/sitemap)
+- [XML sitemap](https://www.youpeak.org/sitemap.xml)

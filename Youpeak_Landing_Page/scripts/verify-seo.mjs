@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { FAQS } from "../src/config/faqs.js";
 
 const dist = path.join(process.cwd(), "dist");
 const home = fs.readFileSync(path.join(dist, "index.html"), "utf8");
@@ -23,10 +24,20 @@ check(!/placehold\.co|href="https:\/\/(play\.google\.com|apps\.apple\.com)"/.tes
 check(!/VITE_GROQ|GROQ_API_KEY/.test(home), "A secret variable name leaked into HTML.");
 
 const schemaMatches = [...home.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
-check(schemaMatches.length === 1, "Expected one JSON-LD graph.");
+check(schemaMatches.length === 2, "Expected the site graph plus the FAQPage block.");
+const escapeText = (value) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#x27;").replace(/"/g, "&quot;");
 for (const match of schemaMatches) {
   try {
     const schema = JSON.parse(match[1]);
+    if (schema["@type"] === "FAQPage") {
+      check(schema.mainEntity?.length === FAQS.length, "FAQPage must mirror every FAQ entry.");
+      const visibleHtml = home.replace(/<script[\s\S]*?<\/script>/g, "");
+      for (const faq of FAQS) {
+        check(visibleHtml.includes(escapeText(faq.q)), `FAQ question is not visible on the page: ${faq.q}`);
+        check(visibleHtml.includes(escapeText(faq.a)), `FAQ answer is not rendered on the page: ${faq.q}`);
+      }
+      continue;
+    }
     check(Array.isArray(schema["@graph"]), "JSON-LD must contain an @graph.");
     const types = schema["@graph"].map((item) => item["@type"]);
     for (const type of ["Organization", "WebSite", "WebPage"]) check(types.includes(type), `JSON-LD is missing ${type}.`);
@@ -34,6 +45,9 @@ for (const match of schemaMatches) {
     failures.push(`JSON-LD does not parse: ${error.message}`);
   }
 }
+const titleText = home.match(/<title>([^<]*)<\/title>/)?.[1] || "";
+check(titleText.length > 0 && titleText.length <= 65, `Homepage title must be 1-65 characters (is ${titleText.length}).`);
+check(home.includes('hreflang="en-IN"'), "Homepage hreflang en-IN is missing.");
 
 for (const match of home.matchAll(/<img\b[^>]*>/g)) {
   check(/\bwidth="\d+"/.test(match[0]) && /\bheight="\d+"/.test(match[0]), `Image lacks intrinsic dimensions: ${match[0].slice(0, 120)}`);
@@ -62,7 +76,29 @@ check(sitemap.includes("<loc>https://www.youpeak.org/</loc>"), "Sitemap canonica
 check(sitemap.includes("<loc>https://www.youpeak.org/sitemap</loc>"), "Sitemap HTML index URL is missing.");
 check(sitemap.includes("<loc>https://www.youpeak.org/privacy</loc>"), "Sitemap privacy URL is missing.");
 check(sitemap.includes("<loc>https://www.youpeak.org/terms</loc>"), "Sitemap terms URL is missing.");
+check(/Disallow:\s*\/api\//.test(robots), "robots.txt must keep the API out of crawling.");
+check(fs.existsSync(path.join(dist, "llms.txt")), "llms.txt is missing from the build.");
 JSON.parse(fs.readFileSync(path.join(dist, "site.webmanifest"), "utf8"));
+
+// Sitemap must list exactly the indexable pages that exist in the build (no drift, no dead URLs).
+const sitemapPaths = [...sitemap.matchAll(/<loc>https:\/\/www\.youpeak\.org(\/[^<]*)<\/loc>/g)].map((m) => m[1]);
+const indexablePages = ["/", "/sitemap", ...fs.readdirSync(dist)
+  .filter((name) => name.endsWith(".html") && !["index.html", "404.html", "sitemap.html"].includes(name))
+  .map((name) => `/${name.replace(/\.html$/, "")}`)];
+for (const url of sitemapPaths) {
+  const file = url === "/" ? "index.html" : url === "/sitemap" ? "sitemap.html" : `${url.slice(1)}.html`;
+  check(fs.existsSync(path.join(dist, file)), `Sitemap lists a URL that does not exist: ${url}`);
+}
+for (const url of indexablePages) {
+  check(sitemapPaths.includes(url), `Indexable page is missing from the sitemap: ${url}`);
+}
+for (const slug of indexablePages.filter((url) => url !== "/" && url !== "/sitemap").map((url) => url.slice(1))) {
+  const page = fs.readFileSync(path.join(dist, `${slug}.html`), "utf8");
+  check(page.includes(`<link rel="canonical" href="https://www.youpeak.org/${slug}">`), `Canonical is wrong on ${slug}.html`);
+  check(page.includes('property="og:title"') && page.includes('name="twitter:card"'), `Social tags are missing on ${slug}.html`);
+  check(page.includes('"BreadcrumbList"'), `BreadcrumbList is missing on ${slug}.html`);
+  check((page.match(/<h1\b/g) || []).length === 1, `${slug}.html must contain exactly one H1`);
+}
 
 const bundles = fs.readdirSync(path.join(dist, "assets"))
   .filter((name) => name.endsWith(".js"))
