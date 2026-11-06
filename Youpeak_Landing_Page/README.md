@@ -1,16 +1,38 @@
-# React + Vite
+# YouPeak Landing Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Public marketing and policy site for YouPeak, served at `https://www.youpeak.org`. Built with Vite and React, prerendered for search engines, and deployed as its own Vercel project.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm ci               # install dependencies
+npm run dev          # local development server
+npm run build        # client build, SSR build, and prerender into dist/
+npm run verify:seo   # checks dist/ for SEO and crawler output
+npm run lint         # oxlint
+npm run images       # regenerate optimized and responsive images
+```
 
-## React Compiler
+Run `npm run build` before `npm run verify:seo`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Structure
 
-## Expanding the Oxlint configuration
+- `index.html` - the homepage shell and structured data.
+- `src/App.jsx` - page composition and auth/checkout modal wiring.
+- `src/components/` - page sections.
+- `src/config/` - site constants and the FAQ data (shared by the UI and FAQPage markup).
+- `src/lib/` - portal session, plans, and checkout helpers.
+- `src/chatbot/` - assistant knowledge base and client code.
+- `scripts/` - prerender, SEO verification, and image tooling.
+- `public/` - `robots.txt`, `sitemap.xml`, `llms.txt`, and the web manifest.
+- `api/chat.js` - serverless chat endpoint.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Deployment
+
+Vercel project with Root Directory set to `Youpeak_Landing_Page`. Framework preset Vite, build `npm run build`, output `dist`.
+
+Environment variables (set in Vercel, see `.env.example`):
+- `VITE_API_BASE_URL`, `VITE_API_KEY`, `VITE_FIREBASE_API_KEY`, `VITE_ADMIN_PANEL_URL` are public values compiled into the browser bundle.
+- Server-side chat keys are set only in Vercel and never use the `VITE_` prefix.
+
+Never put secrets in `VITE_` variables.
