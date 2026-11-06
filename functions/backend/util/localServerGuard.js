@@ -1,12 +1,12 @@
 /**
  * Safety guard for the LOCAL standalone server (server.js — `npm start` /
- * `npm run dev`). Production runs api/index.js on Vercel and never loads this.
+ * `npm run dev`). Production runs functions/api/index.js on Vercel and never loads this.
  *
  * Without it, a plain local start picks up serviceAccountKey.json and talks
  * to the real Firebase project. The server now starts only when one of these
  * holds:
  *   • it is pointed at the Firestore emulator with a demo-* project
- *     (what local-dev/start.js and the test harness do);
+ *     (what tools/local-dev/start.js and the test harness do);
  *   • NODE_ENV=production (an intentional production-style host);
  *   • ALLOW_LIVE_FIREBASE=true (an explicit, deliberate override).
  */
@@ -51,7 +51,7 @@ function guardLocalServer() {
   if (result.ok) return;
   console.error(
     `\n⛔ Refusing to start: this local server would use the live Firebase project "${result.projectId}".\n` +
-      "   Run the isolated local stack instead:  node local-dev/start.js\n" +
+      "   Run the isolated local stack instead:  node tools/local-dev/start.js\n" +
       "   (or set ALLOW_LIVE_FIREBASE=true if you really mean to use live data).\n"
   );
   process.exit(1);

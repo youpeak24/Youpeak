@@ -11,7 +11,7 @@
     4. verifies the result (signature pinned to the release certificate, API
        origin, client key compiled in, no local hosts, this exact build);
     5. writes a uniquely named APK, a manifest (.manifest.json) and a .sha256
-       next to each other, under Youpeak_Flutter/build/release/android/.
+       next to each other, under flutter/build/release/android/.
   The key is read from the environment, never put on a command line, never
   printed, and never written to disk (a temporary defines file is deleted).
 
@@ -33,7 +33,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$appRoot = Join-Path $projectRoot 'Youpeak_Flutter'
+$appRoot = Join-Path $projectRoot 'flutter'
 $pins = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'android-release.json') -Raw | ConvertFrom-Json
 $verifier = Join-Path $PSScriptRoot 'verify-android-apk.ps1'
 $buildProfile = if ($Development) { 'development' } else { 'production' }
@@ -101,7 +101,7 @@ $dirtyCount = @((Get-Git @('status', '--porcelain')) -split "`n" | Where-Object 
 
 # A fingerprint of the app's code and build config, so two builds from the
 # same commit with different uncommitted work are told apart.
-$srcPaths = @('Youpeak_Flutter/lib', 'Youpeak_Flutter/android', 'Youpeak_Flutter/pubspec.yaml', 'Youpeak_Flutter/pubspec.lock')
+$srcPaths = @('flutter/lib', 'flutter/android', 'flutter/pubspec.yaml', 'flutter/pubspec.lock')
 $listed = & git -C $projectRoot ls-files -z -co --exclude-standard -- @srcPaths 2>$null
 $files = ($listed -join '') -split "`0" | Where-Object { $_ } | Sort-Object
 $sha = [Security.Cryptography.SHA256]::Create()

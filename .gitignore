@@ -1,11 +1,14 @@
 # =============================================================================
-# YouPeak monorepo
-#   Admin_Panel/frontend   React (CRA) admin panel
-#   functions/ + api/      Express backend + Vercel serverless entry
-#   Youpeak_Flutter/       Flutter consumer app (mobile + web/PWA)
-#   Youpeak_Landing_Page/  Vite + React landing site
-#   local-dev/, worker/, tests/, scripts/, DB/
-# Sub-projects keep their own .gitignore too; this file is the safety net.
+# YouPeak monorepo - one folder per app, each deployed on its own
+#   landing/        Vite + React landing site         (Vercel: landing)
+#   admin-panel/    React admin panel                 (Vercel: admin)
+#   functions/      Express API + Firebase Functions  (Vercel: api)
+#   flutter/        Flutter consumer app              (built locally)
+#   tools/          local-dev stack, DB import data, fingerprint worker
+#   scripts/        build and deploy helpers
+#   docs/           reports, notes, design material
+#   archive/        old local files, never used by the apps
+# Each app keeps its own .gitignore as well; this file is the safety net.
 # =============================================================================
 
 # ---- Secrets & credentials (never commit) -----------------------------------
@@ -138,8 +141,8 @@ temp/
 tmp/
 *.tmp
 
-# ---- Local dev stack (local-dev/start.js, emulators) ------------------------
-local-dev/emulator-data/
+# ---- Local dev stack (tools/local-dev/start.js, emulators) ------------------------
+tools/local-dev/emulator-data/
 emulator-data/
 firebase-export-*/
 
@@ -163,3 +166,6 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
+# ---- Archive (old local files) -----------------------------------------------
+archive/

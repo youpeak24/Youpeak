@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const crypto = require('node:crypto');
-const parser = require('../Admin_Panel/frontend/node_modules/@babel/parser');
+const parser = require('../admin-panel/node_modules/@babel/parser');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'docs/reports/project-audit');
 fs.mkdirSync(out, { recursive: true });

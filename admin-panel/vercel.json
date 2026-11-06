@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "create-react-app",
+  "installCommand": "npm ci",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "rewrites": [
+    { "source": "/admin/(.*)", "destination": "https://api.youpeak.app/admin/$1" },
+    { "source": "/client/(.*)", "destination": "https://api.youpeak.app/client/$1" },
+    { "source": "/internal/(.*)", "destination": "https://api.youpeak.app/internal/$1" },
+    { "source": "/cron/(.*)", "destination": "https://api.youpeak.app/cron/$1" },
+    { "source": "/api/(.*)", "destination": "https://api.youpeak.app/api/$1" },
+    { "source": "/.well-known/(.*)", "destination": "https://api.youpeak.app/.well-known/$1" },
+    { "source": "/share", "destination": "https://api.youpeak.app/share" },
+    { "source": "/payment/webhook/(.*)", "destination": "https://api.youpeak.app/payment/webhook/$1" },
+    { "source": "/stream/webhook", "destination": "https://api.youpeak.app/stream/webhook" },
+    { "source": "/uploads/(.*)", "destination": "https://api.youpeak.app/uploads/$1" },
+    { "source": "/videos/(.*)", "destination": "https://api.youpeak.app/videos/$1" },
+    { "source": "/video/stream/(.*)", "destination": "https://api.youpeak.app/video/stream/$1" },
+    {
+      "source": "/((?!static/|manifest\\.json|favicon\\.ico|logo192\\.png|logo512\\.png|robots\\.txt|asset-manifest\\.json|.*\\.[a-zA-Z0-9]+$).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

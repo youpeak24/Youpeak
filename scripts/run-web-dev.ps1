@@ -12,7 +12,7 @@
 
   Against production (default) it needs the key:
     npx vercel env run -e production -- powershell -ExecutionPolicy Bypass -File scripts/run-web-dev.ps1
-  Against the local stack (local-dev/start.js running):
+  Against the local stack (tools/local-dev/start.js running):
     powershell -File scripts/run-web-dev.ps1 -Local
 
   This is for development. Distributable builds come only from
@@ -35,7 +35,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$appRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'Youpeak_Flutter'
+$appRoot = Join-Path (Split-Path -Parent $PSScriptRoot) 'flutter'
 $pins = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'android-release.json') -Raw | ConvertFrom-Json
 
 $key = $env:YOUPEAK_API_SECRET_KEY

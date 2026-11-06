@@ -6,7 +6,7 @@
  *  • monetisation gate           (copyright-flagged or not-approved -> no earnings)
  *
  * Audio transcription (Whisper) and copyright fingerprinting run in a separate
- * worker — see util/copyright.service + worker/fingerprintWorker.js.
+ * worker — see util/copyright.service + tools/worker/fingerprintWorker.js.
  */
 "use strict";
 

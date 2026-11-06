@@ -1,15 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const root = process.cwd();
-const dir = path.join(root,'Youpeak_Flutter/assets/icons');
+const dir = path.join(root,'flutter/assets/icons');
 const out = path.join(root,'docs/reports/youpeak-icon-prompts');
 fs.mkdirSync(out,{recursive:true});
 const files = fs.readdirSync(dir).sort();
 const dartFiles=[];
 function walk(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())walk(p);else if(p.endsWith('.dart'))dartFiles.push(p);}}
-walk(path.join(root,'Youpeak_Flutter/lib'));
+walk(path.join(root,'flutter/lib'));
 const source = dartFiles.map(p=>({p,s:fs.readFileSync(p,'utf8')}));
-const icons = fs.readFileSync('Youpeak_Flutter/lib/core/assets/app_icons.dart','utf8');
+const icons = fs.readFileSync('flutter/lib/core/assets/app_icons.dart','utf8');
 const aliases = new Map();
 for(const m of icons.matchAll(/static const String (\w+)\s*=\s*["']assets\/icons\/([^"']+)["']/g)){const a=aliases.get(m[2])||[];a.push(m[1]);aliases.set(m[2],a);}
 const subjects={};
@@ -195,7 +195,7 @@ Prepared from the Flutter source on 15 October 2026. This is an icon/artwork des
 
 ## What I found in your project
 
-- Android Flutter application: \`Youpeak_Flutter/\`.
+- Android Flutter application: \`flutter/\`.
 - Bottom navigation: Home, Bites, central Create, Subscriptions, Library. Four destinations plus an action, not five destinations.
 - Create menu: Create a Bite, Upload a video, Go live.
 - Account/profile menu: Incognito, Create/Your channel, Manage subscription, Earn rewards, My wallet, Time watched, Monetization, Creator VIP pass, Video promotion, Settings, Help center, Log out, Delete account. Some entries depend on account state.

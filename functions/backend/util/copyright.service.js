@@ -2,7 +2,7 @@
  * Copyright / duplicate detection.
  *
  * FFmpeg + Chromaprint (audio) + pHash (frames) run in a SEPARATE worker
- * (worker/fingerprintWorker.js — deploy to Railway/Render/a VPS). This module is
+ * (tools/worker/fingerprintWorker.js — deploy to Railway/Render/a VPS). This module is
  * the Vercel-safe half:
  *   • queueForFingerprint()  — enqueue a new upload
  *   • ingestFingerprint()    — the worker posts hashes back here

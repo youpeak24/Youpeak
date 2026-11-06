@@ -5,7 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$appRoot = Join-Path $projectRoot 'Youpeak_Flutter'
+$appRoot = Join-Path $projectRoot 'flutter'
 $clientKey = $env:YOUPEAK_API_SECRET_KEY
 if ([string]::IsNullOrWhiteSpace($clientKey)) {
     throw 'Set YOUPEAK_API_SECRET_KEY to the backend secretKey value locally, then rerun. Do not use a Firebase private key or an R2 secret.'
@@ -25,7 +25,7 @@ $defineDirectory = Join-Path $appRoot '.dart_tool'
 New-Item -ItemType Directory -Path $defineDirectory -Force | Out-Null
 $definePath = Join-Path $defineDirectory ('consumer-defines-' + [Guid]::NewGuid().ToString('N') + '.json')
 # BUILD_PROFILE is required: a release build without it refuses to start
-# (Youpeak_Flutter/lib/core/config/build_config.dart).
+# (flutter/lib/core/config/build_config.dart).
 $defines = @{
     BUILD_PROFILE = 'production'
     BUILD_ID = ('web-' + (Get-Date).ToUniversalTime().ToString('yyyyMMdd-HHmmss'))

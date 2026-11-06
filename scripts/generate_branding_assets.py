@@ -191,7 +191,7 @@ def main():
     canonical_source = r'e:\Legendary One\youpeak\documents\pic\ChatGPT Image Sep 25, 2026, 03_58_39 PM.png'
 
     if not os.path.exists(canonical_source):
-        canonical_source = os.path.join(root, 'Youpeak_Flutter/assets/icons/logo.png')
+        canonical_source = os.path.join(root, 'flutter/assets/icons/logo.png')
 
     print(f"Using source: {canonical_source}")
 
@@ -205,7 +205,7 @@ def main():
     # 1. Canonical Shared Branding Directories
     for branding_dir in [
         os.path.join(root, 'assets/branding'),
-        os.path.join(root, 'Youpeak_Flutter/assets/branding')
+        os.path.join(root, 'flutter/assets/branding')
     ]:
         os.makedirs(branding_dir, exist_ok=True)
         shutil.copyfile(canonical_source, os.path.join(branding_dir, 'youpeak_logo_canonical.png'))
@@ -214,8 +214,8 @@ def main():
         wordmark.save(os.path.join(branding_dir, 'youpeak_wordmark.png'))
         notif_sil.save(os.path.join(branding_dir, 'youpeak_notification_silhouette.png'))
 
-    # 2. Flutter App Assets (Youpeak_Flutter/assets/icons)
-    icons_dir = os.path.join(root, 'Youpeak_Flutter/assets/icons')
+    # 2. Flutter App Assets (flutter/assets/icons)
+    icons_dir = os.path.join(root, 'flutter/assets/icons')
     os.makedirs(icons_dir, exist_ok=True)
 
     master_1254.save(os.path.join(icons_dir, 'logo.png'))
@@ -240,8 +240,8 @@ def main():
     notif_96 = notif_sil.resize((96, 96), Image.Resampling.LANCZOS)
     notif_96.save(os.path.join(icons_dir, 'ic_notification.png'))
 
-    # 3. Flutter Web (Youpeak_Flutter/web)
-    web_dir = os.path.join(root, 'Youpeak_Flutter/web')
+    # 3. Flutter Web (flutter/web)
+    web_dir = os.path.join(root, 'flutter/web')
     # favicon.png: 64x64 crisp icon-only squircle
     fav_64 = mark_squircle.resize((64, 64), Image.Resampling.LANCZOS)
     fav_64.save(os.path.join(web_dir, 'favicon.png'))
@@ -254,7 +254,7 @@ def main():
     build_maskable_pwa(master_1254, 512).save(os.path.join(web_icons, 'Icon-maskable-512.png'))
 
     # 4. Android Native Resources
-    res_dir = os.path.join(root, 'Youpeak_Flutter/android/app/src/main/res')
+    res_dir = os.path.join(root, 'flutter/android/app/src/main/res')
     # Drawables
     drawable_dir = os.path.join(res_dir, 'drawable')
     drawable_logo = master_1254.resize((512, 512), Image.Resampling.LANCZOS)
@@ -293,12 +293,12 @@ def main():
         fg_icon.save(os.path.join(dpath, 'ic_launcher_foreground.png'))
 
     # 5. Windows (.ico)
-    win_res = os.path.join(root, 'Youpeak_Flutter/windows/runner/resources')
+    win_res = os.path.join(root, 'flutter/windows/runner/resources')
     if os.path.exists(win_res):
         save_ico(mark_squircle, os.path.join(win_res, 'app_icon.ico'), [16, 24, 32, 48, 64, 128, 256])
 
     # 6. macOS AppIcon
-    mac_appicon = os.path.join(root, 'Youpeak_Flutter/macos/Runner/Assets.xcassets/AppIcon.appiconset')
+    mac_appicon = os.path.join(root, 'flutter/macos/Runner/Assets.xcassets/AppIcon.appiconset')
     if os.path.exists(mac_appicon):
         for sz in [16, 32, 64, 128, 256, 512, 1024]:
             master_1254.resize((sz, sz), Image.Resampling.LANCZOS).save(
@@ -306,8 +306,8 @@ def main():
             )
 
     # 7. Admin Frontend
-    admin_public = os.path.join(root, 'Admin_Panel/frontend/public')
-    admin_images = os.path.join(root, 'Admin_Panel/frontend/src/assets/images')
+    admin_public = os.path.join(root, 'admin-panel/public')
+    admin_images = os.path.join(root, 'admin-panel/src/assets/images')
 
     save_ico(mark_squircle, os.path.join(admin_public, 'favicon.ico'), [16, 24, 32, 48, 64, 128, 256])
     logo_512 = master_1254.resize((512, 512), Image.Resampling.LANCZOS)

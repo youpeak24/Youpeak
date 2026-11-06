@@ -1,0 +1,32 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30,
+      "includeFiles": "backend/**"
+    }
+  },
+  "crons": [
+    { "path": "/api/cron/daily", "schedule": "30 18 * * *" }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "api.youpeak.app" }],
+      "destination": "/api"
+    },
+    { "source": "/admin/(.*)", "destination": "/api" },
+    { "source": "/client/(.*)", "destination": "/api" },
+    { "source": "/internal/(.*)", "destination": "/api" },
+    { "source": "/cron/(.*)", "destination": "/api" },
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/.well-known/(.*)", "destination": "/api" },
+    { "source": "/share", "destination": "/api" },
+    { "source": "/payment/webhook/(.*)", "destination": "/api" },
+    { "source": "/stream/webhook", "destination": "/api" },
+    { "source": "/uploads/(.*)", "destination": "/api" },
+    { "source": "/videos/(.*)", "destination": "/api" },
+    { "source": "/video/stream/(.*)", "destination": "/api" }
+  ]
+}

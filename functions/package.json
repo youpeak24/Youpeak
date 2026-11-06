@@ -1,31 +1,36 @@
 {
-  "name": "functions",
-  "description": "Firebase Cloud Functions for YouPeak 100% Firebase Backend",
+  "name": "youpeak-api",
+  "description": "YouPeak API: Express backend for Vercel (api project) and the Firebase Functions entry point.",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "check": "node -e \"require('./backend/index.js'); console.log('backend loads OK')\"",
+    "test": "node --test tests/*.test.cjs",
+    "test:emulator": "npx -y firebase-tools@13 emulators:exec --config tests/emulator/firebase.json --only firestore,auth --project demo-youpeak-audit \"node tests/emulator/run.cjs\"",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log",
-    "dev": "node backend/server.js",
-    "dev:local": "node backend/server.js"
+    "logs": "firebase functions:log"
   },
-  "engines": {
-    "node": "20"
-  },
-  "main": "index.js",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.556.0",
-    "@aws-sdk/s3-request-presigner": "^3.1128.0",
+    "@aws-sdk/s3-request-presigner": "^3.556.0",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "cryptr": "^6.2.0",
+    "cryptr": "^6.4.0",
     "csv-parser": "^3.2.0",
     "dayjs": "^1.11.9",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
     "firebase-admin": "^12.1.1",
     "firebase-functions": "^5.0.0",
+    "form-data": "^4.0.1",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
@@ -39,6 +44,5 @@
     "socket.io": "^4.7.1",
     "stripe": "^20.3.1",
     "uuid": "^11.1.1"
-  },
-  "private": true
+  }
 }

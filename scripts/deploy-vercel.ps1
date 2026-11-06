@@ -1,25 +1,30 @@
-# Deploys one YouPeak Vercel project with its own project link.
+# Deploys one YouPeak Vercel project from its own folder.
 #
-# Why this exists: the repo root has .vercel/project.json linked to the ADMIN/API
-# project ("youpeak"). The Vercel CLI only reads the .vercel folder inside the
-# directory it runs from, so a landing deploy started from the repo root (for
-# example `vercel Youpeak_Landing_Page`) reuses that link and ships to the admin
-# project. This script never relies on the implicit root link: each target is
-# linked from its own folder, and the landing page is refused if it resolves to
-# the admin project.
+# Each deployable folder is linked to its own Vercel project through
+# <folder>/.vercel/project.json. The script never relies on a link stored in a
+# parent folder, because the Vercel CLI reads only the directory it runs from.
+#
+#   landing   -> landing/        (project: landing)
+#   admin     -> admin-panel/    (project: admin)
+#   api       -> functions/      (project: api, also serves api.youpeak.app)
 #
 # Usage (from the repo root):
 #   powershell -ExecutionPolicy Bypass -File scripts/deploy-vercel.ps1 -Target landing
-#   powershell -ExecutionPolicy Bypass -File scripts/deploy-vercel.ps1 -Target api
 #   add -Prod for production; add -DryRun to print the commands only.
 param(
-  [Parameter(Mandatory = $true)][ValidateSet('landing', 'api')][string]$Target,
+  [Parameter(Mandatory = $true)][ValidateSet('landing', 'admin', 'api')][string]$Target,
   [switch]$Prod,
   [switch]$DryRun
 )
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
+
+$folders = @{
+  landing = Join-Path $root 'landing'
+  admin   = Join-Path $root 'admin-panel'
+  api     = Join-Path $root 'functions'
+}
 
 function Get-ProjectId([string]$dir) {
   $file = Join-Path $dir '.vercel/project.json'
@@ -35,24 +40,26 @@ function Invoke-Vercel([string[]]$arguments) {
   if ($LASTEXITCODE -ne 0) { throw "Vercel command failed (exit $LASTEXITCODE)." }
 }
 
-# The admin/API project is whatever the repo root is linked to. Nothing else may
-# use that ID.
-$adminId = Get-ProjectId $root
-if (-not $adminId) { throw 'The repo root has no .vercel/project.json for the admin/API project.' }
+$dir = $folders[$Target]
+if (-not (Test-Path -LiteralPath $dir)) { throw "Folder not found: $dir" }
 
-if ($Target -eq 'landing') {
-  $dir = Join-Path $root 'Youpeak_Landing_Page'
-  $landingId = Get-ProjectId $dir
-  if (-not $landingId) {
-    Write-Output 'Youpeak_Landing_Page is not linked yet. Choose the LANDING project in the prompt.'
-    Invoke-Vercel @('link', '--cwd', $dir)
-    $landingId = Get-ProjectId $dir
-    if (-not $landingId -and -not $DryRun) { throw 'Landing link was not created.' }
+# Link the folder to its project the first time (you pick the project in the prompt).
+$projectId = Get-ProjectId $dir
+if (-not $projectId) {
+  Write-Output "$Target is not linked yet. Choose the matching Vercel project in the prompt."
+  Invoke-Vercel @('link', '--cwd', $dir)
+  $projectId = Get-ProjectId $dir
+  if (-not $projectId -and -not $DryRun) { throw "$Target link was not created." }
+}
+
+# Each folder must map to a different project. The API and admin/landing links
+# must never resolve to the same ID.
+foreach ($other in $folders.Keys) {
+  if ($other -eq $Target) { continue }
+  $otherId = Get-ProjectId $folders[$other]
+  if ($projectId -and $otherId -and $projectId -eq $otherId) {
+    throw "$Target and $other are linked to the same Vercel project. Delete $($folders[$Target])/.vercel and link it again."
   }
-  if ($landingId -and $landingId -eq $adminId) { throw 'Youpeak_Landing_Page is linked to the admin/API project. Delete Youpeak_Landing_Page/.vercel and run again.' }
-} else {
-  $dir = $root
-  if ((Get-ProjectId $dir) -ne $adminId) { throw 'The repo root link changed unexpectedly.' }
 }
 
 Write-Output "Target: $Target  Directory: $dir  Production: $($Prod.IsPresent)"

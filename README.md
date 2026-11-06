@@ -1,70 +1,68 @@
 # YouPeak
 
-Monorepo for the YouPeak video rewards and creator platform. Each deployable has its own folder and its own Vercel project.
+Video rewards and creator platform. This repository holds every app, with each deployable in its own folder.
 
-## Projects
+## Apps
 
-| Folder | What it is | Deploy as | Production domain |
+| Folder | What it is | Deploy | Domain |
 |---|---|---|---|
-| `Youpeak_Landing_Page/` | Public marketing and policy site (Vite + React) | Vercel project, Root Directory `Youpeak_Landing_Page` | `youpeak.org` |
-| `./` (repo root) + `Admin_Panel/`, `api/`, `functions/` | Admin panel (CRA) and the Express API | Vercel project, Root Directory `./` | `admin.youpeak.app`, `api.youpeak.app` |
-| `Youpeak_Flutter/` | Consumer app (mobile + web) | Built with `scripts/build-consumer-web.ps1`, deployed to the `youpeak-web` project | `youpeak.app` |
+| [`landing/`](landing/) | Public marketing and policy site (Vite + React) | Vercel project `landing`, Root Directory `landing` | `youpeak.org` |
+| [`admin-panel/`](admin-panel/) | Admin web panel (React) | Vercel project `admin`, Root Directory `admin-panel` | `admin.youpeak.app` |
+| [`functions/`](functions/) | Backend API (Express) and Firebase Functions entry | Vercel project `api`, Root Directory `functions` | `api.youpeak.app` |
+| [`flutter/`](flutter/) | Consumer app (Android, iOS, web) | Built locally with `scripts/`, uploaded to the `youpeak-web` project | `youpeak.app` |
 
-Each Vercel project has one root. Do not point a project at the repo root unless it is the admin/API project.
+Each app has its own dependencies, build, and `vercel.json` (where applicable). Every deployment uses the app's folder as its root.
 
-## Folder map
+## Other folders
 
-- `Admin_Panel/frontend/` - admin panel source.
-- `functions/backend/` - the Express API. `functions/` is the Firebase Functions wrapper.
-- `api/index.js` - Vercel serverless entry point. It loads `functions/backend`.
-- `Youpeak_Flutter/` - consumer app source.
-- `Youpeak_Landing_Page/` - landing site source.
-- `DB/` - seed and import data.
-- `local-dev/` - local emulator stack for development.
-- `tests/` - backend and integration tests.
-- `scripts/` - build and deploy helpers.
-- `worker/` - fingerprint worker (runs outside Vercel).
-- `docs/` - design notes and audit reports. See `docs/README.md`.
+- `scripts/` - build and deploy helpers, including `deploy-vercel.ps1`.
+- `tools/` - local development stack (`local-dev/`), database import data (`db/`), and the fingerprint worker (`worker/`).
+- `docs/` - all reports, design notes, and audit output. See [`docs/README.md`](docs/README.md).
+- `archive/` - old local files kept for reference. Not used by any app. Ignored by git.
+- `firebase.json`, `firestore.rules`, `firestore.indexes.json`, `storage.rules`, `.firebaserc` - Firebase project configuration.
 
-## Getting started
+## Local setup
 
-Copy `.env.example` to `.env` and fill in the values. Never commit `.env` files or `serviceAccountKey.json`.
+Copy `.env.example` to `.env` in the app folder that needs it. Never commit `.env` files or service account keys.
 
 ```bash
-# Backend and admin build (repo root)
-npm ci
-npm run build          # builds the admin panel into dist/
-npm start              # runs functions/backend/server.js
-npm test               # backend tests
+# Backend
+cd functions && npm ci
+npm start                 # API on the local dev port
+npm test                  # backend test suite (33 tests)
 
-# Admin panel development
-cd Admin_Panel/frontend && npm ci && npm start
+# Admin panel
+cd admin-panel && npm ci
+npm start
 
 # Landing page
-cd Youpeak_Landing_Page && npm ci
-npm run dev            # local preview
-npm run build          # production build + prerender
-npm run verify:seo     # SEO checks against dist/
+cd landing && npm ci
+npm run dev               # local preview
+npm run build             # production build and prerender
+npm run verify:seo        # SEO checks on dist/
 
-# Local emulator stack (Firebase emulators + API + admin)
-node local-dev/start.js
+# Full local stack (emulators, API, admin)
+node tools/local-dev/start.js
 ```
 
-## Deploying
+Flutter: `flutter/` builds with `scripts/build-consumer-web.ps1` and `scripts/build-consumer-apk.ps1`.
 
-Deploy the landing page and the admin/API separately:
+## Deploying to Vercel
+
+Each Vercel project is linked to one folder. Deploy each one from the repo root:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/deploy-vercel.ps1 -Target landing -Prod
+powershell -ExecutionPolicy Bypass -File scripts/deploy-vercel.ps1 -Target admin -Prod
 powershell -ExecutionPolicy Bypass -File scripts/deploy-vercel.ps1 -Target api -Prod
 ```
 
-The script links each folder to its own Vercel project and refuses to send the landing page to the admin project. Add `-DryRun` to print the commands without deploying.
+The first run for a folder asks you to pick its Vercel project. The script refuses to deploy one folder to another folder's project. Add `-DryRun` to print the commands without deploying.
 
-The consumer app is built with `scripts/build-consumer-web.ps1` and `scripts/build-consumer-apk.ps1`.
+In the Vercel dashboard, each project's **Root Directory** must match its folder: `landing`, `admin-panel`, or `functions`.
 
 ## Conventions
 
-- Keep deploy root folder names stable. Vercel Root Directory settings and `api/index.js` depend on them.
-- Generated output (`build/`, `dist/`, `node_modules/`, `.vercel/`, logs) stays out of git. See `.gitignore`.
+- Keep folder names stable. Vercel Root Directory settings depend on them.
+- Build output (`build/`, `dist/`), `node_modules/`, `.vercel/`, and logs stay out of git. See `.gitignore`.
 - Secrets live only in local `.env` files and in Vercel environment variables.
