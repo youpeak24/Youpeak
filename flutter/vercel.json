@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "true",
+  "buildCommand": "bash scripts/vercel-build.sh",
+  "outputDirectory": "build/web",
+  "rewrites": [
+    { "source": "/.well-known/assetlinks.json", "destination": "https://api.youpeak.app/.well-known/assetlinks.json" },
+    { "source": "/.well-known/apple-app-site-association", "destination": "https://api.youpeak.app/.well-known/apple-app-site-association" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
