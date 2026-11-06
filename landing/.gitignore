@@ -33,3 +33,6 @@ lighthouse-*.json
 
 # Full-resolution source art (optimized copies live in public/assets)
 assets_original/
+
+.vercel
+.env*
